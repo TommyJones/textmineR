@@ -1,0 +1,37 @@
+#' @title Function to remove some forms of pluralization. 
+#' @description This function takes a character vector as input and removes some forms of pluralization
+#' from the ends of the words. 
+#' @param term.vec A character vector
+#' 
+#' @details The entries of the vector should be single words or short n-grams without punctuation as the 
+#' function only looks at the ends of strings. In other words, if entries are a paragraph of text. Only the 
+#' final words will get de-pluralized. (Even then, if the final character is a period, as would be the 
+#' case with paragraphs, it's likely that nothing will be de-pluralized.)
+#' @note WARNING: This does make mistakes for irregular words. You should check its results manually. It tends to fail spectacularly for words ending in "es".
+#' @export
+#' @examples
+#' myvec <- c("banana", "bananas", "scientists", "large_armies")
+#'
+#' CorrectS(term.vec=myvec)
+#'
+#'       original   adjusted changed
+#' 1       banana     banana   FALSE
+#' 2      bananas     banana    TRUE
+#' 3   scientists  scientist    TRUE
+#' 4 large_armies large_army    TRUE
+
+CorrectS <- function(term.vec){
+	# makes some adjustments to pluralization
+	# WARNING: This does make mistakes for irregular words. You should check its results manually.
+    s.adjust <- gsub("sses$", "ss", term.vec) 
+    keep.list <- s.adjust[ grepl("sis$|ss$|us$|species$", s.adjust) | nchar(term.vec) <= 3 | grepl( "_[a-zA-Z][a-zA-Z][a-zA-Z]$", s.adjust) ]
+    
+    s.adjust2 <- gsub("ies$", "y", s.adjust)
+    s.adjust2 <- gsub("s$", "", s.adjust2)
+    
+    out.list <- s.adjust2
+    out.list[ s.adjust %in% keep.list ] <- s.adjust[ s.adjust %in% keep.list ]
+    
+    result <- data.frame(original=term.vec, adjusted=out.list, changed=term.vec!=out.list, stringsAsFactors=FALSE)
+    return(result)
+}

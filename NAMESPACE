@@ -1,0 +1,3 @@
+useDynLib(textmineR)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
