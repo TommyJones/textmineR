@@ -55,8 +55,8 @@ DepluralizeDtm <- function(dtm){
     sfLibrary(Matrix)
     
 	term.indices <- sfLapply( unique(colnames(changed)), function(x){ 	    
-        grep(x, colnames(changed), fixed=TRUE)
-        })
+        which(colnames(changed) == x)
+    })
 	
     sfStop()
     
