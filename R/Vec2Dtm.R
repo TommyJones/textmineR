@@ -35,6 +35,9 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=2, remove.stopwords=TRUE, cust
 	# for now, it is strongly advised to accept the defaults for lower, remove.punctuation, and remove.numbers
 	# Other functions are built assuming that the column headings of a dtm contain only letters and underscores "_"
 	
+  # set an option that normally causes this to crash on a Mac
+  if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
+  
 	if(remove.stopwords){
 		stopwords <- unique(c(stopwords("english"), stopwords("SMART")))
 	}else{
