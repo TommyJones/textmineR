@@ -62,7 +62,7 @@ CalcTopicModelR2 <- function(dtm, phi, theta, parallel=FALSE, cpus=NULL){
     
     sfInit(parallel=TRUE, cpus=cpus)
     sfLibrary(Matrix)
-    sfLibrary(idaTopicModels)
+    sfLibrary(textmineR)
 #     sfExport("CalcSumSquares")
     sfExport(list=c("phi", "ybar"))
     
