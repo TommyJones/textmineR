@@ -8,36 +8,40 @@ using namespace Rcpp;
 
 // CalcLikelihoodC
 double CalcLikelihoodC(arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta);
-RcppExport SEXP idaTopicModels_CalcLikelihoodC(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP) {
+RcppExport SEXP textmineR_CalcLikelihoodC(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< arma::sp_mat >::type dtm(dtmSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type theta(thetaSEXP );
-        double __result = CalcLikelihoodC(dtm, phi, theta);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type dtm(dtmSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type theta(thetaSEXP);
+    __result = Rcpp::wrap(CalcLikelihoodC(dtm, phi, theta));
+    return __result;
 END_RCPP
 }
 // CalcSumSquares
 NumericVector CalcSumSquares(arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta, NumericVector ybar);
-RcppExport SEXP idaTopicModels_CalcSumSquares(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP, SEXP ybarSEXP) {
+RcppExport SEXP textmineR_CalcSumSquares(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP, SEXP ybarSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< arma::sp_mat >::type dtm(dtmSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type theta(thetaSEXP );
-        Rcpp::traits::input_parameter< NumericVector >::type ybar(ybarSEXP );
-        NumericVector __result = CalcSumSquares(dtm, phi, theta, ybar);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type dtm(dtmSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type ybar(ybarSEXP);
+    __result = Rcpp::wrap(CalcSumSquares(dtm, phi, theta, ybar));
+    return __result;
+END_RCPP
+}
+// JSD_cpp
+double JSD_cpp(NumericVector p, NumericVector q);
+RcppExport SEXP textmineR_JSD_cpp(SEXP pSEXP, SEXP qSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
+    __result = Rcpp::wrap(JSD_cpp(p, q));
+    return __result;
 END_RCPP
 }

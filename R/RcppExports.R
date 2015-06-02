@@ -27,3 +27,19 @@ CalcSumSquares <- function(dtm, phi, theta, ybar) {
     .Call('textmineR_CalcSumSquares', PACKAGE = 'textmineR', dtm, phi, theta, ybar)
 }
 
+#' Convert a DTM to a Character Vector of documents
+#' 
+#' @description This function takes a sparse matrix (DTM) as input and returns a character vector
+#' whose length is equal to the number of rows of the input DTM.
+#' @param dtm A sparse Matrix from the matrix package whose rownames correspond to documents and colnames correspond to words
+#' @param parallel Do you want to parallelize this function using snowfall? Default is FALSE 
+#' @param cpus If parallel is TRUE, the number of threads to use. (Recommendation is 4, for memory's sake)
+#' @export
+#' @examples
+#' Dtm2Docs(dtm=mydtm, parallel=TRUE, cpus=4)
+NULL
+
+JSD_cpp <- function(p, q) {
+    .Call('textmineR_JSD_cpp', PACKAGE = 'textmineR', p, q)
+}
+
