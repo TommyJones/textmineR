@@ -33,6 +33,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// Dtm2DocsC
+std::vector< std::string> Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab);
+RcppExport SEXP textmineR_Dtm2DocsC(SEXP dtmSEXP, SEXP vocabSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type dtm(dtmSEXP);
+    Rcpp::traits::input_parameter< std::vector< std::string> >::type vocab(vocabSEXP);
+    __result = Rcpp::wrap(Dtm2DocsC(dtm, vocab));
+    return __result;
+END_RCPP
+}
 // JSD_cpp
 double JSD_cpp(NumericVector p, NumericVector q);
 RcppExport SEXP textmineR_JSD_cpp(SEXP pSEXP, SEXP qSEXP) {
@@ -42,6 +54,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
     __result = Rcpp::wrap(JSD_cpp(p, q));
+    return __result;
+END_RCPP
+}
+// JSDmat
+NumericMatrix JSDmat(NumericMatrix A);
+RcppExport SEXP textmineR_JSDmat(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    __result = Rcpp::wrap(JSDmat(A));
     return __result;
 END_RCPP
 }

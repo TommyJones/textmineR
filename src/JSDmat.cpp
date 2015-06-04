@@ -1,4 +1,4 @@
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include <math.h>
 using namespace Rcpp;
 

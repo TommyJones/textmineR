@@ -37,9 +37,16 @@ CalcSumSquares <- function(dtm, phi, theta, ybar) {
 #' @export
 #' @examples
 #' Dtm2Docs(dtm=mydtm, parallel=TRUE, cpus=4)
-NULL
+#' @export
+Dtm2DocsC <- function(dtm, vocab) {
+    .Call('textmineR_Dtm2DocsC', PACKAGE = 'textmineR', dtm, vocab)
+}
 
 JSD_cpp <- function(p, q) {
     .Call('textmineR_JSD_cpp', PACKAGE = 'textmineR', p, q)
+}
+
+JSDmat <- function(A) {
+    .Call('textmineR_JSDmat', PACKAGE = 'textmineR', A)
 }
 

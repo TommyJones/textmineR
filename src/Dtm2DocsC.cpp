@@ -16,7 +16,8 @@ using namespace Rcpp ;
 //' @export
 //' @examples
 //' Dtm2Docs(dtm=mydtm, parallel=TRUE, cpus=4)
-
+//' @export
+// [[Rcpp::export]]
 std::vector< std::string> Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab){
 	
 	// initialize some variables here
