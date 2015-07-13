@@ -39,6 +39,9 @@ JSD <- function(x, y=NULL, by.rows=TRUE){
     result <- textmineR::JSDmat(A = x) # this function only calculates the upper triangle
     
     result <- result + t(result)
+    
+    colnames(result) <- rownames(x)
+    rownames(result) <- rownames(x)
   }
   
   #############################################################################
