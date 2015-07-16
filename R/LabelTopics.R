@@ -24,7 +24,7 @@ LabelTopics <- function(assignments, dtm, M=2){
   
   # get dtm_ngram and p_terms
   dtm_ngram <- dtm[ , grepl("_", colnames(dtm)) ]
-  p_terms <- colSums(dtm_ngram)
+  p_terms <- Matrix::colSums(dtm_ngram)
   p_terms <- p_terms / sum(p_terms)
   
   # apply the label algorithm over each topic
