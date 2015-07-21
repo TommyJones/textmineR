@@ -1,7 +1,9 @@
 #include <RcppArmadillo.h>
 #include <math.h>
+#include <string>
 // [[Rcpp::depends("RcppArmadillo", "RcppProgress")]]
 //#include <progress.hpp>
+using std::string;
 using namespace Rcpp ;
 
 
@@ -18,25 +20,27 @@ using namespace Rcpp ;
 //' Dtm2Docs(dtm=mydtm, parallel=TRUE, cpus=4)
 //' @export
 // [[Rcpp::export]]
-std::vector< std::string> Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab){
+List Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab){
 	
 	// initialize some variables here
 	int n_docs = dtm.n_rows;
 	int n_words = dtm.n_cols;
 	int n = 0;
-	std::vector< std::string > result;
+	List result(n_docs);
 	
-	// loop over documents & vocab to repeat words
+//	// loop over documents & vocab to repeat words
 	for(int d = 0; d < n_docs; d++){
-		result[ d ] = "";
+    string tmp = "";
 		for(int v = 0; v < n_words; v++){
-			n = dtm[ d, v ];
+			n = dtm( d, v );
 			if(n > 0){
 				for(int j = 0; j < n; j++){
-					result[ d ] = result[ d ] + " " + vocab[ v ];
+					tmp = tmp + " " + vocab[ v ] + " ";
 				}
 			}
 		}
+    result[ d ] = tmp;
 	}
+
 	return result;
 }
