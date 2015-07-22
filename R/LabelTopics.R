@@ -15,7 +15,8 @@
 
 LabelTopics <- function(assignments, dtm, M=2){
   # figure out a threshold
-  threshold <- min(apply(assignments, 2, max))
+  threshold <- apply(assignments, 2, function(x) max(x, na.rm=T))
+  threshold <- min(threshold[ threshold > 0 & ! is.na(threshold) ])
   
   # get a list of documents for each topic
   doc_list <- apply(assignments, 2, function(x){
