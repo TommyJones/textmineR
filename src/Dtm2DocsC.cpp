@@ -1,12 +1,9 @@
-#include <RcppArmadillo.h>
-#include <math.h>
-#include <string>
 // [[Rcpp::depends("RcppArmadillo", "RcppProgress")]]
-//#include <progress.hpp>
+#include <RcppArmadillo.h>
+#include <string>
+#define ARMA_64BIT_WORD
 using std::string;
 using namespace Rcpp ;
-
-
 
 //' Convert a DTM to a Character Vector of documents
 //' 
@@ -33,10 +30,8 @@ List Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab){
     string tmp = "";
 		for(int v = 0; v < n_words; v++){
 			n = dtm( d, v );
-			if(n > 0){
-				for(int j = 0; j < n; j++){
-					tmp = tmp + " " + vocab[ v ] + " ";
-				}
+			for(int j = 0; j < n; j++){
+				tmp = tmp + " " + vocab[ v ] + " ";
 			}
 		}
     result[ d ] = tmp;

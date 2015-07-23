@@ -34,7 +34,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // Dtm2DocsC
-std::vector< std::string> Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab);
+List Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab);
 RcppExport SEXP textmineR_Dtm2DocsC(SEXP dtmSEXP, SEXP vocabSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
