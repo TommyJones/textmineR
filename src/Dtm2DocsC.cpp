@@ -1,6 +1,7 @@
 // [[Rcpp::depends("RcppArmadillo", "RcppProgress")]]
 #include <RcppArmadillo.h>
 #include <string>
+#include <progress.hpp>
 #define ARMA_64BIT_WORD
 using std::string;
 using namespace Rcpp ;
@@ -27,6 +28,12 @@ List Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab){
 	
 //	// loop over documents & vocab to repeat words
 	for(int d = 0; d < n_docs; d++){
+    // Check for user interrupt every 256 iterations
+  if (d % 256 == 0){
+		if (Progress::check_abort() ){
+		  return -1.0;
+		}
+  }
     string tmp = "";
 		for(int v = 0; v < n_words; v++){
 			n = dtm( d, v );
