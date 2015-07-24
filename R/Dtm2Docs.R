@@ -10,10 +10,10 @@
 #' Dtm2Docs(dtm=mydtm)
 Dtm2Docs <- function(dtm){
   
-  # do in parallel in batches of about 1000 if we have more than 2000 docs
-  if(nrow(dtm) > 2000){
+  # do in parallel in batches of about 3000 if we have more than 3000 docs
+  if(nrow(dtm) > 3000){
     
-    batches <- seq(1, nrow(dtm), by = 1000)
+    batches <- seq(1, nrow(dtm), by = 3000)
     
     dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 999, nrow(dtm)) , ])
     
