@@ -42,6 +42,14 @@ Dtm2DocsC <- function(dtm, vocab) {
     .Call('textmineR_Dtm2DocsC', PACKAGE = 'textmineR', dtm, vocab)
 }
 
+Hellinger_cpp <- function(p, q) {
+    .Call('textmineR_Hellinger_cpp', PACKAGE = 'textmineR', p, q)
+}
+
+HellingerMat <- function(A) {
+    .Call('textmineR_HellingerMat', PACKAGE = 'textmineR', A)
+}
+
 JSD_cpp <- function(p, q) {
     .Call('textmineR_JSD_cpp', PACKAGE = 'textmineR', p, q)
 }
