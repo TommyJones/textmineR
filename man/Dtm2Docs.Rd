@@ -4,7 +4,7 @@
 \alias{Dtm2Docs}
 \title{Convert a DTM to a Character Vector of documents}
 \usage{
-Dtm2Docs(dtm, parallel = FALSE, cpus = NULL)
+Dtm2Docs(dtm)
 }
 \arguments{
 \item{dtm}{A sparse Matrix from the matrix package whose rownames correspond to documents and colnames correspond to words}
@@ -18,6 +18,6 @@ This function takes a sparse matrix (DTM) as input and returns a character vecto
 whose length is equal to the number of rows of the input DTM.
 }
 \examples{
-Dtm2Docs(dtm=mydtm, parallel=TRUE, cpus=4)
+Dtm2Docs(dtm=mydtm)
 }
 

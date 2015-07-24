@@ -8,10 +8,22 @@
 #' @export
 #' @examples
 #' Dtm2Docs(dtm=mydtm)
-
 Dtm2Docs <- function(dtm){
   
-  out <- Dtm2DocsC(dtm = dtm, vocab = colnames(dtm))
+  # do in parallel in batches of about 1000 if we have more than 2000 docs
+  if(nrow(dtm) > 2000){
+    
+    batches <- seq(1, nrow(dtm), by = 1000)
+    
+    dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 999, nrow(dtm)) , ])
+    
+    out <-TmParallelApply(X = dtm_list, FUN = function(x){
+      Dtm2DocsC(dtm = x, vocab = colnames(x))
+    })
+    
+  }else{
+    out <- Dtm2DocsC(dtm = dtm, vocab = colnames(dtm))
+  }
   
   out <- unlist(out)
   
