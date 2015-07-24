@@ -41,88 +41,46 @@ DepluralizeDtm <- function(dtm){
 	# run depluralization on column names of dtm
 	adjust.terms <- CorrectS(colnames(dtm))
 	
-	# begin procedure to merge depluralized columns with their singular form
-
+  # if we have adjustments to make
+  if(sum(adjust.terms$changed) > 0){
+    # begin procedure to merge depluralized columns with their singular form
+    
     colnames(dtm) <- adjust.terms$adjusted
-
-	# partition dtm.tmp on columns with duplicates (terms that had plurals) and columns without
-	unchanged <- dtm[ , ! colnames(dtm) %in% colnames(dtm)[ duplicated(colnames(dtm)) ] ]
-	changed <- dtm[ , colnames(dtm) %in% colnames(dtm)[ duplicated(colnames(dtm)) ] ]
-
-	# get indices of columns to be merged
-	sfInit(parallel=TRUE, cpus=4)
-	sfExport("changed")
-    sfLibrary(Matrix)
     
-	term.indices <- sfLapply( unique(colnames(changed)), function(x){ 	    
-        which(colnames(changed) == x)
-    })
-	
-    sfStop()
+    # partition dtm.tmp on columns with duplicates (terms that had plurals) and columns without
+    unchanged <- dtm[ , ! colnames(dtm) %in% colnames(dtm)[ duplicated(colnames(dtm)) ] ]
+    changed <- dtm[ , colnames(dtm) %in% colnames(dtm)[ duplicated(colnames(dtm)) ] ]
+    
+    # get indices of columns to be merged
+    term.indices <- TmParallelApply(X=unique(colnames(changed)),
+                                    FUN=function(x){
+                                      which(colnames(changed) == x)
+                                    }, export=c("changed"))
     
     gc()
     
-	# merge columns by summation
-    
-#     merge.list <- lapply(term.indices, function(y) changed[ , y ])
-    
-    
-	sfInit(parallel=TRUE, cpus=4)
-	sfExport("changed")
-	sfLibrary(Matrix)
-	
-	temp <- sfLapply( term.indices, function(y){
-		result <- Matrix(Matrix::rowSums(x = changed[ , y ]), sparse=TRUE)
-	})
-    
-    sfStop()
-
+    # merge columns by summation
+    temp <- TmParallelApply(X = term.indices, 
+                            FUN=function(y){
+                              Matrix(Matrix::rowSums(x = changed[ , y ]), 
+                                     sparse=TRUE, ncol=1)
+                            }, export=c("changed"))
     gc()
-
-	# put back together into a sparse matrix
-	batches <- seq(1, length(temp), by=100)
     
-    if(length(batches) > 1){ # if we need snowfall at all...
-        sfInit(parallel=TRUE, cpus=4)
-        sfExport("temp")
-        sfLibrary(Matrix)
-
-        temp2 <- sfLapply(batches, function(x){
-            do.call(cBind, temp[ x:min( x + 99, length(temp) ) ])
-        })
-        
-        sfStop()
-    }else{
-        temp2 <- temp
-    }
+    # put back together into a sparse matrix
+    temp <- TmParallelApply(X = temp, FUN=function(x) Matrix::t(x))
     
-    if(length(temp2) > 100 ){ # if temp2 is still really big
-        
-        batches <- seq(1, length(temp2), by=100)
-        
-        sfInit(parallel=TRUE, cpus=4)
-        sfExport("temp2")
-        sfLibrary(Matrix)
-        
-        temp <- sfLapply(batches, function(x){
-            do.call(cBind, temp2[ x:min( x + 99, length(temp2) ) ])
-        })
-        
-        sfStop()
-        
-        gc()
-        
-        temp <- do.call(cBind, temp)
-        
-    }else{
-        temp <- do.call(cBind, temp2)
-    }
-
+    temp <- RecursiveRbind(matrix_list = temp)
+    
+    temp <- Matrix::t(temp)
+    
     colnames(temp) <- unique(colnames(changed))
+    
+    dtm <- cBind(unchanged, temp)
+  }
+  
+  dtm <- dtm[ , sort(colnames(dtm)) ]
 
-	dtm <- cBind(unchanged, temp)
+	dtm
 
-	return(dtm)
-
-#     return(list(changed=changed, term.indices=term.indices))
 }
