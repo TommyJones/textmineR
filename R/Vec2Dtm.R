@@ -31,12 +31,15 @@
 #' doc_4       1     .   .    .     1     .    .
 #' 
 
-Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=2, remove.stopwords=TRUE, custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, remove.numbers=TRUE, stem.document=FALSE){
+Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=2, remove.stopwords=TRUE, 
+                    custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, 
+                    remove.numbers=TRUE, stem.document=FALSE){
 	# for now, it is strongly advised to accept the defaults for lower, remove.punctuation, and remove.numbers
 	# Other functions are built assuming that the column headings of a dtm contain only letters and underscores "_"
 	
-  # set an option that normally causes this to crash on a Mac
-  if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
+#   # set an option that normally causes this to crash on a Mac
+#   if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
+  options(mc.cores = detectCores())
   
 	if(remove.stopwords){
 		stopwords <- unique(c(stopwords("english"), stopwords("SMART")))
