@@ -15,7 +15,7 @@ Dtm2Docs <- function(dtm){
     
     batches <- seq(1, nrow(dtm), by = 3000)
     
-    dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 999, nrow(dtm)) , ])
+    dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 2999, nrow(dtm)) , ])
     
     out <-TmParallelApply(X = dtm_list, FUN = function(x){
       Dtm2DocsC(dtm = x, vocab = colnames(x))
