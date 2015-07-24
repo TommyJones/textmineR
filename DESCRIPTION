@@ -8,9 +8,10 @@ Description: This package implements various functions related to
     latent Dirichlet allocation (LDA). It is designed to work with
 		the "lda" package by J. Chang. 
 Depends:
-    R (>= 3.1),
+    R (>= 2.15),
     lda,
     snowfall,
+    parallel,
     wordcloud,
     Matrix,
     slam,
