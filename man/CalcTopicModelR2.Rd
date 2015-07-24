@@ -4,7 +4,7 @@
 \alias{CalcTopicModelR2}
 \title{Function to calculate R-squared of a topic model.}
 \usage{
-CalcTopicModelR2(dtm, phi, theta, parallel = FALSE, cpus = NULL)
+CalcTopicModelR2(dtm, phi, theta)
 }
 \arguments{
 \item{dtm}{= a documents X terms dimensional document term matrix in
