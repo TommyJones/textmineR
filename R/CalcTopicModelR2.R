@@ -8,8 +8,6 @@
 #'   Will *not* work on DTMs from the tm package or simple triplet matrices from the slam package.
 #' @param phi = a topics X terms dimensional matrix where each entry is p(term|topic)
 #' @param theta = a documents X topics dimensional matrix where each entry is p(topic|document)
-#' @param parallel = a logical. Do you have snowfall installed? Would you like to parallelize?
-#' @param cpus = number of threads over which to parallelize.
 #' 
 #'       
 #' @export
