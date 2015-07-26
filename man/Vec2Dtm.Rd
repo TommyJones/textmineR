@@ -4,7 +4,7 @@
 \alias{Vec2Dtm}
 \title{Convert a character vector to a document term matrix of class Matrix.}
 \usage{
-Vec2Dtm(vec, min.n.gram = 1, max.n.gram = 2, remove.stopwords = TRUE,
+Vec2Dtm(vec, min.n.gram = 1, max.n.gram = 1, remove.stopwords = TRUE,
   custom.stopwords = NULL, lower = TRUE, remove.punctuation = TRUE,
   remove.numbers = TRUE, stem.document = FALSE)
 }

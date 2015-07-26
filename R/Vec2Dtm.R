@@ -37,7 +37,7 @@
 #' doc_4       1     .   .    .     1     .    .
 #' 
 
-Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=2, remove.stopwords=TRUE, 
+Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE, 
                     custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, 
                     remove.numbers=TRUE, stem.document=FALSE){
 	# for now, it is strongly advised to accept the defaults for lower, remove.punctuation, and remove.numbers
