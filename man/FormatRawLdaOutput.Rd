@@ -2,7 +2,7 @@
 % Please edit documentation in R/FormatRawLdaOutput.R
 \name{FormatRawLdaOutput}
 \alias{FormatRawLdaOutput}
-\title{Format Raw Output from lda.collapsed.gibbs.sampler()}
+\title{Format Raw Output from lda::lda.collapsed.gibbs.sampler()}
 \usage{
 FormatRawLdaOutput(lda.result, docnames, smooth = TRUE)
 }

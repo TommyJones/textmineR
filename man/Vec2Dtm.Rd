@@ -4,7 +4,7 @@
 \alias{Vec2Dtm}
 \title{Convert a character vector to a document term matrix of class Matrix.}
 \usage{
-Vec2Dtm(vec, min.n.gram = 1, max.n.gram = 2, remove.stopwords = TRUE,
+Vec2Dtm(vec, min.n.gram = 1, max.n.gram = 1, remove.stopwords = TRUE,
   custom.stopwords = NULL, lower = TRUE, remove.punctuation = TRUE,
   remove.numbers = TRUE, stem.document = FALSE)
 }
@@ -32,6 +32,12 @@ remove additional stopwords by subsetting the columns of a DTM post-hoc. This is
 This is the main document term matrix creating function for \code{textmineR}.
 In most cases, all you need to do is import documents as a character vector in R and then run this function
 to get a document term matrix that is compatible with the rest of \code{textmineR}'s functionality.
+}
+\note{
+This function relies heavily on the \code{tm} and \code{RWeka} packages. N-grams are derived using the \code{RWeka} package.
+There is a confilct between \code{RWeka} and \code{parallel} (used for multithread processing on unix-like systems).
+Consequently, using n-grams (n > 1) causes construction of the DTM to be considerably slower on unix systems.
+Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
 }
 \examples{
 myvec <- c("the quick brown fox", "the slow gray fox", "look at my horse", "my horse is amazing")

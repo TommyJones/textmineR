@@ -4,20 +4,25 @@
 \alias{HellDist}
 \title{Hellinger Distance}
 \usage{
-HellDist(p, q)
+HellDist(x, y = NULL, by.rows = TRUE)
 }
 \arguments{
-\item{p}{A numeric vector representing a probability distribution}
+\item{x}{A numeric matrix or numeric vector}
 
-\item{q}{A numeric vector of length length(p) representing a probability distribuiton}
+\item{y}{A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.}
+
+\item{by.rows}{If \code{x} is a matrix, should distances be calculated by rows?}
 }
 \description{
-Calculates the Hellinger distances between two discrete probability distributions p and q
+Calculates the Hellinger distances or the rows or columns of a numeric matrix or for two numeric vectors.
 }
 \examples{
-x <- rnorm(n = 100, mean = 1, sd = 1)
+x <- rchisq(n = 100, df = 8)
 y <- x^2
-HellDist(p = x, q = y)r
+HellDist(x = x, y = y)
+
+mymat <- rbind(x, y)
+HellDist(x = mymat)
 }
 \keyword{distance}
 \keyword{functions}

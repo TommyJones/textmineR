@@ -45,6 +45,29 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// Hellinger_cpp
+double Hellinger_cpp(NumericVector p, NumericVector q);
+RcppExport SEXP textmineR_Hellinger_cpp(SEXP pSEXP, SEXP qSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
+    __result = Rcpp::wrap(Hellinger_cpp(p, q));
+    return __result;
+END_RCPP
+}
+// HellingerMat
+NumericMatrix HellingerMat(NumericMatrix A);
+RcppExport SEXP textmineR_HellingerMat(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    __result = Rcpp::wrap(HellingerMat(A));
+    return __result;
+END_RCPP
+}
 // JSD_cpp
 double JSD_cpp(NumericVector p, NumericVector q);
 RcppExport SEXP textmineR_JSD_cpp(SEXP pSEXP, SEXP qSEXP) {

@@ -33,5 +33,11 @@ LabelTopics <- function(assignments, dtm, M=2){
     l <- GetProbableTerms(docnames = x, dtm = dtm_ngram, p.terms = p_terms)
     names(l)[ order(l, decreasing=T) ][ 1:M ]
   })
+  
+  # format into a matrix for output
+  result <- do.call(rbind, result)
+  
+  colnames(result) <- paste("label_", 1:ncol(result), sep="")
+  
   result
 }

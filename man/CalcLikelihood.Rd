@@ -4,7 +4,7 @@
 \alias{CalcLikelihood}
 \title{Calculate the log likelihood of a DTM given a topic model}
 \usage{
-CalcLikelihood(dtm, phi, theta, parallel = FALSE, cpus = NULL)
+CalcLikelihood(dtm, phi, theta)
 }
 \arguments{
 \item{dtm}{= the document term matrix of class Matrix}

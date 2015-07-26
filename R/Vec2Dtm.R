@@ -13,6 +13,12 @@
 #' @param remove.punctuation Do you want to convert all punctuation to spaces? For example, "big-lipped fish" goes to "big lipped fish" (Defaults to TRUE)
 #' @param remove.numbers Do you want to convert all numbers to spaces? For example, "3rd grade teachers" goes to " rd grade teachers" (Defaults to TRUE)
 #' @param stem.document Do you want to stem the words in your document? (Defaults to FALSE)
+#' 
+#' @note
+#' This function relies heavily on the \code{tm} and \code{RWeka} packages. N-grams are derived using the \code{RWeka} package. 
+#' There is a confilct between \code{RWeka} and \code{parallel} (used for multithread processing on unix-like systems).
+#' Consequently, using n-grams (n > 1) causes construction of the DTM to be considerably slower on unix systems. 
+#' Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
 #'
 #' @export
 #' @examples
@@ -31,12 +37,15 @@
 #' doc_4       1     .   .    .     1     .    .
 #' 
 
-Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=2, remove.stopwords=TRUE, custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, remove.numbers=TRUE, stem.document=FALSE){
+Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE, 
+                    custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, 
+                    remove.numbers=TRUE, stem.document=FALSE){
 	# for now, it is strongly advised to accept the defaults for lower, remove.punctuation, and remove.numbers
 	# Other functions are built assuming that the column headings of a dtm contain only letters and underscores "_"
 	
-  # set an option that normally causes this to crash on a Mac
-  if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
+#   # set an option that normally causes this to crash on a Mac
+#   if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
+  options(mc.cores = detectCores())
   
 	if(remove.stopwords){
 		stopwords <- unique(c(stopwords("english"), stopwords("SMART")))
@@ -76,6 +85,7 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=2, remove.stopwords=TRUE, cust
 	if(max.n.gram == 1){
 		dtm <- DocumentTermMatrix(corp)
 	}else{
+    options(mc.cores=1)
 		dtm <- DocumentTermMatrix(corp, control=list(tokenize=NgramTokenizer(min=min.n.gram, max=max.n.gram)))
 	}
 	

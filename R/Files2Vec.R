@@ -17,11 +17,15 @@ Files2Vec <- function(directory){
     
 	file.list <- grep("\\.txt", dir(directory), value=T)
 	
-	vec <- sapply(file.list, function(x){
-		result <- scan(paste(directory, x, sep=""), what="character", sep="\n")
-		result <- gsub("\\s", " ", result)
-		return(result)
-	})
+  vec <- TmParallelApply(X = file.list, 
+                         FUN = function(x){
+                           result <- scan(paste(directory, x, sep=""), what="character", sep="\n")
+                           result <- paste(result, collapse="\n")
+                           result <- gsub("\\s", " ", result)
+                           return(result)
+                         }, export = c("directory"))
+  
+	vec <- unlist(vec)
 	
 	names(vec) <- gsub("[^a-zA-Z0-9]", "_", file.list)
 	

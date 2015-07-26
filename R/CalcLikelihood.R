@@ -9,48 +9,38 @@
 #' @examples
 #'     myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
 #' @export
-CalcLikelihood <- function(dtm, phi, theta, parallel=FALSE, cpus=NULL){
-    # ensure that all inputs are sorted correctly
-    phi <- phi[ colnames(theta) , colnames(dtm) ]
+CalcLikelihood <- function(dtm, phi, theta){
+  # ensure that all inputs are sorted correctly
+  phi <- phi[ colnames(theta) , colnames(dtm) ]
+  
+  theta <- theta[ rownames(dtm) , ]
+  
+  # do in parallel in batches of about 3000 if we have more than 3000 docs
+  if(nrow(dtm) > 3000){
     
-    theta <- theta[ rownames(dtm) , ]
+    batches <- seq(1, nrow(dtm), by = 3000)
     
-    # If parallel = FALSE (I assume you like waiting...)
-    ###############################################################
-    if(! parallel){
-        result <- CalcLikelihoodC(dtm=dtm, phi=phi, theta=theta)
-        
-        return(result) # function exits here if parallel=FALSE
-    }
-    
-    
-    # If parallel = TRUE ......
-    ###############################################################
-    
-    if(is.null(cpus)){ # if you didn't specify the number of cpus...
-        stop("You must specify the number of cpus when parallel=TRUE")
-    }
-    
-
-    
-    data_divided <- PartitionTopticModelData(dtm=dtm, theta=theta, partitions=cpus)
-    
-    sfInit(parallel=TRUE, cpus=cpus)
-    sfLibrary(Matrix)
-    sfLibrary(idaTopicModels)
-    #     sfExport("CalcSumSquares")
-    sfExport(list=c("phi"))
-    
-    result <- sfLapply(data_divided, function(x){
-        tmp <- CalcLikelihoodC(dtm=x$dtm_divided, phi=phi, theta=x$theta_divided)
-        
-        tmp
+    data_divided <- lapply(batches, function(j){
+      
+      dtm_divided <- dtm[ j:min(j + 2999, nrow(dtm)) , ]
+      
+      theta_divided <- theta[ j:min(j + 2999, nrow(dtm)) , ]
+      
+      list(dtm_divided=dtm_divided, theta_divided=theta_divided)
     })
     
-    sfStop()
+    result <-TmParallelApply(X = data_divided, FUN = function(x){
+      CalcLikelihoodC(dtm=x$dtm_divided, 
+                      phi=phi, 
+                      theta=x$theta_divided)
+    }, export=c("phi"))
     
     result <- sum(unlist(result))
     
-    result
-    
+    # do sequentially otherwise
+  }else{
+    result <- CalcLikelihoodC(dtm=dtm, phi=phi, theta=theta)
+  }
+  
+  result  
 }

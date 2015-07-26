@@ -4,19 +4,6 @@
 #define ARMA_64BIT_WORD
 using namespace Rcpp ;
 
-
-
-
-
-//' Calculate the log likelihood of a DTM given a model using sequential C++ code
-//' 
-//' @param dtm A document term matrix
-//' @param phi = a topics X terms dimensional matrix where each entry is p(term|topic)
-//' @param theta = a documents X topics dimensional matrix where each entry is p(topic|document)//' @export
-//' @description This function calculates the log likelihood for a topic model. Generally, this function (CalcLikelihoodC)
-//' is called by the R function CalcLikelihood, which has options for paralellization. If you call CalcLikelihood but set
-//' \code{parallel=FALSE}, then CalcLikelihood passes off to CalclikelihoodC completely.
-//' @export
 // [[Rcpp::export]]
 double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta) {
     int ndocs = dtm.n_rows;

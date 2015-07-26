@@ -17,7 +17,7 @@
 #' r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta, parallel=TRUE, cpus=8)
 
 
-CalcTopicModelR2 <- function(dtm, phi, theta, parallel=FALSE, cpus=NULL){
+CalcTopicModelR2 <- function(dtm, phi, theta){
     
     # ensure that all inputs are sorted correctly
     phi <- phi[ colnames(theta) , colnames(dtm) ]
@@ -28,55 +28,38 @@ CalcTopicModelR2 <- function(dtm, phi, theta, parallel=FALSE, cpus=NULL){
     # get ybar, the "center" of the documents
     ybar <- Matrix::colMeans(dtm)
     
-    # If parallel = FALSE (I assume you like waiting...)
-    ###############################################################
-    if(! parallel){
-        sum_squares <- CalcSumSquares(dtm = dtm, phi = phi, theta = theta, ybar=ybar)
+    # do in parallel in batches of about 3000 if we have more than 3000 docs
+    if(nrow(dtm) > 3000){
+      
+      batches <- seq(1, nrow(dtm), by = 3000)
+      
+      data_divided <- lapply(batches, function(j){
         
-        result <- 1 - sum_squares[ 1 ] / sum_squares[ 2 ]
+        dtm_divided <- dtm[ j:min(j + 2999, nrow(dtm)) , ]
         
-        return(result) # function exits here if parallel=FALSE
-    }
-    
-    
-    # If parallel = TRUE ......
-    ###############################################################
-    
-    if(is.null(cpus)){ # if you didn't specify the number of cpus...
-        stop("You must specify the number of cpus when parallel=TRUE")
-    }
-    
-    cpus <- round(cpus) # in case some bozo gives a non-integer value
-    
-    # divide the dtm by rows so it goes out to each processor
-    breaks <- round(nrow(dtm) / cpus)
-    
-    indeces <- seq(from=1, to=nrow(dtm), by=breaks)
-    
-    data_divided <- lapply(indeces, function(j){
-        dtm_divided <- dtm[ j:min(j + breaks - 1, nrow(dtm)) , ]
-        theta_divided <- theta[ j:min(j + breaks - 1, nrow(dtm)) , ]
+        theta_divided <- theta[ j:min(j + 2999, nrow(dtm)) , ]
         
         list(dtm_divided=dtm_divided, theta_divided=theta_divided)
-    })
+      })
+      
+      result <-TmParallelApply(X = data_divided, FUN = function(x){
+        CalcSumSquares(dtm = x$dtm_divided, 
+                       phi = phi, 
+                       theta = x$theta_divided, 
+                       ybar=ybar)
+      }, export=c("phi", "ybar"))
+      
+      result <- do.call(rbind, result)
+      
+      result <- 1 - sum(result[ , 1 ]) / sum(result[ , 2 ])
     
-    sfInit(parallel=TRUE, cpus=cpus)
-    sfLibrary(Matrix)
-    sfLibrary(textmineR)
-#     sfExport("CalcSumSquares")
-    sfExport(list=c("phi", "ybar"))
+    # do sequentially otherwise
+    }else{
+      sum_squares <- CalcSumSquares(dtm = dtm,  phi = phi, theta = theta, ybar=ybar)
+      
+      result <- 1 - sum_squares[ 1 ] / sum_squares[ 2 ]
+      
+    }
     
-    result <- sfLapply(data_divided, function(x){
-        tmp <- CalcSumSquares(dtm = x$dtm_divided, phi = phi, theta = x$theta_divided, ybar=ybar)
-        
-        tmp
-    })
-    
-    sfStop()
-    
-    result <- do.call(rbind, result)
-    
-    result <- 1 - sum(result[ , 1 ]) / sum(result[ , 2 ])
-        
-    return(result) # function exits here if parallel=TRUE
+    result
 }
