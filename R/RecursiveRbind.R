@@ -1,4 +1,5 @@
-
+# recursively call rBind from the Matrix package. 
+# This is used for combining a list into a large Matrix.
 
 RecursiveRbind <- function(matrix_list){
   
