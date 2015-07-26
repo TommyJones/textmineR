@@ -32,6 +32,11 @@ Below is a demo of some of the functionality in `textmineR`
     names(model) # phi is P(words | topics), theta is P(topics | documents)
     
     # Calculate some summary statistics etc. Which is the real value-add of textmineR
+
+    # Get the R-squared of this model
+    model$r2 <- CalcTopicModelR2(dtm = dtm, phi = model$phi, theta=model$theta)
+    
+    model$r2
     
     # phi-prime, P(topic | words) for classifying new documents
     model$phi_prime <- GetPhiPrime(phi = model$phi, theta = model$theta)
