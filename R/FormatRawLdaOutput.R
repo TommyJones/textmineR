@@ -1,4 +1,4 @@
-#' Format Raw Output from lda.collapsed.gibbs.sampler() 
+#' Format Raw Output from lda::lda.collapsed.gibbs.sampler() 
 #' @description extracts outputs from LDA model estimated with "lda" package by Jonathan Chang
 #' @param lda.result The list value returned by lda.collapsed.gibbs.sampler()
 #' @param docnames A character vector giving the names of documents. This is generally rownames(dtm). 
@@ -40,25 +40,31 @@ FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
   
   # capture document_expects, if it exists (document_expects is over multiple runs, document_sums is over a single run)
   if(! is.null(dim(lda.result$document_expects))){
-    theta.expects <- t(lda.result$document_expects)
+    theta_expects <- t(lda.result$document_expects)
     
-    theta.expects <- theta.expects/Matrix::rowSums(theta.expects)
-    rownames(theta.expects) <- docnames
-    colnames(theta.expects) <- paste("t.", 1:ncol(theta.expects), sep="" )
+    theta_expects <- theta_expects/Matrix::rowSums(theta_expects)
+    rownames(theta_expects) <- docnames
+    colnames(theta_expects) <- paste("t.", 1:ncol(theta_expects), sep="" )
     
     if(smooth){ 
-      theta.expects <- theta.expects + 0.0001 
+      theta_expects <- theta_expects + 0.0001 
     }
     
     
-    result$theta.expects <- theta.expects
+    result$theta_expects <- theta_expects
     
   }
   
 
-  # add in likelihoods if necessary
-	if( "log.likelihoods" %in% names(lda.result) ){ 
-        result$likelihood <- lda.result$log.likelihoods
+  # add in other outputs that may be in the raw lda.result
+  additional_objects <- setdiff(names(lda.result), 
+                                c("document_sums", "topics", "topic_sums", 
+                                  "document_expects", "assignments"))
+  
+  additional_objects <- additional_objects[ ! is.na(additional_objects) ]
+  
+	if( length(additional_objects) > 0 ){ 
+        result$etc <- lda.result[ additional_objects ]
 	}
 
   # return result

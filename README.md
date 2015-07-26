@@ -26,24 +26,8 @@ Below is a demo of some of the functionality in `textmineR`
     
     dtm <- dtm[ , vocabulary ]
     
-    # construct lexical objects to conform to the 'lda' package formats
-    
-    lex <- Dtm2Docs(dtm = dtm)
-    
-    lex <- lexicalize(lex, vocab=vocabulary, sep=" ")
-    
     # fit an LDA model with some arbitrary parameters
-    model <- lda::lda.collapsed.gibbs.sampler(documents = lex, 
-                                              K = 10,
-                                              alpha=0.1,
-                                              eta=0.05,
-                                              num.iterations=500,
-                                              vocab = vocabulary)
-    
-    
-    model <- FormatRawLdaOutput(lda.result = model, 
-                                docnames = rownames(dtm),
-                                smooth = T)
+    model <- FitLdaModel(dtm = dtm, iterations = 800)
     
     names(model) # phi is P(words | topics), theta is P(topics | documents)
     
