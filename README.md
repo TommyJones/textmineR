@@ -15,19 +15,21 @@ Below is a demo of some of the functionality in `textmineR`
     
     
     # Create a document term matrix
-    dtm <- Vec2Dtm(documents)
+    dtm <- Vec2Dtm(documents, min.n.gram=1, max.n.gram=2)
     
     dim(dtm)
     
     # explore basic frequencies & curate vocabulary
-    tf <- TermDocFreq(dtm = dtm, min.ngram=1, max.ngram=2)
+    tf <- TermDocFreq(dtm = dtm)
     
     vocabulary <- tf$term[ tf$term.freq > 1 & tf$doc.freq < nrow(dtm) / 2 ]
     
     dtm <- dtm[ , vocabulary ]
     
+    dim(dtm)
+    
     # fit an LDA model with some arbitrary parameters
-    model <- FitLdaModel(dtm = dtm, iterations = 800)
+    model <- FitLdaModel(dtm = dtm, k=10, iterations = 800)
     
     names(model) # phi is P(words | topics), theta is P(topics | documents)
     
