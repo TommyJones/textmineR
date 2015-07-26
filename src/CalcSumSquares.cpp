@@ -4,17 +4,6 @@
 #define ARMA_64BIT_WORD
 using namespace Rcpp ;
 
-
-
-//' Calculate the sum of square errors for documents
-//' 
-//' @param dtm A document term matrix
-//' @param phi = a topics X terms dimensional matrix where each entry is p(term|topic)
-//' @param theta = a documents X topics dimensional matrix where each entry is p(topic|document)//' @export
-//' @description This function calculates a vector whose entries are SSE and SST, respectively. 
-//' It is desinged to work with the function CalcTopicModelR2. Generally, this function (CalcSumSquares)
-//' should is not designed to be called by itself.
-//' @export
 // [[Rcpp::export]]
 NumericVector CalcSumSquares( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta, NumericVector ybar) {
     
