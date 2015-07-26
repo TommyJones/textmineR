@@ -33,6 +33,12 @@ This is the main document term matrix creating function for \code{textmineR}.
 In most cases, all you need to do is import documents as a character vector in R and then run this function
 to get a document term matrix that is compatible with the rest of \code{textmineR}'s functionality.
 }
+\note{
+This function relies heavily on the \code{tm} and \code{RWeka} packages. N-grams are derived using the \code{RWeka} package.
+There is a confilct between \code{RWeka} and \code{parallel} (used for multithread processing on unix-like systems).
+Consequently, using n-grams (n > 1) causes construction of the DTM to be considerably slower on unix systems.
+Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
+}
 \examples{
 myvec <- c("the quick brown fox", "the slow gray fox", "look at my horse", "my horse is amazing")
 names(myvec) <- paste("doc", 1:length(myvec), sep="_")
