@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^extra_functions$
+^src/*\.o$
+^src/*\.so$
+^src/*\.dll$
+^ToDo\.numbers$
