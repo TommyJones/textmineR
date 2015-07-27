@@ -9,9 +9,9 @@ Below is a demo of some of the functionality in `textmineR`
     library(textmineR)
     
     # Load some data into the workspace and convert it to a character vector
-    data(crude)
+    data(acq)
     
-    documents <- sapply(crude, function(x) x$content)
+    documents <- sapply(acq, function(x) x$content)
     
     
     # Create a document term matrix
@@ -28,8 +28,23 @@ Below is a demo of some of the functionality in `textmineR`
     
     dim(dtm)
     
-    # fit an LDA model with some arbitrary parameters
-    model <- FitLdaModel(dtm = dtm, k=10, iterations = 800)
+    # fit some LDA models and select the best number of topics
+    k_list <- seq(5, 50, by=5)
+    
+    
+    model_list <- TmParallelApply(X = k_list, FUN = function(k){
+      m <- FitLdaModel(dtm = dtm, k = k, iterations = 500)
+      m$coherence <- apply(m$phi, function(x) ProbCoherence(topic = x, dtm = dtm, M = 5))
+      m
+    }, export=c("dtm")) # export only needed for Windows machines
+    
+    coherence_mat <- data.frame(k=sapply(models, function(x) nrow(x$phi)), 
+        coherence=sapply(models, function(x) mean(x$coherence)), stringsAsFactors=F)
+    
+    plot(coherence_mat, type="o")
+    
+    # previous runs showed that 20 topics is about right
+    model <- model_list[ coherence_mat$k == 20 ][[ 1 ]]
     
     names(model) # phi is P(words | topics), theta is P(topics | documents)
     
@@ -78,7 +93,7 @@ Below is a demo of some of the functionality in `textmineR`
     
     model$hclust <- hclust(as.dist(model$topic_linguistic_dist), "ward.D")
     
-    model$hclust$clustering <- cutree(model$hclust, k = 4)
+    model$hclust$clustering <- cutree(model$hclust, k = 6)
     
     model$hclust$labels <- paste(model$hclust$labels, model$labels[ , 1 ])
     
