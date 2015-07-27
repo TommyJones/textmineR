@@ -45,6 +45,7 @@ Below is a demo of some of the functionality in `textmineR`
     
     # select k based on maximum average coherence
     model <- model_list[ coherence_mat$coherence == max(coherence_mat$coherence) ][[ 1 ]]
+
     
     names(model) # phi is P(words | topics), theta is P(topics | documents)
     
@@ -93,6 +94,7 @@ Below is a demo of some of the functionality in `textmineR`
     model$hclust <- hclust(as.dist(model$topic_linguistic_dist), "ward.D")
     
     model$hclust$clustering <- cutree(model$hclust, k = 10)
+
     
     model$hclust$labels <- paste(model$hclust$labels, model$labels[ , 1 ])
     
