@@ -9,9 +9,9 @@ Below is a demo of some of the functionality in `textmineR`
     library(textmineR)
     
     # Load some data into the workspace and convert it to a character vector
-    data(crude)
+    data(acq)
     
-    documents <- sapply(crude, function(x) x$content)
+    documents <- sapply(acq, function(x) x$content)
     
     
     # Create a document term matrix
@@ -28,13 +28,28 @@ Below is a demo of some of the functionality in `textmineR`
     
     dim(dtm)
     
-    # fit an LDA model with some arbitrary parameters
-    model <- FitLdaModel(dtm = dtm, k=10, iterations = 800)
+    # fit some LDA models and select the best number of topics
+    k_list <- seq(5, 50, by=5)
+    
+    
+    model_list <- TmParallelApply(X = k_list, FUN = function(k){
+      m <- FitLdaModel(dtm = dtm, k = k, iterations = 500)
+      m$coherence <- apply(m$phi, 1, function(x) ProbCoherence(topic = x, dtm = dtm, M = 5))
+      m
+    }, export=c("dtm")) # export only needed for Windows machines
+    
+    coherence_mat <- data.frame(k=sapply(model_list, function(x) nrow(x$phi)), 
+                                coherence=sapply(model_list, function(x) mean(x$coherence)), stringsAsFactors=F)
+    
+    plot(coherence_mat, type="o")
+    
+    # select k based on maximum average coherence
+    model <- model_list[ coherence_mat$coherence == max(coherence_mat$coherence) ][[ 1 ]]
     
     names(model) # phi is P(words | topics), theta is P(topics | documents)
     
     # Calculate some summary statistics etc. Which is the real value-add of textmineR
-
+    
     # Get the R-squared of this model
     model$r2 <- CalcTopicModelR2(dtm = dtm, phi = model$phi, theta=model$theta)
     
@@ -73,12 +88,11 @@ Below is a demo of some of the functionality in `textmineR`
     model$num_docs <- colSums(model$assignments > 0)
     
     # cluster topics together in a dendrogram
-    
     model$topic_linguistic_dist <- HellDist(model$phi)
     
     model$hclust <- hclust(as.dist(model$topic_linguistic_dist), "ward.D")
     
-    model$hclust$clustering <- cutree(model$hclust, k = 4)
+    model$hclust$clustering <- cutree(model$hclust, k = 10)
     
     model$hclust$labels <- paste(model$hclust$labels, model$labels[ , 1 ])
     
@@ -100,4 +114,3 @@ Below is a demo of some of the functionality in `textmineR`
                                 stringsAsFactors=FALSE)
     
     View(model$summary[ order(model$hclust$clustering) , ])
-
