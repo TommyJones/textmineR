@@ -1,4 +1,7 @@
-#Convert a sparse simple triplet document term matrix (tm package) to a sparse Matrix object (Matrix package).
+# Convert a sparse simple triplet document term matrix (tm package) to a sparse 
+# Matrix object (Matrix package).
+# This function is undocumented/internal to the package and not designed to be
+# called by users.
 
 MakeSparseDTM <- function(dtm){
   # dtm is a simple triplet matrix

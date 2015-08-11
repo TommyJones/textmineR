@@ -2,21 +2,30 @@
 % Please edit documentation in R/ProbCoherence.R
 \name{ProbCoherence}
 \alias{ProbCoherence}
-\title{Probailistic Topic Coherence}
+\title{Probailistic coherence of topics}
 \usage{
 ProbCoherence(topic, dtm, M = 5, pct = FALSE)
 }
 \arguments{
-\item{topic}{A probability vector denoting a relationship between words and a topic. This may be p(word|topic) or p(topic|word)}
+\item{topic}{A probability vector denoting a relationship between words
+and a topic. This may be p(word|topic) or p(topic|word)}
 
-\item{dtm}{A document term matrix of class Matrix. Columns index words; rows index documents}
+\item{dtm}{A document term matrix of class Matrix. Columns index words;
+rows index documents}
 
-\item{M}{An integer for the number of words to be used in the calculation. Defaults to 5}
+\item{M}{An integer for the number of words to be used in the calculation.
+Defaults to 5}
 
-\item{pct}{Logical: Should the percent calculation be used? Defaults to FALSE (recommended)}
+\item{pct}{Logical: Should the percent calculation be used?
+Defaults to FALSE (recommended). This argument is deprecated.}
+}
+\value{
+Returns an object of class \code{numeric} corresponding to the
+probabilistic coherence of the input topic.
 }
 \description{
-Calculates the probabilistic coherence of a topic. This approximates semmantic coherence or human understandability.
+Calculates the probabilistic coherence of a topic. This
+approximates semmantic coherence or human understandability of a topic.
 }
 \examples{
 ProbCoherence(topic = phi[ 1 , ], dtm = mydtm, M = 6, pct = FALSE)

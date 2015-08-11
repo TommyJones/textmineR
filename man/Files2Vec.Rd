@@ -7,7 +7,10 @@
 Files2Vec(directory)
 }
 \arguments{
-\item{directory}{a path to directory containing the files you want to read into R.}
+\item{directory}{A path to directory containing the files you want to read into R.}
+}
+\value{
+Returns a character vector where each entry corresponds to a document.
 }
 \description{
 This function reads in all files in a directory ending in .txt into R.

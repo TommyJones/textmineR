@@ -8,10 +8,10 @@ Dtm2Docs(dtm)
 }
 \arguments{
 \item{dtm}{A sparse Matrix from the matrix package whose rownames correspond to documents and colnames correspond to words}
-
-\item{parallel}{Do you want to parallelize this function using snowfall? Default is FALSE}
-
-\item{cpus}{If parallel is TRUE, the number of threads to use. (Recommendation is 4, for memory's sake)}
+}
+\value{
+Returns a character vector. Each entry of this vector corresponds to the rows
+of \code{dtm}.
 }
 \description{
 This function takes a sparse matrix (DTM) as input and returns a character vector

@@ -11,10 +11,16 @@ FormatRawLdaOutput(lda.result, docnames, smooth = TRUE)
 
 \item{docnames}{A character vector giving the names of documents. This is generally rownames(dtm).}
 
-\item{smooth}{Logical. Do you want to smooth your topic proportions so that there is a positive value for each term in each topic? Defaults to TRUE}
+\item{smooth}{Logical. Do you want to smooth your topic proportions so that
+there is a positive value for each term in each topic? Defaults to TRUE}
+}
+\value{
+Returns a \code{list} with two elements: \code{phi} whose rows represent the
+distribution of words across a topic and \code{theta} whose rows represent
+the distribution of topics across a document.
 }
 \description{
-extracts outputs from LDA model estimated with "lda" package by Jonathan Chang
+extracts outputs from LDA model estimated with \code{lda} package by Jonathan Chang
 }
 \examples{
 lex <- ConvertDtm2Docs(dtm)

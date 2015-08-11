@@ -3,8 +3,9 @@
 #' @description This function takes a sparse matrix (DTM) as input and returns a character vector
 #' whose length is equal to the number of rows of the input DTM.
 #' @param dtm A sparse Matrix from the matrix package whose rownames correspond to documents and colnames correspond to words
-#' @param parallel Do you want to parallelize this function using snowfall? Default is FALSE 
-#' @param cpus If parallel is TRUE, the number of threads to use. (Recommendation is 4, for memory's sake)
+#' @return
+#' Returns a character vector. Each entry of this vector corresponds to the rows
+#' of \code{dtm}.
 #' @export
 #' @examples
 #' Dtm2Docs(dtm=mydtm)

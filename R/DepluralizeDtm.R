@@ -1,12 +1,20 @@
-#' @title Run the CorrectS function on columns of a document term matrix of class Matrix.
-#' @description Turns pluralizations of words in the columns of a document term matrix to their singular form. Then aggregates
-#' all columns that now have the same token. See example below. This function **requires** snowfall.
-#' @param dtm A document term matrix of class Matrix whose colnames are words or n-grams
-#' 
+#' @title Run the CorrectS function on columns of a document term matrix.
+#' @description Turns pluralizations of words in the columns of a document term 
+#' matrix to their singular form. Then aggregates all columns that now have the 
+#' same token. See example below. 
+#' @param dtm A document term matrix of class \code{dgCMatrix} whose colnames are tokens
+#' @return
+#' Returns a document term matrix of class \code{dgCMatrix}. The columns index
+#' the de-pluralized tokens of the input document term matrix. In other words,
+#' there will generally be fewer columns in the returned matrix than the
+#' input matrix
 #' 
 #' @export
 #' @examples
-#' myvec <- c("the quick brown fox eats chickens", "the slow gray fox eats the slow chicken", "look at my horse", "my horses are amazing")
+#' myvec <- c("the quick brown fox eats chickens", 
+#'            "the slow gray fox eats the slow chicken", 
+#'            "look at my horse", "my horses are amazing")
+#'            
 #' names(myvec) <- paste("doc", 1:length(myvec), sep="_")
 #' 
 #' dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)

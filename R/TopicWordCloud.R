@@ -1,12 +1,19 @@
 #' Word Cloud for Topics
-#' @description Takes A numeric vector whose names are the terms we wish to display. Does not return a value; plots the word cloud.
-#' @param term.freq.vec A numeric vector whose entries represent word frequency and names represent words
+#' @description Takes A numeric vector whose names are the terms we wish to 
+#' display. Does not return a value; plots the word cloud.
+#' @param term.freq.vec A numeric vector whose entries represent word frequency 
+#' and names represent words
 #' @param title A character for the title you want for your word cloud. 
-#' @param outfilepath A character for the path to save your word cloud. Do not include file name; that is created from title.
+#' @param outfilepath A character for the path to save your word cloud. Do not 
+#' include file name; that is created from title.
 #' @export
+#' @return Does not return an R object. Instead, this function saves a word 
+#' cloud to the location given by \code{paste(outfilepath, title, ".png", sep="")}
 #' @examples
 #' for( j in 1:nrow(phi)){
-#'   TopicWordCloud(term.freq.vec=phi[ j  , ], title=rownames(phi)[ j ], outfilepath="mypath/wordclouds/")
+#'   TopicWordCloud(term.freq.vec=phi[ j  , ], 
+#'                  title=rownames(phi)[ j ], 
+#'                  outfilepath="mypath/wordclouds/")
 #' }
 
 

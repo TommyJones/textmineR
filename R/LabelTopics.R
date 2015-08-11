@@ -1,9 +1,17 @@
 #' Get some topic labels using a "more probable" method of terms
 #' 
-#' @description Function calls \code{textmineR::GetProbableTerms()} with some rules to get topic labels. This function is in "super-ultra-mega alpha". 
-#' @param assignments = a documents X topics matrix similar to \code{theta}. This will work best if this matrix is sparse, with only a few non-zero topics per document.
-#' @param dtm = a document term matrix, preferably a Matrix package sparse matrix
-#' @param M = the number of n-gram labels you want to return. Defaults to 2
+#' @description Function calls \code{textmineR::GetProbableTerms()} with some 
+#' rules to get topic labels. This function is in "super-ultra-mega alpha"; use
+#' at your own risk/discretion. 
+#' @param assignments A documents by topics matrix similar to \code{theta}. 
+#' This will work best if this matrix is sparse, with only a few non-zero topics 
+#' per document.
+#' @param dtm A document term matrix of class \code{matrix} or \code{dgCMatrix}.
+#' The columns of \code{dtm} should be n-grams whose colnames have a "_" where
+#' spaces would be between the words.
+#' @param M The number of n-gram labels you want to return. Defaults to 2
+#' @return Returns a \code{matrix} whose rows correspond to topics and whose
+#' j-th column corresponds to the j-th "best" label assignment.
 #' @export
 #' @examples
 #' assignments <- t(apply(theta, 1, function(x){

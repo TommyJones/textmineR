@@ -1,7 +1,13 @@
 #' Jensen-Shannon Divergence
-#' @description This function calculates the Jensen Shannon Divergence for the rows or columns of a numeric matrix or for two numeric vectors.
+#' @description This function calculates the Jensen Shannon Divergence for the 
+#' rows or columns of a numeric matrix or for two numeric vectors.
 #' @param x A numeric matrix or numeric vector 
 #' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
+#' @return If \code{x} is a matrix, this returns an square and symmetric matrix. 
+#' The i,j entries correspond to the Hellinger Distance between the rows of \code{x} 
+#' (or the columns of \code{x} if \code{by.rows = FALSE}). If \code{x} and \code{y}
+#' are vectors, this returns a numeric scalar whose value is the Hellinger Distance
+#' between \code{x} and \code{y}.
 #' @keywords distance functions
 #' @export
 #' @examples

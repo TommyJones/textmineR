@@ -1,9 +1,16 @@
-#' Probailistic Topic Coherence
-#' @description Calculates the probabilistic coherence of a topic. This approximates semmantic coherence or human understandability.
-#' @param topic A probability vector denoting a relationship between words and a topic. This may be p(word|topic) or p(topic|word)
-#' @param dtm A document term matrix of class Matrix. Columns index words; rows index documents
-#' @param M An integer for the number of words to be used in the calculation. Defaults to 5
-#' @param pct Logical: Should the percent calculation be used? Defaults to FALSE (recommended)
+#' Probailistic coherence of topics
+#' @description Calculates the probabilistic coherence of a topic. This 
+#' approximates semmantic coherence or human understandability of a topic.
+#' @param topic A probability vector denoting a relationship between words 
+#' and a topic. This may be p(word|topic) or p(topic|word)
+#' @param dtm A document term matrix of class Matrix. Columns index words; 
+#' rows index documents
+#' @param M An integer for the number of words to be used in the calculation. 
+#' Defaults to 5
+#' @param pct Logical: Should the percent calculation be used? 
+#' Defaults to FALSE (recommended). This argument is deprecated.
+#' @return Returns an object of class \code{numeric} corresponding to the 
+#' probabilistic coherence of the input topic.
 #' @export
 #' @examples
 #' ProbCoherence(topic = phi[ 1 , ], dtm = mydtm, M = 6, pct = FALSE)

@@ -7,11 +7,18 @@
 DepluralizeDtm(dtm)
 }
 \arguments{
-\item{dtm}{A document term matrix of class Matrix whose colnames are words or n-grams}
+\item{dtm}{A document term matrix of class \code{dgCMatrix} whose colnames are tokens}
+}
+\value{
+Returns a document term matrix of class \code{dgCMatrix}. The columns index
+the de-pluralized tokens of the input document term matrix. In other words,
+there will generally be fewer columns in the returned matrix than the
+input matrix
 }
 \description{
-Turns pluralizations of words in the columns of a document term matrix to their singular form. Then aggregates
-all columns that now have the same token. See example below. This function **requires** snowfall.
+Turns pluralizations of words in the columns of a document term
+matrix to their singular form. Then aggregates all columns that now have the
+same token. See example below.
 }
 \examples{
 myvec <- c("the quick brown fox eats chickens", "the slow gray fox eats the slow chicken", "look at my horse", "my horses are amazing")

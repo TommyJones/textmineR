@@ -4,7 +4,9 @@
 #' The result is a character vector where each entry is a .txt file.
 #' The names of the resulting vector are derived from the names of the files.
 #'
-#' @param directory a path to directory containing the files you want to read into R.
+#' @param directory A path to directory containing the files you want to read into R.
+#' @return 
+#' Returns a character vector where each entry corresponds to a document.
 #' @export
 #' @examples
 #' my_text_vector <- Files2Vec("/path/to/my/data/")

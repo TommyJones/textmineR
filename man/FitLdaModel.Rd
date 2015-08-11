@@ -4,7 +4,7 @@
 \alias{FitLdaModel}
 \title{Fit a topic model using Latent Dirichlet Allocation}
 \usage{
-FitLdaModel(dtm, k, iterations, alpha = 0.1, beta = 0.05, ...)
+FitLdaModel(dtm, k, iterations, alpha = 0.1, beta = 0.05, smooth = T, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{Matrix::dgCMatrix}}
@@ -13,14 +13,25 @@ FitLdaModel(dtm, k, iterations, alpha = 0.1, beta = 0.05, ...)
 
 \item{iterations}{The number of Gibbs iterations}
 
-\item{alpha}{Dirichlet parameter for the distribution of topics over documents. Defaults to 0.1}
+\item{alpha}{Dirichlet parameter for the distribution of topics over documents.
+Defaults to 0.1}
 
-\item{beta}{Dirichlet parameter for the distribution of words over topics. Defaults to 0.05}
+\item{beta}{Dirichlet parameter for the distribution of words over topics.
+Defaults to 0.05}
+
+\item{smooth}{Logical indicating whether or not you want to smooth the
+probabilities in the rows of \code{phi} and \code{theta}.}
 
 \item{...}{Other arguments to pass to \code{lda::lda.collapsed.gibbs.sampler}.}
 }
+\value{
+Returns a list with a minumum of two objects, \code{phi} and
+\code{theta}. The rows of \code{phi} index topics and the columns index tokens.
+The rows of \code{theta} index documents and the columns index topics.
+}
 \description{
-A wrapper for \code{lda::lda.collapsed.gibbs.sampler} that returns nicely formatted objects.
+A wrapper for \code{lda::lda.collapsed.gibbs.sampler} that returns
+a nicely-formatted topic model.
 }
 \examples{
 # fit a model with the default options

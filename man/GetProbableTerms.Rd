@@ -7,19 +7,22 @@
 GetProbableTerms(docnames, dtm, p.terms = NULL)
 }
 \arguments{
-\item{docnames}{= character vector of rownames of dtm for set of documents}
+\item{docnames}{A character vector of rownames of dtm for set of documents}
 
-\item{dtm}{= a document term matrix, preferably a Matrix package sparse matrix}
+\item{dtm}{A document term matrix of class \code{matrix} or \code{dgCMatrix}.}
 
-\item{p.terms}{= if not NULL, a numeric vector representing the probabiliy of each term in the corpus whose names correspond to colnames(dtm).}
+\item{p.terms}{If not NULL (the default), a numeric vector representing the
+probabiliy of each term in the corpus whose names correspond to colnames(dtm).}
+}
+\value{
+Returns a numeric vector of the format p.terms. The entries of the vectors
+correspond to the difference in the probability of drawing a term from the
+set of documents given by docnames and the probability of drawing that term
+from the corpus overall (p.terms).
 }
 \description{
-Function extracts probable terms from a set of documents. Probable here implies more probable than in a corpus overall
-}
-\details{
-A numeric vector of the format p.terms. The entries of the vectors correspond
-     to the difference in the probability of drawing a term from the set of documents given by
-     docnames and the probability of drawing that term from the corpus overall (p.terms)
+Function extracts probable terms from a set of documents.
+Probable here implies more probable than in a corpus overall.
 }
 \examples{
 mydocs <- rownames(lda$theta)[ lda$theta[ , 5 ] >= 0.25 ] # documents with a topic proportion of .25 or higher for topic 5

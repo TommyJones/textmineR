@@ -11,16 +11,23 @@ TmParallelApply(X, FUN, cpus = detectCores(), export = NULL)
 
 \item{FUN}{A function to apply over \code{X}}
 
-\item{cpus}{Number of CPU cores to use, defaults to the value returned by \code{parallel::detectCores()}.}
+\item{cpus}{Number of CPU cores to use, defaults to the value returned by
+\code{parallel::detectCores()}.}
 
-\item{export}{A character vector of objects in the workspace to export when using a Windows machine. Defauts to \code{NULL}}
+\item{export}{A character vector of objects in the workspace to export when
+using a Windows machine. Defauts to \code{NULL}}
+}
+\value{
+This function returns a \code{list} of length \code{length(X)}.
 }
 \description{
 This function takes a vector or list and a function and applies in parallel.
 }
 \details{
-This function is used to parallelize executions in textmineR. It is necessary because of differing capabilities between Windows and Unix.
-Unix systems use \code{mclapply} from \code{package:parallel}. Windows systems use \code{sfLapply} from \code{package:snowfall}.
+This function is used to parallelize executions in textmineR. It is
+necessary because of differing capabilities between Windows and Unix.
+Unix systems use \code{mclapply} from \code{package:parallel}. Windows
+systems use \code{sfLapply} from \code{package:snowfall}.
 }
 \examples{
 x <- 1:10000

@@ -1,8 +1,13 @@
 #' Format Raw Output from lda::lda.collapsed.gibbs.sampler() 
-#' @description extracts outputs from LDA model estimated with "lda" package by Jonathan Chang
+#' @description extracts outputs from LDA model estimated with \code{lda} package by Jonathan Chang
 #' @param lda.result The list value returned by lda.collapsed.gibbs.sampler()
 #' @param docnames A character vector giving the names of documents. This is generally rownames(dtm). 
-#' @param smooth Logical. Do you want to smooth your topic proportions so that there is a positive value for each term in each topic? Defaults to TRUE
+#' @param smooth Logical. Do you want to smooth your topic proportions so that 
+#' there is a positive value for each term in each topic? Defaults to TRUE
+#' @return
+#' Returns a \code{list} with two elements: \code{phi} whose rows represent the 
+#' distribution of words across a topic and \code{theta} whose rows represent 
+#' the distribution of topics across a document. 
 #' @export
 #' @examples
 #' lex <- ConvertDtm2Docs(dtm)

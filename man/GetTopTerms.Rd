@@ -11,8 +11,12 @@ GetTopTerms(phi, M)
 
 \item{M}{An integer for the number of terms to return}
 }
+\value{
+Returns a \code{data.frame} whose columns correspond to a topic and
+whose m-th row correspond to the m-th top term from the input \code{phi}.
+}
 \description{
-Takes topics X terms matrix and returns top M terms for each topic
+Takes topics by terms matrix and returns top M terms for each topic
 }
 \examples{
 GetTopTerms(phi=my_phi, M=5)

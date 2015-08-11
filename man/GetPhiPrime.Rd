@@ -2,18 +2,24 @@
 % Please edit documentation in R/GetPhiPrime.R
 \name{GetPhiPrime}
 \alias{GetPhiPrime}
-\title{Calculate phi.prime = P(topic|word)}
+\title{Calculate a matrix whose rows represent P(topic_i|tokens)}
 \usage{
 GetPhiPrime(phi, theta)
 }
 \arguments{
-\item{phi}{= the phi matrix whose rows index topics and columns index words. The i, j entries are P(word_i | topic_j)}
+\item{phi}{= The phi matrix whose rows index topics and columns index words. The i, j entries are P(word_i | topic_j)}
 
-\item{theta}{= the theta matrix whose rows index documents and columns index topics. The i, j entries are P(topic_i | document_j)}
+\item{theta}{= The theta matrix whose rows index documents and columns index topics. The i, j entries are P(topic_i | document_j)}
+}
+\value{
+Returns a \code{matrix} whose rows correspond to topics and whose columns
+correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 }
 \description{
-This function takes a phi matrix (P(word|topic)) and a theta matrix (P(topic|document)) and
-returns phi.prime = P(topic|word). Phi.prime can be used for classifying new documents and for topic labels.
+This function takes a phi matrix (P(token|topic)) and a theta
+matrix (P(topic|document)) and returns the phi prime matrix (P(topic|token)).
+Phi prime can be used for classifying new documents and for alternative
+topic labels.
 }
 \examples{
 lda$phi.prime <- GetPhiPrime(phi=lda$phi, theta=lda$theta)

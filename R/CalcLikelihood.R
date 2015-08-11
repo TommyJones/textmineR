@@ -1,11 +1,16 @@
 #' @name CalcLikelihood
-#' @title Calculate the log likelihood of a DTM given a topic model
-#' @param dtm = the document term matrix of class Matrix
-#' @param phi = the phi matrix whose rows index topics and columns index words. The i, j entries are P(word_i | topic_j)  
-#' @param theta = the theta matrix whose rows index documents and columns index topics. The i, j entries are P(topic_i | document_j)
+#' @title Calculate the log likelihood of a document term matrix given a topic model
+#' @param dtm The document term matrix of class \code{dgCMatrix}.
+#' @param phi The phi matrix whose rows index topics and columns index words. 
+#' The i, j entries are P(word_i | topic_j)  
+#' @param theta The theta matrix whose rows index documents and columns index topics. 
+#' The i, j entries are P(topic_i | document_j)
 #' @description
-#'     This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix (P(topic|document)) and
-#'     returns a single value for the likelihood of the data given the model.
+#'     This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix 
+#'     (P(topic|document)) and returns a single value for the likelihood of the 
+#'     data given the model.     
+#' @return
+#' Returns an object of class \code{numeric} corresponding to the log likelihood. 
 #' @examples
 #'     myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
 #' @export

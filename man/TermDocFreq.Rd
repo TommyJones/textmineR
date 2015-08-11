@@ -7,7 +7,15 @@
 TermDocFreq(dtm)
 }
 \arguments{
-\item{dtm}{A document term matrix of class Matrix}
+\item{dtm}{A document term matrix of class \code{dgCMatrix}.}
+}
+\value{
+Returns a \code{data.frame} with 4 columns. The first column,
+\code{term} is a vector of token labels. The second column, \code{term.freq}
+is the count of times \code{term} appears in the entire corpus. The third
+column \code{doc.freq} is the count of the number of documents in which
+\code{term} appears. The fourth column, \code{idf} is the log-weighted
+inverse document frequency of \code{term}.
 }
 \description{
 This function takes a document term matrix as input and returns a data frame with columns for

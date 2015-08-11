@@ -3,16 +3,21 @@
 #' This uses a geometric interpretation of R-squared as the proportion of total distance 
 #' each document is from the center of all the documents that is explained by the model. 
 #'
-#' @param dtm = a documents X terms dimensional document term matrix in 
-#'  sparse format from the Matrix package or a regular R matrix. 
-#'   Will *not* work on DTMs from the tm package or simple triplet matrices from the slam package.
-#' @param phi = a topics X terms dimensional matrix where each entry is p(term|topic)
-#' @param theta = a documents X topics dimensional matrix where each entry is p(topic|document)
+#' @param dtm A documents by terms dimensional document term matrix of class
+#' \code{dgCMatrix} or of class \code{matrix}. 
+#'   
+#' @param phi A topics by terms dimensional matrix where each entry is p(term_i |topic_j)
+#' @param theta A documents by topics dimensional matrix where each entry is p(topic_j|document_d)
 #' 
-#'       
+#' @return
+#' Returns an object of class \code{numeric} representing the proportion of variability
+#' in the data that is explained by the topic model.
+#' @note
+#' Will *not* work on DTMs from the \code{tm} package or simple triplet matrices from 
+#' the \code{slam} package.     
 #' @export
 #' @examples
-#' r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta, parallel=TRUE, cpus=8)
+#' r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta)
 
 
 CalcTopicModelR2 <- function(dtm, phi, theta){

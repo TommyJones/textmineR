@@ -7,18 +7,27 @@
 TopicWordCloud(term.freq.vec, title = "", outfilepath = "")
 }
 \arguments{
-\item{term.freq.vec}{A numeric vector whose entries represent word frequency and names represent words}
+\item{term.freq.vec}{A numeric vector whose entries represent word frequency
+and names represent words}
 
 \item{title}{A character for the title you want for your word cloud.}
 
-\item{outfilepath}{A character for the path to save your word cloud. Do not include file name; that is created from title.}
+\item{outfilepath}{A character for the path to save your word cloud. Do not
+include file name; that is created from title.}
+}
+\value{
+Does not return an R object. Instead, this function saves a word
+cloud to the location given by \code{paste(outfilepath, title, ".png", sep="")}
 }
 \description{
-Takes A numeric vector whose names are the terms we wish to display. Does not return a value; plots the word cloud.
+Takes A numeric vector whose names are the terms we wish to
+display. Does not return a value; plots the word cloud.
 }
 \examples{
 for( j in 1:nrow(phi)){
-  TopicWordCloud(term.freq.vec=phi[ j  , ], title=rownames(phi)[ j ], outfilepath="mypath/wordclouds/")
+  TopicWordCloud(term.freq.vec=phi[ j  , ],
+                 title=rownames(phi)[ j ],
+                 outfilepath="mypath/wordclouds/")
 }
 }
 
