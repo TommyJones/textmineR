@@ -27,13 +27,15 @@ TmParallelApply <- function(X, FUN, cpus=detectCores(), export=NULL){
     
   }else{
     
-    sfInit(parallel = TRUE, cpus = cpus)
-    sfLibrary(textmineR)
-    if( ! is.null(export) ) sfExport(list=export)
+    cl <- makeCluster(cpus)
     
-    out <- sfLapply(x = X, fun = FUN)
+    clusterEvalQ(cl, library(textmineR))
     
-    sfStop()
+    if( ! is.null(export) ) clusterExport(varlist=export)
+    
+    out <- parLapply(x = X, fun = FUN)
+    
+    stopCluster(cl)
     
   }
   
