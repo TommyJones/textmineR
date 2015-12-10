@@ -10,7 +10,7 @@
 #' @details This function is used to parallelize executions in textmineR. It is 
 #' necessary because of differing capabilities between Windows and Unix.
 #' Unix systems use \code{mclapply} from \code{package:parallel}. Windows 
-#' systems use \code{sfLapply} from \code{package:snowfall}.
+#' systems use \code{parLapply} from \code{package:parallel}.
 #' @return This function returns a \code{list} of length \code{length(X)}.
 #' @export
 #' @examples
