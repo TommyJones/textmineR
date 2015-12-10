@@ -18,6 +18,8 @@ This function takes a sparse matrix (DTM) as input and returns a character vecto
 whose length is equal to the number of rows of the input DTM.
 }
 \examples{
+\dontrun{
 Dtm2Docs(dtm=mydtm)
+}
 }
 

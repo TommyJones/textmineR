@@ -14,28 +14,30 @@
 #' @return This function returns a \code{list} of length \code{length(X)}.
 #' @export
 #' @examples
+#' \dontrun{
 #' x <- 1:10000
 #' f <- function(y) y * y + 12
 #' result <- TmParallelApply(x, f)
-TmParallelApply <- function(X, FUN, cpus=detectCores(), export=NULL){
+#' }
+TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(), export=NULL){
   
   os <- .Platform$OS.type
   
   if(os == "unix" ){ # on unix systems use mclapply()
     
-    out <- mclapply(X = X, FUN = FUN, mc.cores = cpus)
+    out <- parallel::mclapply(X = X, FUN = FUN, mc.cores = cpus)
     
   }else{
     
-    cl <- makeCluster(cpus)
+    cl <- parallel::makeCluster(cpus)
     
-    clusterEvalQ(cl, library(textmineR))
+    parallel::clusterEvalQ(cl, library(textmineR))
     
-    if( ! is.null(export) ) clusterExport(varlist=export)
+    if( ! is.null(export) ) parallel::clusterExport(varlist=export)
     
-    out <- parLapply(x = X, fun = FUN)
+    out <- parallel::parLapply(x = X, fun = FUN)
     
-    stopCluster(cl)
+    parallel::stopCluster(cl)
     
   }
   

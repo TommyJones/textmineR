@@ -12,7 +12,9 @@
 #' @return
 #' Returns an object of class \code{numeric} corresponding to the log likelihood. 
 #' @examples
+#' \dontrun{
 #'     myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
+#' }
 #' @export
 CalcLikelihood <- function(dtm, phi, theta){
   # ensure that all inputs are sorted correctly

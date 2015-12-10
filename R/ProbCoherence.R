@@ -13,14 +13,14 @@
 #' probabilistic coherence of the input topic.
 #' @export
 #' @examples
+#' \dontrun{
 #' ProbCoherence(topic = phi[ 1 , ], dtm = mydtm, M = 6, pct = FALSE)
+#' }
 
 ProbCoherence <- function( topic, dtm, M=5, pct=FALSE){
 
 ## TODO: consider changing probability calculations from document frequency to term frequency
-    
-  require(Matrix)
-  
+      
   # ordered vector of most probable M terms given a topic
   terms <- names(topic)[ order(topic, decreasing=TRUE ) ][ 1:M ]
   

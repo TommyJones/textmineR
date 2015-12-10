@@ -34,10 +34,12 @@ A wrapper for \code{lda::lda.collapsed.gibbs.sampler} that returns
 a nicely-formatted topic model.
 }
 \examples{
+\dontrun{
 # fit a model with the default options
 model <- FitLdaModel(dtm = mydtm, iterations = 2000)
 
 # include likelihoods
 model <- FitLdaModel(dtm = mydtm, iterations = 2000, compute.log.likelihood = T)
+}
 }
 

@@ -3,6 +3,7 @@
 #' rows or columns of a numeric matrix or for two numeric vectors.
 #' @param x A numeric matrix or numeric vector 
 #' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
+#' @param by.rows Logical. If \code{x} is a matrix, should distances be calculated by rows?
 #' @return If \code{x} is a matrix, this returns an square and symmetric matrix. 
 #' The i,j entries correspond to the Hellinger Distance between the rows of \code{x} 
 #' (or the columns of \code{x} if \code{by.rows = FALSE}). If \code{x} and \code{y}

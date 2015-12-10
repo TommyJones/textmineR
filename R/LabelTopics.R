@@ -14,12 +14,14 @@
 #' j-th column corresponds to the j-th "best" label assignment.
 #' @export
 #' @examples
+#' \dontrun{
 #' assignments <- t(apply(theta, 1, function(x){
 #'   x[ x < 0.05 ] <- 0
 #'   x / sum(x)
 #' }))
 #' 
 #' labels <- LabelTopics(assignments = assignments, dtm = dtm, M = 2)
+#' }
 
 LabelTopics <- function(assignments, dtm, M=2){
   # figure out a threshold

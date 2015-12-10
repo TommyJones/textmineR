@@ -18,6 +18,8 @@ The result is a character vector where each entry is a .txt file.
 The names of the resulting vector are derived from the names of the files.
 }
 \examples{
+\dontrun{
 my_text_vector <- Files2Vec("/path/to/my/data/")
+}
 }
 

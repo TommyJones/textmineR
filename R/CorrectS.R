@@ -21,11 +21,7 @@
 #'
 #' CorrectS(term.vec=myvec)
 #'
-#'       original   adjusted changed
-#' 1       banana     banana   FALSE
-#' 2      bananas     banana    TRUE
-#' 3   scientists  scientist    TRUE
-#' 4 large_armies large_army    TRUE
+
 
 CorrectS <- function(term.vec){
 	# makes some adjustments to pluralization

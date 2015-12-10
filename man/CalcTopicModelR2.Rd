@@ -28,6 +28,8 @@ Will *not* work on DTMs from the \code{tm} package or simple triplet matrices fr
 the \code{slam} package.
 }
 \examples{
+\dontrun{
 r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta)
+}
 }
 

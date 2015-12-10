@@ -10,6 +10,8 @@ JSD(x, y = NULL, by.rows = TRUE)
 \item{x}{A numeric matrix or numeric vector}
 
 \item{y}{A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.}
+
+\item{by.rows}{Logical. If \code{x} is a matrix, should distances be calculated by rows?}
 }
 \value{
 If \code{x} is a matrix, this returns an square and symmetric matrix.

@@ -40,18 +40,12 @@ Consequently, using n-grams (n > 1) causes construction of the DTM to be conside
 Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
 }
 \examples{
+\dontrun{
 myvec <- c("the quick brown fox", "the slow gray fox", "look at my horse", "my horse is amazing")
 names(myvec) <- paste("doc", 1:length(myvec), sep="_")
 
 dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)
 
-dtm
-
-4 x 7 sparse Matrix of class "dgCMatrix"
-amazing brown fox gray horse quick slow
-doc_1       .     1   1    .     .     1    .
-doc_2       .     .   1    1     .     .    1
-doc_3       .     .   .    .     1     .    .
-doc_4       1     .   .    .     1     .    .
+}
 }
 

@@ -5,11 +5,11 @@
 
 MakeSparseDTM <- function(dtm){
   # dtm is a simple triplet matrix
-  dtm.sparse <- sparseMatrix(i=dtm$i, j=dtm$j, x=dtm$v, 
-                             dims=c(dtm$nrow, dtm$ncol))
+  dtm.sparse <- Matrix::sparseMatrix(i=dtm$i, j=dtm$j, x=dtm$v, 
+                                     dims=c(dtm$nrow, dtm$ncol))
   
-  rownames(dtm.sparse) <- Docs(dtm)
-  colnames(dtm.sparse) <- Terms(dtm)
+  rownames(dtm.sparse) <- tm::Docs(dtm)
+  colnames(dtm.sparse) <- tm::Terms(dtm)
   
   return(dtm.sparse)
 }

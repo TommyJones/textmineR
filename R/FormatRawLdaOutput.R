@@ -10,10 +10,14 @@
 #' the distribution of topics across a document. 
 #' @export
 #' @examples
+#' \dontrun{
 #' lex <- ConvertDtm2Docs(dtm)
 #' lex <- lexicalize(lex, vocab=colnames(dtm))
-#' lda <- lda.collapsed.gibbs.sampler(documents = lex, K = 100, vocab = colnames(dtm), num.iterations=2000, alpha=0.1, eta=0.05)
+#' lda <- lda.collapsed.gibbs.sampler(documents = lex, K = 100, 
+#'                                    vocab = colnames(dtm), num.iterations=2000, 
+#'                                    alpha=0.1, eta=0.05)
 #' lda <- FormatRawLdaOutput(lda.result=lda, docnames=rownames(dtm), smooth=TRUE)
+#' }
 
 
 FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
@@ -43,7 +47,8 @@ FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
   # pull theta and phi into the result
 	result <- list(theta=theta, phi=phi)
   
-  # capture document_expects, if it exists (document_expects is over multiple runs, document_sums is over a single run)
+  # capture document_expects, if it exists 
+	# (document_expects is over multiple runs, document_sums is over a single run)
   if(! is.null(dim(lda.result$document_expects))){
     theta_expects <- t(lda.result$document_expects)
     

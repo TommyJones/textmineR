@@ -23,9 +23,13 @@ the distribution of topics across a document.
 extracts outputs from LDA model estimated with \code{lda} package by Jonathan Chang
 }
 \examples{
+\dontrun{
 lex <- ConvertDtm2Docs(dtm)
 lex <- lexicalize(lex, vocab=colnames(dtm))
-lda <- lda.collapsed.gibbs.sampler(documents = lex, K = 100, vocab = colnames(dtm), num.iterations=2000, alpha=0.1, eta=0.05)
+lda <- lda.collapsed.gibbs.sampler(documents = lex, K = 100,
+                                   vocab = colnames(dtm), num.iterations=2000,
+                                   alpha=0.1, eta=0.05)
 lda <- FormatRawLdaOutput(lda.result=lda, docnames=rownames(dtm), smooth=TRUE)
+}
 }
 

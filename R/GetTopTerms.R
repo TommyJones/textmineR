@@ -7,7 +7,9 @@
 #' whose m-th row correspond to the m-th top term from the input \code{phi}.
 #' @export
 #' @examples
+#' \dontrun{
 #' GetTopTerms(phi=my_phi, M=5)
+#' }
 
 GetTopTerms <- function(phi, M){
   

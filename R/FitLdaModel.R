@@ -16,11 +16,13 @@
 #' The rows of \code{theta} index documents and the columns index topics.
 #' @export
 #' @examples
+#' \dontrun{
 #' # fit a model with the default options
 #' model <- FitLdaModel(dtm = mydtm, iterations = 2000)
 #' 
 #' # include likelihoods
 #' model <- FitLdaModel(dtm = mydtm, iterations = 2000, compute.log.likelihood = T)
+#' }
 
 FitLdaModel <- function(dtm, k, iterations, alpha = 0.1, beta = 0.05, 
                         smooth = T, ...){
@@ -29,15 +31,15 @@ FitLdaModel <- function(dtm, k, iterations, alpha = 0.1, beta = 0.05,
   
   lex <- Dtm2Docs(dtm = dtm)
   
-  lex <- lexicalize(lex, sep=" ", vocab=vocab)
+  lex <- lda::lexicalize(lex, sep=" ", vocab=vocab)
   
-  model <- lda.collapsed.gibbs.sampler(documents = lex, 
-                                       K = k, 
-                                       vocab = vocab, 
-                                       num.iterations = iterations, 
-                                       alpha = alpha, 
-                                       eta = beta,
-                                       ...)
+  model <- lda::lda.collapsed.gibbs.sampler(documents = lex, 
+                                            K = k, 
+                                            vocab = vocab, 
+                                            num.iterations = iterations, 
+                                            alpha = alpha, 
+                                            eta = beta,
+                                            ...)
   
   model <- FormatRawLdaOutput(lda.result = model, 
                               docnames = rownames(dtm), 

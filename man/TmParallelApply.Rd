@@ -4,7 +4,7 @@
 \alias{TmParallelApply}
 \title{An OS-independent parallel version of \code{lapply}}
 \usage{
-TmParallelApply(X, FUN, cpus = detectCores(), export = NULL)
+TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL)
 }
 \arguments{
 \item{X}{A vector or list over which to apply \code{FUN}}
@@ -30,8 +30,10 @@ Unix systems use \code{mclapply} from \code{package:parallel}. Windows
 systems use \code{parLapply} from \code{package:parallel}.
 }
 \examples{
+\dontrun{
 x <- 1:10000
 f <- function(y) y * y + 12
 result <- TmParallelApply(x, f)
+}
 }
 

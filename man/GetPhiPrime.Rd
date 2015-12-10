@@ -22,6 +22,8 @@ Phi prime can be used for classifying new documents and for alternative
 topic labels.
 }
 \examples{
-lda$phi.prime <- GetPhiPrime(phi=lda$phi, theta=lda$theta)
+\dontrun{
+phi.prime <- GetPhiPrime(phi=lda$phi, theta=lda$theta)
+}
 }
 

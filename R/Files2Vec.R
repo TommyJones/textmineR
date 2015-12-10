@@ -9,8 +9,9 @@
 #' Returns a character vector where each entry corresponds to a document.
 #' @export
 #' @examples
+#' \dontrun{
 #' my_text_vector <- Files2Vec("/path/to/my/data/")
-#'
+#' }
 
 
 Files2Vec <- function(directory){

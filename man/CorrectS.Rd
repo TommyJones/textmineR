@@ -34,11 +34,5 @@ its results manually. It tends to fail spectacularly for words ending in "es".
 myvec <- c("banana", "bananas", "scientists", "large_armies")
 
 CorrectS(term.vec=myvec)
-
-      original   adjusted changed
-1       banana     banana   FALSE
-2      bananas     banana    TRUE
-3   scientists  scientist    TRUE
-4 large_armies large_army    TRUE
 }
 

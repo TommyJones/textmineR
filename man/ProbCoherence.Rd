@@ -28,6 +28,8 @@ Calculates the probabilistic coherence of a topic. This
 approximates semmantic coherence or human understandability of a topic.
 }
 \examples{
+\dontrun{
 ProbCoherence(topic = phi[ 1 , ], dtm = mydtm, M = 6, pct = FALSE)
+}
 }
 

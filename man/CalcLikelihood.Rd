@@ -24,6 +24,8 @@ This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix
     data given the model.
 }
 \examples{
-myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
+\dontrun{
+    myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
+}
 }
 

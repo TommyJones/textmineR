@@ -8,7 +8,9 @@
 #' of \code{dtm}.
 #' @export
 #' @examples
+#' \dontrun{
 #' Dtm2Docs(dtm=mydtm)
+#' }
 Dtm2Docs <- function(dtm){
   
   # do in parallel in batches of about 3000 if we have more than 3000 docs

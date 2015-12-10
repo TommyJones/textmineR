@@ -24,10 +24,12 @@ Takes A numeric vector whose names are the terms we wish to
 display. Does not return a value; plots the word cloud.
 }
 \examples{
+\dontrun{
 for( j in 1:nrow(phi)){
   TopicWordCloud(term.freq.vec=phi[ j  , ],
                  title=rownames(phi)[ j ],
                  outfilepath="mypath/wordclouds/")
+}
 }
 }
 

@@ -10,24 +10,33 @@
 #' @return Does not return an R object. Instead, this function saves a word 
 #' cloud to the location given by \code{paste(outfilepath, title, ".png", sep="")}
 #' @examples
+#' \dontrun{
 #' for( j in 1:nrow(phi)){
 #'   TopicWordCloud(term.freq.vec=phi[ j  , ], 
 #'                  title=rownames(phi)[ j ], 
 #'                  outfilepath="mypath/wordclouds/")
 #' }
+#' }
 
 
 TopicWordCloud <- function(term.freq.vec, title="", outfilepath=""){
     
-    df <- data.frame(term=names(term.freq.vec)[ term.freq.vec > 0],  freq=term.freq.vec[ term.freq.vec > 0])
+    df <- data.frame(term=names(term.freq.vec)[ term.freq.vec > 0],  
+                     freq=term.freq.vec[ term.freq.vec > 0])
     
     df$freq <- round(df$freq/max(df$freq) * 100)
     
-    col <- c("#313695", rev(brewer.pal(4, "RdYlBu")))
+    col <- c("#313695", rev(RColorBrewer::brewer.pal(4, "RdYlBu")))
     
-    png( paste(outfilepath, title, ".png", sep=""), width=8, height=8, units='in', res=300)
+    png( paste(outfilepath, title, ".png", sep=""), width=8, 
+         height=8, units='in', res=300)
+    
         par(bg="#F8F8FF")
-        wordcloud(words=df$term, freq=df$freq, scale=c(4, 0.5), min.freq=1, max.words=100, colors=col, random.order=FALSE)
+        
+        wordcloud::wordcloud(words=df$term, freq=df$freq, scale=c(4, 0.5), 
+                             min.freq=1, max.words=100, 
+                             colors=col, random.order=FALSE)
+        
         title(main=title, line=-2)
     dev.off()
 }

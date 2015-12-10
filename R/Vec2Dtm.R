@@ -22,20 +22,13 @@
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' myvec <- c("the quick brown fox", "the slow gray fox", "look at my horse", "my horse is amazing")
 #' names(myvec) <- paste("doc", 1:length(myvec), sep="_")
 #' 
 #' dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)
 #' 
-#' dtm
-#' 
-#' 4 x 7 sparse Matrix of class "dgCMatrix"
-      #' amazing brown fox gray horse quick slow
-#' doc_1       .     1   1    .     .     1    .
-#' doc_2       .     .   1    1     .     .    1
-#' doc_3       .     .   .    .     1     .    .
-#' doc_4       1     .   .    .     1     .    .
-#' 
+#' }
 
 Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE, 
                     custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, 
@@ -45,10 +38,10 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE,
 	
 #   # set an option that normally causes this to crash on a Mac
 #   if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
-  options(mc.cores = detectCores())
+  options(mc.cores = parallel::detectCores())
   
 	if(remove.stopwords){
-		stopwords <- unique(c(stopwords("english"), stopwords("SMART")))
+		stopwords <- unique(c(tm::stopwords("english"), tm::stopwords("SMART")))
 	}else{
 		stopwords <- c()
 	}
@@ -71,22 +64,23 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE,
 
 	vec <- gsub("\\s+", " ", vec) # remove extra spaces
 	
-	corp <- Corpus(VectorSource(vec))
+	corp <- tm::Corpus(tm::VectorSource(vec))
     
     
     if( remove.stopwords | ! is.null(custom.stopwords)){
-        corp <- tm_map(x=corp, removeWords, stopwords)
+        corp <- tm::tm_map(x=corp, tm::removeWords, stopwords)
     }
 	
 	if( stem.document ){
-		corp <- tm_map(x=corp, stemDocument)
+		corp <- tm::tm_map(x=corp, tm::stemDocument)
 	}
 	
 	if(max.n.gram == 1){
-		dtm <- DocumentTermMatrix(corp)
+		dtm <- tm::DocumentTermMatrix(corp)
 	}else{
     options(mc.cores=1)
-		dtm <- DocumentTermMatrix(corp, control=list(tokenize=NgramTokenizer(min=min.n.gram, max=max.n.gram)))
+		dtm <- tm::DocumentTermMatrix(corp, control=list(
+		  tokenize=NgramTokenizer(min=min.n.gram, max=max.n.gram)))
 	}
 	
 	dtm <- MakeSparseDTM(dtm=dtm)

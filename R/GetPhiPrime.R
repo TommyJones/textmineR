@@ -12,8 +12,9 @@
 #' correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 #' @export
 #' @examples
-#' lda$phi.prime <- GetPhiPrime(phi=lda$phi, theta=lda$theta)
-#' 
+#' \dontrun{
+#' phi.prime <- GetPhiPrime(phi=lda$phi, theta=lda$theta)
+#' }
 
 
 GetPhiPrime <- function(phi, theta){

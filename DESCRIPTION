@@ -2,28 +2,29 @@ Package: textmineR
 Title: Functions for text mining and topic modeling
 Version: 1.5.0
 Date: 2015-07-26
-Authors: "Thomas W. Jones <jones.thos.w@gmail.com>"
+Author: "Thomas W. Jones <jones.thos.w@gmail.com>"
 Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>
 Description: This package is an aid for text mining in R. Also, it implements 
     various functions related to topic modeling. It is designed to work with
 		the "lda" package by J. Chang. 
 Depends:
-    R (>= 2.15),
+    R (>= 3.0.2)
+Imports:
     lda,
     parallel,
     Matrix,
-    slam,
-    RcppArmadillo,
     tm,
-    RWeka
-License: LGPL
-LazyData: true
-Suggests:
-    wordcloud
-LinkingTo: Rcpp,
-    RcppArmadillo,
-    RcppProgress
-Imports:
+    RWeka,
+    wordcloud,
+    RColorBrewer,
     Rcpp,
     RcppArmadillo,
     RcppProgress
+License: GPL (>= 2)
+LazyData: true
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo,
+    RcppProgress
+
+

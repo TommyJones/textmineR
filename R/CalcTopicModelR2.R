@@ -17,7 +17,9 @@
 #' the \code{slam} package.     
 #' @export
 #' @examples
+#' \dontrun{
 #' r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta)
+#' }
 
 
 CalcTopicModelR2 <- function(dtm, phi, theta){
