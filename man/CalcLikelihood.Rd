@@ -7,7 +7,7 @@
 CalcLikelihood(dtm, phi, theta)
 }
 \arguments{
-\item{dtm}{The document term matrix of class dgCMatrix}
+\item{dtm}{The document term matrix of class \code{dgCMatrix}.}
 
 \item{phi}{The phi matrix whose rows index topics and columns index words.
 The i, j entries are P(word_i | topic_j)}
@@ -16,11 +16,12 @@ The i, j entries are P(word_i | topic_j)}
 The i, j entries are P(topic_i | document_j)}
 }
 \value{
-Returns an object of class numeric corresponding to the log likelihood.
+Returns an object of class \code{numeric} corresponding to the log likelihood.
 }
 \description{
-This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix (P(topic|document)) and
-    returns a single value for the likelihood of the data given the model.
+This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix
+    (P(topic|document)) and returns a single value for the likelihood of the
+    data given the model.
 }
 \examples{
 myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)

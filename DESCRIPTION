@@ -1,6 +1,6 @@
 Package: textmineR
 Title: Functions for text mining and topic modeling
-Version: 1.5
+Version: 1.5.0
 Date: 2015-07-26
 Authors: "Thomas W. Jones <jones.thos.w@gmail.com>"
 Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>

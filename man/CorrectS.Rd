@@ -16,8 +16,8 @@ version of the words in \code{term.vec}. The third column is a logical, indicati
 whether or not the word in \code{term.vec} was changed.
 }
 \description{
-This function takes a character vector as input and removes some forms of pluralization
-from the ends of the words.
+This function takes a character vector as input and removes some
+forms of pluralization from the ends of the words.
 }
 \details{
 The entries of the vector should be single words or short n-grams

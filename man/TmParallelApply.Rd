@@ -27,7 +27,7 @@ This function takes a vector or list and a function and applies in parallel.
 This function is used to parallelize executions in textmineR. It is
 necessary because of differing capabilities between Windows and Unix.
 Unix systems use \code{mclapply} from \code{package:parallel}. Windows
-systems use \code{sfLapply} from \code{package:snowfall}.
+systems use \code{parLapply} from \code{package:parallel}.
 }
 \examples{
 x <- 1:10000

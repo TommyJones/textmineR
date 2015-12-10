@@ -8,14 +8,14 @@ CalcTopicModelR2(dtm, phi, theta)
 }
 \arguments{
 \item{dtm}{A documents by terms dimensional document term matrix of class
- dgCMatrix or of class matrix.}
+\code{dgCMatrix} or of class \code{matrix}.}
 
 \item{phi}{A topics by terms dimensional matrix where each entry is p(term_i |topic_j)}
 
 \item{theta}{A documents by topics dimensional matrix where each entry is p(topic_j|document_d)}
 }
 \value{
-Returns an object of class numeric representing the proportion of variability
+Returns an object of class \code{numeric} representing the proportion of variability
 in the data that is explained by the topic model.
 }
 \description{
@@ -24,9 +24,10 @@ This uses a geometric interpretation of R-squared as the proportion of total dis
 each document is from the center of all the documents that is explained by the model.
 }
 \note{
-Will *not* work on DTMs from the tm package or simple triplet matrices from the slam package.
+Will *not* work on DTMs from the \code{tm} package or simple triplet matrices from
+the \code{slam} package.
 }
 \examples{
-r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta, parallel=TRUE, cpus=8)
+r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta)
 }
 
