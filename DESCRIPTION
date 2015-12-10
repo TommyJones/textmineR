@@ -1,30 +1,25 @@
 Package: textmineR
-Title: Functions for topic modeling and other text mining
+Title: Functions for text mining and topic modeling
 Version: 1.5
 Date: 2015-07-26
 Authors: "Thomas W. Jones <jones.thos.w@gmail.com>"
 Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>
-Description: This package implements various functions related to 
-    latent Dirichlet allocation (LDA). It is designed to work with
+Description: This package is an aid for text mining in R. Also, it implements 
+    various functions related to topic modeling. It is designed to work with
 		the "lda" package by J. Chang. 
 Depends:
     R (>= 2.15),
     lda,
-    snowfall,
     parallel,
-    wordcloud,
     Matrix,
     slam,
     RcppArmadillo,
     tm,
-    RWeka,
-    SnowballC
+    RWeka
 License: LGPL
 LazyData: true
 Suggests:
-    reshape2,
-    ggplot2 (>= 0.9.1),
-    penalized
+    wordcloud
 LinkingTo: Rcpp,
     RcppArmadillo,
     RcppProgress
