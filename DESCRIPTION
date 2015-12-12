@@ -20,7 +20,7 @@ Imports:
     Rcpp,
     RcppArmadillo,
     RcppProgress
-License: GPL (>= 2)
+License: GPL (>= 3)
 LazyData: true
 LinkingTo: 
     Rcpp,
