@@ -5,3 +5,5 @@
 ^src/*\.so$
 ^src/*\.dll$
 ^ToDo\.numbers$
+^cran-comments.md$
+^\.gitignore$
