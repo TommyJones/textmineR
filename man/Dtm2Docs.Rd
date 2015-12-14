@@ -7,7 +7,8 @@
 Dtm2Docs(dtm)
 }
 \arguments{
-\item{dtm}{A sparse Matrix from the matrix package whose rownames correspond to documents and colnames correspond to words}
+\item{dtm}{A sparse Matrix from the matrix package whose rownames correspond
+to documents and colnames correspond to words}
 }
 \value{
 Returns a character vector. Each entry of this vector corresponds to the rows

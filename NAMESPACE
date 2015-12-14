@@ -1,3 +1,5 @@
 useDynLib(textmineR)
 exportPattern("^[[:alpha:]]+")
-importFrom(Rcpp, evalCpp)
+import(Rcpp)
+import(RcppArmadillo)
+import(RcppProgress)
