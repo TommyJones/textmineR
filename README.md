@@ -7,6 +7,7 @@ Below is a demo of some of the functionality in `textmineR`
 
 
     library(textmineR)
+    library(tm)
     
     # Load some data into the workspace and convert it to a character vector
     data(acq)

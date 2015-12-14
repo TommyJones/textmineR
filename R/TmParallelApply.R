@@ -33,9 +33,9 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(), export=NULL){
     
     parallel::clusterEvalQ(cl, library(textmineR))
     
-    if( ! is.null(export) ) parallel::clusterExport(varlist=export)
+    if( ! is.null(export) ) parallel::clusterExport(cl, varlist=export)
     
-    out <- parallel::parLapply(x = X, fun = FUN)
+    out <- parallel::parLapply(cl , X = X, fun = FUN)
     
     parallel::stopCluster(cl)
     
