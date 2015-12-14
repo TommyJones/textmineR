@@ -15,8 +15,6 @@ Imports:
     parallel,
     tm,
     RWeka,
-    wordcloud,
-    RColorBrewer,
     Rcpp,
     RcppArmadillo,
     RcppProgress
