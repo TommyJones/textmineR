@@ -8,11 +8,11 @@ Description: This package is an aid for text mining in R. Also, it implements
     various functions related to topic modeling. It is designed to work with
 		the "lda" package by J. Chang. 
 Depends:
-    R (>= 3.0.2)
+    R (>= 3.0.2),
+    Matrix
 Imports:
     lda,
     parallel,
-    Matrix,
     tm,
     RWeka,
     wordcloud,
