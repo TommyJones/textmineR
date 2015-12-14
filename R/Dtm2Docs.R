@@ -2,7 +2,8 @@
 #' 
 #' @description This function takes a sparse matrix (DTM) as input and returns a character vector
 #' whose length is equal to the number of rows of the input DTM.
-#' @param dtm A sparse Matrix from the matrix package whose rownames correspond to documents and colnames correspond to words
+#' @param dtm A sparse Matrix from the matrix package whose rownames correspond 
+#' to documents and colnames correspond to words
 #' @return
 #' Returns a character vector. Each entry of this vector corresponds to the rows
 #' of \code{dtm}.
