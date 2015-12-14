@@ -58,7 +58,7 @@ DepluralizeDtm <- function(dtm){
     # put back together into a sparse matrix
     temp <- TmParallelApply(X = temp, FUN=function(x) Matrix::t(x))
     
-    temp <- RecursiveRbind(matrix_list = temp)
+    temp <- .RecursiveRbind(matrix_list = temp)
     
     temp <- Matrix::t(temp)
     

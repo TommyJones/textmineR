@@ -2,7 +2,7 @@
 # This is used for combining a list into a large Matrix.
 # This function is undocumented/internal to the package and not designed to be
 # called by users.
-RecursiveRbind <- function(matrix_list){
+.RecursiveRbind <- function(matrix_list){
   
   if(length(matrix_list) <= 100){
     
