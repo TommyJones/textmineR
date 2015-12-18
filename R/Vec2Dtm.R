@@ -5,7 +5,7 @@
 #' 
 #' @param vec A character vector of documents. Punctuation etc. is allowed. names(vec) should be names of your documents.
 #' @param min.n.gram The minimum size of n for creating n-grams. (Defaults to 1)
-#' @param max.n.gram The maximum size of n for creating n-grams. (Defaults to 2. Numbers greater than 3 are discouraged due to risk of overfitting.)
+#' @param max.n.gram The maximum size of n for creating n-grams. (Defaults to 1. Numbers greater than 3 are discouraged due to risk of overfitting.)
 #' @param remove.stopwords Do you want to remove standard stopwords from your documents? (Defaults to TRUE)
 #' @param custom.stopwords If not NULL (the default) a character vector of additional stopwords to remove from your corpus. Note: it is generally faster to
 #' remove additional stopwords by subsetting the columns of a DTM post-hoc. This is to be used when you want these words removed before creatign the DTM.
