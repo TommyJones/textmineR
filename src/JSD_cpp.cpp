@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <math.h>
+#include <cmath>
 using namespace Rcpp;
 
 // Below is a function for calculating JSD in C++
