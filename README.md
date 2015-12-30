@@ -1,19 +1,18 @@
 # textmineR
-Text mining functions, complimentary to J. Chang's lda package
+Functions for Text Mining and Topic Modelin
 
-This package implements various functions related to latent Dirichlet allocation (LDA). It is designed to work with the "lda" package by J. Chang.
-
+An aid for text mining in R, with a syntax that
+    is more familiar to experienced R users. Also, implements various functions
+    related to topic modeling. It works well with with the "lda" package by J.
+    Chang.
+    
 Below is a demo of some of the functionality in `textmineR`
 
 
     library(textmineR)
-    library(tm)
-    
+
     # Load some data into the workspace and convert it to a character vector
-    data(acq)
-    
-    documents <- sapply(acq, function(x) x$content)
-    
+    data(acq2)
     
     # Create a document term matrix
     dtm <- Vec2Dtm(documents, min.n.gram=1, max.n.gram=2)
@@ -117,3 +116,4 @@ Below is a demo of some of the functionality in `textmineR`
                                 stringsAsFactors=FALSE)
     
     View(model$summary[ order(model$hclust$clustering) , ])
+    

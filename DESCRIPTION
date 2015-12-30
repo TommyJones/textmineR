@@ -17,7 +17,6 @@ Imports:
     tm,
     RWeka,
     Rcpp,
-    RcppArmadillo,
     RcppProgress
 License: GPL (>= 3)
 LazyData: true
