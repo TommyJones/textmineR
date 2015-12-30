@@ -1,5 +1,14 @@
 
-Note that this is a first-time submission of textmineR.
+Note that this is a second submission of textmineR. I've addressed the comments
+I received in the following ways:
+
+I have restructured most example code so it can be checked as part of the
+submission process. I did this by creating some data that the examples can run
+off of, without throwing the check error about parallel processes.
+
+I have removed RcppArmadillo from the imports. (I was 
+incorrect that this removal caused an error. The error I was thinking of was 
+from another source.)
 
 ### Test environments
 * local OS X install, R 3.2.3
@@ -8,10 +17,8 @@ Note that this is a first-time submission of textmineR.
 
 ### R CMD check results
 There were no ERRORs or WARNINGs. 
-There are two NOTEs.
+There is one NOTE.
   - This is a first-time submission
-  - Several C++ functions depend on an object from RcppArmadillo. Moving it from 
-    the imports field breaks these functions when called.
 
 ### Downstream dependencies
 There are no downstream dependencies. This is a first-time submission of textmineR.
