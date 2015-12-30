@@ -1,14 +1,16 @@
 
-Note that this is a second submission of textmineR. I've addressed the comments
-I received in the following ways:
+### Resubmission
+This is a resubmission. In this version I have
 
-I have restructured most example code so it can be checked as part of the
-submission process. I did this by creating some data that the examples can run
-off of, without throwing the check error about parallel processes.
+* Replaced the C header "math.h" with the preferred "cmath"
+* Explicitly cast integers as double before performing sqrt
+* Explicitly declared log and sqrt as coming from the std library
 
-I have removed RcppArmadillo from the imports. (I was 
-incorrect that this removal caused an error. The error I was thinking of was 
-from another source.)
+In the previous resubmission(s) I have
+
+* Restructured most example code so that it can be checked explicitly
+* Removed RcppArmadillo from imports
+
 
 ### Test environments
 * local OS X install, R 3.2.3
