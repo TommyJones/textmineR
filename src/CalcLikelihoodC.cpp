@@ -30,7 +30,7 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
        for( int nd = 0; nd < n; nd++ ){
            double ndiff = double(n - nd);
            
-           a = a + log( ndiff );
+           a = a + std::log( ndiff );
            
         }
         
@@ -47,7 +47,7 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
                
            }
            
-           b = b + dtm( d , v) * log(p_word); 
+           b = b + dtm( d , v) * std::log(p_word); 
            
        }
        
@@ -60,7 +60,7 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
            
            for( int j = 0; j < x_dv; j++){
                
-               c = c + log(x_dv - j);
+               c = c + std::log(x_dv - j);
                
            }
        }

@@ -29,10 +29,10 @@ double Hellinger_cpp(NumericVector p, NumericVector q){
     double result = 0.0;
     
     for( int j = 0; j < n; j++ ){
-      result = result + (sqrt(p2[ j ]) - sqrt(q2[ j ])) * (sqrt(p2[ j ]) - sqrt(q2[ j ]));
+      result = result + (std::sqrt(p2[ j ]) - std::sqrt(q2[ j ])) * (std::sqrt(p2[ j ]) - std::sqrt(q2[ j ]));
     }
     
-    result = sqrt(0.5) * sqrt(result);
+    result = std::sqrt(0.5) * std::sqrt(result);
   
   return result;
 }

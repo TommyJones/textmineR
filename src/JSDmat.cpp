@@ -51,8 +51,8 @@ NumericMatrix JSDmat(NumericMatrix A){
         double kl_qm = 0;
         
         for( int i = 0; i < cols; ++i ){
-          kl_pm = kl_pm + log(p[ i ] / m[ i ]) * p[ i ];
-          kl_qm = kl_qm + log(q[ i ] / m[ i ]) * q[ i ];
+          kl_pm = kl_pm + std::log(p[ i ] / m[ i ]) * p[ i ];
+          kl_qm = kl_qm + std::log(q[ i ] / m[ i ]) * q[ i ];
         }
         
         answer(j , k) = 0.5 * (kl_pm + kl_qm);

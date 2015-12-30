@@ -35,8 +35,8 @@ double JSD_cpp(NumericVector p, NumericVector q) {
     
     
     for( int j = 0; j < n; ++j ){
-        kl_pm = kl_pm + log(p2[ j ] / m[ j ]) * p2[ j ];
-        kl_qm = kl_qm + log(q2[ j ] / m[ j ]) * q2[ j ];
+        kl_pm = kl_pm + std::log(p2[ j ] / m[ j ]) * p2[ j ];
+        kl_qm = kl_qm + std::log(q2[ j ] / m[ j ]) * q2[ j ];
     }
     
     // get the final JSD result
