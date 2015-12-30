@@ -9,9 +9,17 @@
 #' of \code{dtm}.
 #' @export
 #' @examples
-#' \dontrun{
-#' Dtm2Docs(dtm=mydtm)
-#' }
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # see the original documents
+#' documents[ 1:3 ]
+#' 
+#' # see the new documents re-structured from the DTM
+#' new_docs <- Dtm2Docs(dtm=dtm)
+#' 
+#' new_docs[ 1:3 ]
+#' 
 Dtm2Docs <- function(dtm){
   
   # do in parallel in batches of about 3000 if we have more than 3000 docs

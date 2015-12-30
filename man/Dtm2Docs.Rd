@@ -19,8 +19,16 @@ This function takes a sparse matrix (DTM) as input and returns a character vecto
 whose length is equal to the number of rows of the input DTM.
 }
 \examples{
-\dontrun{
-Dtm2Docs(dtm=mydtm)
-}
+# Load a pre-formatted dtm and topic model
+data(acq2) 
+
+# see the original documents
+documents[ 1:3 ]
+
+# see the new documents re-structured from the DTM
+new_docs <- Dtm2Docs(dtm=dtm)
+
+new_docs[ 1:3 ]
+
 }
 

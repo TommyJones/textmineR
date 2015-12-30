@@ -10,14 +10,23 @@
 #' the distribution of topics across a document. 
 #' @export
 #' @examples
-#' \dontrun{
-#' lex <- ConvertDtm2Docs(dtm)
-#' lex <- lexicalize(lex, vocab=colnames(dtm))
-#' lda <- lda.collapsed.gibbs.sampler(documents = lex, K = 100, 
-#'                                    vocab = colnames(dtm), num.iterations=2000, 
-#'                                    alpha=0.1, eta=0.05)
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # re-create a character vector of documents from the DTM
+#' lex <- Dtm2Docs(dtm)
+#' 
+#' # Format for input to lda::lda.collapsed.gibbs.sampler
+#' lex <- lda::lexicalize(lex, vocab=colnames(dtm))
+#' 
+#' # Fit the model from lda::lda.collapsed.gibbs.sampler
+#' lda <- lda::lda.collapsed.gibbs.sampler(documents = lex, K = 100, 
+#'                                          vocab = colnames(dtm), num.iterations=200, 
+#'                                          alpha=0.1, eta=0.05)
+#'                                          
+#' # Format the result to get phi and theta matrices                                        
 #' lda <- FormatRawLdaOutput(lda.result=lda, docnames=rownames(dtm), smooth=TRUE)
-#' }
+#' 
 
 
 FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){

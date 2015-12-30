@@ -40,12 +40,22 @@ Consequently, using n-grams (n > 1) causes construction of the DTM to be conside
 Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
 }
 \examples{
+# Load some data and format it into a character vector
+library(tm)
+data(acq)
+
+documents <- sapply(acq, function(x) x$content)
+
 \dontrun{
-myvec <- c("the quick brown fox", "the slow gray fox", "look at my horse", "my horse is amazing")
-names(myvec) <- paste("doc", 1:length(myvec), sep="_")
+# Make a DTM
+dtm <- Vec2Dtm(vec = documents, min.n.gram = 1, max.n.gram = 2)
 
-dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)
+dim(dtm)
 
+head(colnames(dtm))
+
+head(rownames(dtm))
 }
+
 }
 

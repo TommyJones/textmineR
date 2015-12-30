@@ -23,6 +23,7 @@ to \code{textmineR}. However, it is available in case users want to use the
 \examples{
 \dontrun{
 my_dtm <- tm::DocumentTermMatrix(my_corpus_object)
+
 MakeSparseDtm(dtm = my_dtm)
 }
 }

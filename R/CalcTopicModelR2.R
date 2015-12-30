@@ -17,9 +17,14 @@
 #' the \code{slam} package.     
 #' @export
 #' @examples
-#' \dontrun{
-#' r2 <- CalcTopicModelR2(dtm=mydtm, phi=lda$phi, theta=lda$theta)
-#' }
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # Get the R-squared of the model
+#' r2 <- CalcTopicModelR2(dtm = dtm, phi = model$phi, theta = model$theta)
+#' 
+#' r2
+
 
 
 CalcTopicModelR2 <- function(dtm, phi, theta){

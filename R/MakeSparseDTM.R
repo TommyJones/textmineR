@@ -13,6 +13,7 @@
 #' @examples
 #' \dontrun{
 #' my_dtm <- tm::DocumentTermMatrix(my_corpus_object)
+#' 
 #' MakeSparseDtm(dtm = my_dtm)
 #' }
 

@@ -12,9 +12,12 @@
 #' correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 #' @export
 #' @examples
-#' \dontrun{
-#' phi.prime <- GetPhiPrime(phi=lda$phi, theta=lda$theta)
-#' }
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # Make a phi_prime matrix, P(topic|words)
+#' phi_prime <- GetPhiPrime(phi=model$phi, theta=model$theta)
+#' 
 
 
 GetPhiPrime <- function(phi, theta){

@@ -7,17 +7,18 @@
 #' rows index documents
 #' @param M An integer for the number of words to be used in the calculation. 
 #' Defaults to 5
-#' @param pct Logical: Should the percent calculation be used? 
-#' Defaults to FALSE (recommended). This argument is deprecated.
 #' @return Returns an object of class \code{numeric} corresponding to the 
 #' probabilistic coherence of the input topic.
 #' @export
 #' @examples
-#' \dontrun{
-#' ProbCoherence(topic = phi[ 1 , ], dtm = mydtm, M = 6, pct = FALSE)
-#' }
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # Coherence of topic 1
+#' ProbCoherence(topic = model$phi[ 1 , ], dtm = dtm, M = 5)
+#' 
 
-ProbCoherence <- function( topic, dtm, M=5, pct=FALSE){
+ProbCoherence <- function( topic, dtm, M=5){
 
 ## TODO: consider changing probability calculations from document frequency to term frequency
       
@@ -35,11 +36,8 @@ ProbCoherence <- function( topic, dtm, M=5, pct=FALSE){
   
   
   result <- sapply( 1:(ncol(count.mat) - 1), function(x){
-    if(! pct){
-        mean(p.mat[ x, (x + 1):ncol(p.mat) ]/p.mat[ x , x ] - Matrix::diag(p.mat)[ (x + 1):ncol(p.mat) ], na.rm=TRUE)
-    }else{
-        mean( (p.mat[ x, (x + 1):ncol(p.mat) ]/p.mat[ x , x ] - Matrix::diag(p.mat)[ (x + 1):ncol(p.mat) ])/Matrix::diag(p.mat)[ (x + 1):ncol(p.mat) ], na.rm=TRUE ) * 100
-    }
+    
+    mean(p.mat[ x, (x + 1):ncol(p.mat) ]/p.mat[ x , x ] - Matrix::diag(p.mat)[ (x + 1):ncol(p.mat) ], na.rm=TRUE)
     
   })
   

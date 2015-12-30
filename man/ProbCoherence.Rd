@@ -4,7 +4,7 @@
 \alias{ProbCoherence}
 \title{Probailistic coherence of topics}
 \usage{
-ProbCoherence(topic, dtm, M = 5, pct = FALSE)
+ProbCoherence(topic, dtm, M = 5)
 }
 \arguments{
 \item{topic}{A probability vector denoting a relationship between words 
@@ -15,9 +15,6 @@ rows index documents}
 
 \item{M}{An integer for the number of words to be used in the calculation. 
 Defaults to 5}
-
-\item{pct}{Logical: Should the percent calculation be used? 
-Defaults to FALSE (recommended). This argument is deprecated.}
 }
 \value{
 Returns an object of class \code{numeric} corresponding to the 
@@ -28,8 +25,11 @@ Calculates the probabilistic coherence of a topic. This
 approximates semmantic coherence or human understandability of a topic.
 }
 \examples{
-\dontrun{
-ProbCoherence(topic = phi[ 1 , ], dtm = mydtm, M = 6, pct = FALSE)
-}
+# Load a pre-formatted dtm and topic model
+data(acq2) 
+
+# Coherence of topic 1
+ProbCoherence(topic = model$phi[ 1 , ], dtm = dtm, M = 5)
+
 }
 

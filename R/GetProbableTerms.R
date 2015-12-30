@@ -11,16 +11,19 @@
 #' correspond to the difference in the probability of drawing a term from the 
 #' set of documents given by docnames and the probability of drawing that term 
 #' from the corpus overall (p.terms).
+#' 
 #' @export
 #' @examples
-#' \dontrun{
-#' # documents with a topic proportion of .25 or higher for topic 5d
-#' mydocs <- rownames(lda$theta)[ lda$theta[ , 5 ] >= 0.25 ] 
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # documents with a topic proportion of .25 or higher for topic 2
+#' mydocs <- rownames(model$theta)[ model$theta[ , 2 ] >= 0.25 ] 
 #' 
 #' term.probs <- Matrix::colSums(dtm) / sum(Matrix::colSums(dtm))
 #' 
 #' GetProbableTerms(docnames=mydocs, dtm=dtm, p.terms=term.probs)
-#' }
+#' 
 
 
 GetProbableTerms <- function(docnames, dtm, p.terms=NULL){

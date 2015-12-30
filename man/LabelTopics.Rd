@@ -27,13 +27,14 @@ rules to get topic labels. This function is in "super-ultra-mega alpha"; use
 at your own risk/discretion.
 }
 \examples{
-\dontrun{
-assignments <- t(apply(theta, 1, function(x){
+# Load a pre-formatted dtm and topic model
+data(acq2) 
+assignments <- t(apply(model$theta, 1, function(x){
   x[ x < 0.05 ] <- 0
   x / sum(x)
 }))
 
 labels <- LabelTopics(assignments = assignments, dtm = dtm, M = 2)
-}
+
 }
 

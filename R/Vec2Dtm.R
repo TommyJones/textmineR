@@ -22,13 +22,24 @@
 #'
 #' @export
 #' @examples
+#' # Load some data and format it into a character vector
+#' library(tm)
+#' data(acq)
+#' 
+#' documents <- sapply(acq, function(x) x$content)
+#' 
 #' \dontrun{
-#' myvec <- c("the quick brown fox", "the slow gray fox", "look at my horse", "my horse is amazing")
-#' names(myvec) <- paste("doc", 1:length(myvec), sep="_")
+#' # Make a DTM
+#' dtm <- Vec2Dtm(vec = documents, min.n.gram = 1, max.n.gram = 2)
 #' 
-#' dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)
+#' dim(dtm)
 #' 
+#' head(colnames(dtm))
+#' 
+#' head(rownames(dtm))
 #' }
+#' 
+
 
 Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE, 
                     custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, 

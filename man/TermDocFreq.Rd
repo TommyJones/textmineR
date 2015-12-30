@@ -23,15 +23,12 @@ returns a data frame with columns for term frequency, document frequency,
 and inverse-document frequency
 }
 \examples{
-\dontrun{
-myvec <- c("the quick brown fox eats chickens", 
-           "the slow gray fox eats the slow chicken", 
-           "look at my horse", "my horses are amazing")
-names(myvec) <- paste("doc", 1:length(myvec), sep="_")
+# Load a pre-formatted dtm and topic model
+data(acq2) 
 
-dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)
-
+# Get the term frequencies 
 term_freq_mat <- TermDocFreq(dtm)
-}
+
+str(term_freq_mat)
 }
 

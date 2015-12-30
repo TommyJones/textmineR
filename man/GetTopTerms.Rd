@@ -19,8 +19,11 @@ whose m-th row correspond to the m-th top term from the input \code{phi}.
 Takes topics by terms matrix and returns top M terms for each topic
 }
 \examples{
-\dontrun{
-GetTopTerms(phi=my_phi, M=5)
-}
+# Load a pre-formatted dtm and topic model
+data(acq2) 
+
+top_terms <- GetTopTerms(phi=model$phi, M=5)
+
+str(top_terms)
 }
 

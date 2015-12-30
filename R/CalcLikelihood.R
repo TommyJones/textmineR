@@ -12,9 +12,13 @@
 #' @return
 #' Returns an object of class \code{numeric} corresponding to the log likelihood. 
 #' @examples
-#' \dontrun{
-#'     myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
-#' }
+#' # Load a pre-formatted dtm and topic model
+#' data(acq2) 
+#' 
+#' # Get the likelihood of the data given the fitted model parameters
+#' ll <- CalcLikelihood(dtm = dtm, phi = model$phi, theta = model$theta)
+#' 
+#' ll
 #' @export
 CalcLikelihood <- function(dtm, phi, theta){
   # ensure that all inputs are sorted correctly

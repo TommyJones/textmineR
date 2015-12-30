@@ -24,8 +24,12 @@ This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix
     data given the model.
 }
 \examples{
-\dontrun{
-    myll <- CalcLikelihood(dtm=mydtm, phi=myphi, theta=mytheta)
-}
+# Load a pre-formatted dtm and topic model
+data(acq2) 
+
+# Get the likelihood of the data given the fitted model parameters
+ll <- CalcLikelihood(dtm = dtm, phi = model$phi, theta = model$theta)
+
+ll
 }
 
