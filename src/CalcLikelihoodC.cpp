@@ -28,8 +28,9 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
         double a = 0; // first element in the log likelihood
         
        for( int nd = 0; nd < n; nd++ ){
+           double ndiff = double(n - nd);
            
-           a = a + log( n - nd);
+           a = a + log( ndiff );
            
         }
         
@@ -54,7 +55,8 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
        double c = 0; 
        
        for(int v = 0; v < nwords; v++ ){
-           int x_dv = dtm( d, v );
+         
+           double x_dv = dtm( d, v );
            
            for( int j = 0; j < x_dv; j++){
                
