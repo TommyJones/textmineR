@@ -18,9 +18,8 @@ In the previous resubmission(s) I have
 * win-builder (devel and release)
 
 ### R CMD check results
-There were no ERRORs or WARNINGs. 
-There is one NOTE.
-  - This is a first-time submission
+There were no ERRORs, WARNINGs or NOTEs. 
+
 
 ### Downstream dependencies
 There are no downstream dependencies. This is a first-time submission of textmineR.
