@@ -19,7 +19,14 @@ In the previous resubmission(s) I have
 * win-builder (devel and release)
 
 ### R CMD check results
-There were no ERRORs, WARNINGs or NOTEs. 
+There were no ERRORs or WARNINGs.
+
+There was one NOTE.
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: ‘Thomas W. Jones <jones.thos.w@gmail.com>’
+Days since last update: 1
+
+This is a patch designed to fix compliation errors on Solaris.
 
 
 ### Downstream dependencies
