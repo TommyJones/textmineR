@@ -30,5 +30,5 @@ This is a patch designed to fix compliation errors on Solaris.
 
 
 ### Downstream dependencies
-There are no downstream dependencies. This is a first-time submission of textmineR.
+There are no downstream dependencies. 
 
