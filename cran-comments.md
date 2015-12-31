@@ -1,6 +1,7 @@
 
 ### Resubmission
-This is a resubmission. In this version I have
+This is a resubmission. In this version I have addressed issues causing a 
+compilation ERROR or Solaris. Specifically, I have
 
 * Replaced the C header "math.h" with the preferred "cmath"
 * Explicitly cast integers as double before performing sqrt
