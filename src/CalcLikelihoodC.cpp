@@ -28,9 +28,8 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
         double a = 0; // first element in the log likelihood
         
        for( int nd = 0; nd < n; nd++ ){
-           double ndiff = double(n - nd);
-           
-           a = a + std::log( ndiff );
+
+           a = a + std::log( double(n - nd) );
            
         }
         
