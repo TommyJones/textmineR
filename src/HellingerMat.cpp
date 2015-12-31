@@ -40,10 +40,12 @@ NumericMatrix HellingerMat(NumericMatrix A){
         double result = 0.0;
         
         for(int i = 0; i < cols; i++){
-          result = result + (std::sqrt(A2(j , i)) - std::sqrt(A2(k , i))) * (std::sqrt(A2(j , i)) - std::sqrt(A2(k , i)));
+          result = result + (std::sqrt(double(A2(j , i))) - 
+            std::sqrt(double(A2(k , i)))) * (std::sqrt(double(A2(j , i))) - 
+            std::sqrt(double(A2(k , i))));
         }
                 
-        answer(j , k) = std::sqrt(0.5) * std::sqrt(result);
+        answer(j , k) = std::sqrt(double(0.5)) * std::sqrt(result);
         
       }
     }

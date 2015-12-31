@@ -59,7 +59,7 @@ double CalcLikelihoodC( arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta
            
            for( int j = 0; j < x_dv; j++){
                
-               c = c + std::log(x_dv - j);
+               c = c + std::log(double(x_dv - j));
                
            }
        }
