@@ -1,5 +1,5 @@
 # textmineR
-Functions for Text Mining and Topic Modelin
+Functions for Text Mining and Topic Modeling
 
 An aid for text mining in R, with a syntax that
     is more familiar to experienced R users. Also, implements various functions
