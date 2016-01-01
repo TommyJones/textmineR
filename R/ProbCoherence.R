@@ -19,7 +19,8 @@
 #' 
 
 ProbCoherence <- function( topic, dtm, M=5){
-
+  warning("ProbCoherence is deprecated. It will be removed in textmineR v2.0.0",
+          call.=F)
 ## TODO: consider changing probability calculations from document frequency to term frequency
       
   # ordered vector of most probable M terms given a topic
