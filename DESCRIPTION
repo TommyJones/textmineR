@@ -19,6 +19,8 @@ Imports:
     Rcpp,
     RcppProgress
 License: GPL (>= 3)
+URL: https://github.com/TommyJones/textmineR
+BugReports: https://github.com/TommyJones/textmineR/issues
 LazyData: true
 LinkingTo: Rcpp,
     RcppArmadillo,
