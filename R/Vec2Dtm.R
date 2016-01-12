@@ -62,7 +62,7 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE,
     if( ! is.null(custom.stopwords) ) stopwords <- c(stopwords, custom.stopwords)
 	
 	if( lower ) {
-		vec <- tolower(vec)}
+		vec <- tolower(vec)
 		stopwords <- tolower(stopwords)
 	}
 	
