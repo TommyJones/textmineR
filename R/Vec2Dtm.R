@@ -61,7 +61,10 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE,
     
     if( ! is.null(custom.stopwords) ) stopwords <- c(stopwords, custom.stopwords)
 	
-	if( lower ) vec <- tolower(vec)
+	if( lower ) {
+		vec <- tolower(vec)}
+		stopwords <- tolower(stopwords)
+	}
 	
 	if( remove.punctuation ){ 
 		vec <- gsub("[^a-zA-Z0-9]", " ", vec)
