@@ -7,6 +7,8 @@
 #' \code{parallel::detectCores()}.
 #' @param export A character vector of objects in the workspace to export when 
 #' using a Windows machine. Defauts to \code{NULL}
+#' @param libraries A character vector of library/package names to load on to
+#' each cluster if using a Windows machine. Defaults to \code{NULL}
 #' @details This function is used to parallelize executions in textmineR. It is 
 #' necessary because of differing capabilities between Windows and Unix.
 #' Unix systems use \code{mclapply} from \code{package:parallel}. Windows 
@@ -19,7 +21,8 @@
 #' f <- function(y) y * y + 12
 #' result <- TmParallelApply(x, f)
 #' }
-TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(), export=NULL){
+TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(), 
+                            export=NULL, libraries=NULL){
   
   os <- .Platform$OS.type
   
@@ -33,6 +36,21 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(), export=NULL){
     
     parallel::clusterEvalQ(cl, library(textmineR))
     
+    # export & load libraries
+    if(! is.null(libraries) ){
+      
+      lib_fun <- function(){
+        for(l in libraries){
+          eval(parse(text = paste("library(", l, ")", sep="")))
+        }
+      }
+      parallel::clusterExport(cl, varlist = c("libraries", "lib_fun"))
+      
+      parallel::clusterCall(cl, fun=lib_fun)
+      
+    }
+    
+    # export any other objects needed
     if( ! is.null(export) ) parallel::clusterExport(cl, varlist=export)
     
     out <- parallel::parLapply(cl , X = X, fun = FUN)
