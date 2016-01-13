@@ -4,7 +4,8 @@
 \alias{TmParallelApply}
 \title{An OS-independent parallel version of \code{lapply}}
 \usage{
-TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL)
+TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL,
+  libraries = NULL)
 }
 \arguments{
 \item{X}{A vector or list over which to apply \code{FUN}}
@@ -16,6 +17,9 @@ TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL)
 
 \item{export}{A character vector of objects in the workspace to export when 
 using a Windows machine. Defauts to \code{NULL}}
+
+\item{libraries}{A character vector of library/package names to load on to
+each cluster if using a Windows machine. Defaults to \code{NULL}}
 }
 \value{
 This function returns a \code{list} of length \code{length(X)}.
