@@ -31,7 +31,7 @@ Below is a demo of some of the functionality in `textmineR`
     # fit some LDA models and select the best number of topics
     k_list <- seq(5, 50, by=5)
     
-    model_dir <- paste0("models_", digest::sha1(vocabulary))
+    model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
     
     if (!dir.exists(model_dir)) dir.create(model_dir)
     
