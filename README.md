@@ -31,12 +31,24 @@ Below is a demo of some of the functionality in `textmineR`
     # fit some LDA models and select the best number of topics
     k_list <- seq(5, 50, by = 5)
     
+    model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
+    
+    if (!dir.exists(model_dir)) dir.create(model_dir)
     
     model_list <- TmParallelApply(X = k_list, FUN = function(k){
-      m <- FitLdaModel(dtm = dtm, k = k, iterations = 500)
-      m$coherence <- apply(m$phi, 1, function(x) ProbCoherence(topic = x, dtm = dtm, M = 5))
+      filename = file.path(model_dir, paste0(k, "_topics.rda"))
+
+      if (!file.exists(filename)) {
+        m <- FitLdaModel(dtm = dtm, k = k, iterations = 500)
+        m$k <- k
+        m$coherence <- apply(m$phi, 1, function(x) ProbCoherence(topic = x, dtm = dtm, M = 5))
+        save(m, file = filename)
+      } else {
+        load(filename)
+      }
+      
       m
-    }, export = c("dtm")) # export only needed for Windows machines
+    }, export=c("dtm", "model_dir")) # export only needed for Windows machines
     
     coherence_mat <- data.frame(k = sapply(model_list, function(x) nrow(x$phi)), 
                                 coherence = sapply(model_list, function(x) mean(x$coherence)), 

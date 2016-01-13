@@ -18,6 +18,8 @@ Imports:
     RWeka,
     Rcpp,
     RcppProgress
+Suggests:
+    digest
 License: GPL (>= 3)
 URL: https://github.com/TommyJones/textmineR
 BugReports: https://github.com/TommyJones/textmineR/issues
