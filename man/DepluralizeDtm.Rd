@@ -4,10 +4,12 @@
 \alias{DepluralizeDtm}
 \title{Run the CorrectS function on columns of a document term matrix.}
 \usage{
-DepluralizeDtm(dtm)
+DepluralizeDtm(dtm, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix} whose colnames are tokens}
+
+\item{...}{Other arguments to pass to \code{TmParallelApply}. See note, below.}
 }
 \value{
 Returns a document term matrix of class \code{dgCMatrix}. The columns index
@@ -19,6 +21,12 @@ input matrix
 Turns pluralizations of words in the columns of a document term 
 matrix to their singular form. Then aggregates all columns that now have the 
 same token. See example below.
+}
+\note{
+This function performs parallel computation by default. The default 
+behavior is to use all available cores according to \code{parallel::detectCores()}.
+However, this can be modified by passing the \code{cpus} argument when calling
+this function.
 }
 \examples{
 \dontrun{

@@ -4,10 +4,12 @@
 \alias{Files2Vec}
 \title{Function for reading text files into R}
 \usage{
-Files2Vec(directory)
+Files2Vec(directory, ...)
 }
 \arguments{
 \item{directory}{A path to directory containing the files you want to read into R.}
+
+\item{...}{Other arguments to be passed to \code{TmParallelApply}. See note, below.}
 }
 \value{
 Returns a character vector where each entry corresponds to a document.
@@ -16,6 +18,12 @@ Returns a character vector where each entry corresponds to a document.
 This function reads in all files in a directory ending in .txt into R.
 The result is a character vector where each entry is a .txt file.
 The names of the resulting vector are derived from the names of the files.
+}
+\note{
+This function performs parallel computation by default. The default 
+behavior is to use all available cores according to \code{parallel::detectCores()}.
+However, this can be modified by passing the \code{cpus} argument when calling
+this function.
 }
 \examples{
 \dontrun{

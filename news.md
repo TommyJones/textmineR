@@ -3,7 +3,7 @@
 
 * Add deprecation warning to ProbCoherence - DONE
 * Allow for arguments of number of cores to be passed to every function that 
-  uses implicit parallelziation
+  uses implicit parallelziation - TESTING
 * Allow for passing of libraries to TmParallelApply (make this function truely
   independent of textmineR) - TESTING
 * For Vec2Dtm ensure that stopwords and custom stopwords are lowercased 

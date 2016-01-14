@@ -3,6 +3,12 @@
 #' matrix to their singular form. Then aggregates all columns that now have the 
 #' same token. See example below. 
 #' @param dtm A document term matrix of class \code{dgCMatrix} whose colnames are tokens
+#' @param ... Other arguments to pass to \code{TmParallelApply}. See note, below.
+#' @note
+#' This function performs parallel computation by default. The default 
+#' behavior is to use all available cores according to \code{parallel::detectCores()}.
+#' However, this can be modified by passing the \code{cpus} argument when calling
+#' this function.
 #' @return
 #' Returns a document term matrix of class \code{dgCMatrix}. The columns index
 #' the de-pluralized tokens of the input document term matrix. In other words,
@@ -24,7 +30,7 @@
 #' #' }
 
  
-DepluralizeDtm <- function(dtm){
+DepluralizeDtm <- function(dtm, ...){
 
 	# run depluralization on column names of dtm
 	adjust.terms <- CorrectS(colnames(dtm))
@@ -43,7 +49,7 @@ DepluralizeDtm <- function(dtm){
     term.indices <- TmParallelApply(X=unique(colnames(changed)),
                                     FUN=function(x){
                                       which(colnames(changed) == x)
-                                    }, export=c("changed"))
+                                    }, export=c("changed"), ...)
     
     gc()
     
@@ -52,11 +58,11 @@ DepluralizeDtm <- function(dtm){
                             FUN=function(y){
                               Matrix::Matrix(Matrix::rowSums(x = changed[ , y ]), 
                                      sparse=TRUE, ncol=1)
-                            }, export=c("changed"))
+                            }, export=c("changed"), ...)
     gc()
     
     # put back together into a sparse matrix
-    temp <- TmParallelApply(X = temp, FUN=function(x) Matrix::t(x))
+    temp <- TmParallelApply(X = temp, FUN=function(x) Matrix::t(x), ...)
     
     temp <- RecursiveRbind(matrix_list = temp)
     

@@ -4,11 +4,13 @@
 \alias{Dtm2Docs}
 \title{Convert a DTM to a Character Vector of documents}
 \usage{
-Dtm2Docs(dtm)
+Dtm2Docs(dtm, ...)
 }
 \arguments{
 \item{dtm}{A sparse Matrix from the matrix package whose rownames correspond 
 to documents and colnames correspond to words}
+
+\item{...}{Other arguments to be passed to \code{TmParallelApply}. See note, below.}
 }
 \value{
 Returns a character vector. Each entry of this vector corresponds to the rows
@@ -17,6 +19,12 @@ of \code{dtm}.
 \description{
 This function takes a sparse matrix (DTM) as input and returns a character vector
 whose length is equal to the number of rows of the input DTM.
+}
+\note{
+This function performs parallel computation if \code{dtm} has more than 3,000
+rows. The default is to use all available cores according to \code{parallel::detectCores()}.
+However, this can be modified by passing the \code{cpus} argument when calling
+this function.
 }
 \examples{
 # Load a pre-formatted dtm and topic model

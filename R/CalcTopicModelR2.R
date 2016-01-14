@@ -5,16 +5,17 @@
 #'
 #' @param dtm A documents by terms dimensional document term matrix of class
 #' \code{dgCMatrix} or of class \code{matrix}. 
-#'   
 #' @param phi A topics by terms dimensional matrix where each entry is p(term_i |topic_j)
 #' @param theta A documents by topics dimensional matrix where each entry is p(topic_j|document_d)
-#' 
+#' @param ... Other arguments to be passed to \code{TmParallelApply}. See note, below.
 #' @return
 #' Returns an object of class \code{numeric} representing the proportion of variability
 #' in the data that is explained by the topic model.
 #' @note
-#' Will *not* work on DTMs from the \code{tm} package or simple triplet matrices from 
-#' the \code{slam} package.     
+#' This function performs parallel computation if \code{dtm} has more than 3,000
+#' rows. The default is to use all available cores according to \code{parallel::detectCores()}.
+#' However, this can be modified by passing the \code{cpus} argument when calling
+#' this function.
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
@@ -27,7 +28,7 @@
 
 
 
-CalcTopicModelR2 <- function(dtm, phi, theta){
+CalcTopicModelR2 <- function(dtm, phi, theta, ...){
     
     # ensure that all inputs are sorted correctly
     phi <- phi[ colnames(theta) , colnames(dtm) ]
@@ -57,7 +58,7 @@ CalcTopicModelR2 <- function(dtm, phi, theta){
                        phi = phi, 
                        theta = x$theta_divided, 
                        ybar=ybar)
-      }, export=c("phi", "ybar"))
+      }, export=c("phi", "ybar"), ...)
       
       result <- do.call(rbind, result)
       

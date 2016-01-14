@@ -3,10 +3,15 @@
 #' @description This function reads in all files in a directory ending in .txt into R.
 #' The result is a character vector where each entry is a .txt file.
 #' The names of the resulting vector are derived from the names of the files.
-#'
 #' @param directory A path to directory containing the files you want to read into R.
+#' @param ... Other arguments to be passed to \code{TmParallelApply}. See note, below.
 #' @return 
 #' Returns a character vector where each entry corresponds to a document.
+#' @note
+#' This function performs parallel computation by default. The default 
+#' behavior is to use all available cores according to \code{parallel::detectCores()}.
+#' However, this can be modified by passing the \code{cpus} argument when calling
+#' this function.
 #' @export
 #' @examples
 #' \dontrun{
@@ -14,7 +19,7 @@
 #' }
 
 
-Files2Vec <- function(directory){
+Files2Vec <- function(directory, ...){
     
     if( ! grepl("/$", directory) ) directory <- paste(directory, "/", sep="")
     
@@ -26,7 +31,7 @@ Files2Vec <- function(directory){
                            result <- paste(result, collapse="\n")
                            result <- gsub("\\s", " ", result)
                            return(result)
-                         }, export = c("directory"))
+                         }, export = c("directory"), ...)
   
 	vec <- unlist(vec)
 	
