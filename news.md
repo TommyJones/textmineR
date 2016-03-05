@@ -1,14 +1,14 @@
 
-### Planned for version 1.6.0
+### Updates for version 1.6.0
 
-* Add deprecation warning to ProbCoherence - DONE
+* Add deprecation warning to ProbCoherence 
 * Allow for arguments of number of cores to be passed to every function that 
-  uses implicit parallelziation - TESTING
-* Allow for passing of libraries to TmParallelApply (make this function truely
-  independent of textmineR) - TESTING
+  uses implicit parallelziation 
+* Allow for passing of libraries to TmParallelApply (makes this function truely
+  independent of textmineR) 
 * For Vec2Dtm ensure that stopwords and custom stopwords are lowercased 
-  when lower= TRUE - DONE
-* Update README example to use model caches - DONE
+  when lower = TRUE 
+* Update README example to use model caches 
   
 ### Planned for version 2.0.0
 
