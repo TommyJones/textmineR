@@ -1,16 +1,16 @@
 
-### Resubmission
-This is a resubmission. In this version I have addressed issues causing a 
-compilation ERROR or Solaris. Specifically, I have
+### Update
+This is an update, moving textmineR from version 1.5.1 to 1.6.0. 
+In this version I have 
 
-* Replaced the C header "math.h" with the preferred "cmath"
-* Explicitly cast integers as double before performing sqrt or log
-* Explicitly declared log and sqrt as coming from the std library
-
-In the previous resubmission(s) I have
-
-* Restructured most example code so that it can be checked explicitly
-* Removed RcppArmadillo from imports
+* Added deprecation warning to ProbCoherence 
+* Allowed for arguments of number of cores to be passed to every function that 
+  uses implicit parallelziation 
+* Allowed for passing of libraries to TmParallelApply (makes this function truely
+  independent of textmineR) 
+* For Vec2Dtm ensured that stopwords and custom stopwords are lowercased 
+  when lower = TRUE 
+* Updated README example to use model caches 
 
 
 ### Test environments
@@ -19,14 +19,13 @@ In the previous resubmission(s) I have
 * win-builder (devel and release)
 
 ### R CMD check results
-There were no ERRORs or WARNINGs.
+There is one WARNING.
 
-There was one NOTE.
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Thomas W. Jones <jones.thos.w@gmail.com>’
-Days since last update: 1
+* Warning: package ‘Matrix’ was built under R version 3.2.4
 
-This is a patch designed to fix compliation errors on Solaris.
+R version 3.2.4 is not scheduled for official release until 3/10/2016. 
+Perhaps this build of 'Matrix' is premature? If this is a killer, I'd just as
+soon wait until the 10th for 3.2.4 to be officially released.
 
 
 ### Downstream dependencies

@@ -8,4 +8,4 @@
 ^cran-comments.md$
 ^\.gitignore$
 ^news.md
-^models_
+^models_*
