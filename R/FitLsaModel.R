@@ -39,7 +39,7 @@ FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   
   # Fit LSA using single value decomposition on sparse matrices from 
   # irlba library
-  lsa <- irlba::irlba(dtm, nv=10)
+  lsa <- irlba::irlba(dtm, nv=k)
   
   # Rename/transform objects so they conform to the convention in textmineR
   names(lsa)[ names(lsa) == "v" ] <- "phi"
