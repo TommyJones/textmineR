@@ -17,7 +17,8 @@ Imports:
     tm,
     RWeka,
     Rcpp,
-    RcppProgress
+    RcppProgress,
+    irlba
 Suggests:
     digest
 License: GPL (>= 3)
