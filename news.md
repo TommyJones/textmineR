@@ -1,3 +1,11 @@
+### Updates for version 1.6.1
+#### Implemented
+* Add modeling capability for latent semantic analysis
+
+#### Planned 
+* Deprecating arguments that use periods instead of underscores
+* Update add arguments using underscores where necessary
+
 
 ### Updates for version 1.6.0
 
