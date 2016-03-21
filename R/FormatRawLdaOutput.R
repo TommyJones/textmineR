@@ -40,7 +40,7 @@ FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
     }
 	theta <- theta/Matrix::rowSums(theta)
 	rownames(theta) <- docnames
-	colnames(theta) <- paste("t.", 1:ncol(theta), sep="" )
+	colnames(theta) <- paste("t_", 1:ncol(theta), sep="" )
   
   
 
