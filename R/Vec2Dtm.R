@@ -57,7 +57,11 @@ Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE,
 		stopwords <- c()
 	}
   
-  docnames <- names(vec)
+  if(is.null(names(vec))){
+    docnames <- 1:length(vec)
+  }else{
+    docnames <- names(vec)
+  }
     
     if( ! is.null(custom.stopwords) ) stopwords <- c(stopwords, custom.stopwords)
 	
