@@ -1,6 +1,8 @@
 ### Updates for version 1.6.1
 #### Implemented
 * Add modeling capability for latent semantic analysis
+* Add CalcProbCoherence function which replaces ProbCoherence and can calculate
+  probabilistic coherence for the whole phi matrix.
 
 #### Planned 
 * Deprecating arguments that use periods instead of underscores
