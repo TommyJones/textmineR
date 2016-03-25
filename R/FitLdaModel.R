@@ -38,7 +38,21 @@ FitLdaModel <- function(dtm, k, iterations, alpha = 0.1, beta = 0.05,
   
   lex <- Dtm2Docs(dtm = dtm)
   
-  lex <- lda::lexicalize(lex, sep=" ", vocab=vocab)
+  if(nrow(dtm) > 1000){
+    chunks <- seq(1, nrow(dtm), by = 1000)
+    
+    lex_list <- lapply(chunks, function(x) lex[ x:min(x + 999, length(lex)) ])
+    
+    lex <- textmineR::TmParallelApply(X = lex_list, function(x){
+      lda::lexicalize(x, sep = " ", vocab = vocab)
+    }, export = "vocab", ...)
+    
+    lex <- do.call(c, lex)
+    
+  }else{
+    lex <- lda::lexicalize(lex, sep=" ", vocab=vocab)
+  }
+  
   
   model <- lda::lda.collapsed.gibbs.sampler(documents = lex, 
                                             K = k, 
