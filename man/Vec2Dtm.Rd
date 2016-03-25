@@ -6,11 +6,14 @@
 \usage{
 Vec2Dtm(vec, docnames = names(vec), min.n.gram = 1, max.n.gram = 1,
   remove.stopwords = TRUE, custom.stopwords = NULL, lower = TRUE,
-  remove.punctuation = TRUE, remove.numbers = TRUE, stem.document = FALSE,
-  ...)
+  remove.punctuation = TRUE, remove.numbers = TRUE, stem.document = FALSE)
 }
 \arguments{
 \item{vec}{A character vector of documents. Punctuation etc. is allowed. names(vec) should be names of your documents.}
+
+\item{docnames}{A vector of names for your documents. Defaults to 
+\code{names(doc_vec)}. If NULL, then docnames is set to be 
+\code{1:length(doc_vec)}.}
 
 \item{min.n.gram}{The minimum size of n for creating n-grams. (Defaults to 1)}
 
@@ -43,15 +46,12 @@ Consequently, using n-grams (n > 1) causes construction of the DTM to be conside
 Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
 }
 \examples{
-# Load some data and format it into a character vector
-library(tm)
-data(acq)
-
-documents <- sapply(acq, function(x) x$content)
-
 \dontrun{
-# Make a DTM
-dtm <- Vec2Dtm(vec = documents, min.n.gram = 1, max.n.gram = 2)
+data(nih_sample)
+
+dtm <- Vec2Dtm(vec = nih_sample$ABSTRACT_TEXT
+               docnames = nih_sample$APPLICATION_ID, 
+               min.n.gram = 1, max.n.gram = 2)
 
 dim(dtm)
 
@@ -59,6 +59,5 @@ head(colnames(dtm))
 
 head(rownames(dtm))
 }
-
 }
 

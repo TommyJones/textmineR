@@ -25,15 +25,12 @@
 #'
 #' @export
 #' @examples
-#' # Load some data and format it into a character vector
-#' library(tm)
-#' data(acq)
-#' 
-#' documents <- sapply(acq, function(x) x$content)
-#' 
 #' \dontrun{
-#' # Make a DTM
-#' dtm <- Vec2Dtm(vec = documents, min.n.gram = 1, max.n.gram = 2)
+#' data(nih_sample)
+#' 
+#' dtm <- Vec2Dtm(vec = nih_sample$ABSTRACT_TEXT
+#'                docnames = nih_sample$APPLICATION_ID, 
+#'                min.n.gram = 1, max.n.gram = 2)
 #' 
 #' dim(dtm)
 #' 
@@ -41,11 +38,6 @@
 #' 
 #' head(rownames(dtm))
 #' }
-#' 
-
-
-
-
 Vec2Dtm <- function(vec, docnames = names(vec), min.n.gram=1, max.n.gram=1, 
                     remove.stopwords=TRUE, custom.stopwords=NULL, lower=TRUE, 
                     remove.punctuation=TRUE, remove.numbers=TRUE, stem.document=FALSE){

@@ -13,9 +13,10 @@
 #' probabilistic coherence of the input topic(s).
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(acq2) 
+#' data(nih_sample_topic_model)
+#' data(nih_sample_dtm) 
 #' 
-#' CalcProbCoherence(phi = model$phi, dtm = dtm, M = 5)
+#' CalcProbCoherence(phi = nih_sample_topic_model$phi, dtm = nih_sample_dtm, M = 5)
 #' @export 
 CalcProbCoherence<- function(phi, dtm, M = 5){
   

@@ -15,17 +15,16 @@
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(acq2) 
+#' data(nih_sample_topic_model)
+#' data(nih_sample_dtm) 
 #' 
 #' # documents with a topic proportion of .25 or higher for topic 2
-#' mydocs <- rownames(model$theta)[ model$theta[ , 2 ] >= 0.25 ] 
+#' mydocs <- rownames(nih_sample_topic_model$theta)[ nih_sample_topic_model$theta[ , 2 ] >= 0.25 ] 
 #' 
-#' term.probs <- Matrix::colSums(dtm) / sum(Matrix::colSums(dtm))
+#' term_probs <- Matrix::colSums(nih_sample_dtm) / sum(Matrix::colSums(nih_sample_dtm))
 #' 
-#' GetProbableTerms(docnames=mydocs, dtm=dtm, p.terms=term.probs)
+#' GetProbableTerms(docnames = mydocs, dtm = nih_sample_dtm, p.terms = term_probs)
 #' 
-
-
 GetProbableTerms <- function(docnames, dtm, p.terms=NULL){
     
     

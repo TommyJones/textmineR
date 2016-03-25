@@ -12,10 +12,11 @@
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(acq2) 
+#' data(nih_sample_dtm)
+#' data(nih_sample_topic_model) 
 #' 
 #' # Get the term frequencies 
-#' term_freq_mat <- TermDocFreq(dtm)
+#' term_freq_mat <- TermDocFreq(nih_sample_dtm)
 #' 
 #' str(term_freq_mat)
 

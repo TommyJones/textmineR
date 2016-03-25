@@ -13,10 +13,11 @@
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(acq2) 
+#' data(nih_sample_topic_model) 
 #' 
 #' # Make a phi_prime matrix, P(topic|words)
-#' phi_prime <- GetPhiPrime(phi=model$phi, theta=model$theta)
+#' phi_prime <- GetPhiPrime(phi = nih_sample_topic_model$phi, 
+#'                          theta = nih_sample_topic_model$theta)
 #' 
 
 

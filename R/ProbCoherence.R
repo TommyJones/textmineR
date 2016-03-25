@@ -12,10 +12,11 @@
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(acq2) 
+#' data(nih_sample_topic_model) 
+#' data(nih_sample_dtm)
 #' 
 #' # Coherence of topic 1
-#' ProbCoherence(topic = model$phi[ 1 , ], dtm = dtm, M = 5)
+#' ProbCoherence(topic = nih_sample_topic_model$phi[ 1 , ], dtm = nih_sample_dtm, M = 5)
 #' 
 
 ProbCoherence <- function( topic, dtm, M=5){

@@ -35,15 +35,15 @@ a nicely-formatted topic model.
 }
 \examples{
 # Load a pre-formatted dtm 
-data(acq2) 
+data(nih_sample_dtm) 
 
 # Fit an LDA model
-model <- FitLdaModel(dtm = dtm, k = 5, iterations = 500)
+model <- FitLdaModel(dtm = nih_sample_dtm, k = 5, iterations = 500)
 
 str(model)
 
 # Fit a model, include likelihoods passed to lda::lda.collapsed.gibbs.sampler
-model <- FitLdaModel(dtm = dtm, k = 5, iterations = 500, compute.log.likelihood = TRUE)
+model <- FitLdaModel(dtm = nih_sample_dtm, k = 5, iterations = 500, compute.log.likelihood = TRUE)
 
 str(model)
 

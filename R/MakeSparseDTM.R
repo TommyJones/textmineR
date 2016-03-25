@@ -1,7 +1,7 @@
 #' Convert a sparse simple triplet document term matrix to a sparse Matrix
 #' 
 #' @description This function takes a \code{DocumentTermMatrix} from the 
-#' \code{tm} package, and converts it to a \code{CSparse} matrix from the 
+#' \code{tm} package, and converts it to a \code{dgCMatrix} matrix from the 
 #' \code{Matrix} package. Generally, it is designed to be an internal function
 #' to \code{textmineR}. However, it is available in case users want to use the 
 #' \code{tm} package directly to make a DTM.

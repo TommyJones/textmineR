@@ -28,8 +28,9 @@ This approximates semmantic coherence or human understandability of a topic.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
-data(acq2) 
+data(nih_sample_topic_model)
+data(nih_sample_dtm) 
 
-CalcProbCoherence(phi = model$phi, dtm = dtm, M = 5)
+CalcProbCoherence(phi = nih_sample_topic_model$phi, dtm = nih_sample_dtm, M = 5)
 }
 

@@ -33,10 +33,13 @@ this function.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
-data(acq2) 
+data(nih_sample_dtm) 
+data(nih_sample_topic_model)
 
 # Get the likelihood of the data given the fitted model parameters
-ll <- CalcLikelihood(dtm = dtm, phi = model$phi, theta = model$theta)
+ll <- CalcLikelihood(dtm = nih_sample_dtm, 
+                     phi = nih_sample_topic_model$phi, 
+                     theta = nih_sample_topic_model$theta)
 
 ll
 }

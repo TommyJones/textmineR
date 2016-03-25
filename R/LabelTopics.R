@@ -15,14 +15,15 @@
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(acq2) 
-
-#' assignments <- t(apply(model$theta, 1, function(x){
+#' data(nih_sample_dtm)
+#' data(nih_sample_topic_model) 
+#' 
+#' assignments <- t(apply(nih_sample_topic_model$theta, 1, function(x){
 #'   x[ x < 0.05 ] <- 0
 #'   x / sum(x)
 #' }))
 #' 
-#' labels <- LabelTopics(assignments = assignments, dtm = dtm, M = 2)
+#' labels <- LabelTopics(assignments = assignments, dtm = nih_sample_dtm, M = 2)
 #' 
 
 LabelTopics <- function(assignments, dtm, M=2){
