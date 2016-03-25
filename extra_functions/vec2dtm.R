@@ -45,6 +45,7 @@ vec2dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
   
   ### Pre-process the documents ------------------------------------------------
   if(is.null(docnames)){
+    warning("No document names detected. Assigning 1:length(doc_vec) as names.")
     docnames <- 1:length(doc_vec)
   }
   
@@ -109,7 +110,7 @@ vec2dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
   
   corpus <- text2vec::create_corpus(it, vectorizer)
   
-  dtm <- get_dtm(corpus, type = "dgCMatrix")
+  dtm <- text2vec::get_dtm(corpus, type = "dgCMatrix")
   
   rownames(dtm) <- docnames
   

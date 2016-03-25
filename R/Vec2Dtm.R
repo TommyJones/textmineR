@@ -41,71 +41,90 @@
 #' 
 
 
-Vec2Dtm <- function(vec, min.n.gram=1, max.n.gram=1, remove.stopwords=TRUE, 
-                    custom.stopwords=NULL, lower=TRUE, remove.punctuation=TRUE, 
-                    remove.numbers=TRUE, stem.document=FALSE){
-	# for now, it is strongly advised to accept the defaults for lower, remove.punctuation, and remove.numbers
-	# Other functions are built assuming that the column headings of a dtm contain only letters and underscores "_"
-	
-#   # set an option that normally causes this to crash on a Mac
-#   if(grepl("apple", sessionInfo()$platform)) options(mc.cores=1)
-  options(mc.cores = parallel::detectCores())
+Vec2Dtm <- function(vec, docnames = names(vec), min.n.gram=1, max.n.gram=1, 
+                    remove.stopwords=TRUE, custom.stopwords=NULL, lower=TRUE, 
+                    remove.punctuation=TRUE, remove.numbers=TRUE, stem.document=FALSE){
   
-	if(remove.stopwords){
-		stopwords <- unique(c(tm::stopwords("english"), tm::stopwords("SMART")))
-	}else{
-		stopwords <- c()
-	}
-  
-  if(is.null(names(vec))){
-    docnames <- 1:length(vec)
-  }else{
-    docnames <- names(vec)
-  }
-    
-    if( ! is.null(custom.stopwords) ) stopwords <- c(stopwords, custom.stopwords)
-	
-	if( lower ) {
-		vec <- tolower(vec)
-		stopwords <- tolower(stopwords)
-	}
-	
-	if( remove.punctuation ){ 
-		vec <- gsub("[^a-zA-Z0-9]", " ", vec)
-		stopwords <- gsub("[^a-zA-Z0-9]", " ", stopwords)
-		stopwords <- unique(unlist(strsplit(stopwords, split="\\s+")))
-	}
-	
-	if( remove.numbers ){ 
-		vec <- gsub("[0-9]", " ", vec)
-	}
+  ### Convert arguments to conform to textmineR v2.0 naming scheme -------------
+  doc_vec <- vec
+  min_ngram <- min.n.gram
+  max_ngram <- max.n.gram
+  remove_stopwords <- remove.stopwords
+  custom_stopwords <- custom.stopwords
+  remove_punctuation <- remove.punctuation
+  remove_numbers <- remove.numbers
+  stem_documents <- stem.documents
 
-	vec <- gsub("\\s+", " ", vec) # remove extra spaces
-	
-	corp <- tm::Corpus(tm::VectorSource(vec))
-    
-    
-    if( remove.stopwords | ! is.null(custom.stopwords)){
-        corp <- tm::tm_map(x=corp, tm::removeWords, stopwords)
-    }
-	
-	if( stem.document ){
-		corp <- tm::tm_map(x=corp, tm::stemDocument)
-	}
-	
-	if(max.n.gram == 1){
-		dtm <- tm::DocumentTermMatrix(corp)
-	}else{
-    options(mc.cores=1)
-		dtm <- tm::DocumentTermMatrix(corp, control=list(
-		  tokenize=NgramTokenizer(min=min.n.gram, max=max.n.gram)))
-	}
-	
-	dtm <- MakeSparseDTM(dtm=dtm)
-	
-	colnames(dtm) <- gsub(" ", "_", colnames(dtm))
+  ### Pre-process the documents ------------------------------------------------
+  if(is.null(docnames)){
+    warning("No document names detected. Assigning 1:length(doc_vec) as names.")
+    docnames <- 1:length(doc_vec)
+  }
+  
+  if (remove_stopwords) {
+    stopwords <- unique(c(tm::stopwords("english"), tm::stopwords("SMART")))
+  }
+  else {
+    stopwords <- c()
+  }
+  
+  if (!is.null(custom_stopwords)){
+    stopwords <- c(stopwords, custom.stopwords)
+  } 
+  
+  if (lower) {
+    doc_vec <- tolower(doc_vec)
+    stopwords <- tolower(stopwords)
+  }
+  
+  if (remove_punctuation) {
+    doc_vec <- stringr::str_replace_all(doc_vec, "[^a-zA-Z0-9]", " ")
+    stopwords <- stringr::str_replace_all(stopwords, "[^a-zA-Z0-9]", " ")
+    stopwords <- unique(unlist(stringr::str_split(string = stopwords, 
+                                                  pattern = "\\s+")))
+  }
+  
+  if (remove_numbers) {
+    doc_vec <- stringr::str_replace_all(doc_vec, "[0-9]", " ")
+  }
+  
+  doc_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
+  
+  ### Create iterators, vocabulary, other objects for dtm construction ---------
+  
+  # tokenize & construct vocabulary
+  tokens <- text2vec::word_tokenizer(string = doc_vec)
+  
+  if(remove_stopwords | ! is.null(custom_stopwords)){
+    tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
+      setdiff(x, stopwords)
+    }, export = "stopwords", ...)
+  }
+  
+  
+  if(stem_document){
+    tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
+      SnowballC::wordStem(x, "porter")
+    }, ...)
+  }
+  
+  it <- text2vec::itoken(tokens)
+  
+  vocabulary <- text2vec::create_vocabulary(itoken_src = it, 
+                                            ngram = c(ngram_min = as.integer(min_ngram),
+                                                      ngram_max = as.integer(max_ngram)))
+  
+  
+  vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
+  
+  ### Get the dtm, make sure it has correct dimnames, and return ---------------
+  it <- text2vec::itoken(tokens)
+  
+  corpus <- text2vec::create_corpus(it, vectorizer)
+  
+  dtm <- text2vec::get_dtm(corpus, type = "dgCMatrix")
   
   rownames(dtm) <- docnames
-	
-	return(dtm)
+  
+  return(dtm)
 }
