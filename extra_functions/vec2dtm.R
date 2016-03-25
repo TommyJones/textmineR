@@ -21,7 +21,7 @@
 #'        characters to spaces? Defaults to \code{TRUE}
 #' @param remove_numbers Do you want to convert all numbers to spaces? Defaults 
 #'        to \code{TRUE}
-#' @param stem_document Do you want to stem the words in your document using 
+#' @param stem_documents Do you want to stem the words in your document using 
 #'        Porter's word stemmer? Defaults to \code{FALSE}
 #' @param ... Other arguments to be passed to \code{textmineR::TmParallelApply}.
 #' @examples
@@ -41,7 +41,7 @@
 vec2dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1, 
                     remove_stopwords = TRUE, custom_stopwords = NULL, 
                     lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                    stem_document = FALSE, ...){
+                    stem_documents = FALSE, ...){
   
   ### Pre-process the documents ------------------------------------------------
   if(is.null(docnames)){
@@ -90,7 +90,7 @@ vec2dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
   }
   
   
-  if(stem_document){
+  if(stem_documents){
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
       SnowballC::wordStem(x, "porter")
     }, ...)
