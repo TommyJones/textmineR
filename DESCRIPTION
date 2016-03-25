@@ -14,10 +14,11 @@ Depends:
 Imports:
     lda,
     parallel,
+    tm,
+    RWeka,
     Rcpp,
     RcppProgress,
-    irlba,
-    text2vec
+    irlba
 Suggests:
     digest
 License: GPL (>= 3)

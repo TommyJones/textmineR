@@ -11,17 +11,21 @@ Below is a demo of some of the functionality in `textmineR`
 
     library(textmineR)
 
-    # Load some data into the workspace and convert it to a character vector
-    data(acq2)
+    # Load some data into the workspace 
+    data(nih_sample)
     
     # Create a document term matrix
-    dtm <- Vec2Dtm(documents, min.n.gram = 1, max.n.gram = 2)
+    dtm <- Vec2Dtm(nih_sample$ABSTRACT_TEXT, 
+                   docnames = nih_sample$APPLICATION_ID, 
+                   min.n.gram = 1, max.n.gram = 2)
     
     dim(dtm)
     
     # explore basic frequencies & curate vocabulary
     tf <- TermDocFreq(dtm = dtm)
     
+    # Eliminate words appearing less than 2 times or in more than half of the
+    # documents
     vocabulary <- tf$term[ tf$term.freq > 1 & tf$doc.freq < nrow(dtm) / 2 ]
     
     dtm <- dtm[ , vocabulary]
@@ -41,7 +45,7 @@ Below is a demo of some of the functionality in `textmineR`
       if (!file.exists(filename)) {
         m <- FitLdaModel(dtm = dtm, k = k, iterations = 500)
         m$k <- k
-        m$coherence <- apply(m$phi, 1, function(x) ProbCoherence(topic = x, dtm = dtm, M = 5))
+        m$coherence <- CalcProbCoherence(phi = m$phi, dtm = dtm, M = 5)
         save(m, file = filename)
       } else {
         load(filename)
@@ -93,9 +97,7 @@ Below is a demo of some of the functionality in `textmineR`
                                 M = 2)
     
     # Probabilistic coherence: measures statistical support for a topic
-    model$coherence <- apply(model$phi, 1, function(x){
-      ProbCoherence(topic = x, dtm = dtm, M = 5)
-    })
+    model$coherence <- CalcProbCoherence(phi = model$phi, dtm = dtm, M = 5)
     
     
     # Number of documents in which each topic appears

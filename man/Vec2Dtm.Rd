@@ -4,9 +4,10 @@
 \alias{Vec2Dtm}
 \title{Convert a character vector to a document term matrix of class Matrix.}
 \usage{
-Vec2Dtm(vec, min.n.gram = 1, max.n.gram = 1, remove.stopwords = TRUE,
-  custom.stopwords = NULL, lower = TRUE, remove.punctuation = TRUE,
-  remove.numbers = TRUE, stem.document = FALSE)
+Vec2Dtm(vec, docnames = names(vec), min.n.gram = 1, max.n.gram = 1,
+  remove.stopwords = TRUE, custom.stopwords = NULL, lower = TRUE,
+  remove.punctuation = TRUE, remove.numbers = TRUE, stem.document = FALSE,
+  ...)
 }
 \arguments{
 \item{vec}{A character vector of documents. Punctuation etc. is allowed. names(vec) should be names of your documents.}
@@ -27,6 +28,8 @@ remove additional stopwords by subsetting the columns of a DTM post-hoc. This is
 \item{remove.numbers}{Do you want to convert all numbers to spaces? For example, "3rd grade teachers" goes to " rd grade teachers" (Defaults to TRUE)}
 
 \item{stem.document}{Do you want to stem the words in your document? (Defaults to FALSE)}
+
+\item{...}{Additional arguments to be passed to \code{textmineR::TmParallelApply}}
 }
 \description{
 This is the main document term matrix creating function for \code{textmineR}.

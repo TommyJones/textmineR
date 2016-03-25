@@ -1,13 +1,12 @@
-### Updates for version 1.6.1
+### Updates for version 1.7.0
 #### Implemented
-* Add modeling capability for latent semantic analysis
-* Add CalcProbCoherence function which replaces ProbCoherence and can calculate
+* Added modeling capability for latent semantic analysis FitLsaModel
+* Added CalcProbCoherence function which replaces ProbCoherence and can calculate
   probabilistic coherence for the whole phi matrix.
-
-#### Planned 
-* Deprecating arguments that use periods instead of underscores
-* Update add arguments using underscores where necessary
-
+* Vec2Dtm function now uses text2vec instead of tm framework. This makes a
+  _huge_ difference in speed. 
+* Added data from NIH research grants instead of borrowd data from tm
+* Removed qcq data to eliminate tm dependency entierly
 
 ### Updates for version 1.6.0
 

@@ -9,3 +9,6 @@
 ^\.gitignore$
 ^news.md
 ^models_*
+^data/nih_full.rda
+^data/acq2.rda
+^man/acq2.rd
