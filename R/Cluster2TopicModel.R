@@ -1,7 +1,7 @@
 #' Represent a document clustering as a topic model
 #' @description Represents a document clustering as a topic model of two matrices.
 #' phi: P(term | cluster) theta: P(cluster | document)
-#' @param dtm A document term matrix of class \code{matrix} or whose class 
+#' @param dtm A document term matrix of class \code{dgCMatrix} or whose class 
 #' inherits from the \code{Matrix} packge. Columns must index terms, rows must 
 #' index documents.
 #' @param clustering A vector of length \code{nrow(dtm)} whose entries form a
@@ -12,12 +12,15 @@
 #' j-th row represents P(clusters | document_j). Each row of theta should only
 #' have one non-zero element.
 #' @examples
+#' \dontrun{
 #' # Load pre-formatted data for use
 #' data(nih_sample_dtm)
 #' data(nih_sample) 
 #' 
 #' result <- Cluster2TopicModel(dtm = nih_sample_dtm, 
 #'                              clustering = nih_sample$IC_NAME)
+#' }
+
 #' @export 
 Cluster2TopicModel <- function(dtm, clustering, ...){
   
