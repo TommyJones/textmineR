@@ -1,12 +1,12 @@
 ### Updates for version 1.7.0
 #### Implemented
-* Added modeling capability for latent semantic analysis FitLsaModel
-* Added CalcProbCoherence function which replaces ProbCoherence and can calculate
+* Added modeling capability for latent semantic analysis in FitLsaModel()
+* Added CalcProbCoherence() function which replaces ProbCoherence() and can calculate
   probabilistic coherence for the whole phi matrix.
-* Vec2Dtm function now uses text2vec instead of tm framework. This makes a
-  _huge_ difference in speed. 
 * Added data from NIH research grants instead of borrowd data from tm
-* Removed qcq data to eliminate tm dependency entierly
+* Removed qcq data 
+* Added variational em method for FitLdaModel()
+* Added function to represent document clustering as a topic model Cluster2TopicModel()
 
 ### Updates for version 1.6.0
 

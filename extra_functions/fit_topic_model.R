@@ -4,11 +4,11 @@ fit_topic_model <- function(x, k = NULL, type = c("lda", "lsa", "stm", "pca", "c
                             control = list(...)){
   
   # Latent Dirichlet Allocation
-  # (em vs gibbs)
+  # (em vs gibbs) got em!
   
-  # Latent Semantic Analysis
+  # Latent Semantic Analysis got em!
   
-  # Structural Topic Model
+  # Structural Topic Model got em!
   
   # Principle Component Analsis
   
@@ -16,7 +16,9 @@ fit_topic_model <- function(x, k = NULL, type = c("lda", "lsa", "stm", "pca", "c
   
   # GloVe
   
-  # Correlated Topic Model
+  # Correlated Topic Model got em!
+  
+  # Cluster Topic Model
   
   
 }

@@ -15,6 +15,7 @@ Imports:
     lda,
     parallel,
     tm,
+    topicmodels,
     RWeka,
     Rcpp,
     RcppProgress,
