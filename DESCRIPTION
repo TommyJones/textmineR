@@ -1,13 +1,14 @@
 Package: textmineR
 Title: Functions for Text Mining and Topic Modeling
-Version: 1.6.0.9000
+Version: 1.7.0
 Date: 2016-03-05
 Author: "Thomas W. Jones <jones.thos.w@gmail.com>"
 Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>
 Description: An aid for text mining in R, with a syntax that
-    should be familiar to experienced R users. Also, implements various functions
-    related to topic modeling. It is built on the text2vec library and works well 
-    with with the lda library.
+    should be familiar to experienced R users. Provides a wrapper for several 
+    topic models that take similarly-formatted input and give similarly-formatted
+    output. Has additional functionality for analyzing and diagnostics for
+    topic models.
 Depends:
     R (>= 3.0.2),
     Matrix
