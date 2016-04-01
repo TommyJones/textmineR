@@ -13,8 +13,9 @@
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 
 #' 
-#' # Fit a CTM model
-#' model <- FitCtmModel(dtm = nih_sample_dtm, k = 5)
+#' # Fit a CTM model on a sample of documents
+#' model <- FitCtmModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 50) , ], 
+#'                      k = 5, return_all = FALSE)
 #' @export
 FitCtmModel <- function(dtm, k, return_all = TRUE, ...){
   
