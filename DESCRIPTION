@@ -16,7 +16,7 @@ Imports:
     lda,
     parallel,
     topicmodels,
-    text2vec,
+    text2vec (>= 0.3),
     Rcpp,
     RcppProgress,
     irlba
