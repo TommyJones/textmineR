@@ -1,7 +1,7 @@
 #' Fit a topic model using Latent Dirichlet Allocation
 #' @description A wrapper for two implementations of Latent Dirichlet 
 #' Allocation that returns a nicely-formatted topic model. See details, below.
-#' @param dtm A document term matrix of class \code{Matrix::dgCMatrix}
+#' @param dtm A document term matrix of class \code{dgCMatrix}
 #' @param k Number of topics
 #' @param iterations The number of Gibbs iterations if \code{method = 'gibbs'}
 #' @param alpha Dirichlet parameter for the distribution of topics over documents. 
