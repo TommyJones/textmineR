@@ -38,6 +38,13 @@ LabelTopics <- function(assignments, dtm, M=2){
   
   # get dtm_ngram and p_terms
   dtm_ngram <- dtm[ , grepl("_", colnames(dtm)) ]
+  
+  if(ncol(dtm_ngram) == 0){
+    warning("dtm does not appear to contain ngrams. Using unigrams but ngrams will",
+            " work much better.")
+    dtm_ngram <- dtm
+  }
+  
   p_terms <- Matrix::colSums(dtm_ngram)
   p_terms <- p_terms / sum(p_terms)
   
