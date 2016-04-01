@@ -1,6 +1,6 @@
 Package: textmineR
 Title: Functions for Text Mining and Topic Modeling
-Version: 1.7.0
+Version: 2.0.0
 Date: 2016-03-05
 Author: "Thomas W. Jones <jones.thos.w@gmail.com>"
 Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>
@@ -15,9 +15,8 @@ Depends:
 Imports:
     lda,
     parallel,
-    tm,
     topicmodels,
-    RWeka,
+    text2vec,
     Rcpp,
     RcppProgress,
     irlba
