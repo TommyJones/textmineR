@@ -3,7 +3,7 @@
 #' In most cases, all you need to do is import documents as a character vector in R and then 
 #' run this function to get a document term matrix that is compatible with the 
 #' rest of \code{textmineR}'s functionality and many other libraries. \code{vec2dtm}
-#' is built on top of the excellent \code{text2vec} library.
+#' is built on top of the excellent \code{link[text2vec]{text2vec}}library.
 #' 
 #' @param doc_vec A character vector of documents. 
 #' @param docnames A vector of names for your documents. Defaults to 
