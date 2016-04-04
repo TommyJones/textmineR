@@ -68,17 +68,17 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...){
     rownames(phi) <- 1:nrow(phi)
   }
   
-  if(sort(intersect(colnames(dtm), colnames(phi))) != sort(union(colnames(dtm), colnames(phi)))){
+  if(sum(intersect(colnames(dtm), colnames(phi)) %in% union(colnames(dtm), colnames(phi))) != ncol(dtm)){
     # all terms in dtm present in phi?
     stop("vocabulary does not match between dtm and phi. Check colnames of both matrices.")
   }
   
-  if(sort(intersect(rownames(dtm), rownames(theta))) != sort(union(rownames(dtm), rownames(theta)))){
+  if(sum(intersect(rownames(dtm), rownames(theta)) %in% union(rownames(dtm), rownames(theta))) != nrow(dtm)){
     # all documents in dtm present in theta?
     stop("document names do not match between dtm and theta. Check rownames of both matrices.")
   }
   
-  if(sort(intersect(colnames(theta), rownames(phi))) != sort(union(colnames(theta), rownames(phi)))){
+  if(sum(intersect(colnames(theta), rownames(phi)) %in% union(colnames(theta), rownames(phi))) != ncol(theta)){
     # all topics in theta present in phi?
     stop("topic names do not match. Check rownames(phi) and colnames(theta)")
   }
