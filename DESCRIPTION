@@ -17,6 +17,7 @@ Imports:
     parallel,
     topicmodels,
     text2vec (>= 0.3),
+    tm,
     Rcpp,
     RcppProgress,
     irlba
