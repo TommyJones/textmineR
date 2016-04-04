@@ -17,7 +17,7 @@ Below is a demo of some of the functionality in `textmineR`
     # Create a document term matrix
     dtm <- Vec2Dtm(nih_sample$ABSTRACT_TEXT, 
                    docnames = nih_sample$APPLICATION_ID, 
-                   min.n.gram = 1, max.n.gram = 2)
+                   min_n_gram = 1, max_n_gram = 2)
     
     dim(dtm)
     
@@ -26,7 +26,7 @@ Below is a demo of some of the functionality in `textmineR`
     
     # Eliminate words appearing less than 2 times or in more than half of the
     # documents
-    vocabulary <- tf$term[ tf$term.freq > 1 & tf$doc.freq < nrow(dtm) / 2 ]
+    vocabulary <- tf$term[ tf$term_freq > 1 & tf$doc_freq < nrow(dtm) / 2 ]
     
     dtm <- dtm[ , vocabulary]
     
@@ -77,7 +77,7 @@ Below is a demo of some of the functionality in `textmineR`
     model$top_terms <- GetTopTerms(phi = model$phi, M = 5)
     
     # phi-prime, P(topic | words) for classifying new documents
-    model$phi_prime <- GetPhiPrime(phi = model$phi, theta = model$theta)
+    model$phi_prime <- CalcPhiPrime(phi = model$phi, theta = model$theta, p_docs = rowSums(dtm))
     
     model$top_terms_prime <- GetTopTerms(phi = model$phi_prime, M = 5)
     
