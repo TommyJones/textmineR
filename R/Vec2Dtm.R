@@ -38,7 +38,7 @@
 #' 
 #' head(rownames(dtm))
 #' @export
-vec2dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1, 
+Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1, 
                     remove_stopwords = TRUE, custom_stopwords = NULL, 
                     lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
                     stem_documents = FALSE, ...){
