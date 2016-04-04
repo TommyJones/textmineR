@@ -50,7 +50,7 @@ LabelTopics <- function(assignments, dtm, M=2){
   
   # apply the label algorithm over each topic
   result <- lapply(doc_list, function(x){
-    l <- GetProbableTerms(docnames = x, dtm = dtm_ngram, p.terms = p_terms)
+    l <- GetProbableTerms(docnames = x, dtm = dtm_ngram, p_terms = p_terms)
     names(l)[ order(l, decreasing=T) ][ 1:M ]
   })
   
