@@ -30,48 +30,100 @@
 #' 
 #' r2
 CalcTopicModelR2 <- function(dtm, phi, theta, ...){
+  
+  # check that inputs have necessary formats
+  if(nrow(dtm) != nrow(theta) ){ 
+    # number of documents matches?
+    stop("nrow(dtm) must match nrow(theta).")
+  }
+  
+  if(nrow(phi) != ncol(theta)){ 
+    # number of topics matches?
+    stop("nrow(phi) must match ncol(theta)")
+  }
+  
+  if(ncol(dtm) != ncol(phi)){ 
+    # vocabulary size matches?
+    stop("ncol(dtm) must match ncol(phi)")
+  }
+  
+  if(is.null(rownames(dtm)) | is.null(rownames(theta))){ 
+    # doc names exist?
+    warning("missing rownames from one or both of dtm and theta. Row index used instead.")
+    rownames(dtm) <- 1:nrow(dtm)
+    rownames(theta) <- 1:nrow(theta)
+  }
+  
+  if(is.null(colnames(dtm)) | is.null(colnames(phi))){ 
+    # term names exist?
+    warning("missing colnames from one or both of dtm and phi. Column index used instead")
+    colnames(dtm) <- 1:ncol(dtm)
+    colnames(phi) <- 1:ncol(phi)
+  }
+  
+  if(is.null(rownames(phi)) | is.null(colnames(theta))){ 
+    # topic names exist?
+    warning("missing colnames from theta or rownames from phi. Row/column indeces used instead.")
+    colnames(theta) <- 1:ncol(theta)
+    rownames(phi) <- 1:nrow(phi)
+  }
+  
+  if(sort(intersect(colnames(dtm), colnames(phi))) != sort(union(colnames(dtm), colnames(phi)))){
+    # all terms in dtm present in phi?
+    stop("vocabulary does not match between dtm and phi. Check colnames of both matrices.")
+  }
+  
+  if(sort(intersect(rownames(dtm), rownames(theta))) != sort(union(rownames(dtm), rownames(theta)))){
+    # all documents in dtm present in theta?
+    stop("document names do not match between dtm and theta. Check rownames of both matrices.")
+  }
+  
+  if(sort(intersect(colnames(theta), rownames(phi))) != sort(union(colnames(theta), rownames(phi)))){
+    # all topics in theta present in phi?
+    stop("topic names do not match. Check rownames(phi) and colnames(theta)")
+  }
+  
+  # ensure that all inputs are sorted correctly
+  phi <- phi[ colnames(theta) , colnames(dtm) ]
+  
+  theta <- theta[ rownames(dtm) , ]
+  
+  
+  # get ybar, the "center" of the documents
+  ybar <- Matrix::colMeans(dtm)
+  
+  # do in parallel in batches of about 3000 if we have more than 3000 docs
+  if(nrow(dtm) > 3000){
     
-    # ensure that all inputs are sorted correctly
-    phi <- phi[ colnames(theta) , colnames(dtm) ]
+    batches <- seq(1, nrow(dtm), by = 3000)
     
-    theta <- theta[ rownames(dtm) , ]
+    data_divided <- lapply(batches, function(j){
+      
+      dtm_divided <- dtm[ j:min(j + 2999, nrow(dtm)) , ]
+      
+      theta_divided <- theta[ j:min(j + 2999, nrow(dtm)) , ]
+      
+      list(dtm_divided=dtm_divided, theta_divided=theta_divided)
+    })
     
+    result <-TmParallelApply(X = data_divided, FUN = function(x){
+      CalcSumSquares(dtm = x$dtm_divided, 
+                     phi = phi, 
+                     theta = x$theta_divided, 
+                     ybar=ybar)
+    }, export=c("phi", "ybar"), ...)
     
-    # get ybar, the "center" of the documents
-    ybar <- Matrix::colMeans(dtm)
+    result <- do.call(rbind, result)
     
-    # do in parallel in batches of about 3000 if we have more than 3000 docs
-    if(nrow(dtm) > 3000){
-      
-      batches <- seq(1, nrow(dtm), by = 3000)
-      
-      data_divided <- lapply(batches, function(j){
-        
-        dtm_divided <- dtm[ j:min(j + 2999, nrow(dtm)) , ]
-        
-        theta_divided <- theta[ j:min(j + 2999, nrow(dtm)) , ]
-        
-        list(dtm_divided=dtm_divided, theta_divided=theta_divided)
-      })
-      
-      result <-TmParallelApply(X = data_divided, FUN = function(x){
-        CalcSumSquares(dtm = x$dtm_divided, 
-                       phi = phi, 
-                       theta = x$theta_divided, 
-                       ybar=ybar)
-      }, export=c("phi", "ybar"), ...)
-      
-      result <- do.call(rbind, result)
-      
-      result <- 1 - sum(result[ , 1 ]) / sum(result[ , 2 ])
+    result <- 1 - sum(result[ , 1 ]) / sum(result[ , 2 ])
     
     # do sequentially otherwise
-    }else{
-      sum_squares <- CalcSumSquares(dtm = dtm,  phi = phi, theta = theta, ybar=ybar)
-      
-      result <- 1 - sum_squares[ 1 ] / sum_squares[ 2 ]
-      
-    }
+  }else{
+    sum_squares <- CalcSumSquares(dtm = dtm,  phi = phi, theta = theta, ybar=ybar)
     
-    result
+    result <- 1 - sum_squares[ 1 ] / sum_squares[ 2 ]
+    
+  }
+  
+  result
 }
