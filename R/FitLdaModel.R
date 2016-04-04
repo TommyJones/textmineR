@@ -90,7 +90,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05,
                                               eta = beta,
                                               ...)
     
-    result <- FormatRawLdaOutput(lda.result = model, 
+    result <- FormatRawLdaOutput(lda_result = model, 
                                 docnames = rownames(dtm), 
                                 smooth = smooth)
     if(return_all){
