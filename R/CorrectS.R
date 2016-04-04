@@ -1,7 +1,7 @@
 #' @title Function to remove some forms of pluralization. 
 #' @description This function takes a character vector as input and removes some
 #' forms of pluralization from the ends of the words. 
-#' @param term.vec A character vector
+#' @param term_vec A character vector
 #' 
 #' @details The entries of the vector should be single words or short n-grams 
 #' without punctuation as the function only looks at the ends of strings. In 
@@ -13,21 +13,21 @@
 #' @export
 #' @return
 #' Returns an object of class \code{data.frame} with three columns. The first
-#' column is the argument \code{term.vec}. The second column is the depluralized
-#' version of the words in \code{term.vec}. The third column is a logical, indicating
-#' whether or not the word in \code{term.vec} was changed.
+#' column is the argument \code{term_vec}. The second column is the depluralized
+#' version of the words in \code{term_vec}. The third column is a logical, indicating
+#' whether or not the word in \code{term_vec} was changed.
 #' @examples
 #' myvec <- c("banana", "bananas", "scientists", "large_armies")
 #'
-#' CorrectS(term.vec=myvec)
+#' CorrectS(term_vec=myvec)
 #'
 
 
-CorrectS <- function(term.vec){
+CorrectS <- function(term_vec){
 	# makes some adjustments to pluralization
 	# WARNING: This does make mistakes for irregular words. You should check its results manually.
-    s.adjust <- gsub("sses$", "ss", term.vec) 
-    keep.list <- s.adjust[ grepl("sis$|ss$|us$|species$", s.adjust) | nchar(term.vec) <= 3 | grepl( "_[a-zA-Z][a-zA-Z][a-zA-Z]$", s.adjust) ]
+    s.adjust <- gsub("sses$", "ss", term_vec) 
+    keep.list <- s.adjust[ grepl("sis$|ss$|us$|species$", s.adjust) | nchar(term_vec) <= 3 | grepl( "_[a-zA-Z][a-zA-Z][a-zA-Z]$", s.adjust) ]
     
     s.adjust2 <- gsub("ies$", "y", s.adjust)
     s.adjust2 <- gsub("s$", "", s.adjust2)
@@ -35,6 +35,6 @@ CorrectS <- function(term.vec){
     out.list <- s.adjust2
     out.list[ s.adjust %in% keep.list ] <- s.adjust[ s.adjust %in% keep.list ]
     
-    result <- data.frame(original=term.vec, adjusted=out.list, changed=term.vec!=out.list, stringsAsFactors=FALSE)
+    result <- data.frame(original=term_vec, adjusted=out.list, changed=term_vec!=out.list, stringsAsFactors=FALSE)
     return(result)
 }

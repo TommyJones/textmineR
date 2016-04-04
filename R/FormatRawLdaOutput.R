@@ -1,6 +1,6 @@
 #' Format Raw Output from lda::lda.collapsed.gibbs.sampler() 
 #' @description extracts outputs from LDA model estimated with \code{lda} package by Jonathan Chang
-#' @param lda.result The list value returned by lda.collapsed.gibbs.sampler()
+#' @param lda_result The list value returned by lda.collapsed.gibbs.sampler()
 #' @param docnames A character vector giving the names of documents. This is generally rownames(dtm). 
 #' @param smooth Logical. Do you want to smooth your topic proportions so that 
 #' there is a positive value for each term in each topic? Defaults to TRUE
@@ -26,13 +26,13 @@
 #'                                          alpha=0.1, eta=0.05)
 #'                                          
 #' # Format the result to get phi and theta matrices                                        
-#' lda <- FormatRawLdaOutput(lda.result=lda, docnames=rownames(nih_sample_dtm), smooth=TRUE)
+#' lda <- FormatRawLdaOutput(lda_result=lda, docnames=rownames(nih_sample_dtm), smooth=TRUE)
 #' 
 
 
-FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
+FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
     
-    theta <- t(lda.result$document_sums)
+    theta <- t(lda_result$document_sums)
     
   
   # Normalize topic vectors and doc vectors, smooth if necessary
@@ -45,7 +45,7 @@ FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
   
   
 
-	phi <- lda.result$topics
+	phi <- lda_result$topics
   
 	if(smooth){ 
         phi <- phi + 0.0001 
@@ -59,8 +59,8 @@ FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
   
   # capture document_expects, if it exists 
 	# (document_expects is over multiple runs, document_sums is over a single run)
-  if(! is.null(dim(lda.result$document_expects))){
-    theta_expects <- t(lda.result$document_expects)
+  if(! is.null(dim(lda_result$document_expects))){
+    theta_expects <- t(lda_result$document_expects)
     
     theta_expects <- theta_expects/Matrix::rowSums(theta_expects)
     rownames(theta_expects) <- docnames
@@ -76,15 +76,15 @@ FormatRawLdaOutput <- function(lda.result, docnames, smooth=TRUE){
   }
   
 
-  # add in other outputs that may be in the raw lda.result
-  additional_objects <- setdiff(names(lda.result), 
+  # add in other outputs that may be in the raw lda_result
+  additional_objects <- setdiff(names(lda_result), 
                                 c("document_sums", "topics", "topic_sums", 
                                   "document_expects", "assignments"))
   
   additional_objects <- additional_objects[ ! is.na(additional_objects) ]
   
 	if( length(additional_objects) > 0 ){ 
-        result$etc <- lda.result[ additional_objects ]
+        result$etc <- lda_result[ additional_objects ]
 	}
 
   # return result
