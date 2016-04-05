@@ -85,7 +85,7 @@ Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
   
   if(remove_stopwords | ! is.null(custom_stopwords)){
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
-      setdiff(x, stopwords)
+      x[ ! x %in% stopwords ]
     }, export = "stopwords", ...)
   }
   
@@ -108,9 +108,9 @@ Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
   ### Get the dtm, make sure it has correct dimnames, and return ---------------
   it <- text2vec::itoken(tokens)
   
-  corpus <- text2vec::create_corpus(it, vectorizer)
-  
-  dtm <- text2vec::get_dtm(corpus, type = "dgCMatrix")
+  dtm <- text2vec::create_dtm(itoken_src = it, 
+                              vectorizer = vectorizer,
+                              type = "dgCMatrix")
   
   rownames(dtm) <- docnames
   
