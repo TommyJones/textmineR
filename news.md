@@ -1,5 +1,32 @@
-### Updates for version 1.7.0
+### Updates for version 2.0.0
+
 #### Implemented
+* Vec2Dtm is now implemented with a parallel C++ back end through the text2vec library
+  - the implementation is _much_ faster! About a 10x speedup for smaller corpora.
+    I expect there to be an even greater speedup with larger corpora.
+  - adds external dependencies - C++ compiler and GNU make - and takes away an external
+    dependency - Java.
+  - stop words are the same and come from the tm library
+  - stemming should be the same, using Porter's stemmer
+  - now _all_ tokens will be included, regardless of length. (tm's framework silently
+    dropped all tokens of fewer than 3 characters.)
+* Function for fitting correlated topic models
+* Function to turn a document term matrix to term co-occurence matrix
+* Allowed LabelTopics to use unigrams, if you want. (n-grams are still better.)
+* More robust error checking for CalcTopicModelR2 and CalcLikelihood
+* All function arguments use "_", not "." to separate words.
+* CalcPhiPrime replaces (the now deprecated) GetPhiPrime
+  - Allows you to pass an argument to specify non-uniform probabilities of each 
+    document
+
+#### Possible
+* Allow generic stemming and stopwords in Vec2Dtm
+  - At a minimum, communicate better how to use non-English stopwords and make
+    the remove_stopwords argument less English-centric.
+
+
+### Updates for version 1.7.0
+
 * Added modeling capability for latent semantic analysis in FitLsaModel()
 * Added CalcProbCoherence() function which replaces ProbCoherence() and can calculate
   probabilistic coherence for the whole phi matrix.
@@ -19,12 +46,3 @@
   when lower = TRUE 
 * Update README example to use model caches 
   
-### Planned for version 2.0.0
-
-* Parallelization at C++ level with RcppParallel where possible
-* Core DTM creating functions moved from tm framework to being performed in 
-  C++, parallelized where possible
-  - regexp for stopword removal/punctuation removal/number removal
-  - tokenization on spaces
-  - n-gram tokenization
-  - stemming/lemmatization
