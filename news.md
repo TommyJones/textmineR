@@ -18,6 +18,8 @@
 * CalcPhiPrime replaces (the now deprecated) GetPhiPrime
   - Allows you to pass an argument to specify non-uniform probabilities of each 
     document
+* Similarly, CalcHellingerDist and CalcJSDivergence replace HellDist and JSD.
+  This is to conform to a naming convention where functions are "verbs".
 
 #### Possible
 * Allow generic stemming and stopwords in Vec2Dtm
