@@ -1,4 +1,4 @@
-#' Jensen-Shannon Divergence
+#' Calculate Jensen-Shannon Divergence
 #' @description This function calculates the Jensen Shannon Divergence for the 
 #' rows or columns of a numeric matrix or for two numeric vectors.
 #' @param x A numeric matrix or numeric vector 
@@ -14,18 +14,12 @@
 #' @examples
 #' x <- rchisq(n = 100, df = 8)
 #' y <- x^2
-#' JSD(x = x, y = y)
+#' CalcJSDivergence(x = x, y = y)
 #' 
 #' mymat <- rbind(x, y)
-#' JSD(x = mymat)
-
-
-
-JSD <- function(x, y=NULL, by_rows=TRUE){
-  .Deprecated(new = "CalcJSDivergence", package = "textmineR",
-              msg = "JSD is deprecated and will be removed in textmineR v2.5.0
-              Use 'CalcJSDivergence' instead.",
-              old = "JSD")
+#' CalcJSDivergence(x = mymat)
+CalcJSDivergence <- function(x, y=NULL, by_rows=TRUE){
+  
   #############################################################################
   # case 1: x is not specified correctly
   #############################################################################
