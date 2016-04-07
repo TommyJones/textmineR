@@ -58,32 +58,32 @@ CreateDtm <- function(doc_vec, docnames = names(doc_vec), ngram_window = c(1, 1)
 
   if (lower) {
     doc_vec <- tolower(doc_vec)
-    stopwords <- tolower(stopwords)
+    stopword_vec <- tolower(stopword_vec)
   }
   
   if (remove_punctuation) {
     doc_vec <- stringr::str_replace_all(doc_vec, "[^a-zA-Z0-9]", " ")
-    stopwords <- stringr::str_replace_all(stopwords, "[^a-zA-Z0-9]", " ")
-    stopwords <- unique(unlist(stringr::str_split(string = stopwords, 
+    stopword_vec <- stringr::str_replace_all(stopword_vec, "[^a-zA-Z0-9]", " ")
+    stopword_vec <- unique(unlist(stringr::str_split(string = stopword_vec, 
                                                   pattern = "\\s+")))
   }
   
   if (remove_numbers) {
     doc_vec <- stringr::str_replace_all(doc_vec, "[0-9]", " ")
-    stopwords <- stringr::str_replace_all(stopwords, "[0-9]", " ")
-    stopwords <- unique(unlist(stringr::str_split(string = stopwords, 
+    stopword_vec <- stringr::str_replace_all(stopword_vec, "[0-9]", " ")
+    stopword_vec <- unique(unlist(stringr::str_split(string = stopword_vec, 
                                                   pattern = "\\s+")))
   }
   
   doc_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
-  stopwords <- stringr::str_replace_all(doc_vec, "\\s+", " ")
+  stopword_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
   
   ### Create iterators, vocabulary, other objects for dtm construction ---------
   
   # tokenize & construct vocabulary
   tokens <- text2vec::word_tokenizer(string = doc_vec)
   
-  if(length(stopwords) > 0){
+  if(length(stopword_vec) > 0){
     # process in batches of 5,000
     
     batches <- seq(1, length(tokens), 5000)
@@ -91,8 +91,8 @@ CreateDtm <- function(doc_vec, docnames = names(doc_vec), ngram_window = c(1, 1)
     tokens <- lapply(batches, function(x) tokens[ x:min(x + 4999, length(tokens)) ])
     
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
-      lapply(x, function(y) y[ ! y %in% stopwords ])
-    }, export = "stopwords", ...)
+      lapply(x, function(y) y[ ! y %in% stopword_vec ])
+    }, export = "stopword_vec", ...)
     
     tokens <- do.call("c", tokens)
   }
