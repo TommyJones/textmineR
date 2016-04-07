@@ -27,9 +27,9 @@
 #' data(nih_sample)
 #' 
 #' 
-#' dtm <- Vec2Dtm(doc_vec = nih_sample$ABSTRACT_TEXT,
+#' dtm <- Vec2Dtm(vec = nih_sample$ABSTRACT_TEXT,
 #'                docnames = nih_sample$APPLICATION_ID, 
-#'                min_ngram = 1, max_ngram = 2)
+#'                min.n.gram = 1, max.n.gram = 2)
 #' 
 #' dim(dtm)
 #' 
@@ -37,10 +37,10 @@
 #' 
 #' head(rownames(dtm))
 #' @export
-Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1, 
-                    remove_stopwords = TRUE, custom_stopwords = NULL, 
-                    lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                    stem_documents = FALSE, ...){
+Vec2Dtm <- function(vec, docnames = names(vec), min.n.gram=1, max.n.gram=1, 
+                    remove.stopwords=TRUE, custom.stopwords=NULL, lower=TRUE, 
+                    remove.punctuation=TRUE, remove.numbers=TRUE, stem.document=FALSE,
+                    ...){
   
   .Deprecated(new = "CreateDtm", package = "textmineR",
               msg = "Vec2Dtm is deprecated and will be removed in textmineR v3.0
@@ -48,28 +48,28 @@ Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
               old = "Vec2Dtm")
   
   # Recast Vec2Dtm inputs as CreateDtm inputs
-  ngram_window <- c(min_ngram, max_ngram)
+  ngram_window <- c(min.n.gram, max.n.gram)
   
   stopword_vec <- c()
   
-  stopword_vec <- c(stopword_vec, custom_stopwords)
+  stopword_vec <- c(stopword_vec, custom.stopwords)
   
-  if(remove_stopwords){
+  if(remove.stopwords){
     stopwords_vec <- c(stopword_vec, tm::stopwords("english"), tm::stopwords("SMART"))
   }
   
-  if(stem_documents){
+  if(stem.document){
     stem_lemma_function <- function(x) SnowballC::wordStem(x, "porter")
   }else{
     stem_lemma_functions <- NULL
   }
   
   # Use CreateDtm to get our result
-  result <- textmineR::CreateDtm(doc_vec = doc_vec, docnames = docnames,
+  result <- textmineR::CreateDtm(doc_vec = vec, docnames = docnames,
                                  ngram_window = ngram_window,
                                  stopword_vec = stopword_vec, lower = lower, 
-                                 remove_punctuation = remove_punctuation,
-                                 remove_numbers = remove_numbers,
+                                 remove_punctuation = remove.punctuation,
+                                 remove_numbers = remove.numbers,
                                  stem_lemma_function = stem_lemma_function, ...)
   
   result
