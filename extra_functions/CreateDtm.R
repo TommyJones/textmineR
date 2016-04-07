@@ -3,7 +3,7 @@
 #' In most cases, all you need to do is import documents as a character vector in R and then 
 #' run this function to get a document term matrix that is compatible with the 
 #' rest of \code{textmineR}'s functionality and many other libraries. \code{vec2dtm}
-#' is built on top of the excellent \code{link[text2vec]{text2vec}}library.
+#' is built on top of the excellent \code{\link[text2vec]{text2vec}} library.
 #' 
 #' @param doc_vec A character vector of documents. 
 #' @param docnames A vector of names for your documents. Defaults to 
@@ -23,7 +23,7 @@
 #' @param stem_lemma_function A function that you would like to apply to the 
 #'        documents for stemming, lemmatization, or similar. See examples for
 #'        usage.
-#' @param ... Other arguments to be passed to \code{textmineR::TmParallelApply}.
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
 #' @return A document term matrix of class \code{dgCMatrix}. The rows index 
 #' documents. The columns index terms. The i, j entries represent the count of 
 #' term j appearing in document i.
