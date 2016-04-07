@@ -1,8 +1,7 @@
-#' Function to calculate R-squared of a topic model.
+#' Calculate the R-squared of a topic model.
 #' @description Function to calculate R-squared for a topic model. 
 #' This uses a geometric interpretation of R-squared as the proportion of total distance 
 #' each document is from the center of all the documents that is explained by the model. 
-#'
 #' @param dtm A documents by terms dimensional document term matrix of class
 #' \code{dgCMatrix} or of class \code{matrix}. 
 #' @param phi A topics by terms dimensional matrix where each entry is p(term_i |topic_j)
