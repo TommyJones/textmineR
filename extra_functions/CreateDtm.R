@@ -84,9 +84,17 @@ CreateDtm <- function(doc_vec, docnames = names(doc_vec), ngram_window = c(1, 1)
   tokens <- text2vec::word_tokenizer(string = doc_vec)
   
   if(length(stopwords) > 0){
+    # process in batches of 5,000
+    
+    batches <- seq(1, length(tokens), 5000)
+    
+    tokens <- lapply(batches, function(x) tokens[ x:min(x + 4999, length(tokens)) ])
+    
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
-      x[ ! x %in% stopwords ]
+      lapply(x, function(y) y[ ! y %in% stopwords ])
     }, export = "stopwords", ...)
+    
+    tokens <- do.call("c", tokens)
   }
   
   
