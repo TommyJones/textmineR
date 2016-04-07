@@ -31,7 +31,7 @@
 #' data(nih_sample)
 #' 
 #' 
-#' dtm <- vec2dtm(doc_vec = nih_sample$ABSTRACT_TEXT,
+#' dtm <- Vec2Dtm(doc_vec = nih_sample$ABSTRACT_TEXT,
 #'                docnames = nih_sample$APPLICATION_ID, 
 #'                min_ngram = 1, max_ngram = 2)
 #' 
