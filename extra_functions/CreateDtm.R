@@ -45,15 +45,15 @@
 #'                  docnames = nih_sample$APPLICATION_ID,
 #'                  stem_lemma_function = function(x) SnowballC::wordStem(x, "porter"))
 #' @export
-CreateDtm <- function(doc_vec, docnames = names(doc_vec), ngram_window = c(1, 1), 
+CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1), 
                     stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")), 
                     lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
                     stem_lemma_function = NULL, ...){
   
   ### Pre-process the documents ------------------------------------------------
-  if(is.null(docnames)){
+  if(is.null(doc_names)){
     warning("No document names detected. Assigning 1:length(doc_vec) as names.")
-    docnames <- 1:length(doc_vec)
+    doc_names <- 1:length(doc_vec)
   }
 
   if (lower) {
@@ -85,19 +85,18 @@ CreateDtm <- function(doc_vec, docnames = names(doc_vec), ngram_window = c(1, 1)
   
   if(length(stopword_vec) > 0){
     # process in batches of 5,000
-    
+
     batches <- seq(1, length(tokens), 5000)
-    
+
     tokens <- lapply(batches, function(x) tokens[ x:min(x + 4999, length(tokens)) ])
-    
+
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x){
       lapply(x, function(y) y[ ! y %in% stopword_vec ])
     }, export = "stopword_vec", ...)
-    
+
     tokens <- do.call("c", tokens)
   }
-  
-  
+
   if(! is.null(stem_lemma_function)){
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
   }
@@ -117,11 +116,7 @@ CreateDtm <- function(doc_vec, docnames = names(doc_vec), ngram_window = c(1, 1)
                               vectorizer = vectorizer,
                               type = "dgCMatrix")
   
-  rownames(dtm) <- docnames
+  rownames(dtm) <- doc_names
   
   return(dtm)
-  
-  
-  
-  
 }

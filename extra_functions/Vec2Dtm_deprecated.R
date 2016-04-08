@@ -65,7 +65,7 @@ Vec2Dtm <- function(vec, docnames = names(vec), min.n.gram=1, max.n.gram=1,
   }
   
   # Use CreateDtm to get our result
-  result <- textmineR::CreateDtm(doc_vec = vec, docnames = docnames,
+  result <- textmineR::CreateDtm(doc_vec = vec, doc_names = docnames,
                                  ngram_window = ngram_window,
                                  stopword_vec = stopword_vec, lower = lower, 
                                  remove_punctuation = remove.punctuation,
