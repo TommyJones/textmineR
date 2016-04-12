@@ -4,21 +4,21 @@
 \alias{GetProbableTerms}
 \title{Get cluster labels using a "more probable" method of terms}
 \usage{
-GetProbableTerms(docnames, dtm, p.terms = NULL)
+GetProbableTerms(docnames, dtm, p_terms = NULL)
 }
 \arguments{
 \item{docnames}{A character vector of rownames of dtm for set of documents}
 
 \item{dtm}{A document term matrix of class \code{matrix} or \code{dgCMatrix}.}
 
-\item{p.terms}{If not NULL (the default), a numeric vector representing the 
+\item{p_terms}{If not NULL (the default), a numeric vector representing the 
 probabiliy of each term in the corpus whose names correspond to colnames(dtm).}
 }
 \value{
-Returns a numeric vector of the format p.terms. The entries of the vectors 
+Returns a numeric vector of the format p_terms. The entries of the vectors 
 correspond to the difference in the probability of drawing a term from the 
 set of documents given by docnames and the probability of drawing that term 
-from the corpus overall (p.terms).
+from the corpus overall (p_terms).
 }
 \description{
 Function extracts probable terms from a set of documents. 
@@ -34,7 +34,7 @@ mydocs <- rownames(nih_sample_topic_model$theta)[ nih_sample_topic_model$theta[ 
 
 term_probs <- Matrix::colSums(nih_sample_dtm) / sum(Matrix::colSums(nih_sample_dtm))
 
-GetProbableTerms(docnames = mydocs, dtm = nih_sample_dtm, p.terms = term_probs)
+GetProbableTerms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
 
 }
 

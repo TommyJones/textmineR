@@ -4,19 +4,19 @@
 \alias{HellDist}
 \title{Hellinger Distance}
 \usage{
-HellDist(x, y = NULL, by.rows = TRUE)
+HellDist(x, y = NULL, by_rows = TRUE)
 }
 \arguments{
 \item{x}{A numeric matrix or numeric vector}
 
 \item{y}{A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.}
 
-\item{by.rows}{Logical. If \code{x} is a matrix, should distances be calculated by rows?}
+\item{by_rows}{Logical. If \code{x} is a matrix, should distances be calculated by rows?}
 }
 \value{
 If \code{x} is a matrix, this returns an square and symmetric matrix. 
 The i,j entries correspond to the Hellinger Distance between the rows of \code{x} 
-(or the columns of \code{x} if \code{by.rows = FALSE}). If \code{x} and \code{y}
+(or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x} and \code{y}
 are vectors, this returns a numeric scalar whose value is the Hellinger Distance
 between \code{x} and \code{y}.
 }

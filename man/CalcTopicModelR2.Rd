@@ -2,7 +2,7 @@
 % Please edit documentation in R/CalcTopicModelR2.R
 \name{CalcTopicModelR2}
 \alias{CalcTopicModelR2}
-\title{Function to calculate R-squared of a topic model.}
+\title{Calculate the R-squared of a topic model.}
 \usage{
 CalcTopicModelR2(dtm, phi, theta, ...)
 }

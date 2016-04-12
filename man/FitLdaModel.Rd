@@ -8,7 +8,7 @@ FitLdaModel(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05,
   smooth = TRUE, method = "gibbs", return_all = FALSE, ...)
 }
 \arguments{
-\item{dtm}{A document term matrix of class \code{Matrix::dgCMatrix}}
+\item{dtm}{A document term matrix of class \code{dgCMatrix}}
 
 \item{k}{Number of topics}
 

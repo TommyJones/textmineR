@@ -4,60 +4,66 @@
 \alias{Vec2Dtm}
 \title{Convert a character vector to a document term matrix of class Matrix.}
 \usage{
-Vec2Dtm(vec, docnames = names(vec), min.n.gram = 1, max.n.gram = 1,
-  remove.stopwords = TRUE, custom.stopwords = NULL, lower = TRUE,
-  remove.punctuation = TRUE, remove.numbers = TRUE, stem.document = FALSE)
+Vec2Dtm(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1,
+  remove_stopwords = TRUE, custom_stopwords = NULL, lower = TRUE,
+  remove_punctuation = TRUE, remove_numbers = TRUE,
+  stem_documents = FALSE, ...)
 }
 \arguments{
-\item{vec}{A character vector of documents. Punctuation etc. is allowed. names(vec) should be names of your documents.}
+\item{doc_vec}{A character vector of documents.}
 
 \item{docnames}{A vector of names for your documents. Defaults to 
 \code{names(doc_vec)}. If NULL, then docnames is set to be 
 \code{1:length(doc_vec)}.}
 
-\item{min.n.gram}{The minimum size of n for creating n-grams. (Defaults to 1)}
+\item{min_ngram}{The minimum size of n for creating n-grams. Defaults to 1.}
 
-\item{max.n.gram}{The maximum size of n for creating n-grams. (Defaults to 1. Numbers greater than 3 are discouraged due to risk of overfitting.)}
+\item{max_ngram}{The maximum size of n for creating n-grams. Defaults to 1. 
+Numbers greater than 3 are discouraged due to risk of overfitting.}
 
-\item{remove.stopwords}{Do you want to remove standard stopwords from your documents? (Defaults to TRUE)}
+\item{remove_stopwords}{Do you want to remove standard stopwords from your documents? 
+Defaults to \code{TRUE}.}
 
-\item{custom.stopwords}{If not NULL (the default) a character vector of additional stopwords to remove from your corpus. Note: it is generally faster to
-remove additional stopwords by subsetting the columns of a DTM post-hoc. This is to be used when you want these words removed before creatign the DTM.}
+\item{custom_stopwords}{If not \code{NULL} (the default) a character vector 
+of stopwords to remove from your corpus.}
 
-\item{lower}{Do you want all words coerced to lower case? (Defaults to TRUE)}
+\item{lower}{Do you want all words coerced to lower case? Defaults to \code{TRUE}}
 
-\item{remove.punctuation}{Do you want to convert all punctuation to spaces? For example, "big-lipped fish" goes to "big lipped fish" (Defaults to TRUE)}
+\item{remove_punctuation}{Do you want to convert all non-alpha numeric 
+characters to spaces? Defaults to \code{TRUE}}
 
-\item{remove.numbers}{Do you want to convert all numbers to spaces? For example, "3rd grade teachers" goes to " rd grade teachers" (Defaults to TRUE)}
+\item{remove_numbers}{Do you want to convert all numbers to spaces? Defaults 
+to \code{TRUE}}
 
-\item{stem.document}{Do you want to stem the words in your document? (Defaults to FALSE)}
+\item{stem_documents}{Do you want to stem the words in your document using 
+Porter's word stemmer? Defaults to \code{FALSE}}
 
-\item{...}{Additional arguments to be passed to \code{textmineR::TmParallelApply}}
+\item{...}{Other arguments to be passed to \code{textmineR::TmParallelApply}.}
+}
+\value{
+A document term matrix of class \code{dgCMatrix}. The rows index 
+documents. The columns index terms. The i, j entries represent the count of 
+term j appearing in document i.
 }
 \description{
 This is the main document term matrix creating function for \code{textmineR}.
-In most cases, all you need to do is import documents as a character vector in R and then run this function
-to get a document term matrix that is compatible with the rest of \code{textmineR}'s functionality.
-}
-\note{
-This function relies heavily on the \code{tm} and \code{RWeka} packages. N-grams are derived using the \code{RWeka} package. 
-There is a confilct between \code{RWeka} and \code{parallel} (used for multithread processing on unix-like systems).
-Consequently, using n-grams (n > 1) causes construction of the DTM to be considerably slower on unix systems. 
-Speed is unaffected on Windows machines because parallelization is not supported for DTM construction.
+In most cases, all you need to do is import documents as a character vector in R and then 
+run this function to get a document term matrix that is compatible with the 
+rest of \code{textmineR}'s functionality and many other libraries. \code{vec2dtm}
+is built on top of the excellent \code{link[text2vec]{text2vec}}library.
 }
 \examples{
-\dontrun{
 data(nih_sample)
 
-dtm <- Vec2Dtm(vec = nih_sample$ABSTRACT_TEXT
+
+dtm <- Vec2Dtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                docnames = nih_sample$APPLICATION_ID, 
-               min.n.gram = 1, max.n.gram = 2)
+               min_ngram = 1, max_ngram = 2)
 
 dim(dtm)
 
 head(colnames(dtm))
 
 head(rownames(dtm))
-}
 }
 

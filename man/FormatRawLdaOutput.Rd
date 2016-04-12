@@ -4,10 +4,10 @@
 \alias{FormatRawLdaOutput}
 \title{Format Raw Output from lda::lda.collapsed.gibbs.sampler()}
 \usage{
-FormatRawLdaOutput(lda.result, docnames, smooth = TRUE)
+FormatRawLdaOutput(lda_result, docnames, smooth = TRUE)
 }
 \arguments{
-\item{lda.result}{The list value returned by lda.collapsed.gibbs.sampler()}
+\item{lda_result}{The list value returned by lda.collapsed.gibbs.sampler()}
 
 \item{docnames}{A character vector giving the names of documents. This is generally rownames(dtm).}
 
@@ -39,7 +39,7 @@ lda <- lda::lda.collapsed.gibbs.sampler(documents = lex, K = 100,
                                          alpha=0.1, eta=0.05)
                                          
 # Format the result to get phi and theta matrices                                        
-lda <- FormatRawLdaOutput(lda.result=lda, docnames=rownames(nih_sample_dtm), smooth=TRUE)
+lda <- FormatRawLdaOutput(lda_result=lda, docnames=rownames(nih_sample_dtm), smooth=TRUE)
 
 }
 
