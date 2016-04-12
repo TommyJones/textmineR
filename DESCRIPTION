@@ -18,6 +18,8 @@ Imports:
     topicmodels,
     text2vec (>= 0.3),
     tm,
+    stringr,
+    SnowballC,
     Rcpp,
     RcppProgress,
     irlba

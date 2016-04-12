@@ -53,6 +53,7 @@ rest of \code{textmineR}'s functionality and many other libraries. \code{vec2dtm
 is built on top of the excellent \code{link[text2vec]{text2vec}}library.
 }
 \examples{
+\dontrun{
 data(nih_sample)
 
 
@@ -65,5 +66,6 @@ dim(dtm)
 head(colnames(dtm))
 
 head(rownames(dtm))
+}
 }
 
