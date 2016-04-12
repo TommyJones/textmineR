@@ -28,6 +28,7 @@
 #' documents. The columns index terms. The i, j entries represent the count of 
 #' term j appearing in document i.
 #' @examples
+#' \dontrun{
 #' data(nih_sample)
 #' 
 #' 
@@ -40,6 +41,7 @@
 #' head(colnames(dtm))
 #' 
 #' head(rownames(dtm))
+#' }
 #' @export
 Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1, 
                     remove_stopwords = TRUE, custom_stopwords = NULL, 
@@ -60,7 +62,7 @@ Vec2Dtm <- function(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram
   }
   
   if (!is.null(custom_stopwords)){
-    stopwords <- c(stopwords, custom.stopwords)
+    stopwords <- c(stopwords, custom_stopwords)
   } 
   
   if (lower) {
