@@ -4,38 +4,38 @@
 \alias{Vec2Dtm}
 \title{Convert a character vector to a document term matrix of class Matrix.}
 \usage{
-Vec2Dtm(doc_vec, docnames = names(doc_vec), min_ngram = 1, max_ngram = 1,
-  remove_stopwords = TRUE, custom_stopwords = NULL, lower = TRUE,
-  remove_punctuation = TRUE, remove_numbers = TRUE,
-  stem_documents = FALSE, ...)
+Vec2Dtm(vec, docnames = names(vec), min.n.gram = 1, max.n.gram = 1,
+  remove.stopwords = TRUE, custom.stopwords = NULL, lower = TRUE,
+  remove.punctuation = TRUE, remove.numbers = TRUE, stem.document = FALSE,
+  ...)
 }
 \arguments{
-\item{doc_vec}{A character vector of documents.}
+\item{vec}{A character vector of documents.}
 
 \item{docnames}{A vector of names for your documents. Defaults to 
 \code{names(doc_vec)}. If NULL, then docnames is set to be 
 \code{1:length(doc_vec)}.}
 
-\item{min_ngram}{The minimum size of n for creating n-grams. Defaults to 1.}
+\item{min.n.gram}{The minimum size of n for creating n-grams. Defaults to 1.}
 
-\item{max_ngram}{The maximum size of n for creating n-grams. Defaults to 1. 
+\item{max.n.gram}{The maximum size of n for creating n-grams. Defaults to 1. 
 Numbers greater than 3 are discouraged due to risk of overfitting.}
 
-\item{remove_stopwords}{Do you want to remove standard stopwords from your documents? 
+\item{remove.stopwords}{Do you want to remove standard stopwords from your documents? 
 Defaults to \code{TRUE}.}
 
-\item{custom_stopwords}{If not \code{NULL} (the default) a character vector 
+\item{custom.stopwords}{If not \code{NULL} (the default) a character vector 
 of stopwords to remove from your corpus.}
 
 \item{lower}{Do you want all words coerced to lower case? Defaults to \code{TRUE}}
 
-\item{remove_punctuation}{Do you want to convert all non-alpha numeric 
+\item{remove.punctuation}{Do you want to convert all non-alpha numeric 
 characters to spaces? Defaults to \code{TRUE}}
 
-\item{remove_numbers}{Do you want to convert all numbers to spaces? Defaults 
+\item{remove.numbers}{Do you want to convert all numbers to spaces? Defaults 
 to \code{TRUE}}
 
-\item{stem_documents}{Do you want to stem the words in your document using 
+\item{stem.document}{Do you want to stem the words in your document using 
 Porter's word stemmer? Defaults to \code{FALSE}}
 
 \item{...}{Other arguments to be passed to \code{textmineR::TmParallelApply}.}
@@ -46,20 +46,17 @@ documents. The columns index terms. The i, j entries represent the count of
 term j appearing in document i.
 }
 \description{
-This is the main document term matrix creating function for \code{textmineR}.
-In most cases, all you need to do is import documents as a character vector in R and then 
-run this function to get a document term matrix that is compatible with the 
-rest of \code{textmineR}'s functionality and many other libraries. \code{vec2dtm}
-is built on top of the excellent \code{link[text2vec]{text2vec}}library.
+This function is deprecated. Use \code{\link[textmineR]{CreateDtm}}
+             instead.
 }
 \examples{
 \dontrun{
 data(nih_sample)
 
 
-dtm <- Vec2Dtm(doc_vec = nih_sample$ABSTRACT_TEXT,
+dtm <- Vec2Dtm(vec = nih_sample$ABSTRACT_TEXT,
                docnames = nih_sample$APPLICATION_ID, 
-               min_ngram = 1, max_ngram = 2)
+               min.n.gram = 1, max.n.gram = 2)
 
 dim(dtm)
 

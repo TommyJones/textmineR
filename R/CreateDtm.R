@@ -6,8 +6,8 @@
 #' is built on top of the excellent \code{\link[text2vec]{text2vec}} library.
 #' 
 #' @param doc_vec A character vector of documents. 
-#' @param docnames A vector of names for your documents. Defaults to 
-#'        \code{names(doc_vec)}. If NULL, then docnames is set to be 
+#' @param doc_names A vector of names for your documents. Defaults to 
+#'        \code{names(doc_vec)}. If NULL, then doc_names is set to be 
 #'        \code{1:length(doc_vec)}.
 #' @param ngram_window A numeric vector of length 2. The first entry is the minimum
 #'        n-gram size; the second entry is the maximum n-gram size. Defaults to
@@ -28,22 +28,24 @@
 #' documents. The columns index terms. The i, j entries represent the count of 
 #' term j appearing in document i.
 #' @note The following transformations are applied to \code{stopword_vec} as 
-#'       well as \code{doc_vec: 
+#'       well as \code{doc_vec}: 
 #'       \code{lower}, 
 #'       \code{remove_punctuation}, 
 #'       \code{remove_numbers}
 #' @examples
+#' \dontrun{
 #' data(nih_sample)
 #' 
 #' # DTM of unigrams and bigrams
 #' dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
-#'                  docnames = nih_sample$APPLICATION_ID, 
+#'                  doc_names = nih_sample$APPLICATION_ID, 
 #'                  ngram_window = c(1, 2))
 #' 
 #' # DTM of unigrams with Porter's stemmer applied
 #' dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
-#'                  docnames = nih_sample$APPLICATION_ID,
+#'                  doc_names = nih_sample$APPLICATION_ID,
 #'                  stem_lemma_function = function(x) SnowballC::wordStem(x, "porter"))
+#' }
 #' @export
 CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1), 
                     stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")), 
