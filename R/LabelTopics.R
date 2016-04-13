@@ -1,6 +1,6 @@
 #' Get some topic labels using a "more probable" method of terms
 #' 
-#' @description Function calls \code{textmineR::GetProbableTerms()} with some 
+#' @description Function calls \code{\link[textmineR]{GetProbableTerms}} with some 
 #' rules to get topic labels. This function is in "super-ultra-mega alpha"; use
 #' at your own risk/discretion. 
 #' @param assignments A documents by topics matrix similar to \code{theta}. 

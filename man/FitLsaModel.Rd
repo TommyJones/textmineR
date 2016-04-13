@@ -14,7 +14,7 @@ FitLsaModel(dtm, k, return_all = FALSE, ...)
 \item{return_all}{Should all objects returned from \code{irlba::irlba} be
 returned here? Defaults to \code{FALSE}}
 
-\item{...}{Other arguments to pass to \code{irlba::irlba}.}
+\item{...}{Other arguments to pass to \code{\link[irlba]{irlba}}.}
 }
 \value{
 Returns a list with a minimum of three objects: \code{phi},  

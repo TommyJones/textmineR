@@ -10,7 +10,7 @@ Dtm2Docs(dtm, ...)
 \item{dtm}{A sparse Matrix from the matrix package whose rownames correspond 
 to documents and colnames correspond to words}
 
-\item{...}{Other arguments to be passed to \code{TmParallelApply}. See note, below.}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.}
 }
 \value{
 Returns a character vector. Each entry of this vector corresponds to the rows
@@ -22,7 +22,7 @@ whose length is equal to the number of rows of the input DTM.
 }
 \note{
 This function performs parallel computation if \code{dtm} has more than 3,000
-rows. The default is to use all available cores according to \code{parallel::detectCores()}.
+rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
 However, this can be modified by passing the \code{cpus} argument when calling
 this function.
 }

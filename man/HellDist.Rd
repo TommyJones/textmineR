@@ -22,7 +22,8 @@ between \code{x} and \code{y}.
 }
 \description{
 Calculates the Hellinger distances or the rows or columns of a 
-numeric matrix or for two numeric vectors.
+numeric matrix or for two numeric vectors. This function is deprecated. Use
+\code{\link[textmineR]{CalcHellingerDist}} instead.
 }
 \examples{
 x <- rchisq(n = 100, df = 8)

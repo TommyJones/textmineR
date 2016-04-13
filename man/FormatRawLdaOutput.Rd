@@ -2,12 +2,12 @@
 % Please edit documentation in R/FormatRawLdaOutput.R
 \name{FormatRawLdaOutput}
 \alias{FormatRawLdaOutput}
-\title{Format Raw Output from lda::lda.collapsed.gibbs.sampler()}
+\title{Format Raw Output from \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
 \usage{
 FormatRawLdaOutput(lda_result, docnames, smooth = TRUE)
 }
 \arguments{
-\item{lda_result}{The list value returned by lda.collapsed.gibbs.sampler()}
+\item{lda_result}{The list value returned by \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
 
 \item{docnames}{A character vector giving the names of documents. This is generally rownames(dtm).}
 

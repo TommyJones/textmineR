@@ -19,7 +19,7 @@
 #'        to \code{TRUE}
 #' @param stem.document Do you want to stem the words in your document using 
 #'        Porter's word stemmer? Defaults to \code{FALSE}
-#' @param ... Other arguments to be passed to \code{textmineR::TmParallelApply}.
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
 #' @return A document term matrix of class \code{dgCMatrix}. The rows index 
 #' documents. The columns index terms. The i, j entries represent the count of 
 #' term j appearing in document i.

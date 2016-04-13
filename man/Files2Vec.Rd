@@ -9,7 +9,7 @@ Files2Vec(directory, ...)
 \arguments{
 \item{directory}{A path to directory containing the files you want to read into R.}
 
-\item{...}{Other arguments to be passed to \code{TmParallelApply}. See note, below.}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.}
 }
 \value{
 Returns a character vector where each entry corresponds to a document.
@@ -21,7 +21,7 @@ The names of the resulting vector are derived from the names of the files.
 }
 \note{
 This function performs parallel computation by default. The default 
-behavior is to use all available cores according to \code{parallel::detectCores()}.
+behavior is to use all available cores according to \code{\link[parallel]{detectCores}}.
 However, this can be modified by passing the \code{cpus} argument when calling
 this function.
 }

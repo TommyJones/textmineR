@@ -9,7 +9,7 @@ DepluralizeDtm(dtm, ...)
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix} whose colnames are tokens}
 
-\item{...}{Other arguments to pass to \code{TmParallelApply}. See note, below.}
+\item{...}{Other arguments to pass to \code{\link[textmineR]{TmParallelApply}}. See note, below.}
 }
 \value{
 Returns a document term matrix of class \code{dgCMatrix}. The columns index
@@ -24,7 +24,7 @@ same token. See example below.
 }
 \note{
 This function performs parallel computation by default. The default 
-behavior is to use all available cores according to \code{parallel::detectCores()}.
+behavior is to use all available cores according to \code{\link[parallel]{detectCores}}.
 However, this can be modified by passing the \code{cpus} argument when calling
 this function.
 }

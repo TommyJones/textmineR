@@ -5,7 +5,7 @@
 #' The i, j entries are P(word_i | topic_j)  
 #' @param theta The theta matrix whose rows index documents and columns index topics. 
 #' The i, j entries are P(topic_i | document_j)
-#' @param ... Other arguments to pass to \code{TmParallelApply}. See note, below. 
+#' @param ... Other arguments to pass to \code{\link[textmineR]{TmParallelApply}}. See note, below. 
 #' @description
 #'     This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix 
 #'     (P(topic|document)) and returns a single value for the likelihood of the 
@@ -14,7 +14,7 @@
 #' Returns an object of class \code{numeric} corresponding to the log likelihood.
 #' @note
 #' This function performs parallel computation if \code{dtm} has more than 3,000
-#' rows. The default is to use all available cores according to \code{parallel::detectCores()}.
+#' rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
 #' However, this can be modified by passing the \code{cpus} argument when calling
 #' this function.
 #' @examples

@@ -3,7 +3,7 @@
 #' @description This function takes a phi matrix (P(token|topic)) and a theta 
 #' matrix (P(topic|document)) and returns the phi prime matrix (P(topic|token)). 
 #' Phi prime can be used for classifying new documents and for alternative
-#' topic labels.
+#' topic labels. This function is deprecated. Use \code{\link[textmineR]{CalcPhiPrime}} instead.
 #' 
 #' @param phi = The phi matrix whose rows index topics and columns index words. The i, j entries are P(word_i | topic_j)
 #' @param theta = The theta matrix whose rows index documents and columns index topics. The i, j entries are P(topic_i | document_j)

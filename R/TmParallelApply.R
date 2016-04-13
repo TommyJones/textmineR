@@ -1,18 +1,18 @@
-#' An OS-independent parallel version of \code{lapply}
+#' An OS-independent parallel version of \code{\link[base]{lapply}}
 #' 
 #' @description This function takes a vector or list and a function and applies in parallel.
 #' @param X A vector or list over which to apply \code{FUN}
 #' @param FUN A function to apply over \code{X}
 #' @param cpus Number of CPU cores to use, defaults to the value returned by 
-#' \code{parallel::detectCores()}.
+#' \code{\link[parallel]{detectCores}}.
 #' @param export A character vector of objects in the workspace to export when 
 #' using a Windows machine. Defauts to \code{NULL}
 #' @param libraries A character vector of library/package names to load on to
 #' each cluster if using a Windows machine. Defaults to \code{NULL}
-#' @details This function is used to parallelize executions in textmineR. It is 
+#' @details This function is used to parallelize executions in \code{textmineR}. It is 
 #' necessary because of differing capabilities between Windows and Unix.
-#' Unix systems use \code{mclapply} from \code{package:parallel}. Windows 
-#' systems use \code{parLapply} from \code{package:parallel}.
+#' Unix systems use \code{\link[parallel]{mclapply}}. Windows 
+#' systems use \code{\link[parallel]{parLapply}}.
 #' @return This function returns a \code{list} of length \code{length(X)}.
 #' @export
 #' @examples

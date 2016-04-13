@@ -6,7 +6,7 @@
 #' index documents.
 #' @param clustering A vector of length \code{nrow(dtm)} whose entries form a
 #' partitional clustering of the documents.
-#' @param ... Other arguments to be passed to \code{textmineR::TmParallelApply}.
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
 #' @return Returns a list with two elements, phi and theta. 'phi' is a matrix 
 #' whose j-th row represents P(terms | cluster_j). 'theta' is a matrix whose
 #' j-th row represents P(clusters | document_j). Each row of theta should only

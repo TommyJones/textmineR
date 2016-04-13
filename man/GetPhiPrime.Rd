@@ -19,7 +19,7 @@ correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 This function takes a phi matrix (P(token|topic)) and a theta 
 matrix (P(topic|document)) and returns the phi prime matrix (P(topic|token)). 
 Phi prime can be used for classifying new documents and for alternative
-topic labels.
+topic labels. This function is deprecated. Use \code{\link[textmineR]{CalcPhiPrime}} instead.
 }
 \examples{
 # Load a pre-formatted dtm and topic model

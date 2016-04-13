@@ -1,6 +1,7 @@
 #' Hellinger Distance
 #' @description Calculates the Hellinger distances or the rows or columns of a 
-#' numeric matrix or for two numeric vectors.
+#' numeric matrix or for two numeric vectors. This function is deprecated. Use
+#' \code{\link[textmineR]{CalcHellingerDist}} instead.
 #' @param x A numeric matrix or numeric vector 
 #' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
 #' @param by_rows Logical. If \code{x} is a matrix, should distances be calculated by rows?

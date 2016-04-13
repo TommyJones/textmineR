@@ -22,7 +22,8 @@ between \code{x} and \code{y}.
 }
 \description{
 This function calculates the Jensen Shannon Divergence for the 
-rows or columns of a numeric matrix or for two numeric vectors.
+rows or columns of a numeric matrix or for two numeric vectors. This function 
+is deprecated. Use \code{\link[textmineR]{CalcJSDivergence}} instead.
 }
 \examples{
 x <- rchisq(n = 100, df = 8)

@@ -38,7 +38,7 @@ to \code{TRUE}}
 \item{stem.document}{Do you want to stem the words in your document using 
 Porter's word stemmer? Defaults to \code{FALSE}}
 
-\item{...}{Other arguments to be passed to \code{textmineR::TmParallelApply}.}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
 }
 \value{
 A document term matrix of class \code{dgCMatrix}. The rows index 

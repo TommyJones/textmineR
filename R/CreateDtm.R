@@ -32,6 +32,9 @@
 #'       \code{lower}, 
 #'       \code{remove_punctuation}, 
 #'       \code{remove_numbers}
+#'       
+#'       See \code{\link[tm]{stopwords}} for details on the default to the 
+#'       \code{stopword_vec} argument.
 #' @examples
 #' \dontrun{
 #' data(nih_sample)

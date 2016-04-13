@@ -1,6 +1,6 @@
-#' Format Raw Output from lda::lda.collapsed.gibbs.sampler() 
+#' Format Raw Output from \code{\link[lda]{lda.collapsed.gibbs.sampler}} 
 #' @description extracts outputs from LDA model estimated with \code{lda} package by Jonathan Chang
-#' @param lda_result The list value returned by lda.collapsed.gibbs.sampler()
+#' @param lda_result The list value returned by \code{\link[lda]{lda.collapsed.gibbs.sampler}}
 #' @param docnames A character vector giving the names of documents. This is generally rownames(dtm). 
 #' @param smooth Logical. Do you want to smooth your topic proportions so that 
 #' there is a positive value for each term in each topic? Defaults to TRUE

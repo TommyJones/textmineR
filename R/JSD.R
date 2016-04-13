@@ -1,6 +1,7 @@
 #' Jensen-Shannon Divergence
 #' @description This function calculates the Jensen Shannon Divergence for the 
-#' rows or columns of a numeric matrix or for two numeric vectors.
+#' rows or columns of a numeric matrix or for two numeric vectors. This function 
+#' is deprecated. Use \code{\link[textmineR]{CalcJSDivergence}} instead.
 #' @param x A numeric matrix or numeric vector 
 #' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
 #' @param by_rows Logical. If \code{x} is a matrix, should distances be calculated by rows?

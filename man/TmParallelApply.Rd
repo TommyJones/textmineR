@@ -2,7 +2,7 @@
 % Please edit documentation in R/TmParallelApply.R
 \name{TmParallelApply}
 \alias{TmParallelApply}
-\title{An OS-independent parallel version of \code{lapply}}
+\title{An OS-independent parallel version of \code{\link[base]{lapply}}}
 \usage{
 TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL,
   libraries = NULL)
@@ -13,7 +13,7 @@ TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL,
 \item{FUN}{A function to apply over \code{X}}
 
 \item{cpus}{Number of CPU cores to use, defaults to the value returned by 
-\code{parallel::detectCores()}.}
+\code{\link[parallel]{detectCores}}.}
 
 \item{export}{A character vector of objects in the workspace to export when 
 using a Windows machine. Defauts to \code{NULL}}
@@ -28,10 +28,10 @@ This function returns a \code{list} of length \code{length(X)}.
 This function takes a vector or list and a function and applies in parallel.
 }
 \details{
-This function is used to parallelize executions in textmineR. It is 
+This function is used to parallelize executions in \code{textmineR}. It is 
 necessary because of differing capabilities between Windows and Unix.
-Unix systems use \code{mclapply} from \code{package:parallel}. Windows 
-systems use \code{parLapply} from \code{package:parallel}.
+Unix systems use \code{\link[parallel]{mclapply}}. Windows 
+systems use \code{\link[parallel]{parLapply}}.
 }
 \examples{
 \dontrun{

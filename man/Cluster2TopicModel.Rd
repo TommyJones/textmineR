@@ -14,7 +14,7 @@ index documents.}
 \item{clustering}{A vector of length \code{nrow(dtm)} whose entries form a
 partitional clustering of the documents.}
 
-\item{...}{Other arguments to be passed to \code{textmineR::TmParallelApply}.}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
 }
 \value{
 Returns a list with two elements, phi and theta. 'phi' is a matrix 
