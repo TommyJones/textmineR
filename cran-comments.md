@@ -1,9 +1,9 @@
 
 ### Update
-This is an update, moving textmineR from version 1.6.0 to 1.7.0. 
+This is an update, moving textmineR from version 1.7.0 to 2.0.0. 
 In this version I have 
-* Added new functions for model fitting & diagnostics
-* Added new datasets and removed old datasets
+* Removed a Java dependency in favor of a C++11 dependency
+* Added new functions and deprecated old functions
 
 
 ### Test environments
