@@ -21,7 +21,7 @@
 #' 
 GetPhiPrime <- function(phi, theta){
   .Deprecated(new = "CalcPhiPrime", package = "textmineR",
-              msg = "GetPhiPrime is deprecated and will be removed in textmineR v2.5.0
+              msg = "GetPhiPrime is deprecated and will be removed in textmineR v3.0
               Use 'CalcPhiPrime' instead.",
               old = "GetPhiPrime")
 

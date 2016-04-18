@@ -24,7 +24,7 @@
 
 JSD <- function(x, y=NULL, by_rows=TRUE){
   .Deprecated(new = "CalcJSDivergence", package = "textmineR",
-              msg = "JSD is deprecated and will be removed in textmineR v2.5.0
+              msg = "JSD is deprecated and will be removed in textmineR v3.0
               Use 'CalcJSDivergence' instead.",
               old = "JSD")
   #############################################################################

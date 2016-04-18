@@ -22,7 +22,7 @@
 
 HellDist <- function(x, y=NULL, by_rows=TRUE){
   .Deprecated(new = "CalcHellingerDist", package = "textmineR",
-              msg = "HellDist is deprecated and will be removed in textmineR v2.5.0
+              msg = "HellDist is deprecated and will be removed in textmineR v3.0
               Use 'CalcHellingerDist' instead.",
               old = "HellDist")
   
