@@ -75,12 +75,12 @@ The following transformations are applied to \code{stopword_vec} as
 data(nih_sample)
 
 # TCM of unigrams and bigrams
-dtm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
+tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
                  skipgram_window = Inf, 
                  ngram_window = c(1, 2))
 
 # TCM of unigrams and a skip=gram window of 3, applying Porter's word stemmer
-dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
+tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
                  skipgram_window = 3,
                  stem_lemma_function = function(x) SnowballC::wordStem(x, "porter"))
 }
