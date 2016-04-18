@@ -8,7 +8,7 @@ In this version I have
 
 ### Test environments
 * local OS X install, R 3.2.4
-* Ubuntu 14.04 LTS (local install), R 3.2.2
+* Ubuntu 14.04 LTS (local install), R 3.2.5
 * win-builder (devel and release)
 
 ### R CMD check results
