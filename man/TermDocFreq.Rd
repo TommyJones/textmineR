@@ -11,9 +11,9 @@ TermDocFreq(dtm)
 }
 \value{
 Returns a \code{data.frame} with 4 columns. The first column, 
-\code{term} is a vector of token labels. The second column, \code{term.freq}
+\code{term} is a vector of token labels. The second column, \code{term_freq}
 is the count of times \code{term} appears in the entire corpus. The third
-column \code{doc.freq} is the count of the number of documents in which 
+column \code{doc_freq} is the count of the number of documents in which 
 \code{term} appears. The fourth column, \code{idf} is the log-weighted
 inverse document frequency of \code{term}.
 }

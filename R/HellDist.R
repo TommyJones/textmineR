@@ -1,12 +1,13 @@
 #' Hellinger Distance
 #' @description Calculates the Hellinger distances or the rows or columns of a 
-#' numeric matrix or for two numeric vectors.
+#' numeric matrix or for two numeric vectors. This function is deprecated. Use
+#' \code{\link[textmineR]{CalcHellingerDist}} instead.
 #' @param x A numeric matrix or numeric vector 
 #' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
-#' @param by.rows Logical. If \code{x} is a matrix, should distances be calculated by rows?
+#' @param by_rows Logical. If \code{x} is a matrix, should distances be calculated by rows?
 #' @return If \code{x} is a matrix, this returns an square and symmetric matrix. 
 #' The i,j entries correspond to the Hellinger Distance between the rows of \code{x} 
-#' (or the columns of \code{x} if \code{by.rows = FALSE}). If \code{x} and \code{y}
+#' (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x} and \code{y}
 #' are vectors, this returns a numeric scalar whose value is the Hellinger Distance
 #' between \code{x} and \code{y}.
 #' @keywords distance functions
@@ -19,8 +20,12 @@
 #' mymat <- rbind(x, y)
 #' HellDist(x = mymat)
 
-HellDist <- function(x, y=NULL, by.rows=TRUE){
-     
+HellDist <- function(x, y=NULL, by_rows=TRUE){
+  .Deprecated(new = "CalcHellingerDist", package = "textmineR",
+              msg = "HellDist is deprecated and will be removed in textmineR v3.0
+              Use 'CalcHellingerDist' instead.",
+              old = "HellDist")
+  
   #############################################################################
   # case 1: x is not specified correctly
   #############################################################################
@@ -37,7 +42,7 @@ HellDist <- function(x, y=NULL, by.rows=TRUE){
       warning("x is a numeric matrix, y is ignored")
     }
     
-    if(! by.rows){
+    if(! by_rows){
       x <- t(x)
     }
     

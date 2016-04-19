@@ -1,6 +1,6 @@
 #' Get some topic labels using a "more probable" method of terms
 #' 
-#' @description Function calls \code{textmineR::GetProbableTerms()} with some 
+#' @description Function calls \code{\link[textmineR]{GetProbableTerms}} with some 
 #' rules to get topic labels. This function is in "super-ultra-mega alpha"; use
 #' at your own risk/discretion. 
 #' @param assignments A documents by topics matrix similar to \code{theta}. 
@@ -38,12 +38,19 @@ LabelTopics <- function(assignments, dtm, M=2){
   
   # get dtm_ngram and p_terms
   dtm_ngram <- dtm[ , grepl("_", colnames(dtm)) ]
+  
+  if(ncol(dtm_ngram) == 0){
+    warning("dtm does not appear to contain ngrams. Using unigrams but ngrams will",
+            " work much better.")
+    dtm_ngram <- dtm
+  }
+  
   p_terms <- Matrix::colSums(dtm_ngram)
   p_terms <- p_terms / sum(p_terms)
   
   # apply the label algorithm over each topic
   result <- lapply(doc_list, function(x){
-    l <- GetProbableTerms(docnames = x, dtm = dtm_ngram, p.terms = p_terms)
+    l <- GetProbableTerms(docnames = x, dtm = dtm_ngram, p_terms = p_terms)
     names(l)[ order(l, decreasing=T) ][ 1:M ]
   })
   

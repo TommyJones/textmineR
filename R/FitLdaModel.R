@@ -1,7 +1,7 @@
 #' Fit a topic model using Latent Dirichlet Allocation
 #' @description A wrapper for two implementations of Latent Dirichlet 
 #' Allocation that returns a nicely-formatted topic model. See details, below.
-#' @param dtm A document term matrix of class \code{Matrix::dgCMatrix}
+#' @param dtm A document term matrix of class \code{dgCMatrix}
 #' @param k Number of topics
 #' @param iterations The number of Gibbs iterations if \code{method = 'gibbs'}
 #' @param alpha Dirichlet parameter for the distribution of topics over documents. 
@@ -40,13 +40,15 @@
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 
 #' 
-#' # Fit an LDA model
-#' model <- FitLdaModel(dtm = nih_sample_dtm, k = 5, iterations = 500)
+#' # Fit an LDA model on a sample of documents
+#' model <- FitLdaModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm), 20), ], 
+#'                      k = 5, iterations = 200)
 #' 
 #' str(model)
 #' 
 #' # Fit a model, include likelihoods passed to lda::lda.collapsed.gibbs.sampler
-#' model <- FitLdaModel(dtm = nih_sample_dtm, k = 5, iterations = 500, compute.log.likelihood = TRUE)
+#' model <- FitLdaModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm), 20), ], 
+#'                      k = 5, iterations = 200, compute.log.likelihood = TRUE)
 #' 
 #' str(model)
 #' @export
@@ -90,7 +92,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05,
                                               eta = beta,
                                               ...)
     
-    result <- FormatRawLdaOutput(lda.result = model, 
+    result <- FormatRawLdaOutput(lda_result = model, 
                                 docnames = rownames(dtm), 
                                 smooth = smooth)
     if(return_all){

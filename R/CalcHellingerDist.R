@@ -1,7 +1,6 @@
-#' Jensen-Shannon Divergence
-#' @description This function calculates the Jensen Shannon Divergence for the 
-#' rows or columns of a numeric matrix or for two numeric vectors. This function 
-#' is deprecated. Use \code{\link[textmineR]{CalcJSDivergence}} instead.
+#' Calculate Hellinger Distance
+#' @description Calculates the Hellinger distances or the rows or columns of a 
+#' numeric matrix or for two numeric vectors.
 #' @param x A numeric matrix or numeric vector 
 #' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
 #' @param by_rows Logical. If \code{x} is a matrix, should distances be calculated by rows?
@@ -10,23 +9,17 @@
 #' (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x} and \code{y}
 #' are vectors, this returns a numeric scalar whose value is the Hellinger Distance
 #' between \code{x} and \code{y}.
-#' @keywords distance functions
 #' @export
 #' @examples
 #' x <- rchisq(n = 100, df = 8)
 #' y <- x^2
-#' JSD(x = x, y = y)
+#' CalcHellingerDist(x = x, y = y)
 #' 
 #' mymat <- rbind(x, y)
-#' JSD(x = mymat)
+#' CalcHellingerDist(x = mymat)
 
-
-
-JSD <- function(x, y=NULL, by_rows=TRUE){
-  .Deprecated(new = "CalcJSDivergence", package = "textmineR",
-              msg = "JSD is deprecated and will be removed in textmineR v3.0
-              Use 'CalcJSDivergence' instead.",
-              old = "JSD")
+CalcHellingerDist <- function(x, y=NULL, by_rows=TRUE){
+  
   #############################################################################
   # case 1: x is not specified correctly
   #############################################################################
@@ -47,7 +40,7 @@ JSD <- function(x, y=NULL, by_rows=TRUE){
       x <- t(x)
     }
     
-    result <- textmineR::JSDmat(A = x) # this function only calculates the upper triangle
+    result <- textmineR::HellingerMat(A = x) # this function only calculates the upper triangle
     
     result <- result + t(result)
     
@@ -67,8 +60,9 @@ JSD <- function(x, y=NULL, by_rows=TRUE){
       stop("x and y must be of the same length")
     }
     
-    result <- textmineR::JSD_cpp(p = x, q = y)
+    result <- textmineR::Hellinger_cpp(p = x, q = y)
   }
   
   result
 }
+

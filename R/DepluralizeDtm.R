@@ -3,10 +3,10 @@
 #' matrix to their singular form. Then aggregates all columns that now have the 
 #' same token. See example below. 
 #' @param dtm A document term matrix of class \code{dgCMatrix} whose colnames are tokens
-#' @param ... Other arguments to pass to \code{TmParallelApply}. See note, below.
+#' @param ... Other arguments to pass to \code{\link[textmineR]{TmParallelApply}}. See note, below.
 #' @note
 #' This function performs parallel computation by default. The default 
-#' behavior is to use all available cores according to \code{parallel::detectCores()}.
+#' behavior is to use all available cores according to \code{\link[parallel]{detectCores}}.
 #' However, this can be modified by passing the \code{cpus} argument when calling
 #' this function.
 #' @return

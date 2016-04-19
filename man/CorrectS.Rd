@@ -4,16 +4,16 @@
 \alias{CorrectS}
 \title{Function to remove some forms of pluralization.}
 \usage{
-CorrectS(term.vec)
+CorrectS(term_vec)
 }
 \arguments{
-\item{term.vec}{A character vector}
+\item{term_vec}{A character vector}
 }
 \value{
 Returns an object of class \code{data.frame} with three columns. The first
-column is the argument \code{term.vec}. The second column is the depluralized
-version of the words in \code{term.vec}. The third column is a logical, indicating
-whether or not the word in \code{term.vec} was changed.
+column is the argument \code{term_vec}. The second column is the depluralized
+version of the words in \code{term_vec}. The third column is a logical, indicating
+whether or not the word in \code{term_vec} was changed.
 }
 \description{
 This function takes a character vector as input and removes some
@@ -33,7 +33,7 @@ its results manually. It tends to fail spectacularly for words ending in "es".
 \examples{
 myvec <- c("banana", "bananas", "scientists", "large_armies")
 
-CorrectS(term.vec=myvec)
+CorrectS(term_vec=myvec)
 
 }
 

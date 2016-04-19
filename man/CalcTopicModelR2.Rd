@@ -2,7 +2,7 @@
 % Please edit documentation in R/CalcTopicModelR2.R
 \name{CalcTopicModelR2}
 \alias{CalcTopicModelR2}
-\title{Function to calculate R-squared of a topic model.}
+\title{Calculate the R-squared of a topic model.}
 \usage{
 CalcTopicModelR2(dtm, phi, theta, ...)
 }
@@ -14,7 +14,7 @@ CalcTopicModelR2(dtm, phi, theta, ...)
 
 \item{theta}{A documents by topics dimensional matrix where each entry is p(topic_j|document_d)}
 
-\item{...}{Other arguments to be passed to \code{TmParallelApply}. See note, below.}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.}
 }
 \value{
 Returns an object of class \code{numeric} representing the proportion of variability
@@ -27,7 +27,7 @@ each document is from the center of all the documents that is explained by the m
 }
 \note{
 This function performs parallel computation if \code{dtm} has more than 3,000
-rows. The default is to use all available cores according to \code{parallel::detectCores()}.
+rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
 However, this can be modified by passing the \code{cpus} argument when calling
 this function.
 }

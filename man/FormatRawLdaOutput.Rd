@@ -2,12 +2,12 @@
 % Please edit documentation in R/FormatRawLdaOutput.R
 \name{FormatRawLdaOutput}
 \alias{FormatRawLdaOutput}
-\title{Format Raw Output from lda::lda.collapsed.gibbs.sampler()}
+\title{Format Raw Output from \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
 \usage{
-FormatRawLdaOutput(lda.result, docnames, smooth = TRUE)
+FormatRawLdaOutput(lda_result, docnames, smooth = TRUE)
 }
 \arguments{
-\item{lda.result}{The list value returned by lda.collapsed.gibbs.sampler()}
+\item{lda_result}{The list value returned by \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
 
 \item{docnames}{A character vector giving the names of documents. This is generally rownames(dtm).}
 
@@ -26,20 +26,23 @@ extracts outputs from LDA model estimated with \code{lda} package by Jonathan Ch
 # Load a pre-formatted dtm and topic model
 data(nih_sample_dtm) 
 
+# Get a sample of documents
+dtm <- nih_sample_dtm[ sample(1:nrow(nih_sample_dtm), 20) , ]
+
 # re-create a character vector of documents from the DTM
-lex <- Dtm2Docs(nih_sample_dtm)
+lex <- Dtm2Docs(dtm)
 
 # Format for input to lda::lda.collapsed.gibbs.sampler
-lex <- lda::lexicalize(lex, vocab=colnames(nih_sample_dtm))
+lex <- lda::lexicalize(lex, vocab=colnames(dtm))
 
 # Fit the model from lda::lda.collapsed.gibbs.sampler
-lda <- lda::lda.collapsed.gibbs.sampler(documents = lex, K = 100, 
-                                         vocab = colnames(nih_sample_dtm), 
+lda <- lda::lda.collapsed.gibbs.sampler(documents = lex, K = 5, 
+                                         vocab = colnames(dtm), 
                                          num.iterations=200, 
                                          alpha=0.1, eta=0.05)
                                          
 # Format the result to get phi and theta matrices                                        
-lda <- FormatRawLdaOutput(lda.result=lda, docnames=rownames(nih_sample_dtm), smooth=TRUE)
+lda <- FormatRawLdaOutput(lda_result=lda, docnames=rownames(dtm), smooth=TRUE)
 
 }
 

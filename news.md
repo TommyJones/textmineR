@@ -1,5 +1,33 @@
+### Updates for version 2.0.0
+* Vec2Dtm is now deprecated in favor of CreateDtm
+* A function, CreateTcm, now exists to create term co-occurence matrices
+* CreateDtm and CreateTcm are implemented with a parallel C++ back end through the text2vec library
+  - the implementation is _much_ faster! I've clocked 2X - 10X speedups, depending on options
+  - adds external dependencies - C++ compiler and GNU make - and takes away an external
+    dependency - Java.
+  - now _all_ tokens will be included, regardless of length. (tm's framework silently
+    dropped all tokens of fewer than 3 characters.)
+* Allow generic stemming and stopwords in CreateDtm & CreateTcm
+  - Now there is only one argument for stopwords, making it clearer how to use 
+    custom or non-English stopwords
+  - Now the stemming argument allows for passing of stem/lemmatization functions.
+* Function for fitting correlated topic models
+* Function to turn a document term matrix to term co-occurence matrix
+* Allowed LabelTopics to use unigrams, if you want. (n-grams are still better.)
+* More robust error checking for CalcTopicModelR2 and CalcLikelihood
+* All function arguments use "_", not ".".
+* CalcPhiPrime replaces (the now deprecated) GetPhiPrime
+  - Allows you to pass an argument to specify non-uniform probabilities of each 
+    document
+* Similarly, CalcHellingerDist and CalcJSDivergence replace HellDist and JSD.
+  This is to conform to a naming convention where functions are "verbs".
+
+#### Possible
+
+
+
 ### Updates for version 1.7.0
-#### Implemented
+
 * Added modeling capability for latent semantic analysis in FitLsaModel()
 * Added CalcProbCoherence() function which replaces ProbCoherence() and can calculate
   probabilistic coherence for the whole phi matrix.
@@ -19,12 +47,3 @@
   when lower = TRUE 
 * Update README example to use model caches 
   
-### Planned for version 2.0.0
-
-* Parallelization at C++ level with RcppParallel where possible
-* Core DTM creating functions moved from tm framework to being performed in 
-  C++, parallelized where possible
-  - regexp for stopword removal/punctuation removal/number removal
-  - tokenization on spaces
-  - n-gram tokenization
-  - stemming/lemmatization

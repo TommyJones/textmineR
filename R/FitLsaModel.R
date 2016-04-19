@@ -5,7 +5,7 @@
 #' @param k Number of topics
 #' @param return_all Should all objects returned from \code{irlba::irlba} be
 #'        returned here? Defaults to \code{FALSE}
-#' @param ... Other arguments to pass to \code{irlba::irlba}. 
+#' @param ... Other arguments to pass to \code{\link[irlba]{irlba}}. 
 #' @return Returns a list with a minimum of three objects: \code{phi},  
 #' \code{theta}, and \code{sv}. The rows of \code{phi} index topics and the 
 #' columns index tokens. The rows of \code{theta} index documents and the 

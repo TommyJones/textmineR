@@ -22,7 +22,7 @@ Returns a \code{matrix} whose rows correspond to topics and whose
 j-th column corresponds to the j-th "best" label assignment.
 }
 \description{
-Function calls \code{textmineR::GetProbableTerms()} with some 
+Function calls \code{\link[textmineR]{GetProbableTerms}} with some 
 rules to get topic labels. This function is in "super-ultra-mega alpha"; use
 at your own risk/discretion.
 }

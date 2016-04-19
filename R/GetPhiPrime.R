@@ -3,7 +3,7 @@
 #' @description This function takes a phi matrix (P(token|topic)) and a theta 
 #' matrix (P(topic|document)) and returns the phi prime matrix (P(topic|token)). 
 #' Phi prime can be used for classifying new documents and for alternative
-#' topic labels.
+#' topic labels. This function is deprecated. Use \code{\link[textmineR]{CalcPhiPrime}} instead.
 #' 
 #' @param phi = The phi matrix whose rows index topics and columns index words. The i, j entries are P(word_i | topic_j)
 #' @param theta = The theta matrix whose rows index documents and columns index topics. The i, j entries are P(topic_i | document_j)
@@ -19,36 +19,13 @@
 #' phi_prime <- GetPhiPrime(phi = nih_sample_topic_model$phi, 
 #'                          theta = nih_sample_topic_model$theta)
 #' 
-
-
 GetPhiPrime <- function(phi, theta){
+  .Deprecated(new = "CalcPhiPrime", package = "textmineR",
+              msg = "GetPhiPrime is deprecated and will be removed in textmineR v3.0
+              Use 'CalcPhiPrime' instead.",
+              old = "GetPhiPrime")
 
-    # set up constants
-    D <- nrow(theta)
-    K <- ncol(theta)
-    V <- ncol(phi)
-    
-    # probability of each document (assumed to be equiprobable)
-    p.d <- rep(1/nrow(theta), nrow(theta))
-    
-    # get the probability of each topic
-    p.t <- p.d %*% theta
-    
-    # get the probability of each word from the model    
-    p.w <- p.t %*% phi
-    
-
-    
-    # get our result
-    phi.prime <- matrix(0, ncol=ncol(p.t), nrow=ncol(p.t))
-    diag(phi.prime) <- p.t
-    
-    phi.prime <- phi.prime %*% phi
-    
-    phi.prime <- t(apply(phi.prime, 1, function(x) x / p.w))
-    
-    rownames(phi.prime) <- rownames(phi)
-    colnames(phi.prime) <- colnames(phi)
+  phi.prime <- CalcPhiPrime(phi = phi, theta = theta)
     
     return(phi.prime)
 }

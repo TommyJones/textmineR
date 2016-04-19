@@ -4,9 +4,9 @@
 #' and inverse-document frequency
 #' @param dtm A document term matrix of class \code{dgCMatrix}.
 #' @return Returns a \code{data.frame} with 4 columns. The first column, 
-#' \code{term} is a vector of token labels. The second column, \code{term.freq}
+#' \code{term} is a vector of token labels. The second column, \code{term_freq}
 #' is the count of times \code{term} appears in the entire corpus. The third
-#' column \code{doc.freq} is the count of the number of documents in which 
+#' column \code{doc_freq} is the count of the number of documents in which 
 #' \code{term} appears. The fourth column, \code{idf} is the log-weighted
 #' inverse document frequency of \code{term}.
 #' @export
@@ -22,10 +22,10 @@
 
 TermDocFreq <- function(dtm){
 	freq.mat <- data.frame(term=colnames(dtm), 
-	                       term.freq=Matrix::colSums(dtm), 
-	                       doc.freq=Matrix::colSums(dtm > 0), 
+	                       term_freq=Matrix::colSums(dtm), 
+	                       doc_freq=Matrix::colSums(dtm > 0), 
 	                       stringsAsFactors=FALSE)
 	
-	freq.mat$idf <- log(nrow(dtm) / freq.mat$doc.freq)
+	freq.mat$idf <- log(nrow(dtm) / freq.mat$doc_freq)
 	return(freq.mat)
 }
