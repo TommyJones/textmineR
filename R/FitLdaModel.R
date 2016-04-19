@@ -40,13 +40,15 @@
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 
 #' 
-#' # Fit an LDA model
-#' model <- FitLdaModel(dtm = nih_sample_dtm, k = 5, iterations = 500)
+#' # Fit an LDA model on a sample of documents
+#' model <- FitLdaModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm), 20), ], 
+#'                      k = 5, iterations = 200)
 #' 
 #' str(model)
 #' 
 #' # Fit a model, include likelihoods passed to lda::lda.collapsed.gibbs.sampler
-#' model <- FitLdaModel(dtm = nih_sample_dtm, k = 5, iterations = 500, compute.log.likelihood = TRUE)
+#' model <- FitLdaModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm), 20), ], 
+#'                      k = 5, iterations = 200, compute.log.likelihood = TRUE)
 #' 
 #' str(model)
 #' @export
