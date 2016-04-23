@@ -16,8 +16,8 @@ Below is a demo of some of the functionality in `textmineR`
     
     # Create a document term matrix
     dtm <- CreateDtm(nih_sample$ABSTRACT_TEXT, 
-                     docnames = nih_sample$APPLICATION_ID, 
-                     min_ngram = 1, max_ngram = 2)
+                     doc_names = nih_sample$APPLICATION_ID, 
+                     ngram_window = c(1, 2))
 
     dim(dtm)
     
