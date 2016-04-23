@@ -1,7 +1,7 @@
 Package: textmineR
 Title: Functions for Text Mining and Topic Modeling
 Version: 2.0.1
-Date: 2016-04-24
+Date: 2016-04-23
 Author: "Thomas W. Jones <jones.thos.w@gmail.com>"
 Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>
 Description: An aid for text mining in R, with a syntax that
