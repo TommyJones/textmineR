@@ -56,7 +56,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
                     stem_lemma_function = NULL, ...){
   
   ### Pre-process the documents ------------------------------------------------
-  if(is.null(doc_names)){
+  if (is.null(doc_names) & is.null(names(doc_vec))) {
     warning("No document names detected. Assigning 1:length(doc_vec) as names.")
     doc_names <- 1:length(doc_vec)
   }
@@ -81,14 +81,14 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   }
   
   doc_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
-  stopword_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
+  stopword_vec <- stringr::str_replace_all(stopword_vec, "\\s+", " ")
   
   ### Create iterators, vocabulary, other objects for dtm construction ---------
   
   # tokenize & construct vocabulary
   tokens <- text2vec::word_tokenizer(string = doc_vec)
   
-  if(length(stopword_vec) > 0){
+  if (length(stopword_vec) > 0) {
     # process in batches of 5,000
 
     batches <- seq(1, length(tokens), 5000)
@@ -102,7 +102,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
     tokens <- do.call("c", tokens)
   }
 
-  if(! is.null(stem_lemma_function)){
+  if (! is.null(stem_lemma_function)) {
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
   }
   

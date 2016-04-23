@@ -64,12 +64,12 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                       stem_lemma_function = NULL, ...){
   
   ### Check inputs -------------------------------------------------------------
-  if(! is.numeric(skipgram_window)){
+  if (! is.numeric(skipgram_window)) {
     stop("skipgram_window must be a positive integer (including 0) or Inf")
   }
   
-  if(! skipgram_window %in% c(Inf, 0)){
-    if(sum(ngram_window > 1) >0){
+  if (! skipgram_window %in% c(Inf, 0)) {
+    if (sum(ngram_window > 1) >0) {
       stop("If skipgram_window is greater than 0 or non-infinite, ngram_window must be c(1, 1)")
     }
   }
@@ -95,14 +95,14 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   }
   
   doc_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
-  stopword_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
+  stopword_vec <- stringr::str_replace_all(stopword_vec, "\\s+", " ")
   
   ### Create iterators, vocabulary, other objects for dtm construction ---------
   
   # tokenize & construct vocabulary
   tokens <- text2vec::word_tokenizer(string = doc_vec)
   
-  if(length(stopword_vec) > 0){
+  if (length(stopword_vec) > 0) {
     # process in batches of 5,000
     
     batches <- seq(1, length(tokens), 5000)
@@ -116,7 +116,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     tokens <- do.call("c", tokens)
   }
   
-  if(! is.null(stem_lemma_function)){
+  if (! is.null(stem_lemma_function)) {
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
   }
   
@@ -127,7 +127,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   
   ### Get the tcm, make sure it has correct dimnames, and return ---------------
   
-  if(is.infinite(skipgram_window)){ # If you want 
+  if (is.infinite(skipgram_window)) { # If you want 
     
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
     
@@ -139,7 +139,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     return(textmineR::Dtm2Tcm(dtm = dtm))
     
-  }else if(skipgram_window == 0){
+  } else if (skipgram_window == 0) {
     
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
     
@@ -152,7 +152,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     dtm <- dtm > 0
     
     return(dtm %*% t(dtm))
-  }else{
+  } else {
     
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary,
                                              grow_dtm = FALSE,
