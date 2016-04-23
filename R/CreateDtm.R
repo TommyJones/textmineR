@@ -81,7 +81,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   }
   
   doc_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
-  stopword_vec <- stringr::str_replace_all(doc_vec, "\\s+", " ")
+  stopword_vec <- stringr::str_replace_all(stopword_vec, "\\s+", " ")
   
   ### Create iterators, vocabulary, other objects for dtm construction ---------
   
