@@ -56,7 +56,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
                     stem_lemma_function = NULL, ...){
   
   ### Pre-process the documents ------------------------------------------------
-  if(is.null(doc_names)){
+  if(is.null(doc_names) & is.null(names(doc_vec))){
     warning("No document names detected. Assigning 1:length(doc_vec) as names.")
     doc_names <- 1:length(doc_vec)
   }
