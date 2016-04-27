@@ -67,8 +67,8 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   }
   
   if (remove_punctuation) {
-    doc_vec <- stringr::str_replace_all(doc_vec, "[^a-zA-Z0-9]", " ")
-    stopword_vec <- stringr::str_replace_all(stopword_vec, "[^a-zA-Z0-9]", " ")
+    doc_vec <- stringr::str_replace_all(doc_vec, "_|[^\\w0-9]", " ")
+    stopword_vec <- stringr::str_replace_all(stopword_vec, "_|[^\\w0-9]", " ")
     stopword_vec <- unique(unlist(stringr::str_split(string = stopword_vec, 
                                                   pattern = "\\s+")))
   }
