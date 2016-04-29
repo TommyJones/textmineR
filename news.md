@@ -1,6 +1,10 @@
 ### Updates for version 2.0.2 (ongoing)
 
 * Patched CreateDtm and CreateTcm. remove_punctuation now supports non-English characters.
+* Patched TmParallelApply. Added an option to declare the environment to search for your export list.
+  Default to that argument just searches the local environment. The default should cover ~95% of 
+  use cases.
+
 
 ### Updates for version 2.0.1
 
