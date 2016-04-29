@@ -5,7 +5,7 @@
 \title{An OS-independent parallel version of \code{\link[base]{lapply}}}
 \usage{
 TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL,
-  libraries = NULL)
+  libraries = NULL, envir = parent.frame())
 }
 \arguments{
 \item{X}{A vector or list over which to apply \code{FUN}}
@@ -20,6 +20,8 @@ using a Windows machine. Defauts to \code{NULL}}
 
 \item{libraries}{A character vector of library/package names to load on to
 each cluster if using a Windows machine. Defaults to \code{NULL}}
+
+\item{envir}{Environment from which to export variables in varlist}
 }
 \value{
 This function returns a \code{list} of length \code{length(X)}.
