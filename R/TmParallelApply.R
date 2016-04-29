@@ -44,14 +44,16 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(),
           eval(parse(text = paste("library(", l, ")", sep="")))
         }
       }
-      parallel::clusterExport(cl, varlist = c("libraries", "lib_fun"))
+      parallel::clusterExport(cl, varlist = c("libraries", "lib_fun"), 
+                              envir = environment())
       
       parallel::clusterCall(cl, fun=lib_fun)
       
     }
     
     # export any other objects needed
-    if( ! is.null(export) ) parallel::clusterExport(cl, varlist=export)
+    if( ! is.null(export) ) parallel::clusterExport(cl, varlist=export,
+                                                    envir = environment())
     
     out <- parallel::parLapply(cl , X = X, fun = FUN)
     
