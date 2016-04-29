@@ -31,6 +31,18 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(),
     out <- parallel::mclapply(X = X, FUN = FUN, mc.cores = cpus)
     
   }else{
+    # Declare a function for environment scoping
+    # Credit: Hadely Wickham's book "Advanced R"
+    
+    where <- function(name, env = parent.frame()){
+      if (identical(env, emptyenv())) {
+        stop("Can't find ", name, call. = FALSE)
+      } else if (exists(name, envir = env, inherits = FALSE)) {
+        env
+      } else {
+        where(name, parent.env(env))
+      }
+    }
     
     cl <- parallel::makeCluster(cpus)
     
@@ -44,16 +56,23 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(),
           eval(parse(text = paste("library(", l, ")", sep="")))
         }
       }
-      parallel::clusterExport(cl, varlist = c("libraries", "lib_fun"), 
-                              envir = environment())
+      
+      parallel::clusterExport(cl, varlist = "libraries", 
+                              envir = where(libraries))
+      
+      parallel::clusterExport(cl, varlist = "lib_fun", envir = where(lib_fun))
       
       parallel::clusterCall(cl, fun=lib_fun)
       
     }
     
     # export any other objects needed
-    if( ! is.null(export) ) parallel::clusterExport(cl, varlist=export,
-                                                    envir = environment())
+    if( ! is.null(export) ) {
+      for(j in 1:length(export)){
+        parallel::clusterExport(cl, varlist=export[ j ],
+                                envir = where(export[ j ]))
+      }
+    }
     
     out <- parallel::parLapply(cl , X = X, fun = FUN)
     
