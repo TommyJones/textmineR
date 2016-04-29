@@ -1,4 +1,13 @@
+### Updates for version 2.0.2 (ongoing)
+
+* Patched CreateDtm and CreateTcm. remove_punctuation now supports non-English characters.
+
+### Updates for version 2.0.1
+
+* Patched CreateDtm and CreateTcm. An error caused stopwords to not be removed
+
 ### Updates for version 2.0.0
+
 * Vec2Dtm is now deprecated in favor of CreateDtm
 * A function, CreateTcm, now exists to create term co-occurence matrices
 * CreateDtm and CreateTcm are implemented with a parallel C++ back end through the text2vec library
@@ -21,9 +30,6 @@
     document
 * Similarly, CalcHellingerDist and CalcJSDivergence replace HellDist and JSD.
   This is to conform to a naming convention where functions are "verbs".
-
-#### Possible
-
 
 
 ### Updates for version 1.7.0
