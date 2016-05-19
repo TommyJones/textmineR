@@ -162,6 +162,8 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     tcm <- text2vec::create_tcm(it, vectorizer)
     
+    tcm <- as(tcm, "dgCMatrix", strict = TRUE)
+    
     return(tcm)
   }
 }
