@@ -19,7 +19,7 @@
 #' @export
 FitCtmModel <- function(dtm, k, return_all = TRUE, ...){
   
-  model <- topicmodels::CTM(x = dtm, k = k, ...)
+  model <- topicmodels::CTM(x = dtm, k = k, control = list(...))
   
   theta <- model@gamma
   
