@@ -1,17 +1,14 @@
-### Patch
+### Patch version 2.0.2
 This is a patch, I have
-* Corrected a significant error in two functions. 
-  - Users would expect stop words to be removed, but an error in the function meant
-    that they would not be removed regardless of users passing an argument
-  - This is now fixed
-
-### Note on CRAN check of version 2.0
-* r-oldrel-windows-ix86+x86_64 is showing an ERROR
-* `text2vec` is included as an import in the DESCRIPTION file
-* I cannot reproduce this ERROR on any of my machines
+* Corrected functions using the `...` argument so that conflicts in the 
+  underlying functions do not arise.
+* Swapped a dependency of the irlba package for a dependency of the RSpectra
+  package
+* Corrected TmParallelApply so it no longer throws an error when called from
+  R running on Windows. 
 
 ### Test environments
-* local OS X install, R 3.2.4
+* local OS X install, R 3.3
 * Ubuntu 14.04 LTS (local install), R 3.2.5
 * win-builder (devel and release)
 

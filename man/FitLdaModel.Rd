@@ -58,6 +58,9 @@ worth noting. By default, it estimates \code{alpha} and \code{beta} as part
 of the expectation maximization. Therefore, the values of \code{alpha} and 
 \code{beta} passed to \code{\link[topicmodels]{LDA}} will change unless \code{estimate.alpha} and
 \code{estimate.beta} are passed to \code{...} and set to \code{FALSE}.
+
+The \code{...} argument can also be used to control the underlying behavior of
+\code{\link[textmineR]{TmParallelApply}}, such as the number of cpus, for example.
 }
 \examples{
 # Load a pre-formatted dtm 

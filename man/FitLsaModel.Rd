@@ -11,10 +11,11 @@ FitLsaModel(dtm, k, return_all = FALSE, ...)
 
 \item{k}{Number of topics}
 
-\item{return_all}{Should all objects returned from \code{irlba::irlba} be
+\item{return_all}{Should all objects returned from \code{RSpectra::svds} be
 returned here? Defaults to \code{FALSE}}
 
-\item{...}{Other arguments to pass to \code{\link[irlba]{irlba}}.}
+\item{...}{Other arguments to pass to \code{\link[RSpectra]{svds}} through 
+its \code{opts} parameter.}
 }
 \value{
 Returns a list with a minimum of three objects: \code{phi},  
@@ -23,7 +24,7 @@ columns index tokens. The rows of \code{theta} index documents and the
 columns index topics. \code{sv} is a vector of singular values.
 }
 \description{
-A wrapper for \code{irlba::irlba} that returns 
+A wrapper for \code{RSpectra::svds} that returns 
 a nicely-formatted latent semantic analysis topic model.
 }
 \details{
@@ -48,9 +49,5 @@ model <- FitLsaModel(dtm = dtm_tfidf, k = 5)
 
 str(model)
 
-# Fit a model, centering each document, by passing the center argument to irlba
-model <- FitLsaModel(dtm = dtm_tfidf, k = 5, center = Matrix::rowMeans(dtm))
-
-str(model)
 }
 

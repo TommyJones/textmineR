@@ -1,9 +1,20 @@
 ### Updates for version 2.0.2 (ongoing)
 
-* Patched CreateDtm and CreateTcm. remove_punctuation now supports non-English characters.
-* Patched TmParallelApply. Added an option to declare the environment to search for your export list.
-  Default to that argument just searches the local environment. The default should cover ~95% of 
-  use cases.
+* Patched `CreateDtm` and `CreateTcm`. remove_punctuation now supports non-English 
+  characters.
+* Patched `TmParallelApply`. Added an option to declare the environment to search 
+  for your export list. Default to that argument just searches the local 
+  environment. The default should cover ~95% of use cases. (And avoids crash on
+  Windows OS)
+* Patched `FitLdaModel`. Use of the `...` argument now allows you to control 
+  `TmParallelApply`, `lda::lda.collapsed.gibbs.sampler`, and `topicmodels::LDA`
+  without error.
+* Patched `FitCtmModel` where the `...` argument now goes to `topicmodels::CTM`'s
+  `control` argument.
+* Patched `CreateTcm` to return objects of class `dgCMatrix`. This allows you to
+  run functions like `FitLdaModel` on a TCM.
+* Switched from irlba to RSpectra for LSA models because RSpectra's 
+  implementation is much faster.
 
 
 ### Updates for version 2.0.1
