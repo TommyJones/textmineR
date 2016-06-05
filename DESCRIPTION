@@ -23,7 +23,7 @@ Imports:
     SnowballC,
     Rcpp,
     RcppProgress,
-    irlba
+    RSpectra
 Suggests:
     digest
 License: GPL (>= 3)

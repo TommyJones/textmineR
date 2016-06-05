@@ -1,11 +1,12 @@
 #' Fit a topic model using Latent Semantic Analysis
-#' @description A wrapper for \code{irlba::irlba} that returns 
+#' @description A wrapper for \code{RSpectra::svds} that returns 
 #' a nicely-formatted latent semantic analysis topic model.
 #' @param dtm A document term matrix of class \code{Matrix::dgCMatrix}
 #' @param k Number of topics
-#' @param return_all Should all objects returned from \code{irlba::irlba} be
+#' @param return_all Should all objects returned from \code{RSpectra::svds} be
 #'        returned here? Defaults to \code{FALSE}
-#' @param ... Other arguments to pass to \code{\link[irlba]{irlba}}. 
+#' @param ... Other arguments to pass to \code{\link[RSpectra]{svds}} through 
+#'        its \code{opts} parameter. 
 #' @return Returns a list with a minimum of three objects: \code{phi},  
 #' \code{theta}, and \code{sv}. The rows of \code{phi} index topics and the 
 #' columns index tokens. The rows of \code{theta} index documents and the 
@@ -30,16 +31,13 @@
 #' 
 #' str(model)
 #' 
-#' # Fit a model, centering each document, by passing the center argument to irlba
-#' model <- FitLsaModel(dtm = dtm_tfidf, k = 5, center = Matrix::rowMeans(dtm))
-#' 
-#' str(model)
 #' @export
 FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   
-  # Fit LSA using single value decomposition on sparse matrices from 
-  # irlba library
-  lsa <- irlba::irlba(dtm, nv=k)
+  opts <- list(...)
+  
+  # Fit LSA using single value decomposition on sparse matrices
+  lsa <- RSpectra::svds(A = dtm, k = k, opts = opts)
   
   # Rename/transform objects so they conform to the convention in textmineR
   names(lsa)[ names(lsa) == "v" ] <- "phi"
@@ -55,8 +53,8 @@ FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   names(lsa$sv) <- names(lsa$theta)
   
   if(! return_all ){
-    lsa$iter <- NULL
-    lsa$mprod <- NULL
+    lsa$niter <- NULL
+    lsa$nops <- NULL
   }
   
   return(lsa)
