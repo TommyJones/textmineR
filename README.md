@@ -6,9 +6,11 @@ An aid for text mining in R, with a syntax that
     related to topic modeling. It works well with with the "lda" package by J.
     Chang.
     
+
 ## Below is a demo of some of the functionality in `textmineR`
 
 ### Example using LDA topic modeling 
+
     library(textmineR)
 
     # Load some data into the workspace 
@@ -132,7 +134,9 @@ An aid for text mining in R, with a syntax that
     View(model$summary[ order(model$hclust$clustering) , ])
 
 
+
 ### Example of document summarization 
+
         
     rm(list=ls())
     
