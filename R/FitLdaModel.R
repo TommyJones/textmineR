@@ -36,6 +36,9 @@
 #' of the expectation maximization. Therefore, the values of \code{alpha} and 
 #' \code{beta} passed to \code{\link[topicmodels]{LDA}} will change unless \code{estimate.alpha} and
 #' \code{estimate.beta} are passed to \code{...} and set to \code{FALSE}.
+#' 
+#' The \code{...} argument can also be used to control the underlying behavior of
+#' \code{\link[textmineR]{TmParallelApply}}, such as the number of cpus, for example.
 #' @examples
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 
@@ -54,6 +57,9 @@
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05, 
                         smooth = TRUE, method = "gibbs", return_all = FALSE, ...){
+  # Some setup to match arguments given with ...
+  dots <- list(...)
+  
   
   if(! method %in% c("gibbs", "vem") ){
     stop("Method must be one of 'gibbs' or 'vem'")
@@ -62,20 +68,32 @@ FitLdaModel <- function(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05,
   if(method == "gibbs"){
     if(is.null(iterations)){
       stop("'iterations' must be specified for method 'gibbs'")
-    }
+  }
+
+    
+    
     
     vocab <- colnames(dtm)
     
-    lex <- Dtm2Docs(dtm = dtm)
+    lex_args <- c(list(dtm = dtm), dots[ names(dots) %in% 
+                                           names(formals(textmineR::TmParallelApply)) ])
+    
+    lex <- do.call(textmineR::Dtm2Docs, lex_args)
     
     if(nrow(dtm) > 1000){
       chunks <- seq(1, nrow(dtm), by = 1000)
       
       lex_list <- lapply(chunks, function(x) lex[ x:min(x + 999, length(lex)) ])
       
-      lex <- textmineR::TmParallelApply(X = lex_list, function(x){
-        lda::lexicalize(x, sep = " ", vocab = vocab)
-      }, export = "vocab", ...)
+      lex_args <- c(list(X = lex_list, 
+                         FUN = function(x){
+                           lda::lexicalize(x, sep = " ", vocab = vocab)
+                         },
+                         export = "vocab"),
+                         dots[ names(dots) %in% 
+                                 names(formals(textmineR::TmParallelApply)) ])
+      
+      lex <- do.call(textmineR::TmParallelApply, lex_args)
       
       lex <- do.call(c, lex)
       
@@ -83,31 +101,38 @@ FitLdaModel <- function(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05,
       lex <- lda::lexicalize(lex, sep=" ", vocab=vocab)
     }
     
+    model_args <- c(list(documents = lex, 
+                         K = k, 
+                         vocab = vocab, 
+                         num.iterations = iterations, 
+                         alpha = alpha, 
+                         eta = beta),
+                    dots[ names(dots) %in% 
+                            names(formals(lda::lda.collapsed.gibbs.sampler)) ] )
     
-    model <- lda::lda.collapsed.gibbs.sampler(documents = lex, 
-                                              K = k, 
-                                              vocab = vocab, 
-                                              num.iterations = iterations, 
-                                              alpha = alpha, 
-                                              eta = beta,
-                                              ...)
+    model <- do.call(lda::lda.collapsed.gibbs.sampler, model_args)
     
-    result <- FormatRawLdaOutput(lda_result = model, 
-                                docnames = rownames(dtm), 
-                                smooth = smooth)
+    result <- textmineR::FormatRawLdaOutput(lda_result = model, 
+                                            docnames = rownames(dtm), 
+                                            smooth = smooth)
     if(return_all){
       result <- c(result, etc = model)
     }
   }else{
     
-    control <- list(...)
+    # below is an inelegant matching of control parameters to topicmodels::LDA
+    ldacontrol <- c("seed", "verbose", "save", "prefix",
+                    "nstart", "best", "keep", "estimate.beta",
+                    "var", "em", "initialize", "alpha", "estimate.alpha")
+    
+    control <- dots[ names(dots) %in% ldacontrol ]
     
     if(! "alpha" %in% names(control)){
       control <- c(control, alpha = alpha)
     }
     
     model <- topicmodels::LDA(x = dtm, k = k, method = "VEM", 
-                              control = list(...))
+                              control = control)
     
     theta <- model@gamma
     
