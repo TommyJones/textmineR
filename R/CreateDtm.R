@@ -101,14 +101,18 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 
     tokens <- do.call("c", tokens)
   }
+  
 
   if (! is.null(stem_lemma_function)) {
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
   }
   
+  tokens <- textmineR::TmParallelApply(X = tokens, 
+                                       FUN = function(x) paste(x, collapse = " "),
+                                       ...)
   it <- text2vec::itoken(tokens)
   
-  vocabulary <- text2vec::create_vocabulary(itoken_src = it, 
+  vocabulary <- text2vec::create_vocabulary(it = it, 
                                             ngram = ngram_window)
   
   
@@ -117,7 +121,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   ### Get the dtm, make sure it has correct dimnames, and return ---------------
   it <- text2vec::itoken(tokens)
   
-  dtm <- text2vec::create_dtm(itoken_src = it, 
+  dtm <- text2vec::create_dtm(it = it, 
                               vectorizer = vectorizer,
                               type = "dgCMatrix")
   

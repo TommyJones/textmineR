@@ -120,9 +120,13 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
   }
   
+  tokens <- textmineR::TmParallelApply(X = tokens, 
+                                       FUN = function(x) paste(x, collapse = " "),
+                                       ...)
+  
   it <- text2vec::itoken(tokens)
   
-  vocabulary <- text2vec::create_vocabulary(itoken_src = it, 
+  vocabulary <- text2vec::create_vocabulary(it = it, 
                                             ngram = ngram_window)
   
   ### Get the tcm, make sure it has correct dimnames, and return ---------------
@@ -133,7 +137,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     it <- text2vec::itoken(tokens)
     
-    dtm <- text2vec::create_dtm(itoken_src = it, 
+    dtm <- text2vec::create_dtm(it = it, 
                                 vectorizer = vectorizer,
                                 type = "dgCMatrix")
     
@@ -145,7 +149,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     it <- text2vec::itoken(tokens)
     
-    dtm <- text2vec::create_dtm(itoken_src = it, 
+    dtm <- text2vec::create_dtm(it = it, 
                                 vectorizer = vectorizer,
                                 type = "dgCMatrix")
     

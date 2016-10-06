@@ -1,4 +1,9 @@
-### Updates for version 2.0.2 (ongoing)
+### Updates for version 2.0.3
+
+* Patches to `CreateDtm` and `CreateTcm` in response to updates to `text2vec`.
+* More formal update to take advantage of `text2vec`'s latest optimizations to follow.
+
+### Updates for version 2.0.2
 
 * Patched `CreateDtm` and `CreateTcm`. remove_punctuation now supports non-English 
   characters.
