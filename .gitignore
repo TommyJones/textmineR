@@ -6,3 +6,4 @@ src/*.so
 src/*.dll
 ToDo.numbers
 models_*
+.DS_Store
