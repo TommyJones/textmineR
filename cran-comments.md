@@ -1,3 +1,7 @@
+### Patch version 2.0.3
+This is a patch, I have
+* Updated functions to in response to upgrades in upstream packages.
+
 ### Patch version 2.0.2
 This is a patch, I have
 * Corrected functions using the `...` argument so that conflicts in the 
