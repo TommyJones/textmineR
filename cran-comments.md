@@ -1,19 +1,11 @@
-### Patch version 2.0.3
+### Patch version 2.0.4
 This is a patch, I have
 * Updated functions to in response to upgrades in upstream packages.
-
-### Patch version 2.0.2
-This is a patch, I have
-* Corrected functions using the `...` argument so that conflicts in the 
-  underlying functions do not arise.
-* Swapped a dependency of the irlba package for a dependency of the RSpectra
-  package
-* Corrected TmParallelApply so it no longer throws an error when called from
-  R running on Windows. 
+* Cleaned up some code examples.
 
 ### Test environments
-* local OS X install, R 3.3
-* Ubuntu 14.04 LTS (local install), R 3.2.5
+* local OS X install, R 3.3.1
+* Ubuntu 14.04 LTS (local install), R 3.3.1
 * win-builder (devel and release)
 
 ### R CMD check results
