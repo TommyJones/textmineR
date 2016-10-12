@@ -63,7 +63,7 @@ An aid for text mining in R, with a syntax that
     plot(coherence_mat, type = "o")
     
     # select k based on maximum average coherence
-    model <- model_list[ coherence_mat$coherence == max(coherence_mat$coherence) ][[ 1 ]]
+    model <- model_list[ which.max(coherence_mat$coherence) ][[ 1 ]]
 
     
     names(model) # phi is P(words | topics), theta is P(topics | documents)
