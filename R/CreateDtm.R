@@ -110,6 +110,9 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   tokens <- textmineR::TmParallelApply(X = tokens, 
                                        FUN = function(x) paste(x, collapse = " "),
                                        ...)
+  
+  tokens <- unlist(tokens)
+  
   it <- text2vec::itoken(tokens)
   
   vocabulary <- text2vec::create_vocabulary(it = it, 
@@ -119,7 +122,6 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
   
   ### Get the dtm, make sure it has correct dimnames, and return ---------------
-  it <- text2vec::itoken(tokens)
   
   dtm <- text2vec::create_dtm(it = it, 
                               vectorizer = vectorizer,

@@ -124,6 +124,8 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                                        FUN = function(x) paste(x, collapse = " "),
                                        ...)
   
+  tokens <- unlist(tokens)
+  
   it <- text2vec::itoken(tokens)
   
   vocabulary <- text2vec::create_vocabulary(it = it, 
@@ -131,11 +133,9 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   
   ### Get the tcm, make sure it has correct dimnames, and return ---------------
   
-  if (is.infinite(skipgram_window)) { # If you want 
+  if (is.infinite(skipgram_window)) { 
     
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
-    
-    it <- text2vec::itoken(tokens)
     
     dtm <- text2vec::create_dtm(it = it, 
                                 vectorizer = vectorizer,
@@ -146,8 +146,6 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   } else if (skipgram_window == 0) {
     
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
-    
-    it <- text2vec::itoken(tokens)
     
     dtm <- text2vec::create_dtm(it = it, 
                                 vectorizer = vectorizer,
@@ -162,7 +160,6 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                                              grow_dtm = FALSE,
                                              skip_grams_window = as.integer(skipgram_window))
     
-    it <- text2vec::itoken(tokens)
     
     tcm <- text2vec::create_tcm(it, vectorizer)
     
