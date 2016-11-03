@@ -1,3 +1,6 @@
+### Updates for version 2.0.4
+* Patching errors introduced in version 2.0.3
+
 ### Updates for version 2.0.3
 
 * Patches to `CreateDtm` and `CreateTcm` in response to updates to `text2vec`.
