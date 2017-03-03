@@ -1,3 +1,6 @@
+### Updates for version 2.0.5
+* Add `verbose` option to `CreateDtm` and `CreateTcm` to surpress status messages.
+
 ### Updates for version 2.0.4
 * Patching errors introduced in version 2.0.3
 

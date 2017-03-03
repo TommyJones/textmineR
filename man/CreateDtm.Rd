@@ -7,7 +7,7 @@
 CreateDtm(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1),
   stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")),
   lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-  stem_lemma_function = NULL, ...)
+  stem_lemma_function = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{doc_vec}{A character vector of documents.}
@@ -35,6 +35,9 @@ to \code{TRUE}}
 \item{stem_lemma_function}{A function that you would like to apply to the 
 documents for stemming, lemmatization, or similar. See examples for
 usage.}
+
+\item{verbose}{Defaults to \code{TRUE}. Do you want to see status during 
+vectorization?}
 
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
 }

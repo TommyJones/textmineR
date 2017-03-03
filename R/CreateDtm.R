@@ -23,6 +23,8 @@
 #' @param stem_lemma_function A function that you would like to apply to the 
 #'        documents for stemming, lemmatization, or similar. See examples for
 #'        usage.
+#' @param verbose Defaults to \code{TRUE}. Do you want to see status during 
+#'        vectorization?
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
 #' @return A document term matrix of class \code{dgCMatrix}. The rows index 
 #' documents. The columns index terms. The i, j entries represent the count of 
@@ -53,7 +55,7 @@
 CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1), 
                     stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")), 
                     lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                    stem_lemma_function = NULL, ...){
+                    stem_lemma_function = NULL, verbose = TRUE, ...){
   
   ### Pre-process the documents ------------------------------------------------
   if (is.null(doc_names) & is.null(names(doc_vec))) {
@@ -125,6 +127,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   
   dtm <- text2vec::create_dtm(it = it, 
                               vectorizer = vectorizer,
+                              verbose = verbose,
                               type = "dgCMatrix")
   
   rownames(dtm) <- doc_names

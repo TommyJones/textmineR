@@ -23,6 +23,8 @@
 #' @param stem_lemma_function A function that you would like to apply to the 
 #'        documents for stemming, lemmatization, or similar. See examples for
 #'        usage.
+#' @param verbose Defaults to \code{TRUE}. Do you want to see status during 
+#'        vectorization?
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
 #' @return A document term matrix of class \code{dgCMatrix}. The rows index 
 #' documents. The columns index terms. The i, j entries represent the count of 
@@ -61,7 +63,7 @@
 CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1), 
                       stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")), 
                       lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                      stem_lemma_function = NULL, ...){
+                      stem_lemma_function = NULL, verbose = TRUE, ...){
   
   ### Check inputs -------------------------------------------------------------
   if (! is.numeric(skipgram_window)) {
@@ -139,6 +141,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     dtm <- text2vec::create_dtm(it = it, 
                                 vectorizer = vectorizer,
+                                verbose = verbose,
                                 type = "dgCMatrix")
     
     return(textmineR::Dtm2Tcm(dtm = dtm))
@@ -149,6 +152,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     dtm <- text2vec::create_dtm(it = it, 
                                 vectorizer = vectorizer,
+                                verbose = verbose,
                                 type = "dgCMatrix")
     
     dtm <- dtm > 0
@@ -161,7 +165,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                                              skip_grams_window = as.integer(skipgram_window))
     
     
-    tcm <- text2vec::create_tcm(it, vectorizer)
+    tcm <- text2vec::create_tcm(it, vectorizer, verbose = verbose)
     
     tcm <- methods::as(tcm, "dgCMatrix", strict = TRUE)
     
