@@ -88,4 +88,3 @@ tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
                  stem_lemma_function = function(x) SnowballC::wordStem(x, "porter"))
 }
 }
-

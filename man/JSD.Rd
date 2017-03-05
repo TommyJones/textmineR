@@ -35,4 +35,3 @@ JSD(x = mymat)
 }
 \keyword{distance}
 \keyword{functions}
-

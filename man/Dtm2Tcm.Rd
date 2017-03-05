@@ -26,4 +26,3 @@ data(nih_sample_dtm)
 
 tcm <- Dtm2Tcm(nih_sample_dtm)
 }
-

@@ -43,4 +43,3 @@ ll <- CalcLikelihood(dtm = nih_sample_dtm,
 
 ll
 }
-

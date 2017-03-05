@@ -36,4 +36,3 @@ myvec <- c("banana", "bananas", "scientists", "large_armies")
 CorrectS(term_vec=myvec)
 
 }
-

@@ -39,4 +39,3 @@ assignments <- t(apply(nih_sample_topic_model$theta, 1, function(x){
 labels <- LabelTopics(assignments = assignments, dtm = nih_sample_dtm, M = 2)
 
 }
-

@@ -30,4 +30,3 @@ phi_prime <- GetPhiPrime(phi = nih_sample_topic_model$phi,
                          theta = nih_sample_topic_model$theta)
 
 }
-

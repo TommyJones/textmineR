@@ -44,4 +44,3 @@ r2 <- CalcTopicModelR2(dtm = nih_sample_dtm,
 
 r2
 }
-

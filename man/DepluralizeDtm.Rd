@@ -41,4 +41,3 @@ dtm <- Vec2Dtm(vec = myvec, min.n.gram = 1, max.n.gram = 1)
 dtm_new <- DepluralizeDtm(dtm = dtm)
 #' }
 }
-

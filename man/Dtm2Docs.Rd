@@ -40,4 +40,3 @@ new_docs <- Dtm2Docs(dtm = nih_sample_dtm)
 new_docs[ 1:3 ]
 
 }
-

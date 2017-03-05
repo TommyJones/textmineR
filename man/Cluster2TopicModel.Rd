@@ -36,4 +36,3 @@ result <- Cluster2TopicModel(dtm = nih_sample_dtm,
                              clustering = nih_sample$IC_NAME)
 }
 }
-

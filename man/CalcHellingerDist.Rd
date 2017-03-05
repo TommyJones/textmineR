@@ -32,4 +32,3 @@ CalcHellingerDist(x = x, y = y)
 mymat <- rbind(x, y)
 CalcHellingerDist(x = mymat)
 }
-

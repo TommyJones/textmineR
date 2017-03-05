@@ -33,4 +33,3 @@ data(nih_sample_dtm)
 
 CalcProbCoherence(phi = nih_sample_topic_model$phi, dtm = nih_sample_dtm, M = 5)
 }
-

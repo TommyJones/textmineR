@@ -32,4 +32,3 @@ term_freq_mat <- TermDocFreq(nih_sample_dtm)
 
 str(term_freq_mat)
 }
-

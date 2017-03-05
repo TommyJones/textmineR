@@ -35,4 +35,3 @@ HellDist(x = mymat)
 }
 \keyword{distance}
 \keyword{functions}
-

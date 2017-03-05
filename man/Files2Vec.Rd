@@ -30,4 +30,3 @@ this function.
 my_text_vector <- Files2Vec("/path/to/my/data/")
 }
 }
-

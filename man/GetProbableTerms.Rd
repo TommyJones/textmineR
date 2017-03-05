@@ -37,4 +37,3 @@ term_probs <- Matrix::colSums(nih_sample_dtm) / sum(Matrix::colSums(nih_sample_d
 GetProbableTerms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
 
 }
-

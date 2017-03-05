@@ -45,4 +45,3 @@ lda <- lda::lda.collapsed.gibbs.sampler(documents = lex, K = 5,
 lda <- FormatRawLdaOutput(lda_result=lda, docnames=rownames(dtm), smooth=TRUE)
 
 }
-

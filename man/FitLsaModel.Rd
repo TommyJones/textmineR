@@ -50,4 +50,3 @@ model <- FitLsaModel(dtm = dtm_tfidf, k = 5)
 str(model)
 
 }
-

@@ -25,4 +25,3 @@ a_list <- list(a_matrix, a_matrix, a_matrix, a_matrix, a_matrix)
 result <- RecursiveRbind(a_list)
 
 }
-

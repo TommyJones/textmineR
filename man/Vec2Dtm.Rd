@@ -65,4 +65,3 @@ head(colnames(dtm))
 head(rownames(dtm))
 }
 }
-

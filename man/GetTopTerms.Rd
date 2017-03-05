@@ -27,4 +27,3 @@ top_terms <- GetTopTerms(phi = nih_sample_topic_model$phi, M = 5)
 
 str(top_terms)
 }
-
