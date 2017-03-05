@@ -1,6 +1,8 @@
 ### Updates for version 2.0.5
 * Add `verbose` option to `CreateDtm` and `CreateTcm` to surpress status messages.
-
+* Add function `GetVocabFromDtm` to get `text2vec` vocabulary object from a `dgCMatrix` 
+  document term matrix.
+  
 ### Updates for version 2.0.4
 * Patching errors introduced in version 2.0.3
 
