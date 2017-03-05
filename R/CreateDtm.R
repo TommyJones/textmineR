@@ -115,7 +115,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   
   tokens <- unlist(tokens)
   
-  it <- text2vec::itoken(tokens)
+  it <- text2vec::itoken(tokens, progressbar = verbose)
   
   vocabulary <- text2vec::create_vocabulary(it = it, 
                                             ngram = ngram_window)

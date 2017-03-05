@@ -128,7 +128,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   
   tokens <- unlist(tokens)
   
-  it <- text2vec::itoken(tokens)
+  it <- text2vec::itoken(tokens, progressbar = verbose)
   
   vocabulary <- text2vec::create_vocabulary(it = it, 
                                             ngram = ngram_window)
