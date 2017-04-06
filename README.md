@@ -106,7 +106,7 @@ An aid for text mining in R, with a syntax that
     model$num_docs <- colSums(model$assignments > 0)
     
     # cluster topics together in a dendrogram
-    model$topic_linguistic_dist <- HellDist(model$phi)
+    model$topic_linguistic_dist <- CalcHellingerDist(model$phi)
     
     model$hclust <- hclust(as.dist(model$topic_linguistic_dist), "ward.D")
     
