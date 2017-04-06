@@ -1,4 +1,4 @@
-useDynLib(textmineR)
+useDynLib(textmineR, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 import(Matrix)
 import(Rcpp)
