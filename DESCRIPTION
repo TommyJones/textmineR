@@ -1,9 +1,11 @@
 Package: textmineR
 Title: Functions for Text Mining and Topic Modeling
-Version: 2.0.4.9999
-Date: 2016-11-02
-Author: "Thomas W. Jones <jones.thos.w@gmail.com>"
-Maintainer: Thomas W. Jones <jones.thos.w@gmail.com>
+Version: 2.0.5
+Date: 2017-04-03
+Authors@R: c(
+    person("Thomas", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
+    person("William", "Doane", email = "", role = "ctb")
+    )
 Description: An aid for text mining in R, with a syntax that
     should be familiar to experienced R users. Provides a wrapper for several 
     topic models that take similarly-formatted input and give similarly-formatted
