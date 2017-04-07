@@ -26,6 +26,7 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(),
                             export=NULL, libraries=NULL, envir = parent.frame()){
   
   os <- .Platform$OS.type
+  if (length(cpus) == 0 || is.na(cpus)) cpus <- 1L
   
   if(os == "unix" ){ # on unix systems use mclapply()
     
