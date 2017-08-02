@@ -1,3 +1,6 @@
+### Updates for version 2.0.6
+* Back-end changes to CreateTcm in response to new `text2vec` API. Functionality is unchanged.
+
 ### Updates for version 2.0.5
 * Add `verbose` option to `CreateDtm` and `CreateTcm` to surpress status messages.
 * Add function `GetVocabFromDtm` to get `text2vec` vocabulary object from a `dgCMatrix` 
