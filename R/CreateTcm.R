@@ -160,12 +160,12 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     return(dtm %*% t(dtm))
   } else {
     
-    vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary,
-                                             grow_dtm = FALSE,
-                                             skip_grams_window = as.integer(skipgram_window))
+    vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
     
     
-    tcm <- text2vec::create_tcm(it, vectorizer, verbose = verbose)
+    tcm <- text2vec::create_tcm(it, vectorizer, 
+                                skip_grams_window = as.integer(skipgram_window),
+                                                               verbose = verbose)
     
     tcm <- methods::as(tcm, "dgCMatrix", strict = TRUE)
     
