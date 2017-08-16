@@ -1,5 +1,5 @@
 useDynLib(textmineR, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 import(Matrix)
-import(Rcpp)
+importFrom(Rcpp, evalCpp)
 import(RcppProgress)

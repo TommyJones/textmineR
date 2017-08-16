@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // CalcLikelihoodC
 double CalcLikelihoodC(arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta);
-RcppExport SEXP textmineR_CalcLikelihoodC(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP) {
+RcppExport SEXP _textmineR_CalcLikelihoodC(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,7 @@ END_RCPP
 }
 // CalcSumSquares
 NumericVector CalcSumSquares(arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta, NumericVector ybar);
-RcppExport SEXP textmineR_CalcSumSquares(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP, SEXP ybarSEXP) {
+RcppExport SEXP _textmineR_CalcSumSquares(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP, SEXP ybarSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -35,7 +35,7 @@ END_RCPP
 }
 // Dtm2DocsC
 List Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab);
-RcppExport SEXP textmineR_Dtm2DocsC(SEXP dtmSEXP, SEXP vocabSEXP) {
+RcppExport SEXP _textmineR_Dtm2DocsC(SEXP dtmSEXP, SEXP vocabSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -47,7 +47,7 @@ END_RCPP
 }
 // Hellinger_cpp
 double Hellinger_cpp(NumericVector p, NumericVector q);
-RcppExport SEXP textmineR_Hellinger_cpp(SEXP pSEXP, SEXP qSEXP) {
+RcppExport SEXP _textmineR_Hellinger_cpp(SEXP pSEXP, SEXP qSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -59,7 +59,7 @@ END_RCPP
 }
 // HellingerMat
 NumericMatrix HellingerMat(NumericMatrix A);
-RcppExport SEXP textmineR_HellingerMat(SEXP ASEXP) {
+RcppExport SEXP _textmineR_HellingerMat(SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -70,7 +70,7 @@ END_RCPP
 }
 // JSD_cpp
 double JSD_cpp(NumericVector p, NumericVector q);
-RcppExport SEXP textmineR_JSD_cpp(SEXP pSEXP, SEXP qSEXP) {
+RcppExport SEXP _textmineR_JSD_cpp(SEXP pSEXP, SEXP qSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -82,7 +82,7 @@ END_RCPP
 }
 // JSDmat
 NumericMatrix JSDmat(NumericMatrix A);
-RcppExport SEXP textmineR_JSDmat(SEXP ASEXP) {
+RcppExport SEXP _textmineR_JSDmat(SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -90,4 +90,20 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(JSDmat(A));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_textmineR_CalcLikelihoodC", (DL_FUNC) &_textmineR_CalcLikelihoodC, 3},
+    {"_textmineR_CalcSumSquares", (DL_FUNC) &_textmineR_CalcSumSquares, 4},
+    {"_textmineR_Dtm2DocsC", (DL_FUNC) &_textmineR_Dtm2DocsC, 2},
+    {"_textmineR_Hellinger_cpp", (DL_FUNC) &_textmineR_Hellinger_cpp, 2},
+    {"_textmineR_HellingerMat", (DL_FUNC) &_textmineR_HellingerMat, 1},
+    {"_textmineR_JSD_cpp", (DL_FUNC) &_textmineR_JSD_cpp, 2},
+    {"_textmineR_JSDmat", (DL_FUNC) &_textmineR_JSDmat, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_textmineR(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

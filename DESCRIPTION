@@ -1,7 +1,8 @@
 Package: textmineR
+Type: Package
 Title: Functions for Text Mining and Topic Modeling
 Version: 2.0.6
-Date: 2017-04-03
+Date: 2017-08-15
 Authors@R: c(
     person("Thomas", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
     person("William", "Doane", email = "wil@drdoane.com", role = "ctb")
@@ -24,7 +25,7 @@ Imports:
     tm,
     stringr,
     SnowballC,
-    Rcpp,
+    Rcpp (>= 0.12.12),
     RcppProgress,
     RSpectra
 Suggests:
