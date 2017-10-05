@@ -4,6 +4,8 @@
 #' @param docnames A character vector giving the names of documents. This is generally rownames(dtm). 
 #' @param smooth Logical. Do you want to smooth your topic proportions so that 
 #' there is a positive value for each term in each topic? Defaults to TRUE
+#' @param softmax Logical. Do you want to use the softmax function to normalize
+#' raw output? If FALSE (the default) output is normalized using standard sum.
 #' @return
 #' Returns a \code{list} with two elements: \code{phi} whose rows represent the 
 #' distribution of words across a topic and \code{theta} whose rows represent 
@@ -33,7 +35,7 @@
 #' 
 
 
-FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
+FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE, softmax = FALSE){
     
     theta <- t(lda_result$document_sums)
     
@@ -42,7 +44,12 @@ FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
     if(smooth){ 
       theta <- theta + 0.0001 
     }
-	theta <- exp(theta) / Matrix::rowSums(exp(theta))
+    
+    if (softmax){
+      theta <- exp(theta) / Matrix::rowSums(exp(theta))
+    } else {
+      theta <- theta / Matrix::rowSums(theta)
+    }
 	rownames(theta) <- docnames
 	colnames(theta) <- paste("t_", 1:ncol(theta), sep="" )
   
@@ -54,7 +61,13 @@ FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
         phi <- phi + 0.0001 
 	}
   
-	phi <- exp(phi) / Matrix::rowSums(exp(phi))
+	if (softmax) {
+	  phi <- exp(phi) / Matrix::rowSums(exp(phi))
+	  
+	} else {
+	  phi <- phi / Matrix::rowSums(phi)
+	  
+	}
 	rownames(phi) <- colnames(theta)
 
   # pull theta and phi into the result
@@ -69,7 +82,14 @@ FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
       theta_expects <- theta_expects + 0.0001 
     }
     
-    theta_expects <- exp(theta_expects) / Matrix::rowSums(exp(theta_expects))
+    if(softmax){
+      theta_expects <- exp(theta_expects) / Matrix::rowSums(exp(theta_expects))
+      
+    } else {
+      theta_expects <- theta_expects / Matrix::rowSums(theta_expects)
+      
+    }
+    
     rownames(theta_expects) <- docnames
     colnames(theta_expects) <- paste("t.", 1:ncol(theta_expects), sep="" )
     
