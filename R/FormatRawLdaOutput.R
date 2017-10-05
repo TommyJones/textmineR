@@ -42,7 +42,7 @@ FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
     if(smooth){ 
       theta <- theta + 0.0001 
     }
-	theta <- theta/Matrix::rowSums(theta)
+	theta <- exp(theta) / Matrix::rowSums(exp(theta))
 	rownames(theta) <- docnames
 	colnames(theta) <- paste("t_", 1:ncol(theta), sep="" )
   
@@ -54,7 +54,7 @@ FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
         phi <- phi + 0.0001 
 	}
   
-	phi <- phi/Matrix::rowSums(phi)
+	phi <- exp(phi) / Matrix::rowSums(exp(phi))
 	rownames(phi) <- colnames(theta)
 
   # pull theta and phi into the result
@@ -65,13 +65,14 @@ FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE){
   if(! is.null(dim(lda_result$document_expects))){
     theta_expects <- t(lda_result$document_expects)
     
-    theta_expects <- theta_expects/Matrix::rowSums(theta_expects)
-    rownames(theta_expects) <- docnames
-    colnames(theta_expects) <- paste("t.", 1:ncol(theta_expects), sep="" )
-    
     if(smooth){ 
       theta_expects <- theta_expects + 0.0001 
     }
+    
+    theta_expects <- exp(theta_expects) / Matrix::rowSums(exp(theta_expects))
+    rownames(theta_expects) <- docnames
+    colnames(theta_expects) <- paste("t.", 1:ncol(theta_expects), sep="" )
+    
     
     
     result$theta_expects <- theta_expects
