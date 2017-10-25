@@ -4,7 +4,7 @@
 \alias{FormatRawLdaOutput}
 \title{Format Raw Output from \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
 \usage{
-FormatRawLdaOutput(lda_result, docnames, smooth = TRUE)
+FormatRawLdaOutput(lda_result, docnames, smooth = TRUE, softmax = FALSE)
 }
 \arguments{
 \item{lda_result}{The list value returned by \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
@@ -13,6 +13,9 @@ FormatRawLdaOutput(lda_result, docnames, smooth = TRUE)
 
 \item{smooth}{Logical. Do you want to smooth your topic proportions so that 
 there is a positive value for each term in each topic? Defaults to TRUE}
+
+\item{softmax}{Logical. Do you want to use the softmax function to normalize
+raw output? If FALSE (the default) output is normalized using standard sum.}
 }
 \value{
 Returns a \code{list} with two elements: \code{phi} whose rows represent the 
