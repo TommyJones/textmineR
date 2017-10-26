@@ -20,7 +20,7 @@ k <- 10
 
 phi <- gtools::rdirichlet(n = k, alpha = colSums(dtm) / sum(dtm) * 250) # do.call(rbind, lapply(1:k, function(x) colSums(dtm) / sum(dtm)))
 
-theta <- gtools::rdirichlet(n = nrow(dtm), alpha = rep(0.1, k)) # do.call(rbind, lapply(seq_len(nrow(dtm)), function(x) rep(1 / k, k)))
+theta <- do.call(rbind, lapply(seq_len(nrow(dtm)), function(x) rep(1 / k, k))) # gtools::rdirichlet(n = nrow(dtm), alpha = rep(0.1, k)) # 
 
 p_w <- colSums(dtm) / sum(dtm)
 
