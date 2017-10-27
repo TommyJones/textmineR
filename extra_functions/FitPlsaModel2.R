@@ -14,13 +14,15 @@ library(textmineR)
 ### initialize some stuff with toy data ----------------------------------------
 dtm <- as.matrix(nih_sample_dtm)
 
+dtm <- dtm[ rowSums(dtm) > 10  , ]
+
 # these will (later) be initialized at random
 # phi <- nih_sample_topic_model$phi
 # theta <- nih_sample_topic_model$theta
 
 k <- 10
 
-phi <- gtools::rdirichlet(n = k, alpha = colSums(dtm) / sum(dtm) * 100) # do.call(rbind, lapply(1:k, function(x) colSums(dtm) / sum(dtm)))
+phi <- gtools::rdirichlet(n = k, alpha = colSums(dtm) / sum(dtm) * 250) # do.call(rbind, lapply(1:k, function(x) colSums(dtm) / sum(dtm)))
 
 theta <- gtools::rdirichlet(n = nrow(dtm), alpha = rep(0.1, k)) # do.call(rbind, lapply(seq_len(nrow(dtm)), function(x) rep(1 / k, k))) # 
 
@@ -28,38 +30,48 @@ p_w <- colSums(dtm) / sum(dtm)
 
 p_d <- rowSums(dtm) / sum(dtm)
 
-max_iters <- 1000 # something small for now
+max_iters <- 20 # something small for now
 
 cost_history <- numeric(max_iters)
 
 ### declare the main calculating functions -------------------------------------
-GetPhi <- function(gamma, theta, p_d, p_w){ # 
+GetPhi <- function(gamma, theta, p_w){ # 
+  # function is designed to work on one document
+  # for stochastic updates in a loop
   
-  p_t <- p_d %*% theta
+  p_t <- theta
   
   # p_w <- p_t %*% phi
   
-  result <- log(t(gamma)) + log(p_w)
+  result <- t(gamma) * p_w
   
-  result <- t(result) - as.numeric(log(p_t))
+  result <- t(result) / p_t
   
-  result <- exp(result)
+  # result <- log(t(gamma)) + log(p_w)
+  # 
+  # result <- t(result) - as.numeric(log(p_t))
+  # 
+  # result <- exp(result)
   
   result <- result / rowSums(result)
   
 }
 
-GetGamma <- function(phi, theta, p_d, p_w){ # 
+GetGamma <- function(phi, theta, p_w){ # 
+  # function is designed to work on one document
+  # for stochastic updates in a loop
   
-  p_t <- p_d %*% theta
+  p_t <- theta
   
-  p_w <- p_t %*% phi
+  result <- phi * p_t
   
-  result <- log(phi) + log(as.numeric(p_t))
+  result <- t(result) / p_w
   
-  result <- t(result) - log(p_w)
-
-  result <- exp(result)
+  # result <- log(phi) + log(as.numeric(p_t))
+  # 
+  # result <- t(result) - log(p_w)
+  # 
+  # result <- exp(result)
   
   result <- result / rowSums(result)
   
@@ -67,9 +79,12 @@ GetGamma <- function(phi, theta, p_d, p_w){ #
 }
 
 GetTheta <- function(gamma, dtm){
+  # function is designed to work on one document
+  # for stochastic updates in a loop
   result <- dtm %*% t(gamma)
-  # result <- result / rowSums(result)
-  result <- exp(result) / rowSums(exp(result))
+  result <- result / rowSums(result)
+  # result[ is.na(result) ] <- 0
+  # result <- exp(result) / rowSums(exp(result))
   result
 }
 
@@ -90,15 +105,24 @@ GetSS <- function(phi, theta, dtm){
 iter <- 1
 
 while (iter <= max_iters) {
+  print(iter)
   
-  # get gamma
-  gamma <- CalcPhiPrime(phi = phi, theta = theta, p_docs = p_d) # GetGamma(phi = phi, theta = theta, p_d = p_d, p_w = p_w) #
+  # update by each document
+  for (j in seq_len(nrow(dtm))) {
+    # get gamma
+    gamma <- GetGamma(phi = phi, theta = theta[ j , ], p_w = p_w) #
+    
+    # get theta
+    theta[ j , ] <- GetTheta(gamma = gamma, dtm = dtm[ j , ])
+    
+    # get phi
+    phi <- GetPhi(gamma = gamma, theta = theta [ j , ], p_w = p_w) # 
+    
+  }
   
-  # get theta
-  theta <- GetTheta(gamma = gamma, dtm = dtm)
-  
-  # get phi
-  phi <- GetPhi(gamma = gamma, theta = theta, p_d = p_d, p_w = p_w) # 
+  print(summary(rowSums(phi)))
+  print(summary(rowSums(theta)))
+  print(summary(colSums(gamma)))
   
   # get names lined up
   rownames(theta) <- rownames(dtm)
