@@ -1,0 +1,87 @@
+---
+title: "Introduction to textmineR"
+author: "Thomas W. Jones"
+date: "12/15/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+##a Why textmineR?
+
+textmineR was created with three principles in mind:
+
+1. Maximize interoperability within R's ecosystem 
+2. Scaleable in terms of object storeage and computation time
+3. Syntax that is idiomatic to R
+
+R has many packages for text mining and natural language processing (NLP). The [CRAN task view on natural language processing](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html) lists 53 unique packages. Some of these packages are interoperable. Some are not. 
+
+textmineR strives for maximum interoperability in three ways. First, it uses the `dgCMatrix` class from the popular [`Matrix` package](https://cran.r-project.org/web/packages/Matrix/index.html) for document term matrices (DTMs) and term co-occurence matrices (TCMs). The `Matrix` package is an R "recommended" package with nearly 500 packages that depend, import, or suggest it. Compare that to the [`slam` package](https://cran.r-project.org/web/packages/slam/index.html) used by [`tm`](https://cran.r-project.org/web/packages/tm/index.html) and its derivatives. `slam` has an order of magnitude fewer dependents. It is simply not as well integrated. `Matrix` also has methods that make the syntax for manipulating its matrices nearly identical to base R. This greatly reduces the cognitive burden of the programmers. 
+
+Second, textmineR relies on base R objects for corpus and metadata storage. Actually, it relies on the user to do so. textmineR's core functions `CreateDtm` and `CreateTcm` take a simple character vector as input. Users may store their corpora as character vectors, lists, or data frames. _There is no need to learn a new ['Corpus'](https://cran.r-project.org/web/packages/tm/index.html) class._
+
+Third and last, textmineR represents the output of topic models in a consistent way, a list containing two matrices. This is described in more detail in the next section. Several topic models are supported and the simple representation means that textmineR's utility functions are useable with outputs from other packages, so long as they are represented as matrices of probabilities. (Again, see the next section for more detail.)
+
+textmineR acheives scalability through three means. First, sparse matrices (like the `dgCMatrix`) offer significant memory savings. Second, textmineR utilizes `Rcpp` throughout for speedup. Finally, textmineR uses parallel processing by default where possible. textmineR offers a function `TmParallelApply` which implements a framework for parallel processing that is syntactically agnostic between Windows and Unix-like operating systems. `TmParallelApply` is used liberally within textmineR and is exposed for users.
+
+textmineR does make some tradeoffs of performance for syntactic simplicity. textmineR is designed to run on a single node in a cluster computing environment. It can (and will by default) use all available cores of that node. If performance is your number one concern, see [`text2vec`](https://cran.r-project.org/web/packages/text2vec/index.html). textmineR uses some `text2vec` under the hood. 
+
+textmineR strives for syntax that is idiomatic to R. This is, admittedly, a nebulous concept. textmineR does not create new classes where existing R classes exist. It strives for a functional programming paradigm. And it attempts to group closely-related sequential steps into single functions. This means that users will not have to make several temporary objects along the way. As an example, compare making a document term matrix in textmineR (example below) with `tm` or `text2vec`.
+
+As a side note: textmineR's framework for NLP does not need to be exclusive to textmineR. Text mining packages in R can be interoperable with a few concepts. First, use `dgCMatrix` for DTMs and TCMs. Second, write most text mining models in a way that they can take a `dgCMatrix` as the input. Finally, keep non-base R classes to a minimum, especially for corpus and metadata management. For the most part, `text2vec` and `tidytext` adhere to these principles. 
+
+## Corpus management
+
+### Getting your documents into R
+
+### There is no "corpus" class
+
+### Creating a DTM or TCM
+Show other functions like CorrectS/DepluralizeDtm etc.
+
+## Basic corpus statistics
+TermDocFreq
+
+## Topic modeling
+
+### Fitting a topic model
+
+
+### Evaluating results
+
+TopicModelR2 + CalcProbCoherence + CalcLikelihood
+
+### Pruning topics
+
+### Examining outputs
+barplots + summary matrix + LabelTopics + GetTopTerms
+
+### Creating a topical taxonomy
+
+CalcHellDist + CalcJSDivergence
+
+### Classifying new documents under the model
+CalcPhiPrime
+
+### Extensions
+Cluster2TopicModel
+
+### Topic models supported by textmineR
+FitLdaModel + FitLsaModel + FitCtmModel
+
+## Word embeddings 
+CreateTcm
+Topic model as embedding
+`text2vec` GloVe example (if you can)
+
+
+## Building a basic document summarizer
+word embeddings from corpus
+sentences (in a doc) classified under embeddings
+NN network
+top N sentences by eigenvector centrality
+
