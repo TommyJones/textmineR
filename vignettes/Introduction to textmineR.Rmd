@@ -6,11 +6,11 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
 
-##a Why textmineR?
+## Why textmineR?
 
 textmineR was created with three principles in mind:
 
@@ -36,52 +36,498 @@ As a side note: textmineR's framework for NLP does not need to be exclusive to t
 
 ## Corpus management
 
-### Getting your documents into R
+### Creating a DTM 
 
-### There is no "corpus" class
+The basic object of analysis for most text mining applications is a document term matrix, or DTM. This is a matrix where every row represents a document and every column represents a token (word, bi-gram, stem, etc.) 
 
-### Creating a DTM or TCM
-Show other functions like CorrectS/DepluralizeDtm etc.
+You can create a DTM with textmineR by passing a character vector. There are options for stopword removal, creation of n-grams, and other standard data cleaning. There is an option for passing a stemming or lemmatization function if you desire. (See `help(CreateDtm)` for an example using Porter's word stemmer.)
+
+The code below uses a dataset of movie reviews included with the `text2vec` package. This dataset is used for sentiment analysis. In addition to the text of the reviews. There is a binary variable indicating positive or negative sentiment. More on this later...
+
+
+```{r create_dtm}
+library(textmineR)
+
+# load movie_review dataset from text2vec
+data(movie_review, package = "text2vec")
+
+str(movie_review)
+
+# create a document term matrix 
+dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
+                 doc_names = movie_review$id, # document names
+                 ngram_window = c(1, 2), # minimum and maximum n-gram length
+                 stopword_vec = c(tm::stopwords("english"), # stopwords from tm
+                                  tm::stopwords("smart")), # this is the default value
+                 lower = TRUE, # lowercase - this is the default value
+                 remove_punctuation = TRUE, # punctuation - this is the default
+                 remove_numbers = TRUE) # numbers - this is the default
+
+
+dim(dtm) # 5,000 documents and 424,926 tokens
+
+
+```
+
 
 ## Basic corpus statistics
-TermDocFreq
+The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function `TermDocFreq` gives term frequencies (equivalent to `colSums(dtm)`), the number of documents in which each term appears (equivalent to `colSums(dtm > 0)`), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.
+
+```{r corpus_stats_1}
+
+# get counts of tokens across the corpus
+tf_mat <- TermDocFreq(dtm = dtm)
+
+str(tf_mat) 
+
+# look at the most frequent tokens
+head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
+
+# look at the most frequent bigrams
+tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
+
+head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+
+# it looks like we have stray html tags (<br>) that weren't stripped 
+# from our documents. Let's fix that.
+dtm <- dtm[ , ! stringr::str_detect(colnames(dtm),
+                                    "^br$|_br$|^br_") ]
+
+tf_mat <- TermDocFreq(dtm)
+
+tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
+
+head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
+
+head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+
+
+# summary of document lengths
+doc_lengths <- rowSums(dtm)
+
+summary(doc_lengths)
+```
+
+Often,it's useful to prune your vocabulary and remove any tokens that appear in a samall number of documents. This will greatly reduce the vocabulary size (see [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law)) and improve computation time. 
+
+```{r corpus_stats_2}
+# remove any tokens that were in 3 or fewer documents
+dtm <- dtm[ , colSums(dtm > 0) > 3 ] # alternatively: dtm[ , tf_mat$term_freq > 3 ]
+
+tf_mat <- tf_mat[ tf_mat$term %in% colnames(dtm) , ]
+
+tf_bigrams <- tf_bigrams[ tf_bigrams$term %in% colnames(dtm) , ]
+
+```
+
+You can get a lot of mileage out of simple corpus statistics. The code below uses simple probabilistic reweighting (instead of TF-IDF) to see the unigrams and bigrams most-associated with positive and negative sentiment.
+
+```{r corpus_stats_3}
+# what words are most associated with sentiment?
+tf_sentiment <- list(positive = TermDocFreq(dtm[ movie_review$sentiment == 1 , ]),
+                     negative = TermDocFreq(dtm[ movie_review$sentiment == 0 , ]))
+
+# these are basically the same, not helpful
+head(tf_sentiment$positive[ order(tf_sentiment$positive$term_freq, decreasing = TRUE) , ], 10)
+
+head(tf_sentiment$negative[ order(tf_sentiment$negative$term_freq, decreasing = TRUE) , ], 10)
+
+# let's reweight by probability by class
+p_words <- colSums(dtm) / sum(dtm) # alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)
+
+tf_sentiment$positive$conditional_prob <- 
+  tf_sentiment$positive$term_freq / sum(tf_sentiment$positive$term_freq)
+
+tf_sentiment$positive$prob_lift <- tf_sentiment$positive$conditional_prob - p_words
+
+tf_sentiment$negative$conditional_prob <- 
+  tf_sentiment$negative$term_freq / sum(tf_sentiment$negative$term_freq)
+
+tf_sentiment$negative$prob_lift <- tf_sentiment$negative$conditional_prob - p_words
+
+# let's look again with new weights
+head(tf_sentiment$positive[ order(tf_sentiment$positive$prob_lift, decreasing = TRUE) , ], 10)
+
+head(tf_sentiment$negative[ order(tf_sentiment$negative$prob_lift, decreasing = TRUE) , ], 10)
+
+# what about bi-grams?
+tf_sentiment_bigram <- lapply(tf_sentiment, function(x){
+  x <- x[ stringr::str_detect(x$term, "_") , ]
+  x[ order(x$prob_lift, decreasing = TRUE) , ]
+})
+
+head(tf_sentiment_bigram$positive, 10)
+
+head(tf_sentiment_bigram$negative, 10)
+
+
+```
+
 
 ## Topic modeling
 
-### Fitting a topic model
+textmineR has extensive functionality for topic modeling. You can fit Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA and LSA follow below.) As of this writing, textmineR's LDA and CTM functions are wrappers for other packages to facilitate a consistent workflow. Plans exist to impelement LDA natively with `Rcpp` sometime in 2018.
+
+In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)) and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
+
+### LDA Example
+```{r lda_example}
+
+# start with a sample of 500 documents so our example doesn't take too long
+dtm_sample <- dtm[ sample(1:nrow(dtm), 500) , ]
+
+# Fit a Latent Dirichlet Allocation model
+# note the number of topics is arbitrary here
+# see extensions for more info
+model <- FitLdaModel(dtm = dtm_sample, 
+                     k = 100, 
+                     iterations = 800,
+                     alpha = 0.1, # this is the default value
+                     beta = 0.05) # this is the default value
+
+# two matrices: 
+# theta = P(topic | document)
+# phi = P(word | topic)
+str(model)
+
+# R-squared 
+# - only works for probabilistic models like LDA and CTM
+model$r2 <- CalcTopicModelR2(dtm = dtm_sample, 
+                             phi = model$phi,
+                             theta = model$theta)
+
+model$r2
+
+# log Likelihood (does not consider the prior) 
+# - only works for probabilistic models like LDA and CTM
+model$ll <- CalcLikelihood(dtm = dtm_sample, 
+                           phi = model$phi, 
+                           theta = model$theta)
+
+model$ll
+
+# probabilistic coherence, a measure of topic quality
+# - can be used with any topic model, e.g. LSA
+model$coherence <- CalcProbCoherence(phi = model$phi, dtm = dtm_sample, M = 5)
+
+summary(model$coherence)
+
+hist(model$coherence, col= "blue")
+
+# Get the top terms of each topic
+model$top_terms <- GetTopTerms(phi = model$phi, M = 5)
+
+head(t(model$top_terms))
+
+# Get the prevalence of each topic
+# You can make this discrete by applying a threshold, say 0.05, for
+# topics in/out of docuemnts. 
+model$prevalence <- colSums(model$theta) / sum(model$theta) * 100
+
+# textmineR has a naive topic labeling tool based on probable bigrams
+model$labels <- LabelTopics(assignments = model$theta > 0.05, 
+                            dtm = dtm_sample,
+                            M = 1)
+
+head(model$labels)
+
+# put them together, with coherence into a summary table
+model$summary <- data.frame(topic = rownames(model$phi),
+                            label = model$labels,
+                            coherence = round(model$coherence, 3),
+                            prevalence = round(model$prevalence,3),
+                            top_terms = apply(model$top_terms, 2, function(x){
+                              paste(x, collapse = ", ")
+                            }),
+                            stringsAsFactors = FALSE)
+
+View(model$summary[ order(model$summary$prevalence, decreasing = TRUE) , ])
+
+# Get topic predictions for all 2,000 documents
+
+# first get a prediction matrix, phi is P(word | topic)
+# we need P(topic | word), or "phi_prime"
+model$phi_prime <- CalcPhiPrime(phi = model$phi,
+                                theta = model$theta)
+
+# set up the assignments matrix and a simple dot product gives us predictions
+assignments <- dtm / rowSums(dtm)
+
+assignments <- assignments %*% t(model$phi_prime)
+
+assignments <- as.matrix(assignments) # convert to regular R dense matrix
+
+# compare the "fit" assignments to the predicted ones
+barplot(model$theta[ rownames(dtm_sample)[ 1 ] , ], las = 2,
+        main = "Topic Assignments While Fitting LDA")
+
+barplot(assignments[ rownames(dtm_sample)[ 1 ] , ], las = 2,
+        main = "Topic Assignments Predicted Under the Model")
+
+```
+
+Depending on your application, you can reformat the outputs of phi, theta, assignments, the summary table etc. to suite your needs. For example, you can build a "semantic" search of your documents by vectorizing the query with `CreateDtm`, then predicting under the model with phi_prime.
+
+As of this writing, you will have to take care to make sure your vocabulary aligns. (I'd suggest using something like `intersect(colnames(dtm), colnames(theta))`.) Part of the big 2018 update will be creating a predict method that will handle this for you.
+
+### LSA Example
+
+Latent semantic analysis was arguably the first topic model. [LSA was patented in 1988](https://en.wikipedia.org/wiki/Latent_semantic_analysis). It uses a single value decomposition on a document term matrix, TF-IDF matrix, or similar. 
+
+The workflow for LSA is largely the same for LDA. Two key differences: we will use the IDF vector mentioned above to create a TF-IDF matrix and we cannot get an R-squared for LSA as it is non-probabilistic. 
+
+```{r lsa_example}
+
+# get a tf-idf matrix
+tf_sample <- TermDocFreq(dtm_sample)
+
+tf_sample$idf[ is.infinite(tf_sample$idf) ] <- 0 # fix idf for missing words
+
+tf_idf <- t(dtm_sample / rowSums(dtm_sample)) * tf_sample$idf
+
+tf_idf <- t(tf_idf)
+
+# Fit a Latent Semantic Analysis model
+# note the number of topics is arbitrary here
+# see extensions for more info
+lsa_model <- FitLsaModel(dtm = tf_idf, 
+                     k = 100)
+
+# three objects: 
+# theta = distribution of topics over documents
+# phi = distribution of words over topics
+# sv = a vector of singular values created with SVD
+str(lsa_model)
 
 
-### Evaluating results
+# probabilistic coherence, a measure of topic quality
+# - can be used with any topic lsa_model, e.g. LSA
+lsa_model$coherence <- CalcProbCoherence(phi = lsa_model$phi, dtm = dtm_sample, M = 5)
 
-TopicModelR2 + CalcProbCoherence + CalcLikelihood
+summary(lsa_model$coherence)
 
-### Pruning topics
+hist(lsa_model$coherence, col= "blue")
 
-### Examining outputs
-barplots + summary matrix + LabelTopics + GetTopTerms
+# Get the top terms of each topic
+lsa_model$top_terms <- GetTopTerms(phi = lsa_model$phi, M = 5)
 
-### Creating a topical taxonomy
+head(t(lsa_model$top_terms))
 
-CalcHellDist + CalcJSDivergence
+# Get the prevalence of each topic
+# You can make this discrete by applying a threshold, say 0.05, for
+# topics in/out of docuemnts. 
+lsa_model$prevalence <- colSums(lsa_model$theta) / sum(lsa_model$theta) * 100
 
-### Classifying new documents under the model
-CalcPhiPrime
+# textmineR has a naive topic labeling tool based on probable bigrams
+lsa_model$labels <- LabelTopics(assignments = lsa_model$theta > 0.05, 
+                            dtm = dtm_sample,
+                            M = 1)
+
+head(lsa_model$labels)
+
+# put them together, with coherence into a summary table
+lsa_model$summary <- data.frame(topic = rownames(lsa_model$phi),
+                            label = lsa_model$labels,
+                            coherence = round(lsa_model$coherence, 3),
+                            prevalence = round(lsa_model$prevalence,3),
+                            top_terms = apply(lsa_model$top_terms, 2, function(x){
+                              paste(x, collapse = ", ")
+                            }),
+                            stringsAsFactors = FALSE)
+
+View(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing = TRUE) , ])
+
+# Get topic predictions for all 2,000 documents
+
+# first get a prediction matrix,
+lsa_model$phi_prime <- diag(lsa_model$sv) %*% lsa_model$phi
+
+lsa_model$phi_prime <- t(MASS::ginv(lsa_model$phi_prime))
+
+# set up the assignments matrix and a simple dot product gives us predictions
+lsa_assignments <- t(dtm) * tf_sample$idf
+
+lsa_assignments <- t(lsa_assignments)
+
+lsa_assignments <- lsa_assignments %*% t(lsa_model$phi)
+
+lsa_assignments <- as.matrix(lsa_assignments) # convert to regular R dense matrix
+
+# compare the "fit" lsa_assignments to the predicted ones
+# distribution is the same, but scale changes
+barplot(lsa_model$theta[ rownames(dtm_sample)[ 1 ] , ], las = 2,
+        main = "Topic Assignments While Fitting LSA")
+
+barplot(lsa_assignments[ rownames(dtm_sample)[ 1 ] , ], las = 2,
+        main = "Topic Assignments Predicted Under the Model")
+
+```
+
 
 ### Extensions
-Cluster2TopicModel
 
-### Topic models supported by textmineR
-FitLdaModel + FitLsaModel + FitCtmModel
+#### Document clustering is just a special topic model
+Document clustering can be thought of as a topic model where each document contains exactly one topic. textmineR's `Cluster2TopicModel` function allows you to take a clustering solution and a document term matrix and turn it into a probabilistic topic model representation. You can use many of textmineR's topic model utilities to evaluate your clusters (e.g. R-squared, coherence, labels, etc.)
 
-## Word embeddings 
-CreateTcm
-Topic model as embedding
-`text2vec` GloVe example (if you can)
+#### Other topic models
+Topic models from other packages can be used with textmineR. The workflow would look something like this:
 
+1. Use `CreateDtm` to create a curated DTM
+2. Use `Dtm2Docs` to re-create a text vector of curated tokens from your DTM
+3. Fit a topic model using your desired package (for example, [mallet](https://cran.r-project.org/web/packages/mallet/index.html))
+4. Format the raw output to have two matrices, phi and theta as above
+5. Use textmineR's suite of utility functions with your model
+
+## Text embeddings 
+Text embeddings are particularly hot right now. While textmineR doesn't (yet) explicitly implement any embedding models like GloVe or word2vec, you can still get embeddings. Text embedding algorithms aren't conceptually different from topic models. They are, however, operating on a different matrix. Instead of reducing the dimensions of a document term matrix, text embeddings are obtained by reducing the dimensions of a term co-occurrence matrix. In principle, one can use LDA or LSA in the same way. In this case, rows of theta are embedded words. A phi_prime may be obtained to project documents or new text into the embedding space.
+
+What follows is a quick example of this using LDA as the embedding mechanism.
+
+```{r embedding}
+
+# First create a TCM using skip grams, we'll use a 5-word window
+# most options available on CreateDtm are also available for CreateTcm
+tcm <- CreateTcm(doc_vec = movie_review$review,
+                 skipgram_window = 5)
+
+# use LDA to get embeddings into probability space
+# This will take considerably longer as the TCM matrix has many more rows 
+# than a DTM
+embeddings <- FitLdaModel(dtm = tcm,
+                          k = 100,
+                          iterations = 800)
+
+# Get an R-squared for general goodness of fit
+embeddings$r2 <- CalcTopicModelR2(dtm = tcm, 
+                                  phi = embeddings$phi,
+                                  theta = embeddings$theta)
+
+embeddings$r2
+
+# Get coherence (relative to the TCM) for goodness of fit
+embeddings$coherence <- CalcProbCoherence(phi = embeddings$phi,
+                                          dtm = tcm)
+
+summary(embeddings$coherence)
+
+# Get top terms, no labels because we don't have bigrams
+embeddings$top_terms <- GetTopTerms(phi = embeddings$phi,
+                                    M = 5)
+
+head(t(embeddings$top_terms))
+
+# Create a summary table, similar to the above
+embeddings$summary <- data.frame(topic = rownames(embeddings$phi),
+                                 coherence = round(embeddings$coherence, 3),
+                                 prevalence = colSums(embeddings$theta) / 
+                                   sum(embeddings$theta) * 100,
+                                 top_terms = apply(embeddings$top_terms, 2, function(x){
+                                   paste(x, collapse = ", ")
+                                 }),
+                                 stringsAsFactors = FALSE)
+
+View(embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ])
+
+# Embed the documents
+dtm_embed <- CreateDtm(doc_vec = movie_review$review,
+                       doc_names = movie_review$id,
+                       ngram_window = c(1,1))
+
+dtm_embed <- dtm_embed[ , colnames(tcm) ] # make sure vocab lines up
+
+embeddings$phi_prime <- CalcPhiPrime(phi = embeddings$phi,
+                                     theta = embeddings$theta)
+
+embedding_assignments <- dtm_embed / rowSums(dtm_embed)
+
+embedding_assignments <- embedding_assignments %*% t(embeddings$phi_prime)
+
+embedding_assignments <- as.matrix(embedding_assignments)
+
+# get a goodness of fit relative to the DTM
+embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
+                                      phi = embeddings$phi,
+                                      theta = embedding_assignments)
+
+embeddings$r2_dtm
+
+# get coherence relative to DTM
+embeddings$coherence_dtm <- CalcProbCoherence(phi = embeddings$phi,
+                                              dtm = dtm_embed)
+
+summary(embeddings$coherence_dtm)
+
+```
+
+You could just as easily use LSA as your embedding, or any other dimensionality reduction/matrix factorization method. The advantge of using the `dgCMatrix` is that it is so widely supported in the R ecosystem.
+
+Embeddings are only recently being researched. However, they may be used in very similar contexts to topic models. It's just that the "topics" are fit another way.
 
 ## Building a basic document summarizer
-word embeddings from corpus
-sentences (in a doc) classified under embeddings
-NN network
-top N sentences by eigenvector centrality
+Let's use the above embeddings model to create a document summarizer. This will return the three most relevant sentences in each review.
 
+```{r summaries}
+
+library(igraph) 
+
+# let's do this in a function
+
+summarizer <- function(doc, phi_prime) {
+  
+  # recursive fanciness to handle multiple docs at once
+  if (length(doc) > 1 )
+    return(sapply(doc, function(d) summarizer(d, phi_prime)))
+  
+  # parse it into sentences
+  sent <- stringi::stri_split_boundaries(doc, type = "sentence")[[ 1 ]]
+  
+  names(sent) <- seq_along(sent) # so we know index and order
+  
+  # embed the sentences in the model
+  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE)
+  
+  vocab <- intersect(colnames(e), colnames(phi_prime))
+  
+  e <- e / rowSums(e)
+  
+  e <- e[ , vocab ] %*% t(phi_prime[ , vocab ])
+  
+  e <- as.matrix(e)
+  
+  # get the pairwise distances between each embedded sentence
+  e_dist <- CalcHellingerDist(e)
+  
+  # turn into a similarity matrix
+  g <- 1 - e_dist * 100
+  
+  diag(g) <- 0
+  
+  # turn into a nearest-neighbor graph
+  g <- apply(g, 1, function(x){
+    x[ x < sort(x, decreasing = TRUE)[ 3 ] ] <- 0
+    x
+  })
+
+  g <- pmax(g, t(g))
+  
+  g <- graph.adjacency(g, mode = "undirected", weighted = TRUE)
+  
+  # calculate eigenvector centrality
+  ev <- evcent(g)
+  
+  # format the result
+  result <- sent[ names(ev$vector)[ order(ev$vector, decreasing = TRUE)[ 1:3 ] ] ]
+  
+  result <- result[ order(as.numeric(names(result))) ]
+  
+  paste(result, collapse = " ")
+}
+
+# Let's see the summary of the first couple of reviews
+docs <- movie_review$review[ 1:3 ]
+names(docs) <- movie_review$id[ 1:3 ]
+
+sums <- summarizer(docs, phi_prime = embeddings$phi_prime)
+
+sums
+```
