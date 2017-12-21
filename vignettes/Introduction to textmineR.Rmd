@@ -168,7 +168,9 @@ head(tf_sentiment_bigram$negative, 10)
 
 textmineR has extensive functionality for topic modeling. You can fit Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA and LSA follow below.) As of this writing, textmineR's LDA and CTM functions are wrappers for other packages to facilitate a consistent workflow. Plans exist to impelement LDA natively with `Rcpp` sometime in 2018.
 
-In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)) and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
+textmineR's consistent representation of topic models boils down to two matrices. The first, "theta" ($\Theta$), has rows representing a distribution of topics over documents. The second, phi ($\Phi$), has rows representing a distribution of words over topics. In the case of probabilistic models, these are categorical probability distributions. In the case of non-probabilistic models (e.g. LSA) these distributions are, obviously, not probabilities. In the case of LSA, for example, there is a third object representing the sigular values in the decomposition.
+
+In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)), probabilistic coherenc (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
 
 ### LDA Example
 ```{r lda_example}
@@ -395,7 +397,7 @@ model_dir <- paste0("models_", digest::digest(colnames(nih_sample_dtm), algo = "
 if (!dir.exists(model_dir)) dir.create(model_dir)
 
 # Fit a bunch of LDA models
-# even on this trivial corpus, it will a minute to fit all of these models
+# even on this trivial corpus, it will a bit of time to fit all of these models
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
   filename = file.path(model_dir, paste0(k, "_topics.rda"))
 
