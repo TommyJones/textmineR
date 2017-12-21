@@ -534,7 +534,8 @@ summarizer <- function(doc, phi_prime) {
   
   # recursive fanciness to handle multiple docs at once
   if (length(doc) > 1 )
-    return(sapply(doc, function(d) summarizer(d, phi_prime)))
+    # use a try statement to catch any weirdness that may arise
+    return(sapply(doc, function(d) try(summarizer(d, phi_prime))))
   
   # parse it into sentences
   sent <- stringi::stri_split_boundaries(doc, type = "sentence")[[ 1 ]]
@@ -543,6 +544,9 @@ summarizer <- function(doc, phi_prime) {
   
   # embed the sentences in the model
   e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE)
+  
+  # remove any documents with 2 or fewer words
+  e <- e[ rowSums(e) > 2 , ]
   
   vocab <- intersect(colnames(e), colnames(phi_prime))
   
