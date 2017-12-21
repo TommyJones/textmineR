@@ -369,6 +369,62 @@ barplot(lsa_assignments[ rownames(dtm_sample)[ 1 ] , ], las = 2,
 #### Document clustering is just a special topic model
 Document clustering can be thought of as a topic model where each document contains exactly one topic. textmineR's `Cluster2TopicModel` function allows you to take a clustering solution and a document term matrix and turn it into a probabilistic topic model representation. You can use many of textmineR's topic model utilities to evaluate your clusters (e.g. R-squared, coherence, labels, etc.)
 
+#### Choosing the number of topics
+There is no commonly accepted way to choose the number of topics in a topic model. Fear not! Probabilistic coherence can help you. In forthcoming research, I show that probabilistic coherence can find the correct number of topics on a simulated corpus where the number of topics is known beforehand. (This will be part of a PhD dissertation, sometime around 2021. Stand by!)
+
+Users can implement this procedure. Simply fit several topic models across a range of topics. Then calculate the probabilistic coherence for each topic in each model. Finally, average the probabilistic coherence across all topics in a model. This is similar to using the [silhouette coefficient](https://en.wikipedia.org/wiki/Silhouette_(clustering)) to select the number of clusters when clustering.
+
+Some example code (on a trivially small dataset) is below.
+
+```{r select_number_topics}
+# load a sample DTM
+data(nih_sample_dtm)
+
+# choose a range of k 
+# - here, the range runs into the corpus size. Not recommended for large corpora!
+k_list <- seq(5, 95, by = 5)
+
+# set up a temporary directory to store fit models so you get partial results
+# if the process fails or times out. This is a trivial example, but with a decent
+# sized corpus, the procedure can take hours or days, depending on the size of 
+# the data and complexity of the model.
+# I'm using the digest function to create a hash so that it's obvious this is a 
+# temporary directory
+model_dir <- paste0("models_", digest::digest(colnames(nih_sample_dtm), algo = "sha1"))
+
+if (!dir.exists(model_dir)) dir.create(model_dir)
+
+# Fit a bunch of LDA models
+# even on this trivial corpus, it will a minute to fit all of these models
+model_list <- TmParallelApply(X = k_list, FUN = function(k){
+  filename = file.path(model_dir, paste0(k, "_topics.rda"))
+
+  if (!file.exists(filename)) {
+    m <- FitLdaModel(dtm = nih_sample_dtm, k = k, iterations = 500)
+    m$k <- k
+    m$coherence <- CalcProbCoherence(phi = m$phi, dtm = nih_sample_dtm, M = 5)
+    save(m, file = filename)
+  } else {
+    load(filename)
+  }
+  
+  m
+}, export=c("nih_sample_dtm", "model_dir")) # export only needed for Windows machines
+
+# Get average coherence for each model
+coherence_mat <- data.frame(k = sapply(model_list, function(x) nrow(x$phi)), 
+                            coherence = sapply(model_list, function(x) mean(x$coherence)), 
+                            stringsAsFactors = FALSE)
+
+
+# Plot the result
+# On larger (~1,000 or greater documents) corpora, you will usually get a clear peak
+plot(coherence_mat, type = "o")
+    
+
+```
+
+
 #### Other topic models
 Topic models from other packages can be used with textmineR. The workflow would look something like this:
 
