@@ -91,7 +91,7 @@ head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
 # it looks like we have stray html tags (<br>) that weren't stripped 
 # from our documents. Let's fix that.
 dtm <- dtm[ , ! stringr::str_detect(colnames(dtm),
-                                    "^br$|_br$|^br_") ]
+                                    "(^br$)|(_br$)|(^br_)") ]
 
 tf_mat <- TermDocFreq(dtm)
 
@@ -245,7 +245,7 @@ model$summary <- data.frame(topic = rownames(model$phi),
 
 View(model$summary[ order(model$summary$prevalence, decreasing = TRUE) , ])
 
-# Get topic predictions for all 2,000 documents
+# Get topic predictions for all 5,000 documents
 
 # first get a prediction matrix, phi is P(word | topic)
 # we need P(topic | word), or "phi_prime"
@@ -339,7 +339,7 @@ lsa_model$summary <- data.frame(topic = rownames(lsa_model$phi),
 
 View(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing = TRUE) , ])
 
-# Get topic predictions for all 2,000 documents
+# Get topic predictions for all 5,000 documents
 
 # first get a prediction matrix,
 lsa_model$phi_prime <- diag(lsa_model$sv) %*% lsa_model$phi
@@ -351,12 +351,11 @@ lsa_assignments <- t(dtm) * tf_sample$idf
 
 lsa_assignments <- t(lsa_assignments)
 
-lsa_assignments <- lsa_assignments %*% t(lsa_model$phi)
+lsa_assignments <- lsa_assignments %*% t(lsa_model$phi_prime)
 
 lsa_assignments <- as.matrix(lsa_assignments) # convert to regular R dense matrix
 
 # compare the "fit" lsa_assignments to the predicted ones
-# distribution is the same, but scale changes
 barplot(lsa_model$theta[ rownames(dtm_sample)[ 1 ] , ], las = 2,
         main = "Topic Assignments While Fitting LSA")
 
@@ -477,8 +476,7 @@ head(t(embeddings$top_terms))
 # Create a summary table, similar to the above
 embeddings$summary <- data.frame(topic = rownames(embeddings$phi),
                                  coherence = round(embeddings$coherence, 3),
-                                 prevalence = colSums(embeddings$theta) / 
-                                   sum(embeddings$theta) * 100,
+                                 prevalence = colSums(embeddings$theta),
                                  top_terms = apply(embeddings$top_terms, 2, function(x){
                                    paste(x, collapse = ", ")
                                  }),
