@@ -558,7 +558,7 @@ summarizer <- function(doc, phi_prime) {
   e_dist <- CalcHellingerDist(e)
   
   # turn into a similarity matrix
-  g <- 1 - e_dist * 100
+  g <- (1 - e_dist) * 100
   
   diag(g) <- 0
   
