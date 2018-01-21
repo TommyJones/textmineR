@@ -69,11 +69,16 @@ CalcProbCoherence<- function(phi, dtm, M = 5){
     count.mat <- Matrix::t(dtm.t) %*% dtm.t
     num.docs <- nrow(dtm)
     p.mat <- count.mat/num.docs
+    # result <- sapply(1:(ncol(count.mat) - 1), function(x) {
+    #   mean(p.mat[x, (x + 1):ncol(p.mat)]/p.mat[x, x] - Matrix::diag(p.mat)[(x + 
+    #                                                                           1):ncol(p.mat)], na.rm = TRUE)
+    # })
+    # mean(result, na.rm = TRUE)
     result <- sapply(1:(ncol(count.mat) - 1), function(x) {
-      mean(p.mat[x, (x + 1):ncol(p.mat)]/p.mat[x, x] - Matrix::diag(p.mat)[(x + 
-                                                                              1):ncol(p.mat)], na.rm = TRUE)
+      p.mat[x, (x + 1):ncol(p.mat)]/p.mat[x, x] - 
+        Matrix::diag(p.mat)[(x + 1):ncol(p.mat)]
     })
-    mean(result, na.rm = TRUE)
+    mean(unlist(result), na.rm = TRUE) 
   }
   
   # if phi is a single topic vector get that one coherence
