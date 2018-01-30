@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
 
-## Why textmineR?
+# Why textmineR?
 
 textmineR was created with three principles in mind:
 
@@ -34,7 +34,7 @@ textmineR strives for syntax that is idiomatic to R. This is, admittedly, a nebu
 
 As a side note: textmineR's framework for NLP does not need to be exclusive to textmineR. Text mining packages in R can be interoperable with a few concepts. First, use `dgCMatrix` for DTMs and TCMs. Second, write most text mining models in a way that they can take a `dgCMatrix` as the input. Finally, keep non-base R classes to a minimum, especially for corpus and metadata management. For the most part, `text2vec` and `tidytext` adhere to these principles. 
 
-## Corpus management
+# Corpus management
 
 ### Creating a DTM 
 
@@ -61,16 +61,28 @@ dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
                                   tm::stopwords("smart")), # this is the default value
                  lower = TRUE, # lowercase - this is the default value
                  remove_punctuation = TRUE, # punctuation - this is the default
-                 remove_numbers = TRUE) # numbers - this is the default
+                 remove_numbers = TRUE, # numbers - this is the default
+                 verbose = FALSE) # Turn off status bar for this demo
 
+```
 
+Even though a `dgCMatrix` isn't a traditional matrix, it has methods that make it similar to standard R matrices. 
+
+```{r explore_dtm}
 dim(dtm) # 5,000 documents and 424,926 tokens
 
+nrow(dtm) # 5,000 documents
+
+ncol(dtm) # 424,926 tokens
+
+head(colnames(dtm)) # tokens
+
+head(rownames(dtm)) # document IDs
 
 ```
 
 
-## Basic corpus statistics
+# Basic corpus statistics
 The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function `TermDocFreq` gives term frequencies (equivalent to `colSums(dtm)`), the number of documents in which each term appears (equivalent to `colSums(dtm > 0)`), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.
 
 ```{r corpus_stats_1}
@@ -88,11 +100,19 @@ tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
 
 head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
 
-# it looks like we have stray html tags (<br>) that weren't stripped 
-# from our documents. Let's fix that.
+```
+
+It looks like we have stray html tags ("<br>") in the documents. These aren't giving us any relevant information about content. (Except, perhaps, that these documents were originally part of web pages.) 
+
+The most intuitive approach, perhaps, is to strip these tags from our documents, re-construct a document term matrix, and re-calculate the objects as above. However, a simpler approach would be to simply remove the tokens containing "br" from the DTM we already calculated. This is much more computationally efficient and gives us the same result anyway.
+
+
+```{r corpus_stats_2}
+# remove offending tokens from the DTM
 dtm <- dtm[ , ! stringr::str_detect(colnames(dtm),
                                     "(^br$)|(_br$)|(^br_)") ]
 
+# re-construct tf_mat and tf_bigrams
 tf_mat <- TermDocFreq(dtm)
 
 tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
@@ -100,8 +120,11 @@ tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
 head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
 
 head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+```
 
+We can also calculate how many tokens each document contains from the DTM. Note that this reflects the modifications we made in constructing the DTM (removing stop words, punctuation, numbers, etc.).
 
+```{r corpus_stats_3}
 # summary of document lengths
 doc_lengths <- rowSums(dtm)
 
@@ -110,7 +133,7 @@ summary(doc_lengths)
 
 Often,it's useful to prune your vocabulary and remove any tokens that appear in a samall number of documents. This will greatly reduce the vocabulary size (see [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law)) and improve computation time. 
 
-```{r corpus_stats_2}
+```{r corpus_stats_4}
 # remove any tokens that were in 3 or fewer documents
 dtm <- dtm[ , colSums(dtm > 0) > 3 ] # alternatively: dtm[ , tf_mat$term_freq > 3 ]
 
@@ -120,9 +143,11 @@ tf_bigrams <- tf_bigrams[ tf_bigrams$term %in% colnames(dtm) , ]
 
 ```
 
-You can get a lot of mileage out of simple corpus statistics. The code below uses simple probabilistic reweighting (instead of TF-IDF) to see the unigrams and bigrams most-associated with positive and negative sentiment.
+The movie review data set contains more than just text of reviews. It also contains a variable tagging the review as positive (`movie_review$sentiment` $=1$) or negative (`movie_review$sentiment` $=0$). We can examine terms associated with positive and negative reviews. If we wanted, we could use them to build a simple classifier. 
 
-```{r corpus_stats_3}
+However, as we will see immediately below, looking at only the most frequent terms in each category is not helpful. Because of Zipf's law, the most frequent terms in just about _any_ category will be the same.
+
+```{r corpus_stats_4}
 # what words are most associated with sentiment?
 tf_sentiment <- list(positive = TermDocFreq(dtm[ movie_review$sentiment == 1 , ]),
                      negative = TermDocFreq(dtm[ movie_review$sentiment == 0 , ]))
@@ -131,6 +156,23 @@ tf_sentiment <- list(positive = TermDocFreq(dtm[ movie_review$sentiment == 1 , ]
 head(tf_sentiment$positive[ order(tf_sentiment$positive$term_freq, decreasing = TRUE) , ], 10)
 
 head(tf_sentiment$negative[ order(tf_sentiment$negative$term_freq, decreasing = TRUE) , ], 10)
+
+```
+
+That was unhelpful. Instead, we need to re-weight the terms in each class. We'll use a probabilistic reweighting, described below.
+
+The most frequent words in each class are proportional to $P(word|sentiment_j)$. As we saw above, that would puts the words in the same order as $P(word)$, overall. However, we can use the difference in those probabilities to get a new order. That difference is
+\begin{align}
+  P(word|sentiment_j) - P(word)
+\end{align}
+
+You can interpret the difference in (1) as follows: Positive values are more probable in the sentiment class than in the corpus overall. Negative values are less probable. Values close to zero are statistically-independent of sentiment. Since most of the top words are the same when we sort by $P(word|sentiment_j)$, these words are statistically-independent of sentiment. They get forced towards zero. 
+
+For those paying close attention, this difference should give a similar ordering as pointwise-mutual information (PMI), defined as $PMI = \frac{P(word|sentiment_j)}{P(word)}$. However, I prefer the difference as it is bound between $-1$ and $1$. 
+
+The difference method is applied to both words overall and bi-grams in the code below. 
+
+```{r corpus_stats_5}
 
 # let's reweight by probability by class
 p_words <- colSums(dtm) / sum(dtm) # alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)
@@ -163,17 +205,129 @@ head(tf_sentiment_bigram$negative, 10)
 
 ```
 
+# Document clustering
 
-## Topic modeling
+A common task in text mining is document clustering. There are other ways to cluster documents. However, for this vignette, we will stick with the basics. The example below shows the most common method, using [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) and cosine distance. 
 
-textmineR has extensive functionality for topic modeling. You can fit Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA and LSA follow below.) As of this writing, textmineR's LDA and CTM functions are wrappers for other packages to facilitate a consistent workflow. Plans exist to impelement LDA natively with `Rcpp` sometime in 2018.
+First, we must re-weight the word counts in the document term matrix. We do this by multiplying the term frequency (in this case, count of words in documents) by an inverse document frequncy (IDF) vector. textmineR calculates IDF for the $i$-th word as
 
-textmineR's consistent representation of topic models boils down to two matrices. The first, "theta" ($\Theta$), has rows representing a distribution of topics over documents. The second, phi ($\Phi$), has rows representing a distribution of words over topics. In the case of probabilistic models, these are categorical probability distributions. In the case of non-probabilistic models (e.g. LSA) these distributions are, obviously, not probabilities. In the case of LSA, for example, there is a third object representing the sigular values in the decomposition.
+\begin{align}
+  IDF_i = ln(N / \sum_{j = 1}^N C(word_i, doc_j))
+\end{align}
 
-In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)), probabilistic coherenc (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
+where $N$ is the number of documents in the corpus. 
+
+By default, when you multiply a matrix with a vector, R multiplies the vector to each column. For this reason, we need to transpose the DTM before multiplying the IDF vector. Then we transpose it back to the original orientation.
+
+```{r document_clustering_1}
+
+# TF-IDF and cosine similarity
+tfidf <- t(dtm[ , tf_mat$term ]) * tf_mat$idf
+
+tfidf <- t(tfidf)
+
+```
+
+The next step is to calculate cosine similarity and change it to a distance. We're going to use some linear algebra to do this. The dot product of two positive-valued, unit-length vectors is the cosine similarity between the two vectors. For a deeper explanation of the math and logic, read [this article](https://anythingbutrbitrary.blogspot.com/2013/03/build-search-engine-in-20-minutes-or.html).
+
+```{r document_clustering_2}
+
+csim <- tfidf / sqrt(rowSums(tfidf * tfidf))
+
+csim <- csim %*% t(csim)
+
+```
+
+R's various clustering functions work with distances, not similarities. We convert cosine similarity to cosine distance by subtracting it from $1$. This works because cosine similarity is bound between $0$ and $1$. While we are at it, we'll convert the matrix to a `dist` object.
+
+```{r document_clustering_3}
+
+cdist <- as.dist(1 - csim)
+
+```
+
+The last step is clustering. There are many clustering algorithms out there. My preference is [agglomerative hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering) using [Ward's method](https://en.wikipedia.org/wiki/Ward%27s_method) as the merge rule. Compared to other methods, such as k-means, hierarchical clustering is computationally inexpensive. 
+
+In the example below, I choose to cut the tree at $100$ clusters. This is a somewhat arbitrary choice. I often prefer to use the silhouette coefficient. You can read about this method [here](http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/). Performing this is an exercise I'll leave to the reader.
+
+```{r document_clustering_4}
+
+hc <- hclust(cdist, "ward.D")
+
+clustering <- cutree(hc, 100)
+
+plot(hc, main = "Hierarchical clustering of movie codes",
+     ylab = "", xlab = "", yaxt = "n")
+
+rect.hclust(hc, 100, border = "red")
+
+```
+
+It might be nice to get an idea of what's in each of these clusters. We can use the probability difference method from above. 
+
+
+```{r documnet_clustering_5}
+p_words <- colSums(dtm) / sum(dtm)
+
+cluster_words <- lapply(unique(clustering), function(x){
+  rows <- dtm[ clustering == x , ]
+  
+  # for memory's sake, drop all words that don't appear in the cluster
+  rows <- rows[ , colSums(rows) > 0 ]
+  
+  colSums(rows) / sum(rows) - p_words[ colnames(rows) ]
+})
+
+```
+
+The code chunk below creates a summary table of clusters. Each cluster's size and the top 5 words are represented. 
+
+```{r document_clustering_6}
+# create a summary table of the top 5 words defining each cluster
+cluster_summary <- data.frame(cluster = unique(clustering),
+                              size = as.numeric(table(clustering)),
+                              top_words = sapply(cluster_words, function(d){
+                                paste(
+                                  names(d)[ order(d, decreasing = TRUE) ][ 1:5 ], 
+                                  collapse = ", ")
+                              }),
+                              stringsAsFactors = FALSE)
+
+head(cluster_summary, 10)
+
+```
+
+You may want a word cloud to visualize each cluster. Using the `wordcloud` package, we plot cluster 100 below.
+
+```{r document_clustering_7}
+# plot a word cloud of one cluster as an example
+wordcloud::wordcloud(words = names(cluster_words[[ 100 ]]), 
+                     freq = cluster_words[[ 100 ]], 
+                     max.words = 100, 
+                     random.order = FALSE, 
+                     colors = c("red", "yellow", "blue"),
+                     main = "Top words in cluster 100")
+
+```
+
+
+# Topic modeling
+
+textmineR has extensive functionality for topic modeling. You can fit Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA and LSA follow below.) As of this writing, textmineR's LDA and CTM functions are wrappers for other packages to facilitate a consistent workflow. (And textmineR takes advantage of the `RSpectra` package for LSA's single-value decomposition.) Plans exist to impelement LDA natively with `Rcpp` sometime in 2018.
+
+textmineR's consistent representation of topic models boils down to two matrices. The first, "theta" ($\Theta$), has rows representing a distribution of topics over documents. The second, phi ($\Phi$), has rows representing a distribution of words over topics. In the case of probabilistic models, these are categorical probability distributions. For non-probabilistic models (e.g. LSA) these distributions are, obviously, not probabilities. With LSA, for example, there is a third object representing the sigular values in the decomposition.
+
+In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)), probabilistic coherence (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
 
 ### LDA Example
-```{r lda_example}
+
+To fit an LDA model in textmineR, use the `FitLdaModel` function. Input is a document term matrix. textmineR implements 2 methods for LDA, Gibbs sampling, and variational expectation maximization (also known as variational Bayes). The default is Gibbs sampling.
+
+```{r lda_example_1}
+
+# let's start with a clean workspace
+rm(list = ls())
+
 
 # start with a sample of 500 documents so our example doesn't take too long
 dtm_sample <- dtm[ sample(1:nrow(dtm), 500) , ]
@@ -187,10 +341,23 @@ model <- FitLdaModel(dtm = dtm_sample,
                      alpha = 0.1, # this is the default value
                      beta = 0.05) # this is the default value
 
+```
+
+The output from the model is a list with the two matrices listed above. 
+
+```{r lda_example_2}
 # two matrices: 
 # theta = P(topic | document)
 # phi = P(word | topic)
 str(model)
+
+```
+
+Once we have created a model, we need to evaluate it. For overall goodness of fit, textmineR has R-squared and log likelihood. R-squared is interpretable as the proportion of variability in the data explained by the model, as with linear regression. For a full derivation and explanation of properties. See the working paper, [here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view).
+
+The log likelihood has a more difficult interpretation. Though, as shown in the R-squared working paper, R-squared and log likelihood are highly correlated.
+
+```{r lda_example_3}
 
 # R-squared 
 # - only works for probabilistic models like LDA and CTM
@@ -207,9 +374,13 @@ model$ll <- CalcLikelihood(dtm = dtm_sample,
                            theta = model$theta)
 
 model$ll
+```
 
+Next, we turn our attention to topic quality. There are many "topic coherence" metrics available in the literature. For example, see [this paper](https://svn.aksw.org/papers/2015/WSDM_Topic_Evaluation/public.pdf) or [this paper](https://mimno.infosci.cornell.edu/nips2013ws/nips2013tm_submission_7.pdf). textmineR implements a new topic coherence measure based on probability theory. (A formal write up of this metric will be included in my PhD dissertation, expected 2020.)
+
+```{r lda_example_4}
 # probabilistic coherence, a measure of topic quality
-# - can be used with any topic model, e.g. LSA
+# - can be used with any topic model, not just probabilistic ones
 model$coherence <- CalcProbCoherence(phi = model$phi, dtm = dtm_sample, M = 5)
 
 summary(model$coherence)
@@ -435,7 +606,7 @@ Topic models from other packages can be used with textmineR. The workflow would 
 4. Format the raw output to have two matrices, phi and theta as above
 5. Use textmineR's suite of utility functions with your model
 
-## Text embeddings 
+# Text embeddings 
 Text embeddings are particularly hot right now. While textmineR doesn't (yet) explicitly implement any embedding models like GloVe or word2vec, you can still get embeddings. Text embedding algorithms aren't conceptually different from topic models. They are, however, operating on a different matrix. Instead of reducing the dimensions of a document term matrix, text embeddings are obtained by reducing the dimensions of a term co-occurrence matrix. In principle, one can use LDA or LSA in the same way. In this case, rows of theta are embedded words. A phi_prime may be obtained to project documents or new text into the embedding space.
 
 What follows is a quick example of this using LDA as the embedding mechanism.
@@ -519,7 +690,7 @@ You could just as easily use LSA as your embedding, or any other dimensionality 
 
 Embeddings are only recently being researched. However, they may be used in very similar contexts to topic models. It's just that the "topics" are fit another way.
 
-## Building a basic document summarizer
+# Building a basic document summarizer
 Let's use the above embeddings model to create a document summarizer. This will return the three most relevant sentences in each review.
 
 ```{r summaries}
