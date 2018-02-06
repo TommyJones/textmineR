@@ -1,0 +1,11 @@
+---
+title: "5. Document classification"
+author: "Thomas W. Jones"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+

@@ -1,0 +1,217 @@
+---
+title: "1. Start Here"
+author: "Thomas W. Jones"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: html_document
+---
+
+# Vignette guide
+
+1. Start here
+2. Document clustering
+3. Topic modeling
+4. Text embeddings & document summarization
+5. Document classification
+6. Extensions of textmineR
+   Working with other packages (MALLET example)
+   TmParallelApply
+   Dtm2Docs example
+   
+   
+# Why textmineR?
+
+textmineR was created with three principles in mind:
+
+1. Maximize interoperability within R's ecosystem 
+2. Scaleable in terms of object storeage and computation time
+3. Syntax that is idiomatic to R
+
+R has many packages for text mining and natural language processing (NLP). The [CRAN task view on natural language processing](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html) lists 53 unique packages. Some of these packages are interoperable. Some are not. 
+
+textmineR strives for maximum interoperability in three ways. First, it uses the `dgCMatrix` class from the popular [`Matrix` package](https://cran.r-project.org/web/packages/Matrix/index.html) for document term matrices (DTMs) and term co-occurence matrices (TCMs). The `Matrix` package is an R "recommended" package with nearly 500 packages that depend, import, or suggest it. Compare that to the [`slam` package](https://cran.r-project.org/web/packages/slam/index.html) used by [`tm`](https://cran.r-project.org/web/packages/tm/index.html) and its derivatives. `slam` has an order of magnitude fewer dependents. It is simply not as well integrated. `Matrix` also has methods that make the syntax for manipulating its matrices nearly identical to base R. This greatly reduces the cognitive burden of the programmers. 
+
+Second, textmineR relies on base R objects for corpus and metadata storage. Actually, it relies on the user to do so. textmineR's core functions `CreateDtm` and `CreateTcm` take a simple character vector as input. Users may store their corpora as character vectors, lists, or data frames. _There is no need to learn a new ['Corpus'](https://cran.r-project.org/web/packages/tm/index.html) class._
+
+Third and last, textmineR represents the output of topic models in a consistent way, a list containing two matrices. This is described in more detail in the next section. Several topic models are supported and the simple representation means that textmineR's utility functions are useable with outputs from other packages, so long as they are represented as matrices of probabilities. (Again, see the next section for more detail.)
+
+textmineR acheives scalability through three means. First, sparse matrices (like the `dgCMatrix`) offer significant memory savings. Second, textmineR utilizes `Rcpp` throughout for speedup. Finally, textmineR uses parallel processing by default where possible. textmineR offers a function `TmParallelApply` which implements a framework for parallel processing that is syntactically agnostic between Windows and Unix-like operating systems. `TmParallelApply` is used liberally within textmineR and is exposed for users.
+
+textmineR does make some tradeoffs of performance for syntactic simplicity. textmineR is designed to run on a single node in a cluster computing environment. It can (and will by default) use all available cores of that node. If performance is your number one concern, see [`text2vec`](https://cran.r-project.org/web/packages/text2vec/index.html). textmineR uses some `text2vec` under the hood. 
+
+textmineR strives for syntax that is idiomatic to R. This is, admittedly, a nebulous concept. textmineR does not create new classes where existing R classes exist. It strives for a functional programming paradigm. And it attempts to group closely-related sequential steps into single functions. This means that users will not have to make several temporary objects along the way. As an example, compare making a document term matrix in textmineR (example below) with `tm` or `text2vec`.
+
+As a side note: textmineR's framework for NLP does not need to be exclusive to textmineR. Text mining packages in R can be interoperable with a few concepts. First, use `dgCMatrix` for DTMs and TCMs. Second, write most text mining models in a way that they can take a `dgCMatrix` as the input. Finally, keep non-base R classes to a minimum, especially for corpus and metadata management. 
+
+# Corpus management
+
+### Creating a DTM 
+
+The basic object of analysis for most text mining applications is a document term matrix, or DTM. This is a matrix where every row represents a document and every column represents a token (word, bi-gram, stem, etc.) 
+
+You can create a DTM with textmineR by passing a character vector. There are options for stopword removal, creation of n-grams, and other standard data cleaning. There is an option for passing a stemming or lemmatization function if you desire. (See `help(CreateDtm)` for an example using Porter's word stemmer.)
+
+The code below uses a dataset of movie reviews included with the `text2vec` package. This dataset is used for sentiment analysis. In addition to the text of the reviews. There is a binary variable indicating positive or negative sentiment. More on this later...
+
+
+```{r create_dtm}
+library(textmineR)
+
+# load movie_review dataset from text2vec
+data(movie_review, package = "text2vec")
+
+str(movie_review)
+
+# create a document term matrix 
+dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
+                 doc_names = movie_review$id, # document names
+                 ngram_window = c(1, 2), # minimum and maximum n-gram length
+                 stopword_vec = c(tm::stopwords("english"), # stopwords from tm
+                                  tm::stopwords("smart")), # this is the default value
+                 lower = TRUE, # lowercase - this is the default value
+                 remove_punctuation = TRUE, # punctuation - this is the default
+                 remove_numbers = TRUE, # numbers - this is the default
+                 verbose = FALSE) # Turn off status bar for this demo
+
+```
+
+Even though a `dgCMatrix` isn't a traditional matrix, it has methods that make it similar to standard R matrices. 
+
+```{r explore_dtm}
+dim(dtm) # 5,000 documents and 424,926 tokens
+
+nrow(dtm) # 5,000 documents
+
+ncol(dtm) # 424,926 tokens
+
+head(colnames(dtm)) # tokens
+
+head(rownames(dtm)) # document IDs
+
+```
+
+
+# Basic corpus statistics
+The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function `TermDocFreq` gives term frequencies (equivalent to `colSums(dtm)`), the number of documents in which each term appears (equivalent to `colSums(dtm > 0)`), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.
+
+```{r corpus_stats_1}
+
+# get counts of tokens across the corpus
+tf_mat <- TermDocFreq(dtm = dtm)
+
+str(tf_mat) 
+
+# look at the most frequent tokens
+head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
+
+# look at the most frequent bigrams
+tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
+
+head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+
+```
+
+It looks like we have stray html tags ("<br>") in the documents. These aren't giving us any relevant information about content. (Except, perhaps, that these documents were originally part of web pages.) 
+
+The most intuitive approach, perhaps, is to strip these tags from our documents, re-construct a document term matrix, and re-calculate the objects as above. However, a simpler approach would be to simply remove the tokens containing "br" from the DTM we already calculated. This is much more computationally efficient and gives us the same result anyway.
+
+
+```{r corpus_stats_2}
+# remove offending tokens from the DTM
+dtm <- dtm[ , ! stringr::str_detect(colnames(dtm),
+                                    "(^br$)|(_br$)|(^br_)") ]
+
+# re-construct tf_mat and tf_bigrams
+tf_mat <- TermDocFreq(dtm)
+
+tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
+
+head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
+
+head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+```
+
+We can also calculate how many tokens each document contains from the DTM. Note that this reflects the modifications we made in constructing the DTM (removing stop words, punctuation, numbers, etc.).
+
+```{r corpus_stats_3}
+# summary of document lengths
+doc_lengths <- rowSums(dtm)
+
+summary(doc_lengths)
+```
+
+Often,it's useful to prune your vocabulary and remove any tokens that appear in a samall number of documents. This will greatly reduce the vocabulary size (see [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law)) and improve computation time. 
+
+```{r corpus_stats_4}
+# remove any tokens that were in 3 or fewer documents
+dtm <- dtm[ , colSums(dtm > 0) > 3 ] # alternatively: dtm[ , tf_mat$term_freq > 3 ]
+
+tf_mat <- tf_mat[ tf_mat$term %in% colnames(dtm) , ]
+
+tf_bigrams <- tf_bigrams[ tf_bigrams$term %in% colnames(dtm) , ]
+
+```
+
+The movie review data set contains more than just text of reviews. It also contains a variable tagging the review as positive (`movie_review$sentiment` $=1$) or negative (`movie_review$sentiment` $=0$). We can examine terms associated with positive and negative reviews. If we wanted, we could use them to build a simple classifier. 
+
+However, as we will see immediately below, looking at only the most frequent terms in each category is not helpful. Because of Zipf's law, the most frequent terms in just about _any_ category will be the same.
+
+```{r corpus_stats_4}
+# what words are most associated with sentiment?
+tf_sentiment <- list(positive = TermDocFreq(dtm[ movie_review$sentiment == 1 , ]),
+                     negative = TermDocFreq(dtm[ movie_review$sentiment == 0 , ]))
+
+# these are basically the same, not helpful
+head(tf_sentiment$positive[ order(tf_sentiment$positive$term_freq, decreasing = TRUE) , ], 10)
+
+head(tf_sentiment$negative[ order(tf_sentiment$negative$term_freq, decreasing = TRUE) , ], 10)
+
+```
+
+That was unhelpful. Instead, we need to re-weight the terms in each class. We'll use a probabilistic reweighting, described below.
+
+The most frequent words in each class are proportional to $P(word|sentiment_j)$. As we saw above, that would puts the words in the same order as $P(word)$, overall. However, we can use the difference in those probabilities to get a new order. That difference is
+\begin{align}
+  P(word|sentiment_j) - P(word)
+\end{align}
+
+You can interpret the difference in (1) as follows: Positive values are more probable in the sentiment class than in the corpus overall. Negative values are less probable. Values close to zero are statistically-independent of sentiment. Since most of the top words are the same when we sort by $P(word|sentiment_j)$, these words are statistically-independent of sentiment. They get forced towards zero. 
+
+For those paying close attention, this difference should give a similar ordering as pointwise-mutual information (PMI), defined as $PMI = \frac{P(word|sentiment_j)}{P(word)}$. However, I prefer the difference as it is bound between $-1$ and $1$. 
+
+The difference method is applied to both words overall and bi-grams in the code below. 
+
+```{r corpus_stats_5}
+
+# let's reweight by probability by class
+p_words <- colSums(dtm) / sum(dtm) # alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)
+
+tf_sentiment$positive$conditional_prob <- 
+  tf_sentiment$positive$term_freq / sum(tf_sentiment$positive$term_freq)
+
+tf_sentiment$positive$prob_lift <- tf_sentiment$positive$conditional_prob - p_words
+
+tf_sentiment$negative$conditional_prob <- 
+  tf_sentiment$negative$term_freq / sum(tf_sentiment$negative$term_freq)
+
+tf_sentiment$negative$prob_lift <- tf_sentiment$negative$conditional_prob - p_words
+
+# let's look again with new weights
+head(tf_sentiment$positive[ order(tf_sentiment$positive$prob_lift, decreasing = TRUE) , ], 10)
+
+head(tf_sentiment$negative[ order(tf_sentiment$negative$prob_lift, decreasing = TRUE) , ], 10)
+
+# what about bi-grams?
+tf_sentiment_bigram <- lapply(tf_sentiment, function(x){
+  x <- x[ stringr::str_detect(x$term, "_") , ]
+  x[ order(x$prob_lift, decreasing = TRUE) , ]
+})
+
+head(tf_sentiment_bigram$positive, 10)
+
+head(tf_sentiment_bigram$negative, 10)
+
+
+```
+
+
+

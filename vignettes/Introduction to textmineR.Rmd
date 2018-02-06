@@ -1,7 +1,7 @@
 ---
 title: "Introduction to textmineR"
 author: "Thomas W. Jones"
-date: "12/15/2017"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
 ---
 
@@ -32,7 +32,7 @@ textmineR does make some tradeoffs of performance for syntactic simplicity. text
 
 textmineR strives for syntax that is idiomatic to R. This is, admittedly, a nebulous concept. textmineR does not create new classes where existing R classes exist. It strives for a functional programming paradigm. And it attempts to group closely-related sequential steps into single functions. This means that users will not have to make several temporary objects along the way. As an example, compare making a document term matrix in textmineR (example below) with `tm` or `text2vec`.
 
-As a side note: textmineR's framework for NLP does not need to be exclusive to textmineR. Text mining packages in R can be interoperable with a few concepts. First, use `dgCMatrix` for DTMs and TCMs. Second, write most text mining models in a way that they can take a `dgCMatrix` as the input. Finally, keep non-base R classes to a minimum, especially for corpus and metadata management. For the most part, `text2vec` and `tidytext` adhere to these principles. 
+As a side note: textmineR's framework for NLP does not need to be exclusive to textmineR. Text mining packages in R can be interoperable with a few concepts. First, use `dgCMatrix` for DTMs and TCMs. Second, write most text mining models in a way that they can take a `dgCMatrix` as the input. Finally, keep non-base R classes to a minimum, especially for corpus and metadata management. 
 
 # Corpus management
 
@@ -325,10 +325,6 @@ To fit an LDA model in textmineR, use the `FitLdaModel` function. Input is a doc
 
 ```{r lda_example_1}
 
-# let's start with a clean workspace
-rm(list = ls())
-
-
 # start with a sample of 500 documents so our example doesn't take too long
 dtm_sample <- dtm[ sample(1:nrow(dtm), 500) , ]
 
@@ -378,19 +374,46 @@ model$ll
 
 Next, we turn our attention to topic quality. There are many "topic coherence" metrics available in the literature. For example, see [this paper](https://svn.aksw.org/papers/2015/WSDM_Topic_Evaluation/public.pdf) or [this paper](https://mimno.infosci.cornell.edu/nips2013ws/nips2013tm_submission_7.pdf). textmineR implements a new topic coherence measure based on probability theory. (A formal write up of this metric will be included in my PhD dissertation, expected 2020.)
 
+Probabilistic coherence measures how associated words are in a topic, controlling for statistical independence. For example, suppose you have a corpus of articles from the sports section of a newspaper. A topic with the words {sport, sports, ball, fan, athlete} would look great if you look at correlation, without correcting for independence. But we actually know that it's a terrible topic because the words are so frequent in this corpus as to be meaningless. In other words, they are highly correlated with each other but they are statistically-independent of each other.
+
+For each pair of words $\{a, b\}$ in the top M words in a topic, probabilistic coherence calculates $P(b|a) - P(b)$, where $\{a\}$ is more probable than $\{b\}$ in the topic.
+
+Here's the logic: if we restrict our search to only documents that contain the word $\{a\}$, then the word $\{b\}$ should be more more probable in those documents than if chosen at random from the corpus. $P(b|a)$ measures how probable $\{b\}$ is only in documents containing $\{a\}$. $P(b)$ measures how probable $\{b\}$ is in the corpus as a whole. If $\{b\}$ is not more probable in documents containing $\{a\}$, then the difference $P(b|a) - P(b)$ should be close to zero.
+
+For example, suppose the top 4 words in a topic are $\{a, b, c, d\}$. Then, we calculate
+
+1. $P(a|b) - P(b)$, $P(a|c) - P(c)$, $P(a|d) - P(d)$
+2. $P(b|c) - P(c)$, $P(b|d) - P(d)$
+3. $P(c|d) - P(d)$
+
+And all 6 differences are averaged together, giving the probabilistic coherence measure.
+
 ```{r lda_example_4}
 # probabilistic coherence, a measure of topic quality
-# - can be used with any topic model, not just probabilistic ones
+# this measure can be used with any topic model, not just probabilistic ones
 model$coherence <- CalcProbCoherence(phi = model$phi, dtm = dtm_sample, M = 5)
 
 summary(model$coherence)
 
 hist(model$coherence, col= "blue")
+```
 
+We'll see the real value of coherence after calculating a few more objects. (Note: a future version of textmineR will calculate probabilistic coherence and the below objects automatically when you call `FitLdaModel` or any other topic model.)
+
+In the chunk below, we will 
+
+1. Pull out the top 5 terms for each topic
+2. Calculate the most frequent (prevalent) topics in the corpus
+3. Get some bi-gram topic labels from a naive labeling algorithm
+   (These naive labels are based on $P(\text{bi-gram}|\text{topic}) - P(\text{bi-gram})$. Noticing a theme?)
+
+We'll then pull these together, along with coherence, into a table that summarizes the topic model.
+
+```{r lda_example_5}
 # Get the top terms of each topic
 model$top_terms <- GetTopTerms(phi = model$phi, M = 5)
 
-head(t(model$top_terms))
+knitr::kable(head(t(model$top_terms)), col.names = paste("word", c(1:5)))
 
 # Get the prevalence of each topic
 # You can make this discrete by applying a threshold, say 0.05, for
@@ -416,7 +439,35 @@ model$summary <- data.frame(topic = rownames(model$phi),
 
 View(model$summary[ order(model$summary$prevalence, decreasing = TRUE) , ])
 
-# Get topic predictions for all 5,000 documents
+knitr::kable(model$summary[ order(model$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ])
+
+```
+
+Ok, you've built a topic model. You've decided how well it fits your data. You've examined coherence, top words, and so on. Now you want to get topic distributions for new documents. (Remember, we only used 500 of our 5,000 documents to train the model.) To do this, we need Bayes' Rule.  
+
+The rows of $\Phi$ are $P(\text{word}|\text{topic})$. However, to get predictions for new documents, we need $P(\text{topic}|\text{word})$. Remembering Bayes' Rule, we get
+
+\begin{align}
+  P(\text{topic}|\text{word}) 
+    &= \frac{P(\text{word}|\text{topic})P(\text{topic})}{P(\text{word})}
+\end{align}
+
+Detail-oriented readers may wonder how you can get $P(\text{topic})$. We can get this through $\sum_j P(\text{topic}|\text{document}_j)P(\text{document}_j)$. 
+
+For now, textmineR refers to the resulting matrix as $\Phi'$ or "phi prime". (Note: this will be called $\Gamma$ or "gamma" in textmineR version 3.0+.)
+
+textmineR's `CalcPhiPrime` function does the above calculations for you. 
+
+Once you have $\Phi'$, a simple dot product with the DTM of your new documents ($A$) will get new topic predictions. 
+
+\begin{align}
+  \Theta_{new} 
+    &= A \cdot \Phi'^T
+\end{align}
+
+As of this writing, you will have to take care to make sure your vocabulary aligns. (I'd suggest using something like `intersect(colnames(dtm), colnames(theta))`.) (textmineR version 3.0 will enable a `predict` method for topic models that will handle all of this for you.)
+
+```{r lda_example_6}
 
 # first get a prediction matrix, phi is P(word | topic)
 # we need P(topic | word), or "phi_prime"
@@ -429,7 +480,12 @@ assignments <- dtm / rowSums(dtm)
 assignments <- assignments %*% t(model$phi_prime)
 
 assignments <- as.matrix(assignments) # convert to regular R dense matrix
+```
 
+For the pedantic, the above method is a "frequentist" prediction even though LDA is a Bayesian model. textmineR 3.0 will implement a fully Bayesian predict method for LDA. In the meantime, this frequentist method works well, but is a little noisier. We can compare the difference between the frequentist predictions to the Bayesian ones, as the two barplots below show. By and large they are the same.
+
+
+```{r lda_example_7}
 # compare the "fit" assignments to the predicted ones
 barplot(model$theta[ rownames(dtm_sample)[ 1 ] , ], las = 2,
         main = "Topic Assignments While Fitting LDA")
@@ -441,13 +497,30 @@ barplot(assignments[ rownames(dtm_sample)[ 1 ] , ], las = 2,
 
 Depending on your application, you can reformat the outputs of phi, theta, assignments, the summary table etc. to suite your needs. For example, you can build a "semantic" search of your documents by vectorizing the query with `CreateDtm`, then predicting under the model with phi_prime.
 
-As of this writing, you will have to take care to make sure your vocabulary aligns. (I'd suggest using something like `intersect(colnames(dtm), colnames(theta))`.) Part of the big 2018 update will be creating a predict method that will handle this for you.
-
 ### LSA Example
 
-Latent semantic analysis was arguably the first topic model. [LSA was patented in 1988](https://en.wikipedia.org/wiki/Latent_semantic_analysis). It uses a single value decomposition on a document term matrix, TF-IDF matrix, or similar. 
+Latent semantic analysis was arguably the first topic model. [LSA was patented in 1988](https://en.wikipedia.org/wiki/Latent_semantic_analysis). It uses a [single value decomposition](https://en.wikipedia.org/wiki/Singular-value_decomposition) on a document term matrix, TF-IDF matrix, or similar. 
+
+In textmineR's notation:
+
+\begin{align}
+  A &= \Theta \cdot S \cdot \Phi
+\end{align}
+
+$\Theta$ and $\Phi$ have the same (though non-probabilistic) interpretation as in LDA. $S$ is the matrix of single values. 
 
 The workflow for LSA is largely the same for LDA. Two key differences: we will use the IDF vector mentioned above to create a TF-IDF matrix and we cannot get an R-squared for LSA as it is non-probabilistic. 
+
+One key mathematical difference is how you calculate $\Phi'$. For LSA the operation is
+
+\begin{align}
+  \Phi' &=
+    \[S\cdot\Phi\]^-1
+\end{align}
+
+
+The below code chunk is large. But it is by-and-large running the same operations for LSA that we did for LDA. 
+
 
 ```{r lsa_example}
 
@@ -484,7 +557,7 @@ hist(lsa_model$coherence, col= "blue")
 # Get the top terms of each topic
 lsa_model$top_terms <- GetTopTerms(phi = lsa_model$phi, M = 5)
 
-head(t(lsa_model$top_terms))
+knitr::kable(head(t(lsa_model$top_terms)), col.names = paste("word", c(1:5)))
 
 # Get the prevalence of each topic
 # You can make this discrete by applying a threshold, say 0.05, for
@@ -496,7 +569,7 @@ lsa_model$labels <- LabelTopics(assignments = lsa_model$theta > 0.05,
                             dtm = dtm_sample,
                             M = 1)
 
-head(lsa_model$labels)
+knitr::kable(head(lsa_model$labels))
 
 # put them together, with coherence into a summary table
 lsa_model$summary <- data.frame(topic = rownames(lsa_model$phi),
@@ -509,6 +582,8 @@ lsa_model$summary <- data.frame(topic = rownames(lsa_model$phi),
                             stringsAsFactors = FALSE)
 
 View(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing = TRUE) , ])
+
+knitr::kable(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ])
 
 # Get topic predictions for all 5,000 documents
 
