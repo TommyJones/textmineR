@@ -5,14 +5,45 @@ date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
 # Document clustering
 
 A common task in text mining is document clustering. There are other ways to cluster documents. However, for this vignette, we will stick with the basics. The example below shows the most common method, using [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) and cosine distance. 
 
+Let's read in some data and make a document term matrix (DTM) and get started.
+
+```{r document_clustering_0}
+library(textmineR)
+
+# load movie_review dataset from text2vec
+data(movie_review, package = "text2vec")
+
+str(movie_review)
+
+# create a document term matrix 
+dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
+                 doc_names = movie_review$id, # document names
+                 ngram_window = c(1, 2), # minimum and maximum n-gram length
+                 stopword_vec = c(tm::stopwords("english"), # stopwords from tm
+                                  tm::stopwords("smart")), # this is the default value
+                 lower = TRUE, # lowercase - this is the default value
+                 remove_punctuation = TRUE, # punctuation - this is the default
+                 remove_numbers = TRUE, # numbers - this is the default
+                 verbose = FALSE) # Turn off status bar for this demo
+
+# construct the matrix of term counts to get the IDF vector
+tf_mat <- TermDocFreq(dtm)
+
+```
+
+
 First, we must re-weight the word counts in the document term matrix. We do this by multiplying the term frequency (in this case, count of words in documents) by an inverse document frequncy (IDF) vector. textmineR calculates IDF for the $i$-th word as
 
 \begin{align}
-  IDF_i = ln(N / \sum_{j = 1}^N C(word_i, doc_j))
+  IDF_i = ln\big(\frac{N}{\sum_{j = 1}^N C(word_i, doc_j)}\big)
 \end{align}
 
 where $N$ is the number of documents in the corpus. 
@@ -56,7 +87,7 @@ hc <- hclust(cdist, "ward.D")
 
 clustering <- cutree(hc, 100)
 
-plot(hc, main = "Hierarchical clustering of movie codes",
+plot(hc, main = "Hierarchical clustering of movie reviews",
      ylab = "", xlab = "", yaxt = "n")
 
 rect.hclust(hc, 100, border = "red")
@@ -99,11 +130,11 @@ head(cluster_summary, 10)
 
 You may want a word cloud to visualize each cluster. Using the `wordcloud` package, we plot cluster 100 below.
 
-```{r document_clustering_7}
+```{r document_clustering_7, warning = FALSE}
 # plot a word cloud of one cluster as an example
 wordcloud::wordcloud(words = names(cluster_words[[ 100 ]]), 
                      freq = cluster_words[[ 100 ]], 
-                     max.words = 100, 
+                     max.words = 50, 
                      random.order = FALSE, 
                      colors = c("red", "yellow", "blue"),
                      main = "Top words in cluster 100")

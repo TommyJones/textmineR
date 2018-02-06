@@ -4,6 +4,11 @@ author: "Thomas W. Jones"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+
 # Topic modeling
 
 textmineR has extensive functionality for topic modeling. You can fit Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA and LSA follow below.) As of this writing, textmineR's LDA and CTM functions are wrappers for other packages to facilitate a consistent workflow. (And textmineR takes advantage of the `RSpectra` package for LSA's single-value decomposition.) Plans exist to impelement LDA natively with `Rcpp` sometime in 2018.
@@ -11,6 +16,27 @@ textmineR has extensive functionality for topic modeling. You can fit Latent Dir
 textmineR's consistent representation of topic models boils down to two matrices. The first, "theta" ($\Theta$), has rows representing a distribution of topics over documents. The second, phi ($\Phi$), has rows representing a distribution of words over topics. In the case of probabilistic models, these are categorical probability distributions. For non-probabilistic models (e.g. LSA) these distributions are, obviously, not probabilities. With LSA, for example, there is a third object representing the sigular values in the decomposition.
 
 In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)), probabilistic coherence (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
+
+```{r make_dtm}
+library(textmineR)
+
+# load movie_review dataset from text2vec
+data(movie_review, package = "text2vec")
+
+str(movie_review)
+
+# create a document term matrix 
+dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
+                 doc_names = movie_review$id, # document names
+                 ngram_window = c(1, 2), # minimum and maximum n-gram length
+                 stopword_vec = c(tm::stopwords("english"), # stopwords from tm
+                                  tm::stopwords("smart")), # this is the default value
+                 lower = TRUE, # lowercase - this is the default value
+                 remove_punctuation = TRUE, # punctuation - this is the default
+                 remove_numbers = TRUE, # numbers - this is the default
+                 verbose = FALSE) # Turn off status bar for this demo
+```
+
 
 ### LDA Example
 
@@ -130,8 +156,6 @@ model$summary <- data.frame(topic = rownames(model$phi),
                             }),
                             stringsAsFactors = FALSE)
 
-View(model$summary[ order(model$summary$prevalence, decreasing = TRUE) , ])
-
 knitr::kable(model$summary[ order(model$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ])
 
 ```
@@ -208,7 +232,7 @@ One key mathematical difference is how you calculate $\Phi'$. For LSA the operat
 
 \begin{align}
   \Phi' &=
-    \[S\cdot\Phi\]^-1
+    (S\cdot\Phi)^{-1}
 \end{align}
 
 
@@ -274,8 +298,6 @@ lsa_model$summary <- data.frame(topic = rownames(lsa_model$phi),
                             }),
                             stringsAsFactors = FALSE)
 
-View(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing = TRUE) , ])
-
 knitr::kable(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ])
 
 # Get topic predictions for all 5,000 documents
@@ -302,6 +324,7 @@ barplot(lsa_assignments[ rownames(dtm_sample)[ 1 ] , ], las = 2,
         main = "Topic Assignments Predicted Under the Model")
 
 ```
+
 ### Extensions
 
 #### Document clustering is just a special topic model
@@ -312,7 +335,7 @@ There is no commonly accepted way to choose the number of topics in a topic mode
 
 Users can implement this procedure. Simply fit several topic models across a range of topics. Then calculate the probabilistic coherence for each topic in each model. Finally, average the probabilistic coherence across all topics in a model. This is similar to using the [silhouette coefficient](https://en.wikipedia.org/wiki/Silhouette_(clustering)) to select the number of clusters when clustering.
 
-Some example code (on a trivially small dataset) is below.
+Some example code (on a trivially small dataset packaged with textmineR) is below.
 
 ```{r select_number_topics}
 # load a sample DTM

@@ -5,18 +5,10 @@ date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: html_document
 ---
 
-# Vignette guide
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
 
-1. Start here
-2. Document clustering
-3. Topic modeling
-4. Text embeddings & document summarization
-5. Document classification
-6. Extensions of textmineR
-   Working with other packages (MALLET example)
-   TmParallelApply
-   Dtm2Docs example
-   
    
 # Why textmineR?
 
@@ -155,7 +147,7 @@ The movie review data set contains more than just text of reviews. It also conta
 
 However, as we will see immediately below, looking at only the most frequent terms in each category is not helpful. Because of Zipf's law, the most frequent terms in just about _any_ category will be the same.
 
-```{r corpus_stats_4}
+```{r corpus_stats_5}
 # what words are most associated with sentiment?
 tf_sentiment <- list(positive = TermDocFreq(dtm[ movie_review$sentiment == 1 , ]),
                      negative = TermDocFreq(dtm[ movie_review$sentiment == 0 , ]))
@@ -180,7 +172,7 @@ For those paying close attention, this difference should give a similar ordering
 
 The difference method is applied to both words overall and bi-grams in the code below. 
 
-```{r corpus_stats_5}
+```{r corpus_stats_6}
 
 # let's reweight by probability by class
 p_words <- colSums(dtm) / sum(dtm) # alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)
