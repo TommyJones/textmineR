@@ -29,7 +29,9 @@ Imports:
     RcppProgress,
     RSpectra
 Suggests:
-    digest
+    digest,
+    knitr,
+    rmarkdown
 License: GPL (>= 3)
 URL: https://github.com/TommyJones/textmineR
 BugReports: https://github.com/TommyJones/textmineR/issues
@@ -38,3 +40,4 @@ LinkingTo: Rcpp,
     RcppArmadillo,
     RcppProgress
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr

@@ -7,3 +7,4 @@ src/*.dll
 ToDo.numbers
 models_*
 .DS_Store
+inst/doc
