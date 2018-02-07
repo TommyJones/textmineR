@@ -309,7 +309,7 @@ head(t(lsa_model$top_terms))
 
 ```{r echo = FALSE}
 knitr::kable(head(t(lsa_model$top_terms)), 
-             col.names = rep("", row(lsa_mode$top_terms)))
+             col.names = rep("", row(lsa_model$top_terms)))
 ```
 
 ```{r}
