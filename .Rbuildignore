@@ -12,4 +12,3 @@
 ^data/nih_full.rda
 ^data/acq2.rda
 ^man/acq2.rd
-^vignettes/*.md
