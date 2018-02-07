@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   cache = TRUE
 )
 ```
+
 # Document clustering
 
 A common task in text mining is document clustering. There are other ways to cluster documents. However, for this vignette, we will stick with the basics. The example below shows the most common method, using [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) and cosine distance. 
