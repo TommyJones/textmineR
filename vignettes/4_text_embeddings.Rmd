@@ -1,0 +1,166 @@
+---
+title: "4. Text embeddings"
+author: "Thomas W. Jones"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{4. Text embeddings}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Text embeddings
+
+[Text embeddings](https://en.wikipedia.org/wiki/Word_embedding) are particularly hot right now. While textmineR doesn't (yet) explicitly implement any embedding models like GloVe or word2vec, you can still get embeddings. Text embedding algorithms aren't conceptually different from topic models. They are, however, operating on a different matrix. Instead of reducing the dimensions of a document term matrix, text embeddings are obtained by reducing the dimensions of a term co-occurrence matrix. In principle, one can use LDA or LSA in the same way. In this case, rows of theta are embedded words. A phi_prime may be obtained to project documents or new text into the embedding space.
+
+## Create a term co-occurrence matrix
+
+Explain 3 types of TCM you can create with textmineR.
+
+```{r}
+
+# load the NIH data set
+library(textmineR)
+
+# load nih_sample data set from textmineR
+data(nih_sample)
+
+# First create a TCM using skip grams, we'll use a 5-word window
+# most options available on CreateDtm are also available for CreateTcm
+tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
+                 skipgram_window = 5)
+
+# a TCM is generally larger than a DTM
+dim(tcm)
+```
+
+## Fitting a model
+
+Use the same procedure.
+
+It may take considerably longer (because of size) or shorter (because of sparsity). 
+
+```{r}
+# use LDA to get embeddings into probability space
+# This will take considerably longer as the TCM matrix has many more rows 
+# than a DTM
+embeddings <- FitLdaModel(dtm = tcm,
+                          k = 100,
+                          iterations = 800)
+```
+
+
+
+## Evaluating the model
+
+
+```{r}
+# Get an R-squared for general goodness of fit
+embeddings$r2 <- CalcTopicModelR2(dtm = tcm, 
+                                  phi = embeddings$phi,
+                                  theta = embeddings$theta)
+
+embeddings$r2
+
+# Get coherence (relative to the TCM) for goodness of fit
+embeddings$coherence <- CalcProbCoherence(phi = embeddings$phi,
+                                          dtm = tcm)
+
+summary(embeddings$coherence)
+
+# Get top terms, no labels because we don't have bigrams
+embeddings$top_terms <- GetTopTerms(phi = embeddings$phi,
+                                    M = 5)
+```
+
+```{r eval = FALSE}
+head(t(embeddings$top_terms))
+```
+
+```{r echo = FALSE}
+knitr::kable(head(t(embeddings$top_terms)), col.names = rep("", 5))
+```
+
+```{r}
+# Create a summary table, similar to the above
+embeddings$summary <- data.frame(topic = rownames(embeddings$phi),
+                                 coherence = round(embeddings$coherence, 3),
+                                 prevalence = round(colSums(embeddings$theta), 2),
+                                 top_terms = apply(embeddings$top_terms, 2, function(x){
+                                   paste(x, collapse = ", ")
+                                 }),
+                                 stringsAsFactors = FALSE)
+
+```
+
+```{r eval = FALSE}
+embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ]
+```
+
+```{r echo = FALSE}
+knitr::kable(embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ], caption = "Summary of top 10 embedding dimensions")
+```
+
+```{r eval = FALSE}
+embeddings$summary[ order(embeddings$summary$coherence, decreasing = TRUE) , ][ 1:10 , ]
+```
+
+```{r echo = FALSE}
+knitr::kable(embeddings$summary[ order(embeddings$summary$coherence, decreasing = TRUE) , ][ 1:10 , ], caption = "Summary of 10 most coherent embedding dimensions")
+```
+
+## Embedding documents under the model
+
+Explain this and why you might want to do it.
+
+```{r}
+# Make a DTM from our documents
+dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
+                       doc_names = nih_sample$APPLICATION_ID,
+                       ngram_window = c(1,1))
+
+dtm_embed <- dtm_embed[ , colnames(tcm) ] # make sure vocab lines up
+
+# Get phi_prime, the projection matrix
+embeddings$phi_prime <- CalcPhiPrime(phi = embeddings$phi,
+                                     theta = embeddings$theta)
+
+# Project the documents into the embedding space
+embedding_assignments <- dtm_embed / rowSums(dtm_embed)
+
+embedding_assignments <- embedding_assignments %*% t(embeddings$phi_prime)
+
+embedding_assignments <- as.matrix(embedding_assignments)
+```
+
+Hey, you can re-do the evaluation as if you had a topic model!
+
+```{r}
+# get a goodness of fit relative to the DTM
+embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
+                                      phi = embeddings$phi,
+                                      theta = embedding_assignments)
+
+embeddings$r2_dtm
+
+# get coherence relative to DTM
+embeddings$coherence_dtm <- CalcProbCoherence(phi = embeddings$phi,
+                                              dtm = dtm_embed)
+
+summary(embeddings$coherence_dtm)
+```
+
+
+## Where to next?
+
+Embedding research is only just beginning. 
+
+
+

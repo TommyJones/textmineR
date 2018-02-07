@@ -12,8 +12,7 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  cache = TRUE
+  comment = "#>"
 )
 ```
 
@@ -116,7 +115,7 @@ For example, suppose the top 4 words in a topic are $\{a, b, c, d\}$. Then, we c
 
 And all 6 differences are averaged together, giving the probabilistic coherence measure.
 
-```{r }
+```{r fig.width = 7.5, fig.height = 4}
 # probabilistic coherence, a measure of topic quality
 # this measure can be used with any topic model, not just probabilistic ones
 model$coherence <- CalcProbCoherence(phi = model$phi, dtm = dtm_sample, M = 5)
@@ -262,7 +261,7 @@ $\Theta$ and $\Phi$ have the same (though non-probabilistic) interpretation as i
 
 The workflow for LSA is largely the same for LDA. Two key differences: we will use the IDF vector mentioned above to create a TF-IDF matrix and we cannot get an R-squared for LSA as it is non-probabilistic. 
 
-```{r lsa_example}
+```{r }
 
 # get a tf-idf matrix
 tf_sample <- TermDocFreq(dtm_sample)
@@ -290,7 +289,7 @@ We cannot get a proper R-squared for an LSA model. (Actually, multiplying $\Phi 
 
 However, we can still use probabilistic coherence to evaluate individual topics. We'll also get our top terms and make a summary table as we did with LDA, above.
 
-```{r}
+```{r fig.width = 7.5, fig.height = 4}
 # probabilistic coherence, a measure of topic quality
 # - can be used with any topic lsa_model, e.g. LSA
 lsa_model$coherence <- CalcProbCoherence(phi = lsa_model$phi, dtm = dtm_sample, M = 5)
@@ -309,7 +308,7 @@ head(t(lsa_model$top_terms))
 
 ```{r echo = FALSE}
 knitr::kable(head(t(lsa_model$top_terms)), 
-             col.names = rep("", row(lsa_model$top_terms)))
+             col.names = rep("", nrow(lsa_model$top_terms)))
 ```
 
 ```{r}
@@ -428,7 +427,7 @@ Users can implement this procedure. Simply fit several topic models across a ran
 
 Some example code (on a trivially small dataset packaged with textmineR) is below.
 
-```{r select_number_topics}
+```{r fig.width = 7.5, fig.height = 4}
 # load a sample DTM
 data(nih_sample_dtm)
 

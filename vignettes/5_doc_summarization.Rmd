@@ -1,19 +1,25 @@
 ---
-title: "4. Text embeddings & document summarization"
+title: "4. Text embeddings"
 author: "Thomas W. Jones"
-date: "2/4/2018"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{4. Text embeddings}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
-
 
 # Text embeddings 
 Text embeddings are particularly hot right now. While textmineR doesn't (yet) explicitly implement any embedding models like GloVe or word2vec, you can still get embeddings. Text embedding algorithms aren't conceptually different from topic models. They are, however, operating on a different matrix. Instead of reducing the dimensions of a document term matrix, text embeddings are obtained by reducing the dimensions of a term co-occurrence matrix. In principle, one can use LDA or LSA in the same way. In this case, rows of theta are embedded words. A phi_prime may be obtained to project documents or new text into the embedding space.
 
-What follows is a quick example of this using LDA as the embedding mechanism.
+What follows is a quick example of this using LDA as the embedding mechanism. (And for the mathematically precise, we are embedding into a probability space.)
 
 ```{r embedding}
 
