@@ -1,31 +1,38 @@
 ---
-title: "2. Document Clustering"
+title: "2. document clustering"
 author: "Thomas W. Jones"
-date: '`r format(Sys.Date(), "%B %d, %Y")`'
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{2. document clustering}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE
+)
 ```
-
 # Document clustering
 
 A common task in text mining is document clustering. There are other ways to cluster documents. However, for this vignette, we will stick with the basics. The example below shows the most common method, using [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) and cosine distance. 
 
 Let's read in some data and make a document term matrix (DTM) and get started.
 
-```{r document_clustering_0}
+```{r }
 library(textmineR)
 
-# load movie_review dataset from text2vec
-data(movie_review, package = "text2vec")
+# load nih_sample data set from textmineR
+data(nih_sample)
 
-str(movie_review)
+str(nih_sample)
 
 # create a document term matrix 
-dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
-                 doc_names = movie_review$id, # document names
+dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of documents
+                 doc_names = nih_sample$APPLICATION_ID, # document names
                  ngram_window = c(1, 2), # minimum and maximum n-gram length
                  stopword_vec = c(tm::stopwords("english"), # stopwords from tm
                                   tm::stopwords("smart")), # this is the default value
@@ -50,7 +57,7 @@ where $N$ is the number of documents in the corpus.
 
 By default, when you multiply a matrix with a vector, R multiplies the vector to each column. For this reason, we need to transpose the DTM before multiplying the IDF vector. Then we transpose it back to the original orientation.
 
-```{r document_clustering_1}
+```{r }
 
 # TF-IDF and cosine similarity
 tfidf <- t(dtm[ , tf_mat$term ]) * tf_mat$idf
@@ -61,7 +68,7 @@ tfidf <- t(tfidf)
 
 The next step is to calculate cosine similarity and change it to a distance. We're going to use some linear algebra to do this. The dot product of two positive-valued, unit-length vectors is the cosine similarity between the two vectors. For a deeper explanation of the math and logic, read [this article](https://anythingbutrbitrary.blogspot.com/2013/03/build-search-engine-in-20-minutes-or.html).
 
-```{r document_clustering_2}
+```{r }
 
 csim <- tfidf / sqrt(rowSums(tfidf * tfidf))
 
@@ -71,7 +78,7 @@ csim <- csim %*% t(csim)
 
 R's various clustering functions work with distances, not similarities. We convert cosine similarity to cosine distance by subtracting it from $1$. This works because cosine similarity is bound between $0$ and $1$. While we are at it, we'll convert the matrix to a `dist` object.
 
-```{r document_clustering_3}
+```{r }
 
 cdist <- as.dist(1 - csim)
 
@@ -79,18 +86,18 @@ cdist <- as.dist(1 - csim)
 
 The last step is clustering. There are many clustering algorithms out there. My preference is [agglomerative hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering) using [Ward's method](https://en.wikipedia.org/wiki/Ward%27s_method) as the merge rule. Compared to other methods, such as k-means, hierarchical clustering is computationally inexpensive. 
 
-In the example below, I choose to cut the tree at $100$ clusters. This is a somewhat arbitrary choice. I often prefer to use the silhouette coefficient. You can read about this method [here](http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/). Performing this is an exercise I'll leave to the reader.
+In the example below, I choose to cut the tree at $10$ clusters. This is a somewhat arbitrary choice. I often prefer to use the silhouette coefficient. You can read about this method [here](http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/). Performing this is an exercise I'll leave to the reader.
 
-```{r document_clustering_4}
+```{r fig.width = 7.5, fig.height = 4}
 
 hc <- hclust(cdist, "ward.D")
 
-clustering <- cutree(hc, 100)
+clustering <- cutree(hc, 10)
 
-plot(hc, main = "Hierarchical clustering of movie reviews",
+plot(hc, main = "Hierarchical clustering of 100 NIH grant abstracts",
      ylab = "", xlab = "", yaxt = "n")
 
-rect.hclust(hc, 100, border = "red")
+rect.hclust(hc, 10, border = "red")
 
 ```
 
@@ -113,7 +120,7 @@ cluster_words <- lapply(unique(clustering), function(x){
 
 The code chunk below creates a summary table of clusters. Each cluster's size and the top 5 words are represented. 
 
-```{r document_clustering_6}
+```{r }
 # create a summary table of the top 5 words defining each cluster
 cluster_summary <- data.frame(cluster = unique(clustering),
                               size = as.numeric(table(clustering)),
@@ -124,16 +131,23 @@ cluster_summary <- data.frame(cluster = unique(clustering),
                               }),
                               stringsAsFactors = FALSE)
 
-head(cluster_summary, 10)
-
 ```
+
+```{r eval = FALSE}
+cluster_summary
+```
+
+```{r echo = FALSE}
+knitr::kable(cluster_summary, caption = "Cluster summary table")
+```
+
 
 You may want a word cloud to visualize each cluster. Using the `wordcloud` package, we plot cluster 100 below.
 
-```{r document_clustering_7, warning = FALSE}
+```{r  warning = FALSE}
 # plot a word cloud of one cluster as an example
-wordcloud::wordcloud(words = names(cluster_words[[ 100 ]]), 
-                     freq = cluster_words[[ 100 ]], 
+wordcloud::wordcloud(words = names(cluster_words[[ 5 ]]), 
+                     freq = cluster_words[[ 5 ]], 
                      max.words = 50, 
                      random.order = FALSE, 
                      colors = c("red", "yellow", "blue"),

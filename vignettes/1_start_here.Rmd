@@ -1,15 +1,22 @@
 ---
-title: "1. Start Here"
+title: "1. Start here"
 author: "Thomas W. Jones"
-date: '`r format(Sys.Date(), "%B %d, %Y")`'
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{1. Start here}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE
+)
 ```
 
-   
 # Why textmineR?
 
 textmineR was created with three principles in mind:
@@ -45,7 +52,7 @@ You can create a DTM with textmineR by passing a character vector. There are opt
 The code below uses a dataset of movie reviews included with the `text2vec` package. This dataset is used for sentiment analysis. In addition to the text of the reviews. There is a binary variable indicating positive or negative sentiment. More on this later...
 
 
-```{r create_dtm}
+```{r}
 library(textmineR)
 
 # load movie_review dataset from text2vec
@@ -68,16 +75,30 @@ dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
 
 Even though a `dgCMatrix` isn't a traditional matrix, it has methods that make it similar to standard R matrices. 
 
-```{r explore_dtm}
+```{r}
 dim(dtm) # 5,000 documents and 424,926 tokens
 
 nrow(dtm) # 5,000 documents
 
 ncol(dtm) # 424,926 tokens
+```
 
-head(colnames(dtm)) # tokens
+```{r}
+head(colnames(dtm))
+```
 
-head(rownames(dtm)) # document IDs
+```{r echo = FALSE}
+knitr::kable(head(colnames(dtm)), col.names = "colnames(dtm)") # tokens
+```
+
+
+```{r eval = FALSE}
+head(rownames(dtm))
+```
+
+
+```{r echo = FALSE}
+knitr::kable(head(rownames(dtm)), col.names = "rownames(dtm)") # document IDs
 
 ```
 
@@ -85,20 +106,42 @@ head(rownames(dtm)) # document IDs
 # Basic corpus statistics
 The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function `TermDocFreq` gives term frequencies (equivalent to `colSums(dtm)`), the number of documents in which each term appears (equivalent to `colSums(dtm > 0)`), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.
 
-```{r corpus_stats_1}
+```{r }
 
 # get counts of tokens across the corpus
 tf_mat <- TermDocFreq(dtm = dtm)
 
 str(tf_mat) 
 
+```
+
+```{r eval = FALSE}
 # look at the most frequent tokens
 head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
 
+```
+
+
+```{r echo = FALSE}
+knitr::kable(head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10),
+             caption = "Ten most frequent tokens")
+
+```
+
+```{r }
 # look at the most frequent bigrams
 tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
 
+```
+
+```{r eval = FALSE}
 head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+```
+
+```{r echo = FALSE}
+
+knitr::kable(head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10),
+             caption = "Ten most frequent bi-grams")
 
 ```
 
@@ -107,7 +150,7 @@ It looks like we have stray html tags ("<br>") in the documents. These aren't gi
 The most intuitive approach, perhaps, is to strip these tags from our documents, re-construct a document term matrix, and re-calculate the objects as above. However, a simpler approach would be to simply remove the tokens containing "br" from the DTM we already calculated. This is much more computationally efficient and gives us the same result anyway.
 
 
-```{r corpus_stats_2}
+```{r }
 # remove offending tokens from the DTM
 dtm <- dtm[ , ! stringr::str_detect(colnames(dtm),
                                     "(^br$)|(_br$)|(^br_)") ]
@@ -117,14 +160,32 @@ tf_mat <- TermDocFreq(dtm)
 
 tf_bigrams <- tf_mat[ stringr::str_detect(tf_mat$term, "_") , ]
 
-head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
+```
 
+```{r}
+head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10)
+```
+
+```{r echo = FALSE}
+knitr::kable(head(tf_mat[ order(tf_mat$term_freq, decreasing = TRUE) , ], 10),
+             caption = "Ten most frequent terms, '\\<br\\>' removed")
+
+```
+
+```{r eval = FALSE}
 head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10)
+```
+
+
+```{r echo = FALSE}
+
+knitr::kable(head(tf_bigrams[ order(tf_bigrams$term_freq, decreasing = TRUE) , ], 10),
+             caption = "Ten most frequent bi-grams, '\\<br\\>' removed")
 ```
 
 We can also calculate how many tokens each document contains from the DTM. Note that this reflects the modifications we made in constructing the DTM (removing stop words, punctuation, numbers, etc.).
 
-```{r corpus_stats_3}
+```{r}
 # summary of document lengths
 doc_lengths <- rowSums(dtm)
 
@@ -133,7 +194,7 @@ summary(doc_lengths)
 
 Often,it's useful to prune your vocabulary and remove any tokens that appear in a samall number of documents. This will greatly reduce the vocabulary size (see [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law)) and improve computation time. 
 
-```{r corpus_stats_4}
+```{r}
 # remove any tokens that were in 3 or fewer documents
 dtm <- dtm[ , colSums(dtm > 0) > 3 ] # alternatively: dtm[ , tf_mat$term_freq > 3 ]
 
@@ -147,21 +208,37 @@ The movie review data set contains more than just text of reviews. It also conta
 
 However, as we will see immediately below, looking at only the most frequent terms in each category is not helpful. Because of Zipf's law, the most frequent terms in just about _any_ category will be the same.
 
-```{r corpus_stats_5}
+```{r}
 # what words are most associated with sentiment?
 tf_sentiment <- list(positive = TermDocFreq(dtm[ movie_review$sentiment == 1 , ]),
                      negative = TermDocFreq(dtm[ movie_review$sentiment == 0 , ]))
+```
 
-# these are basically the same, not helpful
+These are basically the same. Not helpful at all.
+
+```{r eval = FALSE}
 head(tf_sentiment$positive[ order(tf_sentiment$positive$term_freq, decreasing = TRUE) , ], 10)
 
-head(tf_sentiment$negative[ order(tf_sentiment$negative$term_freq, decreasing = TRUE) , ], 10)
-
 ```
+
+```{r echo = FALSE}
+knitr::kable(head(tf_sentiment$positive[ order(tf_sentiment$positive$term_freq, decreasing = TRUE) , ], 10)
+, caption = "Ten most-frequent positive tokens")
+```
+
+```{r eval = FALSE}
+head(tf_sentiment$negative[ order(tf_sentiment$negative$term_freq, decreasing = TRUE) , ], 10)
+```
+
+```{r echo = FALSE}
+knitr::kable(head(tf_sentiment$negative[ order(tf_sentiment$negative$term_freq, decreasing = TRUE) , ], 10), caption = "Ten most-frequent negative tokens")
+```
+
 
 That was unhelpful. Instead, we need to re-weight the terms in each class. We'll use a probabilistic reweighting, described below.
 
 The most frequent words in each class are proportional to $P(word|sentiment_j)$. As we saw above, that would puts the words in the same order as $P(word)$, overall. However, we can use the difference in those probabilities to get a new order. That difference is
+
 \begin{align}
   P(word|sentiment_j) - P(word)
 \end{align}
@@ -172,7 +249,7 @@ For those paying close attention, this difference should give a similar ordering
 
 The difference method is applied to both words overall and bi-grams in the code below. 
 
-```{r corpus_stats_6}
+```{r}
 
 # let's reweight by probability by class
 p_words <- colSums(dtm) / sum(dtm) # alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)
@@ -186,24 +263,54 @@ tf_sentiment$negative$conditional_prob <-
   tf_sentiment$negative$term_freq / sum(tf_sentiment$negative$term_freq)
 
 tf_sentiment$negative$prob_lift <- tf_sentiment$negative$conditional_prob - p_words
+```
 
+```{r eval = FALSE}
 # let's look again with new weights
 head(tf_sentiment$positive[ order(tf_sentiment$positive$prob_lift, decreasing = TRUE) , ], 10)
 
-head(tf_sentiment$negative[ order(tf_sentiment$negative$prob_lift, decreasing = TRUE) , ], 10)
+```
 
+```{r echo = FALSE}
+knitr::kable(head(tf_sentiment$positive[ order(tf_sentiment$positive$prob_lift, decreasing = TRUE) , ], 10), caption = "Reweighted: ten most relevant terms for positive sentiment")
+```
+
+
+```{r eval = FALSE}
+head(tf_sentiment$negative[ order(tf_sentiment$negative$prob_lift, decreasing = TRUE) , ], 10)
+```
+
+```{r echo = FALSE}
+knitr::kable(head(tf_sentiment$negative[ order(tf_sentiment$negative$prob_lift, decreasing = TRUE) , ], 10), caption = "Reweighted: ten most relevant terms for negative sentiment")
+```
+
+
+
+```{r}
 # what about bi-grams?
 tf_sentiment_bigram <- lapply(tf_sentiment, function(x){
   x <- x[ stringr::str_detect(x$term, "_") , ]
   x[ order(x$prob_lift, decreasing = TRUE) , ]
 })
-
-head(tf_sentiment_bigram$positive, 10)
-
-head(tf_sentiment_bigram$negative, 10)
-
-
 ```
 
+```{r eval = FALSE}
+head(tf_sentiment_bigram$positive, 10)
+```
+
+```{r echo = FALSE}
+knitr::kable(head(tf_sentiment_bigram$positive, 10),
+             caption = "Reweighted: ten most relevant bigrams for positive sentiment")
+```
+
+```{r eval = FALSE}
+head(tf_sentiment_bigram$negative, 10)
+```
+
+```{r echo = FALSE}
+knitr::kable(head(tf_sentiment_bigram$negative, 10),
+             caption = "Reweighted: ten most relevant bigrams for negative sentiment")
+
+```
 
 
