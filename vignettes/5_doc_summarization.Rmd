@@ -46,7 +46,7 @@ tcm <- CreateTcm(doc_vec = movie_review$review,
 # than a DTM
 embeddings <- FitLdaModel(dtm = tcm,
                           k = 100,
-                          iterations = 800)
+                          iterations = 500)
 ```
 
 # Building a basic document summarizer
