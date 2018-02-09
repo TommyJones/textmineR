@@ -1,10 +1,10 @@
 ---
-title: "4. Text embeddings"
+title: "5. Document summarization"
 author: "Thomas W. Jones"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{4. Text embeddings}
+  %\VignetteIndexEntry{5. Document summarization}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,17 +16,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Text embeddings 
-Text embeddings are particularly hot right now. While textmineR doesn't (yet) explicitly implement any embedding models like GloVe or word2vec, you can still get embeddings. Text embedding algorithms aren't conceptually different from topic models. They are, however, operating on a different matrix. Instead of reducing the dimensions of a document term matrix, text embeddings are obtained by reducing the dimensions of a term co-occurrence matrix. In principle, one can use LDA or LSA in the same way. In this case, rows of theta are embedded words. A phi_prime may be obtained to project documents or new text into the embedding space.
+In this example we'll use text embeddings and a bit of network analysis to build a basic document summarizer. 
 
-What follows is a quick example of this using LDA as the embedding mechanism. (And for the mathematically precise, we are embedding into a probability space.)
+Many document summarizers, as the one we'll build here, do not generate language. Instead, they break a document down into sentences and then use some mechanism to score each sentence for relevance. Sentences with the top scores are returned as the "summary." For more information on summarization, a good place to start is [here](https://en.wikipedia.org/wiki/Automatic_summarization).
+
+The summarizer we'll build is a version of the [TextRank algorithm](https://en.wikipedia.org/wiki/Automatic_summarization#Unsupervised_approach:_TextRank). We will split a document into sentences, create a nearest-neighbor network where sentences are connected to other similar sentences, and rank the sentences according to [eigenvector centrality](https://en.wikipedia.org/wiki/Eigenvector_centrality). 
+
+We will use a word embedding model, created on a whole corpus, to project the sentences into the embedding space. Once in the embedding space, we will measure similarity between documents using [Hellinger distance](https://en.wikipedia.org/wiki/Hellinger_distance). Hellinger distance is a metric specifically for probability distributions. Since we'll use LDA to create embeddings to a probability space, it's a useful measure.
+
+# Getting started
+We'll use the movie review data set from `text2vec` again. The first thing we need to do is create a TCM and embedding model. We will skip evaluation such as R-squared, coherence, inspecting top terms, etc. However, in any real application, I'd strongly suggest evaluating your models at every step of the way. 
+ 
 
 ```{r embedding}
+library(textmineR)
+
+# load the data
+data(movie_review, package = "text2vec")
+
 
 # First create a TCM using skip grams, we'll use a 5-word window
 # most options available on CreateDtm are also available for CreateTcm
 tcm <- CreateTcm(doc_vec = movie_review$review,
-                 skipgram_window = 5)
+                 skipgram_window = 5,
+                 verbose = FALSE)
 
 # use LDA to get embeddings into probability space
 # This will take considerably longer as the TCM matrix has many more rows 
@@ -34,74 +47,88 @@ tcm <- CreateTcm(doc_vec = movie_review$review,
 embeddings <- FitLdaModel(dtm = tcm,
                           k = 100,
                           iterations = 800)
-
-# Get an R-squared for general goodness of fit
-embeddings$r2 <- CalcTopicModelR2(dtm = tcm, 
-                                  phi = embeddings$phi,
-                                  theta = embeddings$theta)
-
-embeddings$r2
-
-# Get coherence (relative to the TCM) for goodness of fit
-embeddings$coherence <- CalcProbCoherence(phi = embeddings$phi,
-                                          dtm = tcm)
-
-summary(embeddings$coherence)
-
-# Get top terms, no labels because we don't have bigrams
-embeddings$top_terms <- GetTopTerms(phi = embeddings$phi,
-                                    M = 5)
-
-head(t(embeddings$top_terms))
-
-# Create a summary table, similar to the above
-embeddings$summary <- data.frame(topic = rownames(embeddings$phi),
-                                 coherence = round(embeddings$coherence, 3),
-                                 prevalence = colSums(embeddings$theta),
-                                 top_terms = apply(embeddings$top_terms, 2, function(x){
-                                   paste(x, collapse = ", ")
-                                 }),
-                                 stringsAsFactors = FALSE)
-
-View(embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ])
-
-# Embed the documents
-dtm_embed <- CreateDtm(doc_vec = movie_review$review,
-                       doc_names = movie_review$id,
-                       ngram_window = c(1,1))
-
-dtm_embed <- dtm_embed[ , colnames(tcm) ] # make sure vocab lines up
-
-embeddings$phi_prime <- CalcPhiPrime(phi = embeddings$phi,
-                                     theta = embeddings$theta)
-
-embedding_assignments <- dtm_embed / rowSums(dtm_embed)
-
-embedding_assignments <- embedding_assignments %*% t(embeddings$phi_prime)
-
-embedding_assignments <- as.matrix(embedding_assignments)
-
-# get a goodness of fit relative to the DTM
-embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
-                                      phi = embeddings$phi,
-                                      theta = embedding_assignments)
-
-embeddings$r2_dtm
-
-# get coherence relative to DTM
-embeddings$coherence_dtm <- CalcProbCoherence(phi = embeddings$phi,
-                                              dtm = dtm_embed)
-
-summary(embeddings$coherence_dtm)
-
 ```
-
-You could just as easily use LSA as your embedding, or any other dimensionality reduction/matrix factorization method. The advantge of using the `dgCMatrix` is that it is so widely supported in the R ecosystem.
-
-Embeddings are only recently being researched. However, they may be used in very similar contexts to topic models. It's just that the "topics" are fit another way.
 
 # Building a basic document summarizer
 Let's use the above embeddings model to create a document summarizer. This will return the three most relevant sentences in each review.
+
+The summarizer works best as a function, as we have many documents to summarize. The function `summarizer` is defined in the next section. However, let's look at some key bits of code in detail.
+
+The variable `doc` represents a single document, or a single element of a character vector. 
+
+In the code chunk below, we split the document into sentences using the `stringi` package. Then we embed each sentence under the model built on our whole corpus, above. 
+
+```{r eval = FALSE}
+  # parse it into sentences
+  sent <- stringi::stri_split_boundaries(doc, type = "sentence")[[ 1 ]]
+  
+  names(sent) <- seq_along(sent) # so we know index and order
+  
+  # embed the sentences in the model
+  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE)
+  
+  # remove any documents with 2 or fewer words
+  e <- e[ rowSums(e) > 2 , ]
+  
+  vocab <- intersect(colnames(e), colnames(phi_prime))
+  
+  e <- e / rowSums(e)
+  
+  e <- e[ , vocab ] %*% t(phi_prime[ , vocab ])
+  
+  e <- as.matrix(e)
+
+```
+
+Next, we measure the distance between each of the sentences within the embedding space.
+
+```{r eval = FALSE}
+  # get the pairwise distances between each embedded sentence
+  e_dist <- CalcHellingerDist(e)
+```
+
+Since we are using a distance measure whose values fall between $0$ and $1$, we can take $1 - distance$ to get a similarity. We'll also re-scale it to be between 0 and 100. (The rescaling is just a cautionary measure so that we don't run into numerical precision issues when performing calculations downstream.)
+
+```{r eval = FALSE}
+  # turn into a similarity matrix
+  g <- (1 - e_dist) * 100
+```
+
+If you consider a similarity matrix to be an adjacency matrix, then you have a fully-connected graph. For the sake of potentially faster computation and with the hope of eliminating some noise, we will delete some edges. Going row-by-row, we will keep connections only to the top 3 most similar sentences.
+
+```{r eval = FALSE}
+  # we don't need sentences connected to themselves
+  diag(g) <- 0
+  
+  # turn into a nearest-neighbor graph
+  g <- apply(g, 1, function(x){
+    x[ x < sort(x, decreasing = TRUE)[ 3 ] ] <- 0
+    x
+  })
+
+  # by taking pointwise max, we'll make the matrix symmetric again
+  g <- pmax(g, t(g))
+```
+
+Using the `igraph` package (with its own objects) to calculate eigenvector centrality. From there, we'll take the top three sentences.
+
+```{r eval = FALSE}
+  g <- graph.adjacency(g, mode = "undirected", weighted = TRUE)
+  
+  # calculate eigenvector centrality
+  ev <- evcent(g)
+  
+  # format the result
+  result <- sent[ names(ev$vector)[ order(ev$vector, decreasing = TRUE)[ 1:3 ] ] ]
+  
+  result <- result[ order(as.numeric(names(result))) ]
+  
+  paste(result, collapse = " ")
+```
+
+# Pulling it all together
+
+The code below puts itall together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a singel function call. 
 
 ```{r summaries}
 
@@ -141,6 +168,7 @@ summarizer <- function(doc, phi_prime) {
   # turn into a similarity matrix
   g <- (1 - e_dist) * 100
   
+  # we don't need sentences connected to themselves
   diag(g) <- 0
   
   # turn into a nearest-neighbor graph
@@ -149,6 +177,7 @@ summarizer <- function(doc, phi_prime) {
     x
   })
 
+  # by taking pointwise max, we'll make the matrix symmetric again
   g <- pmax(g, t(g))
   
   g <- graph.adjacency(g, mode = "undirected", weighted = TRUE)
@@ -163,7 +192,11 @@ summarizer <- function(doc, phi_prime) {
   
   paste(result, collapse = " ")
 }
+```
 
+How well did we do? Let's look at summaries from the first three reviews.
+
+```{r}
 # Let's see the summary of the first couple of reviews
 docs <- movie_review$review[ 1:3 ]
 names(docs) <- movie_review$id[ 1:3 ]
@@ -172,4 +205,6 @@ sums <- summarizer(docs, phi_prime = embeddings$phi_prime)
 
 sums
 ```
+
+Compare that to the whole reviews yourself.
 
