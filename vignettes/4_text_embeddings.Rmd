@@ -22,7 +22,13 @@ knitr::opts_chunk$set(
 
 ## Create a term co-occurrence matrix
 
-Explain 3 types of TCM you can create with textmineR.
+The first step in fitting a text embedding model is to [create a term co-occurrence matrix](https://stackoverflow.com/questions/24073030/what-are-co-occurance-matrixes-and-how-are-they-used-in-nlp) or TCM. In a TCM, both columns and rows index tokens. The $(i,j)$ entries of the matrix are a count of the number of times word $i$ co-occures with $j$. However, there are several ways to count co-occurrence. textmineR gives you three.
+
+The most useful way of counting co-occurrence for text embeddings is called the skip-gram model. Under the skip-gram model, the count would be the number of times word $j$ appears within a certain window of $i$. A skip-gram window of two, for example, would count the number of times word $j$ occured in the two words immediately before word $i$ or the two words immediately after word $i$. This helps capture the local context of words. In fact, you can think of a text embedding as being a topic model based on the local context of words. Whereas a traditional topic model is modeling words in their global context. 
+
+To read more about the skip-gram model, which was popularized in the embedding model word2vec, look [here](https://becominghuman.ai/how-does-word2vecs-skip-gram-work-f92e0525def4).
+
+The other types of co-occurence matrix textmineR provides are both global. One is a count of the number of documents in which words $i$ and $j$ co-occur. The other is the number of terms that co-occur between _documents_ $i$ and $j$. See `help(CreateTcm)` for info on these.
 
 ```{r}
 
@@ -35,7 +41,8 @@ data(nih_sample)
 # First create a TCM using skip grams, we'll use a 5-word window
 # most options available on CreateDtm are also available for CreateTcm
 tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
-                 skipgram_window = 5)
+                 skipgram_window = 5,
+                 verbose = FALSE)
 
 # a TCM is generally larger than a DTM
 dim(tcm)
@@ -43,9 +50,7 @@ dim(tcm)
 
 ## Fitting a model
 
-Use the same procedure.
-
-It may take considerably longer (because of size) or shorter (because of sparsity). 
+Once we have a TCM, we can use the same procedure to make an embedding model as we used to make a topic model. Note that it may take considerably longer (because of dimensionality of the matrix) or shorter (because of sparsity) to fit an embedding on the same corpus. 
 
 ```{r}
 # use LDA to get embeddings into probability space
@@ -56,10 +61,13 @@ embeddings <- FitLdaModel(dtm = tcm,
                           iterations = 800)
 ```
 
+## Interpretation of $\Phi$ and $\Theta$
 
+In the language of text embeddings, $\Theta$ gives us our tokens embedded in a probability space (because we used LDA, Euclidean space if we used LSA). $\Phi$ defines the dimensions of our embbeding space. The rows of $\Phi$ can still be interpreted as topics. But they are topics of local contexts, rather than within whole documents.
 
 ## Evaluating the model
 
+As it happens, the same evaluation metrics developed for topic modeling also apply here. There are subtle differences in interpretation because we are using a TCM not a DTM. i.e. occurrences relate words to each other, not to documents. 
 
 ```{r}
 # Get an R-squared for general goodness of fit
@@ -74,18 +82,13 @@ embeddings$coherence <- CalcProbCoherence(phi = embeddings$phi,
                                           dtm = tcm)
 
 summary(embeddings$coherence)
+```
 
+We will create a summary table as we did with a topic model before.
+```{r}
 # Get top terms, no labels because we don't have bigrams
 embeddings$top_terms <- GetTopTerms(phi = embeddings$phi,
                                     M = 5)
-```
-
-```{r eval = FALSE}
-head(t(embeddings$top_terms))
-```
-
-```{r echo = FALSE}
-knitr::kable(head(t(embeddings$top_terms)), col.names = rep("", 5))
 ```
 
 ```{r}
@@ -100,6 +103,8 @@ embeddings$summary <- data.frame(topic = rownames(embeddings$phi),
 
 ```
 
+Here it is ordered by prevalence. (Here, we might say density of tokens along each embedding dimension.)
+
 ```{r eval = FALSE}
 embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ]
 ```
@@ -107,6 +112,8 @@ embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ][
 ```{r echo = FALSE}
 knitr::kable(embeddings$summary[ order(embeddings$summary$prevalence, decreasing = TRUE) , ][ 1:10 , ], caption = "Summary of top 10 embedding dimensions")
 ```
+
+And here is the table ordered by coherence.
 
 ```{r eval = FALSE}
 embeddings$summary[ order(embeddings$summary$coherence, decreasing = TRUE) , ][ 1:10 , ]
@@ -118,13 +125,14 @@ knitr::kable(embeddings$summary[ order(embeddings$summary$coherence, decreasing 
 
 ## Embedding documents under the model
 
-Explain this and why you might want to do it.
+You can embed whole documents under your model. Doing so, effectively makes your embeddings a topic model that have topics of local contexts, instead of global ones. Why might you want to do this? The short answer is that you may have reason to believe that an embedding model may give you better topics, especially if you are trying to pick up on more subtle topics. In a later example, we'll be doing that to build a document summarizer. 
 
 ```{r}
 # Make a DTM from our documents
 dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                        doc_names = nih_sample$APPLICATION_ID,
-                       ngram_window = c(1,1))
+                       ngram_window = c(1,1),
+                       verbose = FALSE)
 
 dtm_embed <- dtm_embed[ , colnames(tcm) ] # make sure vocab lines up
 
@@ -140,7 +148,7 @@ embedding_assignments <- embedding_assignments %*% t(embeddings$phi_prime)
 embedding_assignments <- as.matrix(embedding_assignments)
 ```
 
-Hey, you can re-do the evaluation as if you had a topic model!
+Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculaing R-squared and coherence.
 
 ```{r}
 # get a goodness of fit relative to the DTM
@@ -160,7 +168,7 @@ summary(embeddings$coherence_dtm)
 
 ## Where to next?
 
-Embedding research is only just beginning. 
+Embedding research is only just beginning. I would encourage you to play with them and develop your own methods.
 
 
 
