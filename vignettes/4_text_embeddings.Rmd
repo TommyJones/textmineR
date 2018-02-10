@@ -42,7 +42,8 @@ data(nih_sample)
 # most options available on CreateDtm are also available for CreateTcm
 tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
                  skipgram_window = 5,
-                 verbose = FALSE)
+                 verbose = FALSE,
+                 cpus = 2)
 
 # a TCM is generally larger than a DTM
 dim(tcm)
@@ -58,7 +59,8 @@ Once we have a TCM, we can use the same procedure to make an embedding model as 
 # than a DTM
 embeddings <- FitLdaModel(dtm = tcm,
                           k = 100,
-                          iterations = 800)
+                          iterations = 500,
+                          cpus = 2)
 ```
 
 ## Interpretation of $\Phi$ and $\Theta$
@@ -73,7 +75,8 @@ As it happens, the same evaluation metrics developed for topic modeling also app
 # Get an R-squared for general goodness of fit
 embeddings$r2 <- CalcTopicModelR2(dtm = tcm, 
                                   phi = embeddings$phi,
-                                  theta = embeddings$theta)
+                                  theta = embeddings$theta,
+                                  cpus = 2)
 
 embeddings$r2
 
@@ -132,7 +135,8 @@ You can embed whole documents under your model. Doing so, effectively makes your
 dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                        doc_names = nih_sample$APPLICATION_ID,
                        ngram_window = c(1,1),
-                       verbose = FALSE)
+                       verbose = FALSE,
+                       cpus = 2)
 
 dtm_embed <- dtm_embed[ , colnames(tcm) ] # make sure vocab lines up
 
@@ -154,7 +158,8 @@ Once you've embedded your documents, you effectively have a new $\Theta$. We can
 # get a goodness of fit relative to the DTM
 embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
                                       phi = embeddings$phi,
-                                      theta = embedding_assignments)
+                                      theta = embedding_assignments,
+                                      cpus = 2)
 
 embeddings$r2_dtm
 

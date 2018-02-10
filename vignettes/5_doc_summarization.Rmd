@@ -34,6 +34,13 @@ library(textmineR)
 # load the data
 data(movie_review, package = "text2vec")
 
+# let's take a sample so the demo will run quickly
+# note: textmineR is generally quite scaleable, depending on your system
+set.seed(123)
+s <- sample(1:nrow(movie_review), 500)
+
+movie_review <- movie_review[ s , ]
+
 # let's get those nasty "<br />" symbols out of the way
 movie_review$review <- stringr::str_replace_all(movie_review$review, "<br */>", "")
 
@@ -41,14 +48,16 @@ movie_review$review <- stringr::str_replace_all(movie_review$review, "<br */>", 
 # most options available on CreateDtm are also available for CreateTcm
 tcm <- CreateTcm(doc_vec = movie_review$review,
                  skipgram_window = 5,
-                 verbose = FALSE)
+                 verbose = FALSE,
+                 cpus = 2)
 
 # use LDA to get embeddings into probability space
 # This will take considerably longer as the TCM matrix has many more rows 
 # than a DTM
 embeddings <- FitLdaModel(dtm = tcm,
                           k = 100,
-                          iterations = 500)
+                          iterations = 500,
+                          cpus = 2)
 
 # and we'll get our projection matrix
 embeddings$phi_prime <- CalcPhiPrime(phi = embeddings$phi, 
@@ -71,7 +80,7 @@ In the code chunk below, we split the document into sentences using the `stringi
   names(sent) <- seq_along(sent) # so we know index and order
   
   # embed the sentences in the model
-  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE)
+  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE, cpus = 2)
   
   # remove any documents with 2 or fewer words
   e <- e[ rowSums(e) > 2 , ]

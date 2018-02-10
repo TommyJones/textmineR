@@ -32,7 +32,9 @@ Suggests:
     digest,
     igraph,
     knitr,
+    MASS,
     rmarkdown,
+    stringi,
     wordcloud
 License: GPL (>= 3)
 URL: https://github.com/TommyJones/textmineR

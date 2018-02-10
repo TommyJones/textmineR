@@ -42,7 +42,8 @@ dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
                  lower = TRUE, # lowercase - this is the default value
                  remove_punctuation = TRUE, # punctuation - this is the default
                  remove_numbers = TRUE, # numbers - this is the default
-                 verbose = FALSE) # Turn off status bar for this demo
+                 verbose = FALSE, # Turn off status bar for this demo
+                 cpus = 2) # default is all available cpus on the system
 ```
 
 
@@ -60,9 +61,10 @@ dtm_sample <- dtm[ sample(1:nrow(dtm), 500) , ]
 # see extensions for more info
 model <- FitLdaModel(dtm = dtm_sample, 
                      k = 100, 
-                     iterations = 800,
+                     iterations = 500,
                      alpha = 0.1, # this is the default value
-                     beta = 0.05) # this is the default value
+                     beta = 0.05, # this is the default value
+                     cpus = 2) 
 
 ```
 
@@ -86,7 +88,8 @@ The log likelihood has a more difficult interpretation. Though, as shown in the 
 # - only works for probabilistic models like LDA and CTM
 model$r2 <- CalcTopicModelR2(dtm = dtm_sample, 
                              phi = model$phi,
-                             theta = model$theta)
+                             theta = model$theta,
+                             cpus = 2)
 
 model$r2
 
@@ -94,7 +97,8 @@ model$r2
 # - only works for probabilistic models like LDA and CTM
 model$ll <- CalcLikelihood(dtm = dtm_sample, 
                            phi = model$phi, 
-                           theta = model$theta)
+                           theta = model$theta,
+                           cpus = 2)
 
 model$ll
 ```
@@ -435,32 +439,29 @@ data(nih_sample_dtm)
 # - here, the range runs into the corpus size. Not recommended for large corpora!
 k_list <- seq(5, 95, by = 5)
 
-# set up a temporary directory to store fit models so you get partial results
-# if the process fails or times out. This is a trivial example, but with a decent
-# sized corpus, the procedure can take hours or days, depending on the size of 
-# the data and complexity of the model.
-# I'm using the digest function to create a hash so that it's obvious this is a 
-# temporary directory
+# you may want toset up a temporary directory to store fit models so you get 
+# partial results if the process fails or times out. This is a trivial example, 
+# but with a decent sized corpus, the procedure can take hours or days, 
+# depending on the size of the data and complexity of the model.
+# I suggest using the digest package to create a hash so that it's obvious this 
+# is a temporary directory
 model_dir <- paste0("models_", digest::digest(colnames(nih_sample_dtm), algo = "sha1"))
-
-if (!dir.exists(model_dir)) dir.create(model_dir)
 
 # Fit a bunch of LDA models
 # even on this trivial corpus, it will a bit of time to fit all of these models
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
-  filename = file.path(model_dir, paste0(k, "_topics.rda"))
 
-  if (!file.exists(filename)) {
-    m <- FitLdaModel(dtm = nih_sample_dtm, k = k, iterations = 500)
-    m$k <- k
-    m$coherence <- CalcProbCoherence(phi = m$phi, dtm = nih_sample_dtm, M = 5)
-    save(m, file = filename)
-  } else {
-    load(filename)
-  }
-  
+  m <- FitLdaModel(dtm = nih_sample_dtm, 
+                   k = k, 
+                   iterations = 500, 
+                   cpus = 1)
+  m$k <- k
+  m$coherence <- CalcProbCoherence(phi = m$phi, 
+                                   dtm = nih_sample_dtm, 
+                                   M = 5)
   m
-}, export=c("nih_sample_dtm", "model_dir")) # export only needed for Windows machines
+}, export=c("nih_sample_dtm"), # export only needed for Windows machines
+cpus = 2) 
 
 # Get average coherence for each model
 coherence_mat <- data.frame(k = sapply(model_list, function(x) nrow(x$phi)), 

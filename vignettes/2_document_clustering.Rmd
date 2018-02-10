@@ -28,8 +28,6 @@ library(textmineR)
 # load nih_sample data set from textmineR
 data(nih_sample)
 
-str(nih_sample)
-
 # create a document term matrix 
 dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of documents
                  doc_names = nih_sample$APPLICATION_ID, # document names
@@ -39,7 +37,8 @@ dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of docum
                  lower = TRUE, # lowercase - this is the default value
                  remove_punctuation = TRUE, # punctuation - this is the default
                  remove_numbers = TRUE, # numbers - this is the default
-                 verbose = FALSE) # Turn off status bar for this demo
+                 verbose = FALSE, # Turn off status bar for this demo
+                 cpus = 2) # default is all available cpus on the system
 
 # construct the matrix of term counts to get the IDF vector
 tf_mat <- TermDocFreq(dtm)
