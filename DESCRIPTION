@@ -30,8 +30,10 @@ Imports:
     RSpectra
 Suggests:
     digest,
+    igraph,
     knitr,
-    rmarkdown
+    rmarkdown,
+    wordcloud
 License: GPL (>= 3)
 URL: https://github.com/TommyJones/textmineR
 BugReports: https://github.com/TommyJones/textmineR/issues
