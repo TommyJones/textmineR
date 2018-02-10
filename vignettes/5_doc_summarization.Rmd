@@ -34,6 +34,8 @@ library(textmineR)
 # load the data
 data(movie_review, package = "text2vec")
 
+# let's get those nasty "<br />" symbols out of the way
+movie_review$review <- stringr::str_replace_all(movie_review$review, "<br */>", "")
 
 # First create a TCM using skip grams, we'll use a 5-word window
 # most options available on CreateDtm are also available for CreateTcm
@@ -47,6 +49,10 @@ tcm <- CreateTcm(doc_vec = movie_review$review,
 embeddings <- FitLdaModel(dtm = tcm,
                           k = 100,
                           iterations = 500)
+
+# and we'll get our projection matrix
+embeddings$phi_prime <- CalcPhiPrime(phi = embeddings$phi, 
+                                     theta = embeddings$theta)
 ```
 
 # Building a basic document summarizer
