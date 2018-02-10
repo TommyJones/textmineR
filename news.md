@@ -1,3 +1,9 @@
+
+### Updates for version 2.1.0
+* Added vignettes for common use cases of textmineR
+* Modified averaging for `CalcProbCoherence`
+* Updated documentation to `CreateTcm`
+
 ### Updates for version 2.0.6
 * Back-end changes to CreateTcm in response to new `text2vec` API. Functionality is unchanged.
 * Changes to how the package interfaces with Rcpp
