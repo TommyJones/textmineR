@@ -143,7 +143,7 @@ knitr::kable(cluster_summary, caption = "Cluster summary table")
 
 You may want a word cloud to visualize each cluster. Using the `wordcloud` package, we plot cluster 100 below.
 
-```{r  warning = FALSE}
+```{r  warning = FALSE, fit.height = 7.5, fig.width = 7.5}
 # plot a word cloud of one cluster as an example
 wordcloud::wordcloud(words = names(cluster_words[[ 5 ]]), 
                      freq = cluster_words[[ 5 ]], 
