@@ -409,12 +409,12 @@ legend("topleft",
 
 As of this writing, textmineR has implementations of
 
-* LDA using Gibbs sampling from the [`lda`](https://cran.r-project.org/web/packages/lda/index.html) package
-* LDA using Bayesian expectation maximization from the [`topicmodels`](https://cran.r-project.org/web/packages/topicmodels/index.html) package
-* LSA using a single value decomposition from the [`RSpectra`](https://cran.r-project.org/web/packages/RSpectra/index.html) package
-* Correlated topic models (CTM) from the [`topicmodels`](https://cran.r-project.org/web/packages/topicmodels/index.html) package
+* LDA using Gibbs sampling from the [`lda`](https://CRAN.R-project.org/package=lda) package
+* LDA using Bayesian expectation maximization from the [`topicmodels`](https://CRAN.R-project.org/package=topicmodels) package
+* LSA using a single value decomposition from the [`RSpectra`](https://CRAN.R-project.org/package=RSpectra) package
+* Correlated topic models (CTM) from the [`topicmodels`](https://CRAN.R-project.org/package=topicmodels) package
 
-A future version of textmineR will have an implementation of a strucural topic model from the [`stm`](https://cran.r-project.org/web/packages/stm/index.html) package. 
+A future version of textmineR will have an implementation of a strucural topic model from the [`stm`](https://CRAN.R-project.org/package=stm) package. 
 
 All of the above have nearly identical syntax and workflows as detailed above.
 
@@ -483,7 +483,7 @@ Topic models from other packages can be used with textmineR. The workflow would 
 
 1. Use `CreateDtm` to create a curated DTM
 2. Use `Dtm2Docs` to re-create a text vector of curated tokens from your DTM
-3. Fit a topic model using your desired package (for example, [mallet](https://cran.r-project.org/web/packages/mallet/index.html))
+3. Fit a topic model using your desired package (for example, [mallet](https://CRAN.R-project.org/package=mallet))
 4. Format the raw output to have two matrices, phi and theta as above
 5. Use textmineR's suite of utility functions with your model
 
