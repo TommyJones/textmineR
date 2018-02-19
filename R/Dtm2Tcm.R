@@ -1,6 +1,6 @@
-#' @title Turn a document term matrix into a term co-occurence matrix
+#' @title Turn a document term matrix into a term co-occurrence matrix
 #' @description Turn a document term matrix, whose rows index documents and 
-#' whose columns index terms, into a term co-occurrence matrix. A term co-occurence
+#' whose columns index terms, into a term co-occurrence matrix. A term co-occurrence
 #' matrix's rows and columns both index terms. See \code{details}, below.
 #' @param dtm A document term matrix, generally of class \code{dgCMatrix}, though
 #' other classes, such as \code{dgTMatrix}, may also work without issue.

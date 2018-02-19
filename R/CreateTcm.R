@@ -1,7 +1,7 @@
 #' @title Convert a character vector to a term co-occurrence matrix.
-#' @description This is the main term co-occurence matrix creating function for \code{textmineR}.
+#' @description This is the main term co-occurrence matrix creating function for \code{textmineR}.
 #' In most cases, all you need to do is import documents as a character vector in R and then 
-#' run this function to get a term co-occurence matrix that is compatible with the 
+#' run this function to get a term co-occurrence matrix that is compatible with the 
 #' rest of \code{textmineR}'s functionality and many other libraries. \code{CreateTcm}
 #' is built on top of the excellent \code{\link[text2vec]{text2vec}} library.
 #' 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/CalcProbCoherence.R
 \name{CalcProbCoherence}
 \alias{CalcProbCoherence}
-\title{Probailistic coherence of topics}
+\title{Probabilistic coherence of topics}
 \usage{
 CalcProbCoherence(phi, dtm, M = 5)
 }

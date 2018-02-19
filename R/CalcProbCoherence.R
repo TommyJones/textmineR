@@ -1,4 +1,4 @@
-#' Probailistic coherence of topics
+#' Probabilistic coherence of topics
 #' @description Calculates the probabilistic coherence of a topic or topics. 
 #' This approximates semantic coherence or human understandability of a topic.
 #' @param phi A numeric matrix or a numeric vector. The vector, or rows of the 
