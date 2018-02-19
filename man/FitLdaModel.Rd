@@ -32,7 +32,7 @@ function returned along with the formatted results? Defaults to \code{TRUE}.}
 \item{...}{Other arguments to pass to underlying functions. See details, below.}
 }
 \value{
-Returns a list with a minumum of two objects, \code{phi} and 
+Returns a list with a minimum of two objects, \code{phi} and 
 \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
 The rows of \code{theta} index documents and the columns index topics.
 }

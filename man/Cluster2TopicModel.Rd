@@ -8,7 +8,7 @@ Cluster2TopicModel(dtm, clustering, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix} or whose class 
-inherits from the \code{Matrix} packge. Columns must index terms, rows must 
+inherits from the \code{Matrix} package. Columns must index terms, rows must 
 index documents.}
 
 \item{clustering}{A vector of length \code{nrow(dtm)} whose entries form a

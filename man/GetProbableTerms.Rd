@@ -12,7 +12,7 @@ GetProbableTerms(docnames, dtm, p_terms = NULL)
 \item{dtm}{A document term matrix of class \code{matrix} or \code{dgCMatrix}.}
 
 \item{p_terms}{If not NULL (the default), a numeric vector representing the 
-probabiliy of each term in the corpus whose names correspond to colnames(dtm).}
+probability of each term in the corpus whose names correspond to colnames(dtm).}
 }
 \value{
 Returns a numeric vector of the format p_terms. The entries of the vectors 

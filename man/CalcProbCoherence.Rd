@@ -11,8 +11,8 @@ CalcProbCoherence(phi, dtm, M = 5)
 matrix represent the numeric relationship between topic(s) and terms. For
 example, this relationship may be p(word|topic) or p(topic|word).}
 
-\item{dtm}{A document term matrix  or co-occurence matrix of class 
-\code{matrix} or whose class inherits from the \code{Matrix} packge. Columns
+\item{dtm}{A document term matrix  or co-occurrence matrix of class 
+\code{matrix} or whose class inherits from the \code{Matrix} package. Columns
 must index terms.}
 
 \item{M}{An integer for the number of words to be used in the calculation. 
@@ -24,7 +24,7 @@ probabilistic coherence of the input topic(s).
 }
 \description{
 Calculates the probabilistic coherence of a topic or topics. 
-This approximates semmantic coherence or human understandability of a topic.
+This approximates semantic coherence or human understandability of a topic.
 }
 \examples{
 # Load a pre-formatted dtm and topic model

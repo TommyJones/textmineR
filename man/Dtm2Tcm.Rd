@@ -18,7 +18,7 @@ symmetric.
 }
 \description{
 Turn a document term matrix, whose rows index documents and 
-whose columns index terms, into a term co-occurence matrix. A term co-occurence
+whose columns index terms, into a term co-occurrence matrix. A term co-occurence
 matrix's rows and columns both index terms. See \code{details}, below.
 }
 \examples{

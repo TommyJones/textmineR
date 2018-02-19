@@ -2,7 +2,7 @@
 % Please edit documentation in R/CreateTcm.R
 \name{CreateTcm}
 \alias{CreateTcm}
-\title{Convert a character vector to a term co-occurence matrix.}
+\title{Convert a character vector to a term co-occurrence matrix.}
 \usage{
 CreateTcm(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")),

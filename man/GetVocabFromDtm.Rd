@@ -14,7 +14,7 @@ Returns a \code{text2vec::vocabulary} object.
 See \code{\link[text2vec]{create_vocabulary}} for more details.
 }
 \description{
-Reconstructs a \code{text2vec::vocabulary} object fom a document 
+Reconstructs a \code{text2vec::vocabulary} object from a document 
 term matrix. See \code{\link[text2vec]{create_vocabulary}} for more details.
 }
 \examples{
