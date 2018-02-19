@@ -24,7 +24,7 @@ textmineR was created with three principles in mind:
 2. Scaleable in terms of object storeage and computation time
 3. Syntax that is idiomatic to R
 
-R has many packages for text mining and natural language processing (NLP). The [CRAN task view on natural language processing](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html) lists 53 unique packages. Some of these packages are interoperable. Some are not. 
+R has many packages for text mining and natural language processing (NLP). The [CRAN task view on natural language processing](https://CRAN.R-project.org/view=NaturalLanguageProcessing) lists 53 unique packages. Some of these packages are interoperable. Some are not. 
 
 textmineR strives for maximum interoperability in three ways. First, it uses the `dgCMatrix` class from the popular [`Matrix` package](https://CRAN.R-project.org/package=Matrix) for document term matrices (DTMs) and term co-occurence matrices (TCMs). The `Matrix` package is an R "recommended" package with nearly 500 packages that depend, import, or suggest it. Compare that to the [`slam` package](https://CRAN.R-project.org/package=slam) used by [`tm`](https://CRAN.R-project.org/package=tm) and its derivatives. `slam` has an order of magnitude fewer dependents. It is simply not as well integrated. `Matrix` also has methods that make the syntax for manipulating its matrices nearly identical to base R. This greatly reduces the cognitive burden of the programmers. 
 
