@@ -1,4 +1,4 @@
-#' @title Convert a character vector to a term co-occurence matrix.
+#' @title Convert a character vector to a term co-occurrence matrix.
 #' @description This is the main term co-occurence matrix creating function for \code{textmineR}.
 #' In most cases, all you need to do is import documents as a character vector in R and then 
 #' run this function to get a term co-occurence matrix that is compatible with the 

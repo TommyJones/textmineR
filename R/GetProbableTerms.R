@@ -5,7 +5,7 @@
 #' @param docnames A character vector of rownames of dtm for set of documents
 #' @param dtm A document term matrix of class \code{matrix} or \code{dgCMatrix}.
 #' @param p_terms If not NULL (the default), a numeric vector representing the 
-#' probabiliy of each term in the corpus whose names correspond to colnames(dtm). 
+#' probability of each term in the corpus whose names correspond to colnames(dtm). 
 #' @return
 #' Returns a numeric vector of the format p_terms. The entries of the vectors 
 #' correspond to the difference in the probability of drawing a term from the 

@@ -1,5 +1,5 @@
 #' Reconstruct a \code{text2vec::vocabulary} object from a document term matrix.
-#' @description Reconstructs a \code{text2vec::vocabulary} object fom a document 
+#' @description Reconstructs a \code{text2vec::vocabulary} object from a document 
 #' term matrix. See \code{\link[text2vec]{create_vocabulary}} for more details.
 #' @param dtm A document term matrix of class \code{dgCMatrix}
 #' @return Returns a \code{text2vec::vocabulary} object. 

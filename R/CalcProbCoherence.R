@@ -1,11 +1,11 @@
 #' Probailistic coherence of topics
 #' @description Calculates the probabilistic coherence of a topic or topics. 
-#' This approximates semmantic coherence or human understandability of a topic.
+#' This approximates semantic coherence or human understandability of a topic.
 #' @param phi A numeric matrix or a numeric vector. The vector, or rows of the 
 #' matrix represent the numeric relationship between topic(s) and terms. For
 #' example, this relationship may be p(word|topic) or p(topic|word).
-#' @param dtm A document term matrix  or co-occurence matrix of class 
-#' \code{matrix} or whose class inherits from the \code{Matrix} packge. Columns
+#' @param dtm A document term matrix  or co-occurrence matrix of class 
+#' \code{matrix} or whose class inherits from the \code{Matrix} package. Columns
 #' must index terms.
 #' @param M An integer for the number of words to be used in the calculation. 
 #' Defaults to 5

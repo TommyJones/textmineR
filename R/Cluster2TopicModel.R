@@ -2,7 +2,7 @@
 #' @description Represents a document clustering as a topic model of two matrices.
 #' phi: P(term | cluster) theta: P(cluster | document)
 #' @param dtm A document term matrix of class \code{dgCMatrix} or whose class 
-#' inherits from the \code{Matrix} packge. Columns must index terms, rows must 
+#' inherits from the \code{Matrix} package. Columns must index terms, rows must 
 #' index documents.
 #' @param clustering A vector of length \code{nrow(dtm)} whose entries form a
 #' partitional clustering of the documents.

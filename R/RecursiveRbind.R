@@ -1,5 +1,5 @@
 #' @title Recursively call rBind from the Matrix package.
-#' @description This is used for combining a list of sparce matrices into a large Matrix.
+#' @description This is used for combining a list of sparse matrices into a large Matrix.
 #' This is a worker function for \code{textmineR} and generally not made to be
 #' used by users. However, the function is provided for custom functions. 
 #' @param matrix_list A list, each element containing a matrix of class \code{dgCMatrix}
