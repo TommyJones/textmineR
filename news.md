@@ -1,4 +1,7 @@
 
+### Updates for version 2.1.1
+* Corrected some code in the vignettes that caused errors on Linux machines.
+
 ### Updates for version 2.1.0
 * Added vignettes for common use cases of textmineR
 * Modified averaging for `CalcProbCoherence`
