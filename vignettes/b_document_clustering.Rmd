@@ -33,7 +33,7 @@ dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of docum
                  doc_names = nih_sample$APPLICATION_ID, # document names
                  ngram_window = c(1, 2), # minimum and maximum n-gram length
                  stopword_vec = c(tm::stopwords("english"), # stopwords from tm
-                                  tm::stopwords("smart")), # this is the default value
+                                  tm::stopwords("SMART")), # this is the default value
                  lower = TRUE, # lowercase - this is the default value
                  remove_punctuation = TRUE, # punctuation - this is the default
                  remove_numbers = TRUE, # numbers - this is the default
