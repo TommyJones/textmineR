@@ -3,7 +3,7 @@ In this version, as directed by CRAN, I have corrected an error in the code of m
 
 ### Test environments
 * local OS X install, R 3.4.2
-* Ubuntu 16.04 LTS (local install), R 3.4.1
+* Ubuntu 16.04 LTS (local install), R 3.4.3
 * win-builder (devel and release)
 
 ### R CMD check results
