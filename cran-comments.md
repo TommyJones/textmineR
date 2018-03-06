@@ -1,5 +1,5 @@
 ### Patch version 2.1.1
-In this version I have corrected an error in the code of my vignettes that affected Linux distributions.
+In this version, as directed by CRAN, I have corrected an error in the code of my vignettes that affected Linux distributions.
 
 ### Test environments
 * local OS X install, R 3.4.2
