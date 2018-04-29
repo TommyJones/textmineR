@@ -1,5 +1,5 @@
-### Patch version 2.1.1
-In this version, as directed by CRAN, I have corrected an error in the code of my vignettes that affected Linux distributions.
+### Patch version 2.1.
+In this version, as directed by CRAN, I have deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.
 
 ### Test environments
 * local OS X install, R 3.4.2
