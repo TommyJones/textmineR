@@ -1,4 +1,4 @@
-### Patch version 2.1.
+### Patch version 2.1.2
 In this version, as directed by CRAN, I have deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.
 
 ### Test environments
