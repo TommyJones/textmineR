@@ -18,10 +18,11 @@ This is a worker function for \code{textmineR} and generally not made to be
 used by users. However, the function is provided for custom functions.
 }
 \examples{
+\dontrun{
 a_matrix <- Matrix::Matrix(0, nrow=10, ncol=10)
 
 a_list <- list(a_matrix, a_matrix, a_matrix, a_matrix, a_matrix)
 
 result <- RecursiveRbind(a_list)
-
+}
 }

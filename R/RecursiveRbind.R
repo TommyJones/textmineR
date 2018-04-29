@@ -6,12 +6,13 @@
 #' @return
 #' Returns a matrix of class \code{dgCMatrix}. 
 #' @examples
+#' \dontrun{
 #' a_matrix <- Matrix::Matrix(0, nrow=10, ncol=10)
 #' 
 #' a_list <- list(a_matrix, a_matrix, a_matrix, a_matrix, a_matrix)
 #' 
 #' result <- RecursiveRbind(a_list)
-#' 
+#' }
 #' @export 
 
 RecursiveRbind <- function(matrix_list){
