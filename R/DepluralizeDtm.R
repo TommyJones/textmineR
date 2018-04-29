@@ -70,7 +70,7 @@ DepluralizeDtm <- function(dtm, ...){
     
     colnames(temp) <- unique(colnames(changed))
     
-    dtm <- Matrix::cBind(unchanged, temp)
+    dtm <- Matrix::cbind2(unchanged, temp)
   }
   
   dtm <- dtm[ , sort(colnames(dtm)) ]
