@@ -132,5 +132,19 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
   
   rownames(dtm) <- doc_names
   
+  # prepare attribute of arguments for repeating later
+  attr(dtm, "args") <- list(
+    doc_names = names(dtm),
+    ngram_window = ngram_window, 
+    stopword_vec = stopword_vec, 
+    lower = lower, 
+    remove_punctuation = remove_punctuation, 
+    remove_numbers = remove_numbers,
+    stem_lemma_function = stem_lemma_function, 
+    verbose = verbose
+  )
+  
+  class(dtm) <- c(class(dtm), "DTM")
+  
   return(dtm)
 }
