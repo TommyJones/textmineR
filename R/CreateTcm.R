@@ -144,7 +144,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                                 verbose = verbose,
                                 type = "dgCMatrix")
     
-    return(textmineR::Dtm2Tcm(dtm = dtm))
+    tcm <- textmineR::Dtm2Tcm(dtm = dtm)
     
   } else if (skipgram_window == 0) {
     
@@ -157,7 +157,8 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     dtm <- dtm > 0
     
-    return(dtm %*% t(dtm))
+    tcm <- dtm %*% t(dtm)
+    
   } else {
     
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
@@ -169,6 +170,21 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     
     tcm <- methods::as(tcm, "dgCMatrix", strict = TRUE)
     
-    return(tcm)
   }
+  
+  # prepare attribute of arguments for repeating later
+  attr(tcm, "args") <- list(
+    skipgram_window = skipgram_window, 
+    ngram_window = ngram_window, 
+    stopword_vec = stopword_vec, 
+    lower = lower, 
+    remove_punctuation = remove_punctuation, 
+    remove_numbers = remove_numbers,
+    stem_lemma_function = stem_lemma_function, 
+    verbose = verbose
+  )
+  
+  class(tcm) <- c(class(tcm), "TCM")
+  
+  return(tcm)
 }
