@@ -1,6 +1,17 @@
 ### Updates for version 2.1.3
-* Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0
-
+* Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0. 
+* Functions slated for deletion:
+  - RecursiveRbind
+  - Vec2Dtm
+  - JSD
+  - HellDist
+  - GetPhiPrime
+  - FormatRawLdaOutput
+  - Files2Vec
+  - DepluralizeDtm
+  - CorrectS
+  - CalcPhiPrime
+* In addition: FitLdaModel is going to change significantly in its functionality and argument calls.
 
 ### Updates for version 2.1.2
 * Deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.
