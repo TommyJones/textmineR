@@ -57,6 +57,16 @@
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, alpha = 0.1, beta = 0.05, 
                         smooth = TRUE, method = "gibbs", return_all = FALSE, ...){
+  
+  # Let you know about some changes
+  warning("Functionality of FitLdaModel will change significantly in textmineR v3.0.
+  Some relevant changes are that 'smooth', 'method' and 'return_all' are deprecated arguments.
+  Please see https://github.com/TommyJones/textmineR/tree/3.0 for the 
+  development version. Expected release is October or November of 2018.
+  Please submit questions or requests to https://github.com/TommyJones/textmineR/issues")
+  
+  
+  
   # Some setup to match arguments given with ...
   dots <- list(...)
   
