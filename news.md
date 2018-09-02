@@ -1,3 +1,7 @@
+### Updates for version 2.1.3
+* Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0
+
+
 ### Updates for version 2.1.2
 * Deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.
 
