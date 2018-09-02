@@ -20,11 +20,9 @@
 #'                          theta = nih_sample_topic_model$theta)
 #' 
 GetPhiPrime <- function(phi, theta){
-  .Deprecated(new = "CalcPhiPrime", package = "textmineR",
-              msg = "GetPhiPrime is deprecated and will be removed in textmineR v3.0
-              Use 'CalcPhiPrime' instead.",
-              old = "GetPhiPrime")
-
+  .Deprecated(msg = "GetPhiPrime is slated for deletion in textmineR v3.0. Please plan accordingly.
+              Please submit questions or requests to 	https://github.com/TommyJones/textmineR/issues")
+  
   phi.prime <- CalcPhiPrime(phi = phi, theta = theta)
     
     return(phi.prime)

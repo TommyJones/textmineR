@@ -31,7 +31,9 @@
 
  
 DepluralizeDtm <- function(dtm, ...){
-
+  .Deprecated(msg = "DepluralizeDtm is slated for deletion in textmineR v3.0. Please plan accordingly.
+              Please submit questions or requests to 	https://github.com/TommyJones/textmineR/issues")
+  
 	# run depluralization on column names of dtm
 	adjust.terms <- CorrectS(colnames(dtm))
 	

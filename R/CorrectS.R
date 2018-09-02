@@ -24,6 +24,9 @@
 
 
 CorrectS <- function(term_vec){
+  .Deprecated(msg = "CorrectS is slated for deletion in textmineR v3.0. Please plan accordingly.
+              Please submit questions or requests to 	https://github.com/TommyJones/textmineR/issues")
+  
 	# makes some adjustments to pluralization
 	# WARNING: This does make mistakes for irregular words. You should check its results manually.
     s.adjust <- gsub("sses$", "ss", term_vec) 

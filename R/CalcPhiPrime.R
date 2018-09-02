@@ -26,6 +26,9 @@
 #' 
 CalcPhiPrime <- function(phi, theta, p_docs = NULL){
   
+  .Deprecated(msg = "CalcPhiPrime will be renamed to 'CalcGamma' in textmineR v3.0. Please plan accordingly.
+              Please submit questions or requests to 	https://github.com/TommyJones/textmineR/issues")
+  
   # set up constants
   D <- nrow(theta)
   K <- ncol(theta)

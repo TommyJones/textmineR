@@ -36,7 +36,9 @@
 
 
 FormatRawLdaOutput <- function(lda_result, docnames, smooth=TRUE, softmax = FALSE){
-    
+  .Deprecated(msg = "FormatRawLdaOutput is slated for deletion in textmineR v3.0. Please plan accordingly.
+              Please submit questions or requests to 	https://github.com/TommyJones/textmineR/issues")
+  
     theta <- t(lda_result$document_sums)
     
   

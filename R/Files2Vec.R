@@ -20,7 +20,9 @@
 
 
 Files2Vec <- function(directory, ...){
-    
+  .Deprecated(msg = "Files2Vec is slated for deletion in textmineR v3.0. Please plan accordingly.
+              Please submit questions or requests to 	https://github.com/TommyJones/textmineR/issues")
+  
     if( ! grepl("/$", directory) ) directory <- paste(directory, "/", sep="")
     
 	file.list <- grep("\\.txt", dir(directory), value=T)
