@@ -1,4 +1,4 @@
-.onLoad <- function() {
+.onLoad <- function(libname, pkgname) {
   
   packageStartupMessage("textmineR v3.0 is coming with major changes that WILL break things!
                         Please see https://github.com/TommyJones/textmineR/tree/3.0 for the 
