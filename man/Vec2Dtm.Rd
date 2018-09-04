@@ -6,8 +6,8 @@
 \usage{
 Vec2Dtm(vec, docnames = names(vec), min.n.gram = 1, max.n.gram = 1,
   remove.stopwords = TRUE, custom.stopwords = NULL, lower = TRUE,
-  remove.punctuation = TRUE, remove.numbers = TRUE, stem.document = FALSE,
-  ...)
+  remove.punctuation = TRUE, remove.numbers = TRUE,
+  stem.document = FALSE, ...)
 }
 \arguments{
 \item{vec}{A character vector of documents.}

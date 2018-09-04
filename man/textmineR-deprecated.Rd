@@ -11,5 +11,14 @@ The functions listed below are deprecated and will be defunct in
 \details{
 Below is a list of deprecated functions:
 RecursiveRbind
+Vec2Dtm
+JSD
+HellDist
+GetPhiPrime
+FormatRawLdaOutput
+Files2Vec
+DepluralizeDtm
+CorrectS
+CalcPhiPrime
 }
 \keyword{internal}

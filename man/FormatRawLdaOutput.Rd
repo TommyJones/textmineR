@@ -4,7 +4,8 @@
 \alias{FormatRawLdaOutput}
 \title{Format Raw Output from \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
 \usage{
-FormatRawLdaOutput(lda_result, docnames, smooth = TRUE, softmax = FALSE)
+FormatRawLdaOutput(lda_result, docnames, smooth = TRUE,
+  softmax = FALSE)
 }
 \arguments{
 \item{lda_result}{The list value returned by \code{\link[lda]{lda.collapsed.gibbs.sampler}}}
