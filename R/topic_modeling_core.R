@@ -245,12 +245,58 @@ FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   names(lsa)[ names(lsa) == "d" ] <- "sv"
   names(lsa$sv) <- names(lsa$theta)
   
+  # get gamma for predictions
+  lsa$gamma <- diag(lsa$sv) %*% lsa$phi
+  lsa$gamma <- t(MASS::ginv(lsa$gamma))
+  
   if(! return_all ){
     lsa$niter <- NULL
     lsa$nops <- NULL
   }
   
+  class(lsa) <- c("LSA", "TopicModel")
+  
   return(lsa)
+  
+}
+
+predict.LSA <- function(object, newdata) {
+  
+  ### Check inputs ----
+  if (method[1] == "gibbs") {
+    
+    if (is.null(iterations)) {
+      stop("when using method 'gibs' iterations must be specified.")
+    }
+    
+    if (burnin >= iterations) {
+      stop("burnin must be less than iterations")
+    }
+    
+  }
+  
+  
+  if (sum(c("LDA", "TopicModel") %in% class(object)) < 2) {
+    stop("object must be a topic model object of class c('LDA', 'TopicModel')")
+  }
+  
+  if (sum(c("dgCMatrix", "character") %in% class(newdata)) < 1) {
+    stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  }
+  
+  if (sum(c("gibbs", "dot") %in% method) == 0) {
+    stop("method must be one of 'gibbs' or 'dot'")
+  }
+  
+  if (! is.null(seed)) {
+    if (! is.numeric(seed)){
+      stop("seed must be NULL or numeric")
+    }
+    set.seed(seed)
+  }
+  
+  ### align vocabulary ----
+  
   
 }
 
