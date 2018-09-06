@@ -1,3 +1,5 @@
+[![Travis-CI Build Status](https://travis-ci.org/TommyJones/textmineR.svg?branch=master)](https://travis-ci.org/TommyJones/textmineR)
+
 # textmineR
 Functions for Text Mining and Topic Modeling
 
