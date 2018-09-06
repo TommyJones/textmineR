@@ -1,8 +1,22 @@
-### Patch version 2.1.2
-In this version, as directed by CRAN, I have deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.
+### Patch version 2.1.3
+In this version, I have deprecated many functions. I am preparing a release of version 3.0 which drops or significantly modifies the behaviour of several functions. I am planning the major update for late October.
+
+* Functions slated for deletion:
+  - RecursiveRbind
+  - Vec2Dtm
+  - JSD
+  - HellDist
+  - GetPhiPrime
+  - FormatRawLdaOutput
+  - Files2Vec
+  - DepluralizeDtm
+  - CorrectS
+  - CalcPhiPrime
+  
+* In addition: FitLdaModel is going to change significantly in its functionality and argument calls. When run, it issues a warning.
 
 ### Test environments
-* local OS X install, R 3.5.0
+* local OS X install, R 3.5.1
 * Ubuntu 16.04 LTS (local install), R 3.4.4
 * win-builder (devel and release)
 
