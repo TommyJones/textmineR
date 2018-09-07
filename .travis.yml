@@ -3,8 +3,58 @@
 language: R
 sudo: false
 cache: packages
+warnings_are_errors: false
 r_build_args: --no-build-vignettes
 addons:
   apt:
     packages:
     - libgsl0-dev
+r_binary_packages:
+  - devtools
+  - mime
+  - curl
+  - openssl
+  - R6
+  - httr
+  - memoise
+  - whisker
+  - digest
+  - rstudioapi
+  - jsonlite
+  - git2r
+  - withr
+  - httr
+  - igraph
+  - magrittr
+  - knitr
+  - evaluate
+  - stringr
+  - glue
+  - stringi
+  - highr
+  - markdown
+  - yaml
+  - Rcpp
+  - RcppArmadillo
+  - RcppProgress
+  - base64enc
+  - htmltools
+  - rprojroot
+  - backports
+  - RcppEigen
+  - SnowballC
+  - data.table
+  - foreach
+  - iterators
+  - futile.logger
+  - futile.options
+  - lambda.r
+  - formatR
+  - irlba
+  - tm
+  - NLP
+  - slam
+  - xml2
+  - modeltools
+  - wordcloud
+  - rcolorbrewer
