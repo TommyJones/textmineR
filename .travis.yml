@@ -1,7 +1,7 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+sudo: required
 cache: packages
 warnings_are_errors: false
 r_build_args: --no-build-vignettes
@@ -57,4 +57,4 @@ r_binary_packages:
   - xml2
   - modeltools
   - wordcloud
-  - rcolorbrewer
+  - RColorBrewer
