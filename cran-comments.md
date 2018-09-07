@@ -17,7 +17,7 @@ In this version, I have deprecated many functions. I am preparing a release of v
 
 ### Test environments
 * local OS X install, R 3.5.1
-* Ubuntu 16.04 LTS (local install), R 3.4.4
+* Ubuntu 14.04 LTS (on travis ci), R 3.5.1
 * win-builder (devel and release)
 
 ### R CMD check results
