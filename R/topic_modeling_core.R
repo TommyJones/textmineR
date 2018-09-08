@@ -249,54 +249,66 @@ FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   lsa$gamma <- diag(lsa$sv) %*% lsa$phi
   lsa$gamma <- t(MASS::ginv(lsa$gamma))
   
+  colnames(lsa$gamma) <- colnames(lsa$phi)
+  rownames(lsa$gamma) <- rownames(lsa$phi)
+  
+  # keep dtm/tcm for predict method etc.
+  lsa$data <- dtm
+  
   if(! return_all ){
     lsa$niter <- NULL
     lsa$nops <- NULL
   }
   
-  class(lsa) <- c("LSA", "TopicModel")
+  class(lsa) <- "lsa_topic_model"
   
   return(lsa)
   
 }
 
-predict.LSA <- function(object, newdata) {
+predict.lsa_topic_model <- function(object, newdata, verbose = FALSE) {
   
   ### Check inputs ----
-  if (method[1] == "gibbs") {
-    
-    if (is.null(iterations)) {
-      stop("when using method 'gibs' iterations must be specified.")
-    }
-    
-    if (burnin >= iterations) {
-      stop("burnin must be less than iterations")
-    }
-    
-  }
   
+  ## Add check for single row of dtm that gets coerced to a numeric by R
   
-  if (sum(c("LDA", "TopicModel") %in% class(object)) < 2) {
-    stop("object must be a topic model object of class c('LDA', 'TopicModel')")
+  if (class(object) != "lsa_topic_model") {
+    stop("object must be a topic model object of class lsa_topic_model")
   }
   
   if (sum(c("dgCMatrix", "character") %in% class(newdata)) < 1) {
     stop("newdata must be a matrix of class dgCMatrix or a character vector")
   }
-  
-  if (sum(c("gibbs", "dot") %in% method) == 0) {
-    stop("method must be one of 'gibbs' or 'dot'")
-  }
-  
-  if (! is.null(seed)) {
-    if (! is.numeric(seed)){
-      stop("seed must be NULL or numeric")
+
+  ### if newdata is a document vector, make a dtm ----
+  if (class(newdata) == "character") {
+    ## Add a check here to make sure it's the right object & return helpful error message
+    
+    data_args <- attr(object$data, "args")
+    
+    data_args$doc_vec <- newdata
+    
+    data_args$verbose <- verbose
+    
+    if (attr(object$data, "call") == "CreateDtm") {
+      newdata <- do.call(CreateDtm, data_args)
+    } else if (attr(object$data, "call") == "CreateTcm") {
+      newdata <- do.call(CreateTcm, data_args)
+    } else {
+      stop("Something is wrong with object$data. Cannot find attribute 'call'.")
     }
-    set.seed(seed)
+
   }
   
   ### align vocabulary ----
+  vocab <- intersect(colnames(newdata), colnames(object$gamma))
   
+  ### get predictions ----
+  out <- newdata[,vocab] %*% t(object$gamma)
+  
+  out <- as.matrix(out)
+  
+  return(out)
   
 }
 
