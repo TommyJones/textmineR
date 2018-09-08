@@ -55,7 +55,7 @@
 CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1), 
                       stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")), 
                       lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                      stem_lemma_function = NULL, verbose = TRUE, ...){
+                      stem_lemma_function = NULL, verbose = FALSE, ...){
   
   ### Pre-process the documents ------------------------------------------------
   if (is.null(doc_names) & is.null(names(doc_vec))) {
@@ -143,9 +143,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
     stem_lemma_function = stem_lemma_function, 
     verbose = verbose
   )
-  
-  class(dtm) <- c(class(dtm), "DTM")
-  
+
   return(dtm)
 }
 
@@ -214,7 +212,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1), 
                       stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")), 
                       lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                      stem_lemma_function = NULL, verbose = TRUE, ...){
+                      stem_lemma_function = NULL, verbose = FALSE, ...){
   
   ### Check inputs -------------------------------------------------------------
   if (! is.numeric(skipgram_window)) {
@@ -334,9 +332,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     stem_lemma_function = stem_lemma_function, 
     verbose = verbose
   )
-  
-  class(tcm) <- c(class(tcm), "TCM")
-  
+
   return(tcm)
 }
 
