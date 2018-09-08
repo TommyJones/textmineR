@@ -145,7 +145,10 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
   rownames(phi) <- colnames(theta)
   colnames(phi) <- colnames(dtm)
   
-  return(list(theta = theta, phi = phi))
+  # Get gamma
+  gamma <- CalcGamma(phi, theta, p_docs = Matrix::rowSums(dtm))
+
+  return(list(theta = theta, phi = phi, gamma = gamma, data = dtm))
 }
 
 
