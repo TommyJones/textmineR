@@ -33,35 +33,35 @@ CalcGamma <- function(phi, theta, p_docs = NULL){
   
   # probability of each document (assumed to be equiprobable)
   if(is.null(p_docs)){
-    p.d <- rep(1/nrow(theta), nrow(theta))
+    p_d <- rep(1/nrow(theta), nrow(theta))
   }else{
     if(sum(is.na(p_docs)) > 0){
       warning("found missing values in p_docs. Setting them as 0.")
       p_docs[ is.na(p_docs) ] <- 0 
     }
-    p.d <- p_docs / sum(p_docs)
+    p_d <- p_docs / sum(p_docs)
   }
   
   # get the probability of each topic
-  p.t <- p.d %*% theta
+  p_t <- p_d %*% theta
   
   # get the probability of each word from the model    
-  p.w <- p.t %*% phi
+  p_w <- p_t %*% phi
   
   
   
   # get our result
-  phi.prime <- matrix(0, ncol=ncol(p.t), nrow=ncol(p.t))
-  diag(phi.prime) <- p.t
+  phi_prime <- matrix(0, ncol=ncol(p_t), nrow=ncol(p_t))
+  diag(phi_prime) <- p_t
   
-  phi.prime <- phi.prime %*% phi
+  phi_prime <- phi_prime %*% phi
   
-  phi.prime <- t(apply(phi.prime, 1, function(x) x / p.w))
+  phi_prime <- t(apply(phi_prime, 1, function(x) x / p_w))
   
-  rownames(phi.prime) <- rownames(phi)
-  colnames(phi.prime) <- colnames(phi)
+  rownames(phi_prime) <- rownames(phi)
+  colnames(phi_prime) <- colnames(phi)
   
-  return(phi.prime)
+  return(phi_prime)
 }
 
 
