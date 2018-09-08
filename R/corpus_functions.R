@@ -143,6 +143,8 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
     stem_lemma_function = stem_lemma_function, 
     verbose = verbose
   )
+  
+  attr(dtm, "call") <- "CreateDtm"
 
   return(dtm)
 }
@@ -333,6 +335,8 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
     verbose = verbose
   )
 
+  attr(tcm, "call") <- "CreateTcm"
+  
   return(tcm)
 }
 
