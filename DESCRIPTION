@@ -2,7 +2,7 @@ Package: textmineR
 Type: Package
 Title: Functions for Text Mining and Topic Modeling
 Version: 2.1.3
-Date: 2018-09-06
+Date: 2018-09-10
 Authors@R: c(
     person("Thomas", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
     person("William", "Doane", email = "wil@drdoane.com", role = "ctb")
