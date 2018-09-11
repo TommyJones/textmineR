@@ -1,4 +1,6 @@
 ### Patch version 2.1.3
+I have addressed CRAN comments on vignette length. Additional updates are described below.
+
 In this version, I have deprecated many functions. I am preparing a release of version 3.0 which drops or significantly modifies the behaviour of several functions. I am planning the major update for late October.
 
 * Functions slated for deletion:
