@@ -364,6 +364,48 @@ Dtm2Lexicon <- function(dtm, ...) {
   
 }
 
+#' Turn a document term matrix into a list for LDA Gibbs sampling
+#' @description Represents a document term matrix as a list. 
+#' @param dtm A document term matrix (or term co-occurrence matrix) of class 
+#' \code{dgCMatrix}. 
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @return Returns a list. Each element of the list represents a row of the input
+#' matrix. Each list element contains a numeric vector with as many entries as
+#' tokens in the original document. The entries are the column index for that token, minus 1. 
+#' @examples
+#' \dontrun{
+#' # Load pre-formatted data for use
+#' data(nih_sample_dtm)
+#' 
+#' result <- Dtm2Lexicon(dtm = nih_sample_dtm, 
+#'                       cpus = 2)
+#' }
+#' @export 
+Dtm2Lexicon <- function(dtm, ...) {
+  
+  # do in parallel in batches of about 3000 if we have more than 3000 docs
+  if(nrow(dtm) > 3000){
+    
+    batches <- seq(1, nrow(dtm), by = 3000)
+    
+    dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 2999, nrow(dtm)) , ])
+    
+    out <-textmineR::TmParallelApply(X = dtm_list, FUN = function(y){
+      dtm_to_lexicon_c(x = y)
+    }, ...)
+    
+    out <- do.call(c, out)
+    
+  }else{
+    out <- dtm_to_lexicon_c(x = dtm)
+  }
+  
+  names(out) <- rownames(dtm)
+  
+  out
+  
+}
+
 #' Fit a Latent Dirichlet Allocation topic model
 #' @description Fit a Latent Dirichlet Allocation topic model using collapsed Gibbs sampling. 
 #' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix
@@ -382,6 +424,7 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' @examples GIVE EXAMPLES
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
+                        optimize_alpha = FALSE, calc_likelihood = FALSE, 
                         calc_coherence = TRUE, calc_r2 = FALSE, seed = NULL, ...){
   
   ### Check inputs are of correct dimensionality ----
@@ -458,8 +501,10 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   ### run C++ gibbs sampler ----
   
   result <- fit_lda_c(docs = docs, Nk = Nk, Nd = Nd, Nv = Nv, 
-                      alpha = alpha, beta = beta,
-                      iterations = iterations, burnin = burnin)
+                      alph = alpha, beta = beta,
+                      iterations = iterations, burnin = burnin,
+                      optimize_alpha = optimize_alpha,
+                      calc_likelihood = calc_likelihood)
   
   
   ### Format posteriors correctly ----
@@ -493,7 +538,10 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
                                    p_docs = Matrix::rowSums(dtm))
   
   result <- list(phi = phi, theta = theta, gamma = gamma,
-                 dtm = dtm, alpha = alpha, beta = beta) # add other things here
+                 dtm = dtm, alpha = result$alpha, beta = result$beta,
+                 log_likelihood = data.frame(result$log_likelihood)) # add other things here
+  
+  names(result$log_likelihood) <- c("iteration", "log_likelihood")
   
   class(result) <- c("LDA", "TopicModel")
   
@@ -504,6 +552,10 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   if (calc_r2) {
     result$r2 <- textmineR::CalcTopicModelR2(dtm, result$phi, result$theta, ...)
+  }
+  
+  if (! calc_likelihood) {
+    result$log_likelihood <- NULL
   }
   
   ### return result ----
@@ -604,7 +656,3 @@ predict.LDA <- function(object, newdata, method = c("gibbs", "dot"),
   result
   
 }
-
-
-
-
