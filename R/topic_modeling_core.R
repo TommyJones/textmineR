@@ -269,6 +269,30 @@ FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   
 }
 
+#' Predict method for LSA topic models
+#' @description Obtains predictions of topics for new documents from a fitted LSA model
+#' @param object a fitted object of class "lsa_topic_model"
+#' @param newdata a DTM or TCM of class dgCMatrix or a character vector
+#' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
+#'        do you want to see status during vectorization?
+#' @return a "theta" matrix with one row per document and one column per topic
+#' @examples
+#' # Load a pre-formatted dtm 
+#' data(nih_sample_dtm) 
+#' 
+#' # Convert raw word counts to TF-IDF frequency weights
+#' idf <- log(nrow(nih_sample_dtm) / Matrix::colSums(nih_sample_dtm > 0))
+#' 
+#' dtm_tfidf <- Matrix::t(nih_sample_dtm) * idf
+#' 
+#' dtm_tfidf <- Matrix::t(dtm_tfidf)
+#' 
+#' # Fit an LSA model on the first 50 documents
+#' model <- FitLsaModel(dtm = dtm_tfidf[1:50,], k = 5)
+#' 
+#' # Get predictions on the next 50 documents
+#' pred <- predict(model, dtm_tfidf[51:100,])
+#' @export
 predict.lsa_topic_model <- function(object, newdata, verbose = FALSE) {
   
   ### Check inputs ----
@@ -314,13 +338,6 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE) {
   return(out)
   
 }
-
-################################################################################
-# This file turns the Gibbs sampler cobbled from various sources into an R function
-# Once I am sure that it is (a) calculating properly and (b) efficient, I will
-# roll it over to C++
-################################################################################
-
 
 #' Turn a document term matrix into a list for LDA Gibbs sampling
 #' @description Represents a document term matrix as a list. 
