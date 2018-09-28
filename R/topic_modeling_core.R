@@ -551,7 +551,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   rownames(theta) <- rownames(dtm)
   
   ### collect the result ----
-  gamma <- textmineR::CalcPhiPrime(phi = phi, theta = theta, 
+  gamma <- textmineR::CalcGammae(phi = phi, theta = theta, 
                                    p_docs = Matrix::rowSums(dtm))
   
   result <- list(phi = phi, theta = theta, gamma = gamma,
