@@ -331,7 +331,7 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE) {
   vocab <- intersect(colnames(newdata), colnames(object$gamma))
   
   ### get predictions ----
-  out <- newdata[,vocab] %*% t(object$gamma)
+  out <- newdata[,vocab] %*% t(object$gamma[,vocab])
   
   out <- as.matrix(out)
   
@@ -365,49 +365,7 @@ Dtm2Lexicon <- function(dtm, ...) {
     
     dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 2999, nrow(dtm)) , ])
     
-    out <-textmineR::TmParallelApply(X = dtm_list, FUN = function(y){
-      dtm_to_lexicon_c(x = y)
-    }, ...)
-    
-    out <- do.call(c, out)
-    
-  }else{
-    out <- dtm_to_lexicon_c(x = dtm)
-  }
-  
-  names(out) <- rownames(dtm)
-  
-  out
-  
-}
-
-#' Turn a document term matrix into a list for LDA Gibbs sampling
-#' @description Represents a document term matrix as a list. 
-#' @param dtm A document term matrix (or term co-occurrence matrix) of class 
-#' \code{dgCMatrix}. 
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
-#' @return Returns a list. Each element of the list represents a row of the input
-#' matrix. Each list element contains a numeric vector with as many entries as
-#' tokens in the original document. The entries are the column index for that token, minus 1. 
-#' @examples
-#' \dontrun{
-#' # Load pre-formatted data for use
-#' data(nih_sample_dtm)
-#' 
-#' result <- Dtm2Lexicon(dtm = nih_sample_dtm, 
-#'                       cpus = 2)
-#' }
-#' @export 
-Dtm2Lexicon <- function(dtm, ...) {
-  
-  # do in parallel in batches of about 3000 if we have more than 3000 docs
-  if(nrow(dtm) > 3000){
-    
-    batches <- seq(1, nrow(dtm), by = 3000)
-    
-    dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 2999, nrow(dtm)) , ])
-    
-    out <-textmineR::TmParallelApply(X = dtm_list, FUN = function(y){
+    out <- TmParallelApply(X = dtm_list, FUN = function(y){
       dtm_to_lexicon_c(x = y)
     }, ...)
     
@@ -551,7 +509,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   rownames(theta) <- rownames(dtm)
   
   ### collect the result ----
-  gamma <- textmineR::CalcGammae(phi = phi, theta = theta, 
+  gamma <- CalcGamma(phi = phi, theta = theta, 
                                    p_docs = Matrix::rowSums(dtm))
   
   result <- list(phi = phi, theta = theta, gamma = gamma,
@@ -560,15 +518,15 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
   
-  class(result) <- c("LDA", "TopicModel")
+  class(result) <- "lda_topic_model"
   
   ### calculate additional things ----
   if (calc_coherence) {
-    result$coherence <- textmineR::CalcProbCoherence(result$phi, dtm, M = 5)
+    result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
   }
   
   if (calc_r2) {
-    result$r2 <- textmineR::CalcTopicModelR2(dtm, result$phi, result$theta, ...)
+    result$r2 <- CalcTopicModelR2(dtm, result$phi, result$theta, ...)
   }
   
   if (! calc_likelihood) {
@@ -580,8 +538,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 }
 
 ### Predict method for LDA objects
-predict.LDA <- function(object, newdata, method = c("gibbs", "dot"), 
-                        iterations = NULL, burnin = -1, seed = NULL, ...) {
+predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"), 
+                                    iterations = NULL, burnin = -1, seed = NULL, ...) {
   
   ### Check inputs ----
   if (method[1] == "gibbs") {
