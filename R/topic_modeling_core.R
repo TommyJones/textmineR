@@ -513,7 +513,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
                                    p_docs = Matrix::rowSums(dtm))
   
   result <- list(phi = phi, theta = theta, gamma = gamma,
-                 dtm = dtm, alpha = result$alpha, beta = result$beta,
+                 data = dtm, alpha = result$alpha, beta = result$beta,
                  log_likelihood = data.frame(result$log_likelihood)) # add other things here
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
@@ -539,7 +539,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 
 ### Predict method for LDA objects
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"), 
-                                    iterations = NULL, burnin = -1, seed = NULL, ...) {
+                                    iterations = NULL, burnin = -1, seed = NULL, 
+                                    verbose = FALSE, ...) {
   
   ### Check inputs ----
   if (method[1] == "gibbs") {
@@ -555,8 +556,8 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   }
   
   
-  if (sum(c("LDA", "TopicModel") %in% class(object)) < 2) {
-    stop("object must be a topic model object of class c('LDA', 'TopicModel')")
+  if (class(object) != "lda_topic_model") {
+    stop("object must be a topic model object of class lda_topic_model")
   }
   
   if (sum(c("dgCMatrix", "character") %in% class(newdata)) < 1) {
@@ -575,18 +576,30 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   }
   
   ### If newdata is a character vector, convert to dgCMatrix ----
-  # TODO: requires re-write of outputs of CreateDtm/CreateTcm
-  
+
   if ("dgCMatrix" %in% class(newdata)) {
     dtm_newdata <- newdata
   } else {
-    # code to convert goes here
-    stop("newdata not of class character is not yet supported")
+    ## Add a check here to make sure it's the right object & return helpful error message
+    
+    data_args <- attr(object$data, "args")
+    
+    data_args$doc_vec <- newdata
+    
+    data_args$verbose <- verbose
+    
+    if (attr(object$data, "call") == "CreateDtm") {
+      dtm_newdata <- do.call(CreateDtm, data_args)
+    } else if (attr(object$data, "call") == "CreateTcm") {
+      dtm_newdata <- do.call(CreateTcm, data_args)
+    } else {
+      stop("Something is wrong with object$data. Cannot find attribute 'call'.")
+    }
   }
   
   ### Align vocabulary ----
-  vocab1 <- colnames(object$dtm)
-  # vocab2 <- setdiff(colnames(dtm_newdata), colnames(object$dtm)) # for now unused
+  vocab1 <- colnames(object$data)
+  # vocab2 <- setdiff(colnames(dtm_newdata), colnames(object$data)) # for now unused
   
   ### Get predictions ----
   
