@@ -441,7 +441,6 @@ Dtm2Tcm <- function(dtm){
 #' term_freq_mat <- TermDocFreq(nih_sample_dtm)
 #' 
 #' str(term_freq_mat)
-
 TermDocFreq <- function(dtm){
   freq.mat <- data.frame(term=colnames(dtm), 
                          term_freq=Matrix::colSums(dtm), 
