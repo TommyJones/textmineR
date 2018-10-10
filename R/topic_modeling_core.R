@@ -396,7 +396,7 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' @param ... Other arguments to be passed to textmineR::TmParallelApply
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
-#' @examples GIVE EXAMPLES
+#' @examples # GIVE EXAMPLES
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
                         optimize_alpha = FALSE, calc_likelihood = FALSE, 
