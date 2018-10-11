@@ -598,26 +598,36 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   }
   
   ### Align vocabulary ----
-  vocab1 <- colnames(object$data)
-  # vocab2 <- setdiff(colnames(dtm_newdata), colnames(object$data)) # for now unused
+  # this is fancy because of how we do indexing in gibbs sampling
+  vocab_original <- colnames(object$data) # tokens in training set
   
+  vocab_intersect <- intersect(vocab_original, colnames(dtm_newdata))
+  
+  vocab_add <- setdiff(vocab_original, vocab_intersect)
+  
+  add_mat <- Matrix::Matrix(0, nrow = nrow(dtm_newdata), ncol = length(vocab_add))
+  
+  colnames(add_mat) <- vocab_add
+  
+  dtm_newdata <- Matrix::cbind2(dtm_newdata, add_mat)
+  
+  dtm_newdata <- dtm_newdata[, vocab_original]
+
   ### Get predictions ----
   
   if (method[1] == "dot") { # dot product method
     
-    result <- dtm_newdata[ ,vocab1]
-    result <- (result / Matrix::rowSums(result)) %*% t(object$gamma[ ,vocab1])
+    result <- dtm_newdata
+    result <- (result / Matrix::rowSums(result)) %*% t(object$gamma[ ,vocab_original])
     result <- as.matrix(result)
     
   } else { # gibbs method
     # format inputs
-    docs <- Dtm2Lexicon(dtm_newdata[,vocab1])
+    docs <- Dtm2Lexicon(dtm_newdata)
     
     Nd <- nrow(dtm_newdata)
     
     Nk <- nrow(object$phi)
-    
-    sum_alpha <- sum(object$alpha)
     
     # pass inputs to C function
     theta <- predict_lda_c(docs = docs, Nk = Nk, Nd = Nd, 
