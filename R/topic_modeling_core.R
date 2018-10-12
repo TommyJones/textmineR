@@ -303,8 +303,23 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE) {
     stop("object must be a topic model object of class lsa_topic_model")
   }
   
-  if (sum(c("dgCMatrix", "character") %in% class(newdata)) < 1) {
+  if (sum(c("dgCMatrix", "character", "numeric") %in% class(newdata)) < 1) {
     stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  }
+  
+  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+    if (is.null(names(newdata))) {
+      stop("it looks like newdata is a numeric vector without names. 
+           Did you mean to pass a single document?
+           If so, it needs a names attribute to index tokens")
+    }
+    
+    new_names <- names(newdata)
+    
+    newdata <- Matrix::Matrix(newdata, nrow = 1)
+    
+    colnames(newdata) <- new_names
+    
   }
 
   ### if newdata is a document vector, make a dtm ----
@@ -560,8 +575,25 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     stop("object must be a topic model object of class lda_topic_model")
   }
   
-  if (sum(c("dgCMatrix", "character") %in% class(newdata)) < 1) {
+  if (sum(c("dgCMatrix", "character", "numeric") %in% class(newdata)) < 1) {
     stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  }
+  
+  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+    if (is.null(names(newdata))) {
+      stop("it looks like newdata is a numeric vector without names. 
+           Did you mean to pass a single document?
+           If so, it needs a names attribute to index tokens")
+    }
+    
+    new_names <- names(newdata)
+    
+    newdata <- Matrix::Matrix(newdata, nrow = 1)
+    
+    colnames(newdata) <- new_names
+    
+    rownames(newdata) <- 1
+    
   }
   
   if (sum(c("gibbs", "dot") %in% method) == 0) {
@@ -611,7 +643,17 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   
   dtm_newdata <- Matrix::cbind2(dtm_newdata, add_mat)
   
-  dtm_newdata <- dtm_newdata[, vocab_original]
+  if (nrow(dtm_newdata) == 1) {
+    dtm_newdata <- Matrix::Matrix(dtm_newdata[,vocab_original], nrow = 1)
+    
+    colnames(dtm_newdata) <- vocab_original
+    
+    rownames(dtm_newdata) <- 1
+  } else {
+    
+    dtm_newdata <- dtm_newdata[, vocab_original]
+    
+  }
 
   ### Get predictions ----
   
