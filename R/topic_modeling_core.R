@@ -400,18 +400,43 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' @description Fit a Latent Dirichlet Allocation topic model using collapsed Gibbs sampling. 
 #' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix
 #' @param k Integer number of topics
+#' @param iterations Integer number of iterations for the Gibbs sampler to run. A
+#'        future version may include automatic stopping criteria.
+#' @param burnin Integer number of burnin iterations. If \code{burnin} is greater than -1,
+#'        the resulting "phi" and "theta" matrices are an average over all iterations
+#'        greater than \code{burnin}.
 #' @param alpha Vector of length \code{k} for asymmetric or a number for symmetric.
 #'        This is the prior for topics over documents
 #' @param beta Vector of length \code{ncol(dtm)} for asymmetric or a number for symmetric.
 #'        This is the prior for words over topics.
-#' @param iterations Integer number of iterations for the Gibbs sampler to run. A
-#'        future version may include automatic stopping criteria.
+#' @param optimize_alpha = FALSE, 
+#' @param calc_likelihood = FALSE, 
+#' @param calc_coherence = TRUE, 
+#' @param calc_r2
 #' @param seed If not null (the default) then the random seed you wish to set. This
 #' will return the same outputs for the same inputs. Useful for diagnostics.
 #' @param ... Other arguments to be passed to textmineR::TmParallelApply
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
-#' @examples # GIVE EXAMPLES
+#' @examples 
+#' # load some data
+#' data(nih_sample_dtm)
+#' 
+#' # fit a model 
+#' m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
+#'                  iterations = 200, burnin = 175)
+#'
+#' str(m)
+#' 
+#' # predict on held-out documents using gibbs sampling "fold in"
+#' p1 <- predict(m, nih_sample_dtm[21:100,], method = "gibbs",
+#'               iterations = 200, burnin = 175)
+#' 
+#' # predict on held-out documents using the dot product method
+#' p2 <- predict(m, nih_sample_dtm[21:100,], method = "dot")
+#'
+#' # compare the methods
+#' barplot(rbind(p1[1,],p2[1,]), beside = T, col = c("red", "blue")) 
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
                         optimize_alpha = FALSE, calc_likelihood = FALSE, 
@@ -529,7 +554,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   result <- list(phi = phi, theta = theta, gamma = gamma,
                  data = dtm, alpha = result$alpha, beta = result$beta,
-                 log_likelihood = data.frame(result$log_likelihood)) # add other things here
+                 log_likelihood = data.frame(result$log_likelihood)[,1:2] # for now, 3rd column isn't right
+                 ) # add other things here
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
   
