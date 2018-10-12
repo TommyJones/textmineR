@@ -579,6 +579,43 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 }
 
 ### Predict method for LDA objects
+#' Get predictions from a Latent Dirichlet Allocation model
+#' @description Obtains predictions of topics for new documents from a fitted LDA model
+#' @param object a fitted object of class \code{lda_topic_model}
+#' @param newdata a DTM or TCM of class \code{dgCMatrix} or a character vector
+#' @param method one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
+#'        and \code{iterations} must be specified.
+#' @param iterations If \code{method = "gibbs"}, an integer number of iterations 
+#'        for the Gibbs sampler to run. A future version may include automatic stopping criteria.
+#' @param burnin If \code{method = "gibbs"}, an integer number of burnin iterations. 
+#'        If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
+#'        are an average over all iterations greater than \code{burnin}.
+#' @param seed If \code{method = "gibbs"}, a random seed. 
+#' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
+#'        do you want to see status during vectorization?
+#' @return a "theta" matrix with one row per document and one column per topic
+#' @examples
+#' \dontrun{
+#' # load some data
+#' data(nih_sample_dtm)
+#' 
+#' # fit a model 
+#' m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
+#'                  iterations = 200, burnin = 175)
+#'
+#' str(m)
+#' 
+#' # predict on held-out documents using gibbs sampling "fold in"
+#' p1 <- predict(m, nih_sample_dtm[21:100,], method = "gibbs",
+#'               iterations = 200, burnin = 175)
+#' 
+#' # predict on held-out documents using the dot product method
+#' p2 <- predict(m, nih_sample_dtm[21:100,], method = "dot")
+#'
+#' # compare the methods
+#' barplot(rbind(p1[1,],p2[1,]), beside = T, col = c("red", "blue")) 
+#' }
+#' @export
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"), 
                                     iterations = NULL, burnin = -1, seed = NULL, 
                                     verbose = FALSE, ...) {
