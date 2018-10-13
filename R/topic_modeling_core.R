@@ -228,7 +228,7 @@ FitCtmModel <- function(dtm, k, return_all = TRUE, ...){
 #' str(model)
 #' 
 #' @export
-FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
+FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
   
   opts <- list(...)
   
@@ -254,6 +254,12 @@ FitLsaModel <- function(dtm, k, return_all = FALSE, ...){
   
   colnames(lsa$gamma) <- colnames(lsa$phi)
   rownames(lsa$gamma) <- rownames(lsa$phi)
+  
+  # calc coherence if desired
+  if (calc_coherence) {
+    lsa$coherence <- CalcProbCoherence(lsa$phi, dtm)
+  }
+  
   
   # keep dtm/tcm for predict method etc.
   lsa$data <- dtm
