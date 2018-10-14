@@ -44,6 +44,9 @@ dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of docum
                  remove_numbers = TRUE, # numbers - this is the default
                  verbose = FALSE, # Turn off status bar for this demo
                  cpus = 2) # default is all available cpus on the system
+
+dtm <- dtm[,colSums(dtm) > 2]
+
 ```
 
 

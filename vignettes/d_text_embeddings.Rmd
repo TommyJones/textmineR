@@ -139,16 +139,17 @@ dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                        verbose = FALSE,
                        cpus = 2)
 
+dtm_embed <- dtm_embed[,colSums(dtm_embed) > 2]
 
 # Project the documents into the embedding space
-embedding_assignments <- predict(embeddings, dtm_embed, method = "dot")
+embedding_assignments <- predict(embeddings, dtm_embed, method = "gibbs",
+                                 iterations = 200, burnin = 180)
 ```
 
 Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculaing R-squared and coherence.
 
 ```{r}
 # get a goodness of fit relative to the DTM
-# as of 10/15/2018, this isn't calculating right. Have to track down this bug.
 embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
                                       phi = embeddings$phi[,colnames(dtm_embed)], # line up vocabulary
                                       theta = embedding_assignments,
