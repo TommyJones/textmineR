@@ -28,14 +28,14 @@ In addition, textmineR has utility functions for topic models. This includes som
 ```{r}
 library(textmineR)
 
-# load movie_review dataset from text2vec
-data(movie_review, package = "text2vec")
+# load nih_sample data set from textmineR
+data(nih_sample)
 
-str(movie_review)
+str(nih_sample)
 
 # create a document term matrix 
-dtm <- CreateDtm(doc_vec = movie_review$review, # character vector of documents
-                 doc_names = movie_review$id, # document names
+dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of documents
+                 doc_names = nih_sample$APPLICATION_ID, # document names
                  ngram_window = c(1, 2), # minimum and maximum n-gram length
                  stopword_vec = c(tm::stopwords("english"), # stopwords from tm
                                   tm::stopwords("SMART")), # this is the default value
@@ -53,18 +53,15 @@ To fit an LDA model in textmineR, use the `FitLdaModel` function. Input is a doc
 
 ```{r }
 
-# start with a sample of 500 documents so our example doesn't take too long
-dtm_sample <- dtm[ sample(1:nrow(dtm), 500) , ]
-
 # Fit a Latent Dirichlet Allocation model
 # note the number of topics is arbitrary here
 # see extensions for more info
-model <- FitLdaModel(dtm = dtm_sample, 
-                     k = 100,
-                     iterations = 300, # I usually recommend at least 500 iterations or more
-                     burnin = 275,
+model <- FitLdaModel(dtm = dtm, 
+                     k = 20,
+                     iterations = 200, # I usually recommend at least 500 iterations or more
+                     burnin = 180,
                      alpha = 0.1,
-                     beta = colSums(dtm_sample) / sum(dtm_sample) * 100, # asymmetric beta
+                     beta = 0.05,
                      optimize_alpha = TRUE,
                      calc_likelihood = TRUE,
                      calc_coherence = TRUE,
@@ -92,7 +89,6 @@ The log likelihood has a more difficult interpretation. Though, as shown in the 
 model$r2
 
 # log Likelihood (does not consider the prior) 
-# - only works for probabilistic models like LDA and CTM
 plot(model$log_likelihood, type = "l")
 ```
 
@@ -158,7 +154,7 @@ plot(model$prevalence, model$alpha, xlab = "prevalence", ylab = "alpha")
 
 # textmineR has a naive topic labeling tool based on probable bigrams
 model$labels <- LabelTopics(assignments = model$theta > 0.05, 
-                            dtm = dtm_sample,
+                            dtm = dtm,
                             M = 1)
 
 head(model$labels)
@@ -218,8 +214,8 @@ Do note how much faster "dot" is when running the two below.
 # predictions with gibbs
 assignments <- predict(model, dtm,
                        method = "gibbs", 
-                       iterations = 300,
-                       burnin = 275,
+                       iterations = 200,
+                       burnin = 180,
                        seed = 1234,
                        cpus = 2)
 
@@ -254,11 +250,11 @@ The workflow for LSA is largely the same for LDA. Two key differences: we will u
 ```{r }
 
 # get a tf-idf matrix
-tf_sample <- TermDocFreq(dtm_sample)
+tf_sample <- TermDocFreq(dtm)
 
 tf_sample$idf[ is.infinite(tf_sample$idf) ] <- 0 # fix idf for missing words
 
-tf_idf <- t(dtm_sample / rowSums(dtm_sample)) * tf_sample$idf
+tf_idf <- t(dtm / rowSums(dtm)) * tf_sample$idf
 
 tf_idf <- t(tf_idf)
 
@@ -312,7 +308,7 @@ lsa_model$prevalence <- colSums(lsa_model$theta) / sum(lsa_model$theta) * 100
 
 # textmineR has a naive topic labeling tool based on probable bigrams
 lsa_model$labels <- LabelTopics(assignments = lsa_model$theta > 0.05, 
-                            dtm = dtm_sample,
+                            dtm = dtm,
                             M = 1)
 ```
 
@@ -373,8 +369,8 @@ In this case, there is no Bayesian/frequentist difference. So there's only one w
 
 ```{r fig.width = 7.5, fig.height = 4}
 # compare the "fit" assignments to the predicted ones
-barplot(rbind(lsa_model$theta[ rownames(dtm_sample)[ 1 ] , ],
-              lsa_assignments[ rownames(dtm_sample)[ 1 ] , ]), 
+barplot(rbind(lsa_model$theta[ rownames(dtm)[ 1 ] , ],
+              lsa_assignments[ rownames(dtm)[ 1 ] , ]), 
         las = 2,
         main = "Comparing topic assignments in LSA",
         beside = TRUE,
