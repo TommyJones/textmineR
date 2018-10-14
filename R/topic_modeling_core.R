@@ -624,7 +624,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' p2 <- predict(m, nih_sample_dtm[21:100,], method = "dot")
 #'
 #' # compare the methods
-#' barplot(rbind(p1[1,],p2[1,]), beside = T, col = c("red", "blue")) 
+#' barplot(rbind(p1[1,],p2[1,]), beside = TRUE, col = c("red", "blue")) 
 #' }
 #' @export
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"), 
