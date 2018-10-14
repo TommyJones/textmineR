@@ -21,7 +21,7 @@ Imports:
     lda,
     parallel,
     text2vec (>= 0.5),
-    tm,
+    stopwords,
     stringr,
     SnowballC,
     Rcpp (>= 0.12.12),
