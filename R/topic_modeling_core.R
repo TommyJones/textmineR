@@ -518,7 +518,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   ### Format inputs ----
   
-  docs <- Dtm2Lexicon(dtm)
+  docs <- Dtm2Lexicon(dtm,...)
   
   Nd <- nrow(dtm)
   
