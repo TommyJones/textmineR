@@ -59,6 +59,9 @@ To fit an LDA model in textmineR, use the `FitLdaModel` function. Input is a doc
 # Fit a Latent Dirichlet Allocation model
 # note the number of topics is arbitrary here
 # see extensions for more info
+
+set.seed(12345)
+
 model <- FitLdaModel(dtm = dtm, 
                      k = 20,
                      iterations = 200, # I usually recommend at least 500 iterations or more
@@ -219,7 +222,6 @@ assignments <- predict(model, dtm,
                        method = "gibbs", 
                        iterations = 200,
                        burnin = 180,
-                       seed = 1234,
                        cpus = 2)
 
 # predictions with dot

@@ -426,8 +426,6 @@ Dtm2Lexicon <- function(dtm, ...) {
 #'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
-#' @param seed If not null (the default) then the random seed you wish to set. This
-#' will return the same outputs for the same inputs. Useful for diagnostics.
 #' @param ... Other arguments to be passed to textmineR::TmParallelApply
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
@@ -436,6 +434,7 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' data(nih_sample_dtm)
 #' 
 #' # fit a model 
+#' set.seed(12345)
 #' m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
 #'                  iterations = 200, burnin = 175)
 #'
@@ -453,7 +452,7 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
                         optimize_alpha = FALSE, calc_likelihood = FALSE, 
-                        calc_coherence = TRUE, calc_r2 = FALSE, seed = NULL, ...){
+                        calc_coherence = TRUE, calc_r2 = FALSE, ...){
   
   ### Check inputs are of correct dimensionality ----
   
@@ -499,14 +498,6 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
     beta <- numeric(ncol(dtm)) + beta
   } else if (length(beta) != ncol(dtm)){
     stop("beta must be a scalar or vector of length ncol(dtm)")
-  }
-  
-  if (! is.null(seed)){
-    if (! is.numeric(seed)){
-      stop("if seed is not NULL, then it must be numeric")
-    } else {
-      set.seed(seed)
-    }
   }
   
   if (! is.logical(calc_coherence))
@@ -603,7 +594,6 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' @param burnin If \code{method = "gibbs"}, an integer number of burnin iterations. 
 #'        If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
 #'        are an average over all iterations greater than \code{burnin}.
-#' @param seed If \code{method = "gibbs"}, a random seed. 
 #' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 #'        do you want to see status during vectorization?
 #' @param ... Other arguments to be passed to textmineR::TmParallelApply
@@ -614,6 +604,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' data(nih_sample_dtm)
 #' 
 #' # fit a model 
+#' set.seed(12345)
+#' 
 #' m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
 #'                  iterations = 200, burnin = 175)
 #'
@@ -631,7 +623,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' }
 #' @export
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"), 
-                                    iterations = NULL, burnin = -1, seed = NULL, 
+                                    iterations = NULL, burnin = -1,  
                                     verbose = FALSE, ...) {
   
   ### Check inputs ----
@@ -676,14 +668,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   if (sum(c("gibbs", "dot") %in% method) == 0) {
     stop("method must be one of 'gibbs' or 'dot'")
   }
-  
-  if (! is.null(seed)) {
-    if (! is.numeric(seed)){
-      stop("seed must be NULL or numeric")
-    }
-    set.seed(seed)
-  }
-  
+
   ### If newdata is a character vector, convert to dgCMatrix ----
 
   if ("dgCMatrix" %in% class(newdata)) {
