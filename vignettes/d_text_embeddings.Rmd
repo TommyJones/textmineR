@@ -158,7 +158,7 @@ embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed,
 embeddings$r2_dtm
 
 # get coherence relative to DTM
-embeddings$coherence_dtm <- CalcProbCoherence(phi = embeddings$phi,
+embeddings$coherence_dtm <- CalcProbCoherence(phi = embeddings$phi[,colnames(dtm_embed)], # line up vocabulary
                                               dtm = dtm_embed)
 
 summary(embeddings$coherence_dtm)
