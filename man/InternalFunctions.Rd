@@ -1,7 +1,10 @@
 \name{Internals}
 \alias{CalcLikelihoodC}
 \alias{CalcSumSquares}
+\alias{dtm_to_lexicon_c}
 \alias{Dtm2DocsC}
+\alias{fit_lda_c}
+\alias{predict_lda_c}
 \alias{Hellinger_cpp}
 \alias{HellingerMat}
 \alias{JSD_cpp}
