@@ -11,6 +11,9 @@ FitLsaModel(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...)
 
 \item{k}{Number of topics}
 
+\item{calc_coherence}{Do you want to calculate probabilistic coherence of topics
+after the model is trained? Defaults to \code{TRUE}.}
+
 \item{return_all}{Should all objects returned from \code{RSpectra::svds} be
 returned here? Defaults to \code{FALSE}}
 

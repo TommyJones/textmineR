@@ -199,6 +199,8 @@ FitCtmModel <- function(dtm, k, return_all = TRUE, ...){
 #' a nicely-formatted latent semantic analysis topic model.
 #' @param dtm A document term matrix of class \code{Matrix::dgCMatrix}
 #' @param k Number of topics
+#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
+#'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param return_all Should all objects returned from \code{RSpectra::svds} be
 #'        returned here? Defaults to \code{FALSE}
 #' @param ... Other arguments to pass to \code{\link[RSpectra]{svds}} through 
