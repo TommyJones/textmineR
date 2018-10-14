@@ -55,6 +55,6 @@ p1 <- predict(m, nih_sample_dtm[21:100,], method = "gibbs",
 p2 <- predict(m, nih_sample_dtm[21:100,], method = "dot")
 
 # compare the methods
-barplot(rbind(p1[1,],p2[1,]), beside = T, col = c("red", "blue")) 
+barplot(rbind(p1[1,],p2[1,]), beside = TRUE, col = c("red", "blue")) 
 }
 }
