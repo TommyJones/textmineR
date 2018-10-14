@@ -599,6 +599,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' @param seed If \code{method = "gibbs"}, a random seed. 
 #' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 #'        do you want to see status during vectorization?
+#' @param ... Other arguments to be passed to textmineR::TmParallelApply
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
 #' \dontrun{
