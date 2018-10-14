@@ -68,7 +68,8 @@ model <- FitLdaModel(dtm = dtm_sample,
                      optimize_alpha = TRUE,
                      calc_likelihood = TRUE,
                      calc_coherence = TRUE,
-                     calc_r2 = TRUE) 
+                     calc_r2 = TRUE,
+                     cpus = 2) 
 
 ```
 
@@ -219,7 +220,8 @@ assignments <- predict(model, dtm,
                        method = "gibbs", 
                        iterations = 300,
                        burnin = 275,
-                       seed = 1234)
+                       seed = 1234,
+                       cpus = 2)
 
 # predictions with dot
 assignments_dot <- predict(model, dtm,
@@ -437,7 +439,8 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
                    optimize_alpha = TRUE,
                    calc_likelihood = FALSE,
                    calc_coherence = TRUE,
-                   calc_r2 = FALSE)
+                   calc_r2 = FALSE,
+                   cpus = 1)
   m$k <- k
   
   m
