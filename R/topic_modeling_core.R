@@ -283,6 +283,7 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
 #' @param newdata a DTM or TCM of class dgCMatrix or a character vector
 #' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 #'        do you want to see status during vectorization?
+#' @param ... further arguments passed to or from other methods.
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
 #' # Load a pre-formatted dtm 
@@ -301,7 +302,7 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
 #' # Get predictions on the next 50 documents
 #' pred <- predict(model, dtm_tfidf[51:100,])
 #' @export
-predict.lsa_topic_model <- function(object, newdata, verbose = FALSE) {
+predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
   
   ### Check inputs ----
   
