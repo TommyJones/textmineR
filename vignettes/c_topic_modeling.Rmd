@@ -60,20 +60,22 @@ dtm_sample <- dtm[ sample(1:nrow(dtm), 500) , ]
 # note the number of topics is arbitrary here
 # see extensions for more info
 model <- FitLdaModel(dtm = dtm_sample, 
-                     k = 100, 
-                     iterations = 500,
-                     alpha = 0.1, # this is the default value
-                     beta = 0.05, # this is the default value
-                     cpus = 2) 
+                     k = 100,
+                     iterations = 300, # I usually recommend at least 500 iterations or more
+                     burnin = 275,
+                     alpha = 0.1,
+                     beta = colSums(dtm_sample) / sum(dtm_sample) * 100, # asymmetric beta
+                     optimize_alpha = TRUE,
+                     calc_likelihood = TRUE,
+                     calc_coherence = TRUE,
+                     calc_r2 = TRUE) 
 
 ```
 
-The output from the model is a list with the two matrices listed above. 
+The output from the model is an S3 object of class `lda_topic_model`. It contains several objects. The most important are three matrices: `theta` gives $P(topic_k|document_d)$, `phi` gives $P(token_v|topic_k)$, and `gamma` gives $P(topic_k|token_v)$. (For more on `gamma`, see below.) Then `data` is the DTM or TCM used to train the model. `alpha` and `beta` are the Dirichlet priors for topics over documents and tokens over topics, respectively. The `log_likelihood` is $P(tokens|topics)$ at each iteration. `coherence` gives the probabilistic coherence of each topic. And `r2` is the R-squared of the model given the data. 
 
 ```{r }
-# two matrices: 
-# theta = P(topic | document)
-# phi = P(word | topic)
+
 str(model)
 
 ```
@@ -86,21 +88,11 @@ The log likelihood has a more difficult interpretation. Though, as shown in the 
 
 # R-squared 
 # - only works for probabilistic models like LDA and CTM
-model$r2 <- CalcTopicModelR2(dtm = dtm_sample, 
-                             phi = model$phi,
-                             theta = model$theta,
-                             cpus = 2)
-
 model$r2
 
 # log Likelihood (does not consider the prior) 
 # - only works for probabilistic models like LDA and CTM
-model$ll <- CalcLikelihood(dtm = dtm_sample, 
-                           phi = model$phi, 
-                           theta = model$theta,
-                           cpus = 2)
-
-model$ll
+plot(model$log_likelihood, type = "l")
 ```
 
 Next, we turn our attention to topic quality. There are many "topic coherence" metrics available in the literature. For example, see [this paper](https://svn.aksw.org/papers/2015/WSDM_Topic_Evaluation/public.pdf) or [this paper](https://mimno.infosci.cornell.edu/nips2013ws/nips2013tm_submission_7.pdf). textmineR implements a new topic coherence measure based on probability theory. (A formal write up of this metric will be included in my PhD dissertation, expected 2020.)
@@ -122,8 +114,6 @@ And all 6 differences are averaged together, giving the probabilistic coherence 
 ```{r fig.width = 7.5, fig.height = 4}
 # probabilistic coherence, a measure of topic quality
 # this measure can be used with any topic model, not just probabilistic ones
-model$coherence <- CalcProbCoherence(phi = model$phi, dtm = dtm_sample, M = 5)
-
 summary(model$coherence)
 
 hist(model$coherence, 
@@ -131,9 +121,7 @@ hist(model$coherence,
      main = "Histogram of probabilistic coherence")
 ```
 
-We'll see the real value of coherence after calculating a few more objects. (Note: a future version of textmineR will calculate probabilistic coherence and the below objects automatically when you call `FitLdaModel` or any other topic model.)
-
-In the chunk below, we will 
+We'll see the real value of coherence after calculating a few more objects. In the chunk below, we will 
 
 1. Pull out the top 5 terms for each topic
 2. Calculate the most frequent (prevalent) topics in the corpus
@@ -164,6 +152,9 @@ knitr::kable(head(t(model$top_terms)),
 # topics in/out of docuemnts. 
 model$prevalence <- colSums(model$theta) / sum(model$theta) * 100
 
+# prevalence should be proportional to alpha
+plot(model$prevalence, model$alpha, xlab = "prevalence", ylab = "alpha")
+
 # textmineR has a naive topic labeling tool based on probable bigrams
 model$labels <- LabelTopics(assignments = model$theta > 0.05, 
                             dtm = dtm_sample,
@@ -192,64 +183,57 @@ knitr::kable(model$summary[ order(model$summary$prevalence, decreasing = TRUE) ,
 
 ```
 
-Ok, you've built a topic model. You've decided how well it fits your data. You've examined coherence, top words, and so on. Now you want to get topic distributions for new documents. (Remember, we only used 500 of our 5,000 documents to train the model.) To do this, we need Bayes' Rule.  
+Ok, you've built a topic model. You've decided how well it fits your data. You've examined coherence, top words, and so on. Now you want to get topic distributions for new documents. (Remember, we only used 500 of our 5,000 documents to train the model.) `textmineR` provides a couple of ways to do this. The full Bayesian approach is to use Gibbs sampling, holding the topic distributions in `phi` fixed. The more frequentist way is using the `gamma` object returned when we ran `FitLdaModel`. (You can also calculate it separately with the `CalcGamma` function.)
 
-The rows of $\Phi$ are $P(\text{word}|\text{topic})$. However, to get predictions for new documents, we need $P(\text{topic}|\text{word})$. Remembering Bayes' Rule, we get
+
+`gamma` or $\Gamma$ is a matrix whose entries represent $P(\text{topic}|\text{token}). To calculate this, we need Bayes' Rule.  
+
+The rows of `phi` or $\Phi$ are $P(\text{token}|\text{topic})$. However, to get predictions for new documents, we need $P(\text{topic}|\text{token})$. Remembering Bayes' Rule, we get
 
 \begin{align}
-  P(\text{topic}|\text{word}) 
-    &= \frac{P(\text{word}|\text{topic})P(\text{topic})}{P(\text{word})}
+  P(\text{topic}|\text{token}) 
+    &= \frac{P(\text{token}|\text{topic})P(\text{topic})}{P(\text{token})}
 \end{align}
 
 Detail-oriented readers may wonder how you can get $P(\text{topic})$. We can get this through $\sum_j P(\text{topic}|\text{document}_j)P(\text{document}_j)$. 
 
-For now, textmineR refers to the resulting matrix as $\Phi'$ or "phi prime". (Note: this will be called $\Gamma$ or "gamma" in textmineR version 3.0+.)
+For now, textmineR refers to the resulting matrix as $\Gamma$ or "phi prime". (Note: this will be called $\Gamma$ or "gamma" in textmineR version 3.0+.)
 
 textmineR's `CalcPhiPrime` function does the above calculations for you. 
 
-Once you have $\Phi'$, a simple dot product with the DTM of your new documents ($A$) will get new topic predictions. 
+Once you have $\Gamma$, a simple dot product with the DTM of your new documents ($A$) will get new topic predictions. 
 
 \begin{align}
   \Theta_{new} 
-    &= A \cdot \Phi'^T
+    &= A \cdot \Gamma^T
 \end{align}
 
-As of this writing, you will have to take care to make sure your vocabulary aligns. (I'd suggest using something like `intersect(colnames(dtm), colnames(theta))`.) (textmineR version 3.0 will enable a `predict` method for topic models that will handle all of this for you.)
+Both methods are available through `predict.lda_topic_model` with the `method` argument ("dot" or "gibbs"). Which method should you use? In most cases, I'd recommend "gibbs". However, "dot" is useful for speed if that's necessary. Also, `gamma` can be examined along with `phi` for corpus analysis.
 
-```{r }
-
-# first get a prediction matrix, phi is P(word | topic)
-# we need P(topic | word), or "phi_prime"
-model$phi_prime <- CalcPhiPrime(phi = model$phi,
-                                theta = model$theta)
-
-# set up the assignments matrix and a simple dot product gives us predictions
-assignments <- dtm / rowSums(dtm)
-
-assignments <- assignments %*% t(model$phi_prime)
-
-assignments <- as.matrix(assignments) # convert to regular R dense matrix
-```
-
-For the pedantic, the above method is a "frequentist" prediction even though LDA is a Bayesian model. textmineR 3.0 will implement a fully Bayesian predict method for LDA. In the meantime, this frequentist method works well, but is a little noisier. We can compare the difference between the frequentist predictions to the Bayesian ones, as the two barplots below show. By and large they are the same.
-
+Do note how much faster "dot" is when running the two below.
 
 ```{r fig.width = 7.5, fig.height = 4}
-# compare the "fit" assignments to the predicted ones
-barplot(rbind(model$theta[ rownames(dtm_sample)[ 1 ] , ],
-              assignments[ rownames(dtm_sample)[ 1 ] , ]), 
-        las = 2,
-        main = "Comparing topic assignments",
-        beside = TRUE,
-        col = c("red", "blue"))
 
-legend("topleft", 
-       legend = c("Bayesian (during fitting)", "Frequentist (predicted)"),
+# predictions with gibbs
+assignments <- predict(model, dtm,
+                       method = "gibbs", 
+                       iterations = 300,
+                       burnin = 275,
+                       seed = 1234)
+
+# predictions with dot
+assignments_dot <- predict(model, dtm,
+                           method = "dot")
+
+
+# compare
+barplot(rbind(assignments[10,], assignments_dot[10,]),
+        col = c("red", "blue"), las = 2, beside = TRUE)
+legend("topright", legend = c("gibbs", "dot"), col = c("red", "blue"), 
        fill = c("red", "blue"))
-
 ```
 
-Depending on your application, you can reformat the outputs of phi, theta, assignments, the summary table etc. to suite your needs. For example, you can build a "semantic" search of your documents by vectorizing the query with `CreateDtm`, then predicting under the model with phi_prime.
+If you compare the two methods in the image above, you can see that Gibbs sampling is slower, but has a much less noisy result.
 
 ### LSA Example
 
@@ -282,10 +266,13 @@ tf_idf <- t(tf_idf)
 lsa_model <- FitLsaModel(dtm = tf_idf, 
                      k = 100)
 
-# three objects: 
+# objects: 
+# sv = a vector of singular values created with SVD
 # theta = distribution of topics over documents
 # phi = distribution of words over topics
-# sv = a vector of singular values created with SVD
+# gamma = predition matrix, distribution of topics over words
+# coherence = coherence of each topic
+# data = data used to train model
 str(lsa_model)
 ```
 
@@ -296,7 +283,6 @@ However, we can still use probabilistic coherence to evaluate individual topics.
 ```{r fig.width = 7.5, fig.height = 4}
 # probabilistic coherence, a measure of topic quality
 # - can be used with any topic lsa_model, e.g. LSA
-lsa_model$coherence <- CalcProbCoherence(phi = lsa_model$phi, dtm = dtm_sample, M = 5)
 
 summary(lsa_model$coherence)
 
@@ -360,10 +346,10 @@ knitr::kable(lsa_model$summary[ order(lsa_model$summary$prevalence, decreasing =
 ```
 
 
-One key mathematical difference is how you calculate $\Phi'$. For LSA the operation is
+One key mathematical difference is how you calculate $\Gamma$. For LSA the operation is
 
 \begin{align}
-  \Phi' &=
+  \Gamma &=
     (S\cdot\Phi)^{-1}
 \end{align}
 
@@ -371,24 +357,17 @@ One key mathematical difference is how you calculate $\Phi'$. For LSA the operat
 ```{r}
 # Get topic predictions for all 5,000 documents
 
-# first get a prediction matrix,
-lsa_model$phi_prime <- diag(lsa_model$sv) %*% lsa_model$phi
-
-lsa_model$phi_prime <- t(MASS::ginv(lsa_model$phi_prime))
-
 # set up the assignments matrix and a simple dot product gives us predictions
 lsa_assignments <- t(dtm) * tf_sample$idf
 
 lsa_assignments <- t(lsa_assignments)
 
-lsa_assignments <- lsa_assignments %*% t(lsa_model$phi_prime)
-
-lsa_assignments <- as.matrix(lsa_assignments) # convert to regular R dense matrix
+lsa_assignments <- predict(lsa_model, lsa_assignments)
 
 
 ```
 
-In this case, there is no Bayesian/frequentist difference. So predictions are identical with both methods.
+In this case, there is no Bayesian/frequentist difference. So there's only one way to predict. Note that in the case above, we had to do the IDF reweighting before passing to `predict.lsa_topic_model`. If you pass a character vector (which is possible), `predict.lsa_topic_model` will only calculate a count DTM (or TCM), not do any reweighting.
 
 ```{r fig.width = 7.5, fig.height = 4}
 # compare the "fit" assignments to the predicted ones
@@ -409,15 +388,13 @@ legend("topleft",
 
 As of this writing, textmineR has implementations of
 
-* LDA using Gibbs sampling from the [`lda`](https://CRAN.R-project.org/package=lda) package
-* LDA using Bayesian expectation maximization from the [`topicmodels`](https://CRAN.R-project.org/package=topicmodels) package
+* LDA using Gibbs sampling implemented natively in textmineR
 * LSA using a single value decomposition from the [`RSpectra`](https://CRAN.R-project.org/package=RSpectra) package
 * Correlated topic models (CTM) from the [`topicmodels`](https://CRAN.R-project.org/package=topicmodels) package
 
 A future version of textmineR will have an implementation of a strucural topic model from the [`stm`](https://CRAN.R-project.org/package=stm) package. 
 
 All of the above have nearly identical syntax and workflows as detailed above.
-
 
 ### Extensions
 
@@ -453,14 +430,18 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
 
   m <- FitLdaModel(dtm = nih_sample_dtm, 
                    k = k, 
-                   iterations = 500, 
-                   cpus = 1)
+                   iterations = 200, 
+                   burnin = 180,
+                   alpha = 0.1,
+                   beta = colSums(nih_sample_dtm) / sum(nih_sample_dtm) * 100,
+                   optimize_alpha = TRUE,
+                   calc_likelihood = FALSE,
+                   calc_coherence = TRUE,
+                   calc_r2 = FALSE)
   m$k <- k
-  m$coherence <- CalcProbCoherence(phi = m$phi, 
-                                   dtm = nih_sample_dtm, 
-                                   M = 5)
+  
   m
-}, export=c("nih_sample_dtm"), # export only needed for Windows machines
+}, export= ls(), # c("nih_sample_dtm"), # export only needed for Windows machines
 cpus = 2) 
 
 # Get average coherence for each model
