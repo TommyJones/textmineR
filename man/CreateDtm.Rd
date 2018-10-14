@@ -5,8 +5,9 @@
 \title{Convert a character vector to a document term matrix.}
 \usage{
 CreateDtm(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1),
-  stopword_vec = c(tm::stopwords("english"), tm::stopwords("SMART")),
-  lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
+  stopword_vec = c(stopwords::stopwords("en"),
+  stopwords::stopwords(source = "smart")), lower = TRUE,
+  remove_punctuation = TRUE, remove_numbers = TRUE,
   stem_lemma_function = NULL, verbose = FALSE, ...)
 }
 \arguments{
@@ -21,7 +22,7 @@ n-gram size; the second entry is the maximum n-gram size. Defaults to
 \code{c(1, 1)}.}
 
 \item{stopword_vec}{A character vector of stopwords you would like to remove.
-Defaults to \code{c(tm::stopwords("english"), tm::stopwords("SMART"))}. 
+Defaults to \code{c(stopwords::stopwords("en"), stopwords::stopwords(source = "smart"))}. 
 If you do not want stopwords removed, specify \code{stopword_vec = c()}.}
 
 \item{lower}{Do you want all words coerced to lower case? Defaults to \code{TRUE}}

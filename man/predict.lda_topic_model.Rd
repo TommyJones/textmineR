@@ -5,8 +5,7 @@
 \title{Get predictions from a Latent Dirichlet Allocation model}
 \usage{
 \method{predict}{lda_topic_model}(object, newdata, method = c("gibbs",
-  "dot"), iterations = NULL, burnin = -1, seed = NULL,
-  verbose = FALSE, ...)
+  "dot"), iterations = NULL, burnin = -1, verbose = FALSE, ...)
 }
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}
@@ -22,8 +21,6 @@ for the Gibbs sampler to run. A future version may include automatic stopping cr
 \item{burnin}{If \code{method = "gibbs"}, an integer number of burnin iterations. 
 If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
 are an average over all iterations greater than \code{burnin}.}
-
-\item{seed}{If \code{method = "gibbs"}, a random seed.}
 
 \item{verbose}{Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 do you want to see status during vectorization?}
@@ -42,6 +39,8 @@ Obtains predictions of topics for new documents from a fitted LDA model
 data(nih_sample_dtm)
 
 # fit a model 
+set.seed(12345)
+
 m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
                  iterations = 200, burnin = 175)
 
