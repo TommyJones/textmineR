@@ -41,7 +41,7 @@ data(nih_sample)
 # First create a TCM using skip grams, we'll use a 5-word window
 # most options available on CreateDtm are also available for CreateTcm
 tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
-                 skipgram_window = 5,
+                 skipgram_window = 10,
                  verbose = FALSE,
                  cpus = 2)
 
@@ -56,11 +56,17 @@ Once we have a TCM, we can use the same procedure to make an embedding model as 
 ```{r}
 # use LDA to get embeddings into probability space
 # This will take considerably longer as the TCM matrix has many more rows 
-# than a DTM
+# than your average DTM
 embeddings <- FitLdaModel(dtm = tcm,
                           k = 100,
-                          iterations = 500,
-                          cpus = 2)
+                          iterations = 200,
+                          burnin = 180,
+                          alpha = 0.1,
+                          beta = colSums(tcm) / sum(tcm) * 100,
+                          optimize_alpha = TRUE,
+                          calc_likelihood = TRUE,
+                          calc_coherence = TRUE,
+                          calc_r2 = TRUE)
 ```
 
 ## Interpretation of $\Phi$ and $\Theta$
@@ -73,17 +79,9 @@ As it happens, the same evaluation metrics developed for topic modeling also app
 
 ```{r}
 # Get an R-squared for general goodness of fit
-embeddings$r2 <- CalcTopicModelR2(dtm = tcm, 
-                                  phi = embeddings$phi,
-                                  theta = embeddings$theta,
-                                  cpus = 2)
-
 embeddings$r2
 
 # Get coherence (relative to the TCM) for goodness of fit
-embeddings$coherence <- CalcProbCoherence(phi = embeddings$phi,
-                                          dtm = tcm)
-
 summary(embeddings$coherence)
 ```
 
@@ -130,6 +128,8 @@ knitr::kable(embeddings$summary[ order(embeddings$summary$coherence, decreasing 
 
 You can embed whole documents under your model. Doing so, effectively makes your embeddings a topic model that have topics of local contexts, instead of global ones. Why might you want to do this? The short answer is that you may have reason to believe that an embedding model may give you better topics, especially if you are trying to pick up on more subtle topics. In a later example, we'll be doing that to build a document summarizer. 
 
+A note on the below: TCMs may be very sparse and cause us to run into computational underflow issues when using the "gibbs" prediction method. As a result, I'm choosing to use the "dot" method.
+
 ```{r}
 # Make a DTM from our documents
 dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
@@ -138,26 +138,18 @@ dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                        verbose = FALSE,
                        cpus = 2)
 
-dtm_embed <- dtm_embed[ , colnames(tcm) ] # make sure vocab lines up
-
-# Get phi_prime, the projection matrix
-embeddings$phi_prime <- CalcPhiPrime(phi = embeddings$phi,
-                                     theta = embeddings$theta)
 
 # Project the documents into the embedding space
-embedding_assignments <- dtm_embed / rowSums(dtm_embed)
-
-embedding_assignments <- embedding_assignments %*% t(embeddings$phi_prime)
-
-embedding_assignments <- as.matrix(embedding_assignments)
+embedding_assignments <- predict(embeddings, dtm_embed, method = "dot")
 ```
 
 Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculaing R-squared and coherence.
 
 ```{r}
 # get a goodness of fit relative to the DTM
+# as of 10/15/2018, this isn't calculating right. Have to track down this bug.
 embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
-                                      phi = embeddings$phi,
+                                      phi = embeddings$phi[,colnames(dtm_embed)], # line up vocabulary
                                       theta = embedding_assignments,
                                       cpus = 2)
 
