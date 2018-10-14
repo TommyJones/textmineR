@@ -446,7 +446,7 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' p2 <- predict(m, nih_sample_dtm[21:100,], method = "dot")
 #'
 #' # compare the methods
-#' barplot(rbind(p1[1,],p2[1,]), beside = T, col = c("red", "blue")) 
+#' barplot(rbind(p1[1,],p2[1,]), beside = TRUE, col = c("red", "blue")) 
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
                         optimize_alpha = FALSE, calc_likelihood = FALSE, 
