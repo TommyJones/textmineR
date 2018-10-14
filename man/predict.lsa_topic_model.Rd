@@ -4,7 +4,7 @@
 \alias{predict.lsa_topic_model}
 \title{Predict method for LSA topic models}
 \usage{
-\method{predict}{lsa_topic_model}(object, newdata, verbose = FALSE)
+\method{predict}{lsa_topic_model}(object, newdata, verbose = FALSE, ...)
 }
 \arguments{
 \item{object}{a fitted object of class "lsa_topic_model"}
@@ -13,6 +13,8 @@
 
 \item{verbose}{Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 do you want to see status during vectorization?}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \value{
 a "theta" matrix with one row per document and one column per topic
