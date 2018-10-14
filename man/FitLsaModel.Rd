@@ -4,7 +4,7 @@
 \alias{FitLsaModel}
 \title{Fit a topic model using Latent Semantic Analysis}
 \usage{
-FitLsaModel(dtm, k, return_all = FALSE, ...)
+FitLsaModel(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{Matrix::dgCMatrix}}

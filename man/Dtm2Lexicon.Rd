@@ -5,15 +5,8 @@
 \title{Turn a document term matrix into a list for LDA Gibbs sampling}
 \usage{
 Dtm2Lexicon(dtm, ...)
-
-Dtm2Lexicon(dtm, ...)
 }
 \arguments{
-\item{dtm}{A document term matrix (or term co-occurrence matrix) of class 
-\code{dgCMatrix}.}
-
-\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
-
 \item{dtm}{A document term matrix (or term co-occurrence matrix) of class 
 \code{dgCMatrix}.}
 
@@ -23,24 +16,11 @@ Dtm2Lexicon(dtm, ...)
 Returns a list. Each element of the list represents a row of the input
 matrix. Each list element contains a numeric vector with as many entries as
 tokens in the original document. The entries are the column index for that token, minus 1.
-
-Returns a list. Each element of the list represents a row of the input
-matrix. Each list element contains a numeric vector with as many entries as
-tokens in the original document. The entries are the column index for that token, minus 1.
 }
 \description{
 Represents a document term matrix as a list.
-
-Represents a document term matrix as a list.
 }
 \examples{
-\dontrun{
-# Load pre-formatted data for use
-data(nih_sample_dtm)
-
-result <- Dtm2Lexicon(dtm = nih_sample_dtm, 
-                      cpus = 2)
-}
 \dontrun{
 # Load pre-formatted data for use
 data(nih_sample_dtm)

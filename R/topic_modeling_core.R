@@ -415,10 +415,14 @@ Dtm2Lexicon <- function(dtm, ...) {
 #'        This is the prior for topics over documents
 #' @param beta Vector of length \code{ncol(dtm)} for asymmetric or a number for symmetric.
 #'        This is the prior for words over topics.
-#' @param optimize_alpha = FALSE, 
-#' @param calc_likelihood = FALSE, 
-#' @param calc_coherence = TRUE, 
-#' @param calc_r2
+#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs iterations?
+#'        Defaults to \code{FALSE}.
+#' @param calc_likelihood Do you want to calculate the likelihood every 10 Gibbs iterations?
+#'        Useful for assessing convergence. Defaults to \code{FALSE}. 
+#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
+#'        after the model is trained? Defaults to \code{TRUE}. 
+#' @param calc_r2 Do you want to calculate R-squared after the model is trained?
+#'        Defaults to \code{FALSE}.
 #' @param seed If not null (the default) then the random seed you wish to set. This
 #' will return the same outputs for the same inputs. Useful for diagnostics.
 #' @param ... Other arguments to be passed to textmineR::TmParallelApply
