@@ -728,9 +728,10 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   
   if (method[1] == "dot") { # dot product method
     
-    result <- dtm_newdata
+    result <- dtm_newdata[,vocab_original]
     result <- (result / Matrix::rowSums(result)) %*% t(object$gamma[ ,vocab_original])
     result <- as.matrix(result)
+    result[is.na(result)] <- 0
     
   } else { # gibbs method
     # format inputs
