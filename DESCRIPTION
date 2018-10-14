@@ -36,7 +36,7 @@ Suggests:
     stringi,
     topicmodels,
     wordcloud
-License: GPL (>= 3)
+License: GPL (>= 3) + file LICENSE
 URL: https://github.com/TommyJones/textmineR
 BugReports: https://github.com/TommyJones/textmineR/issues
 LazyData: true
