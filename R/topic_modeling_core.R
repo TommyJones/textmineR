@@ -333,7 +333,16 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
 
   ### if newdata is a document vector, make a dtm ----
   if (class(newdata) == "character") {
-    ## Add a check here to make sure it's the right object & return helpful error message
+    
+    # check if we have the option to use a character vector
+    data_args <- attr(object$data, "args")
+    
+    data_call <- attr(object$data, "call")
+    
+    if (is.null(data_args) | is.null(data_call)) {
+      stop("Prediction where newdata is of class character is in beta and something went wrong.
+           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
+    }
     
     data_args <- attr(object$data, "args")
     
@@ -346,7 +355,9 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
     } else if (attr(object$data, "call") == "CreateTcm") {
       newdata <- do.call(CreateTcm, data_args)
     } else {
-      stop("Something is wrong with object$data. Cannot find attribute 'call'.")
+      stop("Something is wrong with object$data. Cannot find attribute 'call'.
+           Prediction where newdata is of class character is in beta and something went wrong.
+           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
     }
 
   }
@@ -673,25 +684,37 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     stop("method must be one of 'gibbs' or 'dot'")
   }
 
+
   ### If newdata is a character vector, convert to dgCMatrix ----
 
   if ("dgCMatrix" %in% class(newdata)) {
     dtm_newdata <- newdata
   } else {
+    
     ## Add a check here to make sure it's the right object & return helpful error message
     
+    
     data_args <- attr(object$data, "args")
+    
+    data_call <- attr(object$data, "call")
+    
+    if (is.null(data_args) | is.null(data_call)) {
+      stop("Prediction where newdata is of class character is in beta and something went wrong.
+           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
+    }
     
     data_args$doc_vec <- newdata
     
     data_args$verbose <- verbose
     
-    if (attr(object$data, "call") == "CreateDtm") {
+    if (data_call == "CreateDtm") {
       dtm_newdata <- do.call(CreateDtm, data_args)
-    } else if (attr(object$data, "call") == "CreateTcm") {
+    } else if (data_call == "CreateTcm") {
       dtm_newdata <- do.call(CreateTcm, data_args)
     } else {
-      stop("Something is wrong with object$data. Cannot find attribute 'call'.")
+      stop("Something is wrong with object$data. Cannot find attribute 'call'.
+           Prediction where newdata is of class character is in beta and something went wrong.
+           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
     }
   }
   
