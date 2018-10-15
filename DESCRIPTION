@@ -34,6 +34,7 @@ Suggests:
     MASS,
     rmarkdown,
     stringi,
+    testthat,
     topicmodels,
     wordcloud
 License: MIT + file LICENSE
