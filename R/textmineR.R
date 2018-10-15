@@ -14,7 +14,18 @@ NULL
 
 #' @import Matrix
 #' @import Rcpp
+#' @importFrom Rcpp sourceCpp
 #' @import RcppProgress
 #' @importFrom methods as
+#' @export CalcLikelihoodC
+#' @export CalcSumSquares
+#' @export Dtm2DocsC
+#' @export Hellinger_cpp
+#' @export HellingerMat
+#' @export JSD_cpp
+#' @export JSDmat
+#' @export dtm_to_lexicon_c
+#' @export fit_lda_c
+#' @export predict_lda_c
 #' @useDynLib "textmineR", .registration=TRUE
 NULL
