@@ -556,6 +556,10 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   gamma <- CalcGamma(phi = phi, theta = theta, 
                                    p_docs = Matrix::rowSums(dtm))
   
+  names(result$alpha) <- rownames(result$phi)
+  
+  names(result$beta) <- colnames(result$phi)
+  
   result <- list(phi = phi, theta = theta, gamma = gamma,
                  data = dtm, alpha = result$alpha, beta = result$beta,
                  log_likelihood = data.frame(result$log_likelihood)[,1:2] # for now, 3rd column isn't right
