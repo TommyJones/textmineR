@@ -562,7 +562,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   result <- list(phi = phi, theta = theta, gamma = gamma,
                  data = dtm, alpha = result$alpha, beta = result$beta,
-                 log_likelihood = data.frame(result$log_likelihood)[,1:2] # for now, 3rd column isn't right
+                 log_likelihood = data.frame(result$log_likelihood)[,1:2] # drop 3rd col for now
                  ) # add other things here
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
