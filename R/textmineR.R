@@ -16,6 +16,5 @@ NULL
 #' @import Rcpp
 #' @import RcppProgress
 #' @importFrom methods as
-#' @importFrom futile.logger flog.debug flog.info flog.warn flog.error
 #' @useDynLib "textmineR", .registration=TRUE
 NULL
