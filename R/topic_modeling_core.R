@@ -437,7 +437,7 @@ Dtm2Lexicon <- function(dtm, ...) {
 #'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
-#' @param ... Other arguments to be passed to textmineR::TmParallelApply
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
 #' @examples 
@@ -611,7 +611,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #'        are an average over all iterations greater than \code{burnin}.
 #' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 #'        do you want to see status during vectorization?
-#' @param ... Other arguments to be passed to textmineR::TmParallelApply
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
 #' \dontrun{

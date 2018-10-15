@@ -38,7 +38,7 @@ after the model is trained? Defaults to \code{TRUE}.}
 \item{calc_r2}{Do you want to calculate R-squared after the model is trained?
 Defaults to \code{FALSE}.}
 
-\item{...}{Other arguments to be passed to textmineR::TmParallelApply}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
 Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE

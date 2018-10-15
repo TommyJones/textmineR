@@ -25,7 +25,7 @@ are an average over all iterations greater than \code{burnin}.}
 \item{verbose}{Defaults to \code{FALSE}. If \code{newdata} is a character vector,
 do you want to see status during vectorization?}
 
-\item{...}{Other arguments to be passed to textmineR::TmParallelApply}
+\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
 a "theta" matrix with one row per document and one column per topic
