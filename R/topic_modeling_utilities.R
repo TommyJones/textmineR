@@ -72,18 +72,24 @@ GetProbableTerms <- function(docnames, dtm, p_terms=NULL){
 #' j-th column corresponds to the j-th "best" label assignment.
 #' @export
 #' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_dtm)
-#' data(nih_sample_topic_model) 
+#' # make a dtm with unigrams and bigrams
+#' data(nih_sample)
 #' 
-#' assignments <- t(apply(nih_sample_topic_model$theta, 1, function(x){
+#' dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
+#'                  doc_names = nih_sample$APPLICATION_ID,
+#'                  ngram_window = c(1,2))
+#' 
+#' # make a topic model
+#' m <- FitLsaModel(dtm = dtm,
+#'                  k = 10)
+#'
+#' assignments <- t(apply(m$theta, 1, function(x){
 #'   x[ x < 0.05 ] <- 0
 #'   x / sum(x)
 #' }))
 #' 
-#' labels <- LabelTopics(assignments = assignments, dtm = nih_sample_dtm, M = 2)
+#' labels <- LabelTopics(assignments = assignments, dtm = dtm, M = 2)
 #' 
-
 LabelTopics <- function(assignments, dtm, M=2){
   # figure out a threshold
   threshold <- apply(assignments, 2, function(x) max(x, na.rm=T))
