@@ -32,7 +32,8 @@ data(nih_sample)
 
 dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                  doc_names = nih_sample$APPLICATION_ID,
-                 ngram_window = c(1,2))
+                 ngram_window = c(1,2),
+                 cpus = 2)
 
 # make a topic model
 m <- FitLsaModel(dtm = dtm,
