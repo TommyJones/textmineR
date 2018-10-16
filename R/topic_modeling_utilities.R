@@ -88,7 +88,7 @@ GetProbableTerms <- function(docnames, dtm, p_terms=NULL){
 #'   x / sum(x)
 #' }))
 #' 
-#' labels <- LabelTopics(assignments = assignments, dtm = dtm, M = 2)
+#' labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
 #' 
 LabelTopics <- function(assignments, dtm, M=2){
   # figure out a threshold
