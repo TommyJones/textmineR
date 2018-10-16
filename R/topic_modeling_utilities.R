@@ -88,6 +88,8 @@ GetProbableTerms <- function(docnames, dtm, p_terms=NULL){
 #'   x / sum(x)
 #' }))
 #' 
+#' assignments[is.na(assignments)] <- 0
+#'
 #' labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
 #' 
 LabelTopics <- function(assignments, dtm, M=2){

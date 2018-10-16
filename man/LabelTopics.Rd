@@ -43,6 +43,8 @@ assignments <- t(apply(m$theta, 1, function(x){
   x / sum(x)
 }))
 
+assignments[is.na(assignments)] <- 0
+
 labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
 
 }
