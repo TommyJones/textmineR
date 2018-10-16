@@ -12,6 +12,9 @@
 #' @param p_docs A numeric vector of length \code{nrow(theta)} that is 
 #'               proportional to the number of terms in each document. This is
 #'               an optional argument. It defaults to NULL
+#' @param correct Logical. Do you want to set NAs or NaNs in the final result to
+#'                zero? Useful when hitting computational underflow. Defaults to
+#'                \code{TRUE}. Set to \code{FALSE} for troubleshooting or diagnostics.
 #' @return
 #' Returns a \code{matrix} whose rows correspond to topics and whose columns
 #' correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
@@ -24,7 +27,7 @@
 #' gamma <- CalcGamma(phi = nih_sample_topic_model$phi, 
 #'                    theta = nih_sample_topic_model$theta)
 #' 
-CalcGamma <- function(phi, theta, p_docs = NULL){
+CalcGamma <- function(phi, theta, p_docs = NULL, correct = TRUE){
   
   # set up constants
   D <- nrow(theta)
@@ -51,17 +54,22 @@ CalcGamma <- function(phi, theta, p_docs = NULL){
   
   
   # get our result
-  phi_prime <- matrix(0, ncol=ncol(p_t), nrow=ncol(p_t))
-  diag(phi_prime) <- p_t
+  gamma <- matrix(0, ncol=ncol(p_t), nrow=ncol(p_t))
+  diag(gamma) <- p_t
   
-  phi_prime <- phi_prime %*% phi
+  gamma <- gamma %*% phi
   
-  phi_prime <- t(apply(phi_prime, 1, function(x) x / p_w))
+  gamma <- t(apply(gamma, 1, function(x) x / p_w))
   
-  rownames(phi_prime) <- rownames(phi)
-  colnames(phi_prime) <- colnames(phi)
+  rownames(gamma) <- rownames(phi)
+  colnames(gamma) <- colnames(phi)
   
-  return(phi_prime)
+  # give us zeros instead of NAs when we have NA or NaN entries
+  if (correct) {
+    gamma[is.na(gamma)] <- 0 
+  }
+  
+  return(gamma)
 }
 
 
@@ -159,7 +167,7 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #' @param k Number of topics
 #' @param return_all Logical. Do you want the raw results of the underlying 
 #' function returned along with the formatted results? Defaults to \code{TRUE}.
-#' @param ... Other arguments to pass to \link[topicmodels]{CTM}. 
+#' @param ... Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}. 
 #' @return Returns a list with a minimum of two objects, \code{phi} and 
 #' \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
 #' The rows of \code{theta} index documents and the columns index topics.
@@ -171,9 +179,21 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #' model <- FitCtmModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ], 
 #'                      k = 3, return_all = FALSE)
 #' @export
-FitCtmModel <- function(dtm, k, return_all = TRUE, ...){
+FitCtmModel <- function(dtm, k, calc_coherence = TRUE, 
+                        calc_r2 = FALSE, return_all = TRUE, ...){
   
-  model <- topicmodels::CTM(x = dtm, k = k, control = list(...))
+  ## TODO - Add checks for inputs
+  
+  # match arguments in ... to the functions to which they apply
+  dots <- list(...)
+  
+  parallel_args <- dots[ names(dots) %in% 
+                        names(formals(textmineR::TmParallelApply)) ]
+  
+  model_args <- dots[ names(dots) %in% 
+                      names(formals(topicmodels::CTM)) ]
+  
+  model <- topicmodels::CTM(x = dtm, k = k, control = model_args)
   
   theta <- model@gamma
   
@@ -186,13 +206,121 @@ FitCtmModel <- function(dtm, k, return_all = TRUE, ...){
   
   result <- list(theta = theta, phi = phi)
   
+  result$gamma <- CalcGamma(result$phi, result$theta, 
+                            p_docs = Matrix::rowSums(dtm))
+  
+  if (calc_coherence) {
+    result$coherence <- CalcProbCoherence(result$phi, dtm)
+  }
+  
+  if (calc_r2) {
+    result$r2 <- CalcTopicModelR2(dtm, result$phi, result$theta,
+                                  parallel_args)
+  }
+  
   if(return_all){
     result <- c(result, etc = model)
   }
   
+  class(result) <- "ctm_topic_model"
+  
   return(result)
 }
 
+#' Predict method for Correlated topic models (CTM)
+#' @description Obtains predictions of topics for new documents from a fitted CTM model
+#' @param object a fitted object of class "ctm_topic_model"
+#' @param newdata a DTM or TCM of class dgCMatrix or a character vector
+#' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
+#'        do you want to see status during vectorization?
+#' @param ... further arguments passed to or from other methods.
+#' @return a "theta" matrix with one row per document and one column per topic
+#' @note
+#' Predictions for this method are performed using the "dot" method as described
+#' in the textmineR vignette "c_topic_modeling".
+#' @examples
+#' # Load a pre-formatted dtm 
+#' data(nih_sample_dtm) 
+#' 
+#' model <- FitCtmModel(dtm = nih_sample_dtm[1:50,], k = 3,
+#'                      calc_coherence = FALSE, calc_r2 = FALSE)
+#' 
+#' # Get predictions on the next 50 documents
+#' pred <- predict(model, nih_sample_dtm[51:100,])
+#' @export
+predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
+  ### Check inputs ----
+
+  if (class(object) != "ctm_topic_model") {
+    stop("object must be a topic model object of class ctm_topic_model")
+  }
+  
+  if (sum(c("dgCMatrix", "character", "numeric") %in% class(newdata)) < 1) {
+    stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  }
+  
+  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+    if (is.null(names(newdata))) {
+      stop("it looks like newdata is a numeric vector without names. 
+           Did you mean to pass a single document?
+           If so, it needs a names attribute to index tokens")
+    }
+    
+    new_names <- names(newdata)
+    
+    newdata <- Matrix::Matrix(newdata, nrow = 1)
+    
+    colnames(newdata) <- new_names
+    
+    }
+  
+  ### if newdata is a document vector, make a dtm ----
+  if (class(newdata) == "character") {
+    
+    # check if we have the option to use a character vector
+    data_args <- attr(object$data, "args")
+    
+    data_call <- attr(object$data, "call")
+    
+    if (is.null(data_args) | is.null(data_call)) {
+      stop("Prediction where newdata is of class character is in beta and something went wrong.
+           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
+    }
+    
+    data_args <- attr(object$data, "args")
+    
+    data_args$doc_vec <- newdata
+    
+    data_args$verbose <- verbose
+    
+    if (attr(object$data, "call") == "CreateDtm") {
+      newdata <- do.call(CreateDtm, data_args)
+    } else if (attr(object$data, "call") == "CreateTcm") {
+      newdata <- do.call(CreateTcm, data_args)
+    } else {
+      stop("Something is wrong with object$data. Cannot find attribute 'call'.
+           Prediction where newdata is of class character is in beta and something went wrong.
+           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
+    }
+    
+    }
+  
+  ### align vocabulary ----
+  vocab <- intersect(colnames(newdata), colnames(object$gamma))
+  
+  ### get predictions ----
+  newdata <- newdata[,vocab] / Matrix::rowSums(newdata[,vocab],na.rm = TRUE)
+  
+  newdata[is.na(newdata)] <- 0
+  
+  out <- newdata[,vocab] %*% t(object$gamma[,vocab])
+  
+  out <- as.matrix(out)
+  
+  out <- out / rowSums(out) # make sure rows are normalized
+  
+  return(out)
+}
 
 #' Fit a topic model using Latent Semantic Analysis
 #' @description A wrapper for \code{RSpectra::svds} that returns 

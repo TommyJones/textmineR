@@ -4,7 +4,8 @@
 \alias{FitCtmModel}
 \title{Fit a Correlated Topic Model}
 \usage{
-FitCtmModel(dtm, k, return_all = TRUE, ...)
+FitCtmModel(dtm, k, calc_coherence = TRUE, calc_r2 = FALSE,
+  return_all = TRUE, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix}}
@@ -14,7 +15,7 @@ FitCtmModel(dtm, k, return_all = TRUE, ...)
 \item{return_all}{Logical. Do you want the raw results of the underlying 
 function returned along with the formatted results? Defaults to \code{TRUE}.}
 
-\item{...}{Other arguments to pass to \link[topicmodels]{CTM}.}
+\item{...}{Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.}
 }
 \value{
 Returns a list with a minimum of two objects, \code{phi} and 
