@@ -4,7 +4,7 @@
 \alias{CalcGamma}
 \title{Calculate a matrix whose rows represent P(topic_i|tokens)}
 \usage{
-CalcGamma(phi, theta, p_docs = NULL)
+CalcGamma(phi, theta, p_docs = NULL, correct = TRUE)
 }
 \arguments{
 \item{phi}{The phi matrix whose rows index topics and columns index words. 
@@ -16,6 +16,10 @@ topics. The i, j entries are P(topic_i | document_j)}
 \item{p_docs}{A numeric vector of length \code{nrow(theta)} that is 
 proportional to the number of terms in each document. This is
 an optional argument. It defaults to NULL}
+
+\item{correct}{Logical. Do you want to set NAs or NaNs in the final result to
+zero? Useful when hitting computational underflow. Defaults to
+\code{TRUE}. Set to \code{FALSE} for troubleshooting or diagnostics.}
 }
 \value{
 Returns a \code{matrix} whose rows correspond to topics and whose columns
