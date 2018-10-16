@@ -30,7 +30,7 @@ test_that("CreateDtm works with minimal arguments",{
 
 test_that("CreateDtm works for a single document",{
   expect_true(
-    class(CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT[1]), cpus = 2) == "dgCMatrix"
+    class(CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT[1], cpus = 2)) == "dgCMatrix"
   )
 })
 
