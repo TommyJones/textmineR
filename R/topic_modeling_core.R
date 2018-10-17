@@ -167,6 +167,10 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #' @param k Number of topics
 #' @param return_all Logical. Do you want the raw results of the underlying 
 #' function returned along with the formatted results? Defaults to \code{TRUE}.
+#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
+#'        after the model is trained? Defaults to \code{TRUE}. 
+#' @param calc_r2 Do you want to calculate R-squared after the model is trained?
+#'        Defaults to \code{FALSE}.
 #' @param ... Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}. 
 #' @return Returns a list with a minimum of two objects, \code{phi} and 
 #' \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
@@ -242,11 +246,11 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 
 #' 
-#' model <- FitCtmModel(dtm = nih_sample_dtm[1:50,], k = 3,
+#' model <- FitCtmModel(dtm = nih_sample_dtm[1:20,], k = 3,
 #'                      calc_coherence = FALSE, calc_r2 = FALSE)
 #' 
 #' # Get predictions on the next 50 documents
-#' pred <- predict(model, nih_sample_dtm[51:100,])
+#' pred <- predict(model, nih_sample_dtm[21:100,])
 #' @export
 predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
   ### Check inputs ----

@@ -12,6 +12,12 @@ FitCtmModel(dtm, k, calc_coherence = TRUE, calc_r2 = FALSE,
 
 \item{k}{Number of topics}
 
+\item{calc_coherence}{Do you want to calculate probabilistic coherence of topics
+after the model is trained? Defaults to \code{TRUE}.}
+
+\item{calc_r2}{Do you want to calculate R-squared after the model is trained?
+Defaults to \code{FALSE}.}
+
 \item{return_all}{Logical. Do you want the raw results of the underlying 
 function returned along with the formatted results? Defaults to \code{TRUE}.}
 
