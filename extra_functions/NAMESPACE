@@ -1,0 +1,7 @@
+useDynLib(textmineR, .registration = TRUE)
+exportPattern("^[[:alpha:]]+")
+import(Matrix)
+importFrom(Rcpp, evalCpp)
+import(RcppProgress)
+S3method(predict,lda_topic_model)
+S3method(predict,lsa_topic_model)

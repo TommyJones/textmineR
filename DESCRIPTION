@@ -1,8 +1,8 @@
 Package: textmineR
 Type: Package
 Title: Functions for Text Mining and Topic Modeling
-Version: 2.1.3.9999
-Date: 2018-09-10
+Version: 3.0.0.9999
+Date: 2018-10-28
 Authors@R: c(
     person("Thomas", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
     person("William", "Doane", email = "wil@drdoane.com", role = "ctb")
@@ -21,7 +21,7 @@ Imports:
     lda,
     parallel,
     text2vec (>= 0.5),
-    tm,
+    stopwords,
     stringr,
     SnowballC,
     Rcpp (>= 0.12.12),
@@ -34,9 +34,10 @@ Suggests:
     MASS,
     rmarkdown,
     stringi,
+    testthat,
     topicmodels,
     wordcloud
-License: GPL (>= 3)
+License: MIT + file LICENSE
 URL: https://github.com/TommyJones/textmineR
 BugReports: https://github.com/TommyJones/textmineR/issues
 LazyData: true
