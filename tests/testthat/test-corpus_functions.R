@@ -15,7 +15,7 @@ test_that("CreateDtm performs as expected",{
                  cpus = 2)
   
   # all documents accounted for?
-  expect_equal(length(docs) == nrow(d))
+  expect_equal(length(docs), nrow(d))
   
   # correct number of unigrams and bigrams?
   expect_true(sum(! grepl("_", colnames(d))) == 9)
