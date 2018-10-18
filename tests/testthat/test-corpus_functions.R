@@ -17,6 +17,9 @@ test_that("CreateDtm performs as expected",{
   # all documents accounted for?
   expect_equal(length(docs), nrow(d))
   
+  # stopwords removed?
+  expect_false("the" %in% colnames(d))
+  
   # correct number of unigrams and bigrams?
   expect_true(sum(! grepl("_", colnames(d))) == 9)
   
@@ -34,7 +37,31 @@ test_that("CreateDtm performs as expected",{
 
 
 ### CreateTcm ----
+test_that("CreateTcm performs as expected",{
+  docs <- c("This is my first document.",
+            "My 2nd document!",
+            "skills, son, skills. Skillz!")
+  
+  d <- CreateTcm(doc_vec = docs, 
+                 skipgram_window = 3,
+                 stopword_vec = "the", 
+                 lower = TRUE,
+                 remove_punctuation = TRUE,
+                 remove_numbers = TRUE,
+                 cpus = 2)
 
+  # stopwords removed?
+  expect_false("the" %in% colnames(d))
+  
+  # lowercase?
+  expect_true(sum(grepl("[A-Z]", colnames(d))) == 0)
+  
+  # punctuation removed?
+  expect_true(sum(grepl("[^[:alnum:]_]", colnames(d))) == 0)
+  
+  # numbers removed?
+  expect_true(sum(grepl("[0-9]", colnames(d))) == 0)
+})
 
 
 ### Dtm2Docs ----
