@@ -1,4 +1,6 @@
 [![Travis-CI Build Status](https://travis-ci.org/TommyJones/textmineR.svg?branch=master)](https://travis-ci.org/TommyJones/textmineR)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/textmineR)](https://cran.r-project.org/package=textmineR)
+[![Downloads](https://cranlogs.r-pkg.org/badges/textmineR)](https://CRAN.R-project.org/package=textmineR)
 
 # textmineR
 Functions for Text Mining and Topic Modeling
