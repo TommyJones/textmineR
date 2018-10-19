@@ -192,7 +192,7 @@ LabelTopics <- function(assignments, dtm, M=2){
   dtm_ngram <- dtm[ , grepl("_", colnames(dtm)) ]
   
   if(ncol(dtm_ngram) == 0){
-    warning("dtm does not appear to contain ngrams. Using unigrams but ngrams will",
+    message("dtm does not appear to contain ngrams. Using unigrams but ngrams will",
             " work much better.")
     dtm_ngram <- dtm
   }
