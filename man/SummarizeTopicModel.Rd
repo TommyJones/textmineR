@@ -37,7 +37,7 @@ Create a data frame summarizing the contents of each topic in a model
          ensures that each document has at least one topic assigned to it.
 }
 \examples{
-\\donotrun{
+\dontrun{
 SummarizeTopicModel(nih_sample_topic_model)
 }
 }

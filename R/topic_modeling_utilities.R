@@ -22,7 +22,7 @@
 #'          of the largest value for each row of theta (each document). This 
 #'          ensures that each document has at least one topic assigned to it.
 #' @examples
-#' \donotrun{
+#' \dontrun{
 #' SummarizeTopicModel(nih_sample_topic_model)
 #' }
 #' @export
