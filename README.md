@@ -3,8 +3,10 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/textmineR)](https://CRAN.R-project.org/package=textmineR)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/textmineR?color=orange)](https://CRAN.R-project.org/package=textmineR)
 
+<img src="tools/textmineR.png" align="right" />
+
 # textmineR
-Functions for Text Mining and Topic Modeling <img src="tools/textmineR.png" align="right" />
+Functions for Text Mining and Topic Modeling 
 
 Copyright 2018 by Thomas W. Jones
 
