@@ -1,4 +1,89 @@
-### PUT A TOPIC MODEL SUMMARY FUNCTION HERE ----
+#' Summarize a topic model
+#' @description Create a data frame summarizing the contents of each topic in a model
+#' @param model A list (or S3 object) with three named matrices: phi, theta, and gamma.
+#'        These conform to outputs of many of \link[textmineR]{textmineR}'s native
+#'        topic modeling functions such as \link[textmineR]{FitLdaModel}. 
+#' @return An object of class \code{data.frame} with 6 columns: 'topic' is the 
+#'         name of the topic, 'prevalence' is the rough prevalence of the topic 
+#'         in all documents across the corpus, 'coherence' is the probabilistic
+#'         coherence of the topic, 'top_terms_phi' are the top 5 terms for each
+#'         topic according to P(word|topic), 'top_terms_gamma' are the top 5 terms
+#'         for each topic according to P(topic|word).
+#' @details 'prevalence' is normalized to sum to 100. If your 'theta' matrix has
+#'          negative values (as may be the case with an LSA model), a constant is
+#'          added so that the least prevalent topic has a prevalence of 0.
+#'          
+#'          'coherence' is calcuated using \link[textmineR]{CalcProbCoherence}.
+#'          
+#'          'label' is assigned using the top label from \link[textmineR]{LabelTopics}.
+#'          This requires an "assignment" matrix. This matrix is like a "theta" matrix
+#'          except that it is binary. A topic is "in" a document or it is not.
+#'          The assignment is made by comparing each value of theta to the minimum
+#'          of the largest value for each row of theta (each document). This 
+#'          ensures that each document has at least one topic assigned to it.
+#' @examples
+#' \donotrun{
+#' SummarizeTopicModel(nih_sample_topic_model)
+#' }
+#' @export
+SummarizeTopicModel <- function(model){
+  
+  # check inputs
+  if (! "phi" %in% names(model) | ! "theta" %in% names(model)) {
+    stop("model must contain a 'phi' matrix and a 'theta' matrix named as such.")
+  }
+  
+  # get coherence
+  if ("coherence" %in% names(model)) {
+    coherence <- model$coherence
+  } else {
+    coherence <- CalcProbCoherence(model$phi, model$data)
+  }
+  
+  # get prevalence - this gets fancy to account for negatives in LSA models
+  p <- colSums(model$theta)
+  
+  if (sum(p < 0) > 0) { # if there are any negatives
+    p <- p + min(p)
+  }
+  
+  prevalence <- p / sum(p) * 100
+  
+  # get top terms from phi
+  tt_phi <- GetTopTerms(phi = model$phi, M = 5)
+  
+  tt_phi <- apply(tt_phi, 2, function(x){
+    paste(x, collapse = ", ")
+  })
+  
+  # get top terms from gamma
+  tt_gamma <- GetTopTerms(phi = model$gamma, M = 5)
+  
+  tt_gamma <- apply(tt_gamma, 2, function(x){
+    paste(x, collapse = ", ")
+  })
+  
+  # get labels
+  m <- apply(model$theta, 1, max, na.rm = TRUE)
+  
+  m <- min(m, na.rm = TRUE)
+  
+  a <- model$theta >= m # (mean(model$theta) + 0 * sd(model$theta))
+  
+  labels <- LabelTopics(a, model$data, M = 1)
+  
+  # prepare output
+  out <- data.frame(topic = rownames(model$phi),
+                    label = labels,
+                    prevalence = round(prevalence,2),
+                    coherence = round(coherence,3),
+                    top_terms_phi = tt_phi,
+                    top_terms_gamma = tt_gamma,
+                    stringsAsFactors = FALSE)
+  
+  out
+}
+
 
 
 #' Get cluster labels using a "more probable" method of terms
