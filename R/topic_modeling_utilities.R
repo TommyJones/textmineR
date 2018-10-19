@@ -227,7 +227,6 @@ LabelTopics <- function(assignments, dtm, M=2){
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_dtm)
 #' data(nih_sample_topic_model) 
 #' 
 #' top_terms <- GetTopTerms(phi = nih_sample_topic_model$phi, M = 5)
