@@ -1,4 +1,4 @@
-#' Summarize a topic model
+#' Summarize topics in a topic model
 #' @description Create a data frame summarizing the contents of each topic in a model
 #' @param model A list (or S3 object) with three named matrices: phi, theta, and gamma.
 #'        These conform to outputs of many of \link[textmineR]{textmineR}'s native
@@ -23,10 +23,10 @@
 #'          ensures that each document has at least one topic assigned to it.
 #' @examples
 #' \dontrun{
-#' SummarizeTopicModel(nih_sample_topic_model)
+#' SummarizeTopics(nih_sample_topic_model)
 #' }
 #' @export
-SummarizeTopicModel <- function(model){
+SummarizeTopics <- function(model){
   
   # check inputs
   if (! "phi" %in% names(model) | ! "theta" %in% names(model)) {
