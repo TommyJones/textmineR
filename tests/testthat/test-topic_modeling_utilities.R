@@ -29,11 +29,11 @@ test_that("GetTopTerms performs as expected",{
 
 ### GetProbableTerms ----
 
-# check some errors here
-# what happens with topics that get no assignment?
 
 
 ### LabelTopics ----
+# check some errors here
+# what happens with topics that get no assignment?
 
 
 ### SummarizeTopics ----
