@@ -237,9 +237,7 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 #' Predict method for Correlated topic models (CTM)
 #' @description Obtains predictions of topics for new documents from a fitted CTM model
 #' @param object a fitted object of class "ctm_topic_model"
-#' @param newdata a DTM or TCM of class dgCMatrix or a character vector
-#' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
-#'        do you want to see status during vectorization?
+#' @param newdata a DTM or TCM of class dgCMatrix or a numeric vector
 #' @param ... further arguments passed to or from other methods.
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @note
@@ -255,15 +253,15 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 #' # Get predictions on the next 50 documents
 #' pred <- predict(model, nih_sample_dtm[21:100,])
 #' @export
-predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
+predict.ctm_topic_model <- function(object, newdata, ...) {
   ### Check inputs ----
 
   if (class(object) != "ctm_topic_model") {
     stop("object must be a topic model object of class ctm_topic_model")
   }
   
-  if (sum(c("dgCMatrix", "character", "numeric") %in% class(newdata)) < 1) {
-    stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  if (sum(c("dgCMatrix", "numeric") %in% class(newdata)) < 1) {
+    stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
   
   if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
@@ -293,46 +291,7 @@ predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
     newdata <- newdata[,intersect_names]
   }
   
-  ### if newdata is a document vector, make a dtm ----
-  if (class(newdata) == "character") {
-    
-    # check if we have the option to use a character vector
-    data_args <- attr(object$data, "args")
-    
-    data_call <- attr(object$data, "call")
-    
-    if (is.null(data_args) | is.null(data_call)) {
-      stop("Prediction where newdata is of class character is in beta and something went wrong.
-           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
-    }
-    
-    data_args <- attr(object$data, "args")
-    
-    data_args$doc_vec <- newdata
-    
-    data_args$verbose <- verbose
-    
-    if (attr(object$data, "call") == "CreateDtm") {
-      newdata <- do.call(CreateDtm, data_args)
-      
-      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
-      
-      newdata <- newdata[,intersect_names]
-      
-    } else if (attr(object$data, "call") == "CreateTcm") {
-      newdata <- do.call(CreateTcm, data_args)
-      
-      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
-      
-      newdata <- newdata[,intersect_names]
-      
-    } else {
-      stop("Something is wrong with object$data. Cannot find attribute 'call'.
-           Prediction where newdata is of class character is in beta and something went wrong.
-           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
-    }
-  }
-  
+
   ### get predictions ----
   if (class(newdata) == "numeric") {
     newdata <- newdata / sum(newdata)
@@ -437,9 +396,7 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
 #' Predict method for LSA topic models
 #' @description Obtains predictions of topics for new documents from a fitted LSA model
 #' @param object a fitted object of class "lsa_topic_model"
-#' @param newdata a DTM or TCM of class dgCMatrix or a character vector
-#' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
-#'        do you want to see status during vectorization?
+#' @param newdata a DTM or TCM of class dgCMatrix or a numeric vector
 #' @param ... further arguments passed to or from other methods.
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
@@ -459,7 +416,7 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
 #' # Get predictions on the next 50 documents
 #' pred <- predict(model, dtm_tfidf[51:100,])
 #' @export
-predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
+predict.lsa_topic_model <- function(object, newdata, ...) {
   
   ### Check inputs ----
   
@@ -469,8 +426,8 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
     stop("object must be a topic model object of class lsa_topic_model")
   }
   
-  if (sum(c("dgCMatrix", "character", "numeric") %in% class(newdata)) < 1) {
-    stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  if (sum(c("dgCMatrix", "numeric") %in% class(newdata)) < 1) {
+    stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
   
   if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
@@ -494,52 +451,7 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
     
     colnames(newdata) <- intersect_names
     
-    } else if (attr(object$data, "call") == "CreateTcm") { # we still need to align the vocabulary
-      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
-      
-      newdata <- newdata[,intersect_names]
-    }
-  
-  ### if newdata is a document vector, make a dtm ----
-  if (class(newdata) == "character") {
-    
-    # check if we have the option to use a character vector
-    data_args <- attr(object$data, "args")
-    
-    data_call <- attr(object$data, "call")
-    
-    if (is.null(data_args) | is.null(data_call)) {
-      stop("Prediction where newdata is of class character is in beta and something went wrong.
-           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
-    }
-    
-    data_args <- attr(object$data, "args")
-    
-    data_args$doc_vec <- newdata
-    
-    data_args$verbose <- verbose
-    
-    if (attr(object$data, "call") == "CreateDtm") {
-      newdata <- do.call(CreateDtm, data_args)
-      
-      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
-      
-      newdata <- newdata[,intersect_names]
-      
-    } else if (attr(object$data, "call") == "CreateTcm") {
-      newdata <- do.call(CreateTcm, data_args)
-      
-      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
-      
-      newdata <- newdata[,intersect_names]
-      
-    } else {
-      stop("Something is wrong with object$data. Cannot find attribute 'call'.
-           Prediction where newdata is of class character is in beta and something went wrong.
-           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
-    }
-
-  }
+    } 
   
 
   ### get predictions ----
@@ -778,7 +690,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' Get predictions from a Latent Dirichlet Allocation model
 #' @description Obtains predictions of topics for new documents from a fitted LDA model
 #' @param object a fitted object of class \code{lda_topic_model}
-#' @param newdata a DTM or TCM of class \code{dgCMatrix} or a character vector
+#' @param newdata a DTM or TCM of class \code{dgCMatrix} or a numeric vector
 #' @param method one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
 #'        and \code{iterations} must be specified.
 #' @param iterations If \code{method = "gibbs"}, an integer number of iterations 
@@ -786,8 +698,6 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' @param burnin If \code{method = "gibbs"}, an integer number of burnin iterations. 
 #'        If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
 #'        are an average over all iterations greater than \code{burnin}.
-#' @param verbose Defaults to \code{FALSE}. If \code{newdata} is a character vector,
-#'        do you want to see status during vectorization?
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
@@ -815,8 +725,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' }
 #' @export
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"), 
-                                    iterations = NULL, burnin = -1,  
-                                    verbose = FALSE, ...) {
+                                    iterations = NULL, burnin = -1, ...) {
   
   ### Check inputs ----
   if (method[1] == "gibbs") {
@@ -836,8 +745,8 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     stop("object must be a topic model object of class lda_topic_model")
   }
   
-  if (sum(c("dgCMatrix", "character", "numeric") %in% class(newdata)) < 1) {
-    stop("newdata must be a matrix of class dgCMatrix or a character vector")
+  if (sum(c("dgCMatrix", "numeric") %in% class(newdata)) < 1) {
+    stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
   
   if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
@@ -861,38 +770,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     stop("method must be one of 'gibbs' or 'dot'")
   }
 
-
-  ### If newdata is a character vector, convert to dgCMatrix ----
-
-  if ("dgCMatrix" %in% class(newdata)) {
-    dtm_newdata <- newdata
-  } else {
-    
-    data_args <- attr(object$data, "args")
-    
-    data_call <- attr(object$data, "call")
-    
-    if (is.null(data_args) | is.null(data_call)) {
-      stop("Prediction where newdata is of class character is in beta and something went wrong.
-           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
-    }
-    
-    data_args$doc_vec <- newdata
-    
-    data_args$verbose <- verbose
-    
-    if (data_call == "CreateDtm") {
-      dtm_newdata <- do.call(CreateDtm, data_args)
-
-    } else if (data_call == "CreateTcm") {
-      dtm_newdata <- do.call(CreateTcm, data_args)
-      
-    } else {
-      stop("Something is wrong with object$data. Cannot find attribute 'call'.
-           Prediction where newdata is of class character is in beta and something went wrong.
-           Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
-    }
-  }
+  dtm_newdata <- newdata
   
   ### Align vocabulary ----
   # this is fancy because of how we do indexing in gibbs sampling
