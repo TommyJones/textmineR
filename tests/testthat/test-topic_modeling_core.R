@@ -1,5 +1,18 @@
 context("Topic Modeling Core")
 
+# common objects
+docs <- c("This is my first document.",
+          "My 2nd document!",
+          "skills, son, skills. Skillz!")
+
+d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
+               ngram_window = c(1,2),
+               stopword_vec = "the", 
+               lower = TRUE,
+               remove_punctuation = TRUE,
+               remove_numbers = TRUE,
+               cpus = 2)
+
 
 ### CalcGamma ----
 test_that("CalcGamma works as expected",{
@@ -47,17 +60,6 @@ test_that("Cluster2TopicModel works as expected",{
 
 ### FitCtmModel ----
 test_that("FitCtmModel performs as expected",{
-  docs <- c("This is my first document.",
-            "My 2nd document!",
-            "skills, son, skills. Skillz!")
-  
-  d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
-                 ngram_window = c(1,2),
-                 stopword_vec = "the", 
-                 lower = TRUE,
-                 remove_punctuation = TRUE,
-                 remove_numbers = TRUE,
-                 cpus = 2)
   
   m <- FitCtmModel(dtm = d, k = 2, calc_coherence = FALSE, calc_r2 = FALSE)
   
@@ -86,18 +88,7 @@ test_that("FitCtmModel performs as expected",{
 
 ### predict.ctm_topic_model ----
 test_that("predict.ctm_topic_model performs as expected", {
-  docs <- c("This is my first document.",
-            "My 2nd document!",
-            "skills, son, skills. Skillz!")
-  
-  d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
-                 ngram_window = c(1,2),
-                 stopword_vec = "the", 
-                 lower = TRUE,
-                 remove_punctuation = TRUE,
-                 remove_numbers = TRUE,
-                 cpus = 2)
-  
+
   m <- FitCtmModel(dtm = d, k = 2, calc_coherence = FALSE, calc_r2 = FALSE)
   
   # predict with a bunch of documents
@@ -121,7 +112,11 @@ test_that("predict.ctm_topic_model performs as expected", {
 })
 
 ### FitLsaModel ----
-
+test_that("FitLsaModel", {
+  
+  
+  
+})
 
 ### predict.lsa_topic_model ----
 
