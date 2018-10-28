@@ -334,7 +334,7 @@ predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
   }
   
   ### get predictions ----
-  if (nrow(newdata) == 1 | class(newdata) == "numeric") {
+  if (class(newdata) == "numeric") {
     newdata <- newdata / sum(newdata)
   } else {
     newdata <- newdata / Matrix::rowSums(newdata,na.rm = TRUE)

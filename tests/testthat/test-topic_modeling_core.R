@@ -120,7 +120,7 @@ test_that("predict.ctm_topic_model performs as expected", {
   
   expect_true(ncol(p) == ncol(m$theta))
   
-  expect_true(sum(p) == 1)
+  expect_true(round(sum(p),10) == 1)
   
   # predict with character vector
   p <- predict(m, docs)
@@ -138,7 +138,7 @@ test_that("predict.ctm_topic_model performs as expected", {
   
   expect_true(ncol(p) == ncol(m$theta))
   
-  expect_true(sum(p) == 1)
+  expect_true(round(sum(p),10) == 1)
   
 })
 
