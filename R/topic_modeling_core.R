@@ -285,7 +285,7 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
     
     colnames(newdata) <- intersect_names
     
-  } else if (class(newdata) == "dgCMatrix") { # we still need to align the vocabulary
+  } else { # we still need to align the vocabulary
     intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
     
     newdata <- newdata[,intersect_names]
