@@ -4,15 +4,12 @@
 \alias{predict.ctm_topic_model}
 \title{Predict method for Correlated topic models (CTM)}
 \usage{
-\method{predict}{ctm_topic_model}(object, newdata, verbose = FALSE, ...)
+\method{predict}{ctm_topic_model}(object, newdata, ...)
 }
 \arguments{
 \item{object}{a fitted object of class "ctm_topic_model"}
 
-\item{newdata}{a DTM or TCM of class dgCMatrix or a character vector}
-
-\item{verbose}{Defaults to \code{FALSE}. If \code{newdata} is a character vector,
-do you want to see status during vectorization?}
+\item{newdata}{a DTM or TCM of class dgCMatrix or a numeric vector}
 
 \item{...}{further arguments passed to or from other methods.}
 }

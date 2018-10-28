@@ -5,12 +5,12 @@
 \title{Get predictions from a Latent Dirichlet Allocation model}
 \usage{
 \method{predict}{lda_topic_model}(object, newdata, method = c("gibbs",
-  "dot"), iterations = NULL, burnin = -1, verbose = FALSE, ...)
+  "dot"), iterations = NULL, burnin = -1, ...)
 }
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}
 
-\item{newdata}{a DTM or TCM of class \code{dgCMatrix} or a character vector}
+\item{newdata}{a DTM or TCM of class \code{dgCMatrix} or a numeric vector}
 
 \item{method}{one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
 and \code{iterations} must be specified.}
@@ -21,9 +21,6 @@ for the Gibbs sampler to run. A future version may include automatic stopping cr
 \item{burnin}{If \code{method = "gibbs"}, an integer number of burnin iterations. 
 If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
 are an average over all iterations greater than \code{burnin}.}
-
-\item{verbose}{Defaults to \code{FALSE}. If \code{newdata} is a character vector,
-do you want to see status during vectorization?}
 
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
