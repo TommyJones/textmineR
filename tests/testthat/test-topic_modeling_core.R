@@ -14,11 +14,7 @@ test_that("CalcGamma works as expected",{
   expect_true(ncol(g) == ncol(nih_sample_topic_model$phi))
   
   # check_sums
-  expect_true(min(round(colSums(g),10)) == 1) # round b/c numeric precision
-  
-  expect_true(max(round(colSums(g),10)) == 1) # round b/c numeric precision
-  
-  expect_true(sum(colSums(g)) == ncol(g))
+  expect_true(mean(round(colSums(g),10)) == 1) # round b/c numeric precision
   
   
 })
