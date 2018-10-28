@@ -451,7 +451,9 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
     
     colnames(newdata) <- intersect_names
     
-    } 
+  } else {
+      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+  }
   
 
   ### get predictions ----
