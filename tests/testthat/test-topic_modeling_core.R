@@ -122,24 +122,6 @@ test_that("predict.ctm_topic_model performs as expected", {
   
   expect_true(round(sum(p),10) == 1)
   
-  # predict with character vector
-  p <- predict(m, docs)
-  
-  expect_true(nrow(p) == length(docs))
-  
-  expect_true(ncol(p) == ncol(m$theta))
-  
-  expect_true(round(mean(rowSums(p)),10) == 1)
-  
-  # predict with single character
-  p <- predict(m, docs[1])
-  
-  expect_true(nrow(p) == 1)
-  
-  expect_true(ncol(p) == ncol(m$theta))
-  
-  expect_true(round(sum(p),10) == 1)
-  
 })
 
 ### FitLsaModel ----
