@@ -213,6 +213,9 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
   result$gamma <- CalcGamma(result$phi, result$theta, 
                             p_docs = Matrix::rowSums(dtm))
   
+  
+  result$data <- dtm
+
   if (calc_coherence) {
     result$coherence <- CalcProbCoherence(result$phi, dtm)
   }
@@ -270,13 +273,25 @@ predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
            If so, it needs a names attribute to index tokens")
     }
     
-    new_names <- names(newdata)
+    # align vocabulary
+    intersect_names <- intersect(names(newdata), colnames(object$gamma))
     
+    if (length(intersect_names) == 0)
+      stop("No common vocabulary terms between model and newdata. 
+           See `intersect(names(newdata), colnames(object$gamma))`")
+    
+    newdata <- newdata[intersect_names]
+    
+    # coerce into a dgCMatrix
     newdata <- Matrix::Matrix(newdata, nrow = 1)
     
-    colnames(newdata) <- new_names
+    colnames(newdata) <- intersect_names
     
-    }
+  } else if (class(newdata) == "dgCMatrix") { # we still need to align the vocabulary
+    intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+    
+    newdata <- newdata[,intersect_names]
+  }
   
   ### if newdata is a document vector, make a dtm ----
   if (class(newdata) == "character") {
@@ -299,25 +314,35 @@ predict.ctm_topic_model <- function(object, newdata, verbose = FALSE, ...) {
     
     if (attr(object$data, "call") == "CreateDtm") {
       newdata <- do.call(CreateDtm, data_args)
+      
+      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+      
+      newdata <- newdata[,intersect_names]
+      
     } else if (attr(object$data, "call") == "CreateTcm") {
       newdata <- do.call(CreateTcm, data_args)
+      
+      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+      
+      newdata <- newdata[,intersect_names]
+      
     } else {
       stop("Something is wrong with object$data. Cannot find attribute 'call'.
            Prediction where newdata is of class character is in beta and something went wrong.
            Please make your own DTM/TCM using CreateDtm/CreateTcm and pass as newdata.")
     }
-    
-    }
-  
-  ### align vocabulary ----
-  vocab <- intersect(colnames(newdata), colnames(object$gamma))
+  }
   
   ### get predictions ----
-  newdata <- newdata[,vocab] / Matrix::rowSums(newdata[,vocab],na.rm = TRUE)
-  
+  if (nrow(newdata) == 1 | class(newdata) == "numeric") {
+    newdata <- newdata / sum(newdata)
+  } else {
+    newdata <- newdata / Matrix::rowSums(newdata,na.rm = TRUE)
+  }
+
   newdata[is.na(newdata)] <- 0
   
-  out <- newdata[,vocab] %*% t(object$gamma[,vocab])
+  out <- newdata %*% t(object$gamma[,intersect_names])
   
   out <- as.matrix(out)
   
@@ -455,14 +480,26 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
            If so, it needs a names attribute to index tokens")
     }
     
-    new_names <- names(newdata)
+    # align vocabulary
+    intersect_names <- intersect(names(newdata), colnames(object$gamma))
     
+    if (length(intersect_names) == 0)
+      stop("No common vocabulary terms between model and newdata. 
+           See `intersect(names(newdata), colnames(object$gamma))`")
+    
+    newdata <- newdata[intersect_names]
+    
+    # coerce into a dgCMatrix
     newdata <- Matrix::Matrix(newdata, nrow = 1)
     
-    colnames(newdata) <- new_names
+    colnames(newdata) <- intersect_names
     
-  }
-
+    } else if (attr(object$data, "call") == "CreateTcm") { # we still need to align the vocabulary
+      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+      
+      newdata <- newdata[,intersect_names]
+    }
+  
   ### if newdata is a document vector, make a dtm ----
   if (class(newdata) == "character") {
     
@@ -484,8 +521,18 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
     
     if (attr(object$data, "call") == "CreateDtm") {
       newdata <- do.call(CreateDtm, data_args)
+      
+      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+      
+      newdata <- newdata[,intersect_names]
+      
     } else if (attr(object$data, "call") == "CreateTcm") {
       newdata <- do.call(CreateTcm, data_args)
+      
+      intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
+      
+      newdata <- newdata[,intersect_names]
+      
     } else {
       stop("Something is wrong with object$data. Cannot find attribute 'call'.
            Prediction where newdata is of class character is in beta and something went wrong.
@@ -494,11 +541,9 @@ predict.lsa_topic_model <- function(object, newdata, verbose = FALSE, ...) {
 
   }
   
-  ### align vocabulary ----
-  vocab <- intersect(colnames(newdata), colnames(object$gamma))
-  
+
   ### get predictions ----
-  out <- newdata[,vocab] %*% t(object$gamma[,vocab])
+  out <- newdata %*% t(object$gamma[,intersect_names])
   
   out <- as.matrix(out)
   
@@ -802,11 +847,11 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
            If so, it needs a names attribute to index tokens")
     }
     
-    new_names <- names(newdata)
+    vocab <- names(newdata)
     
     newdata <- Matrix::Matrix(newdata, nrow = 1)
     
-    colnames(newdata) <- new_names
+    colnames(newdata) <- vocab
     
     rownames(newdata) <- 1
     
@@ -823,9 +868,6 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     dtm_newdata <- newdata
   } else {
     
-    ## Add a check here to make sure it's the right object & return helpful error message
-    
-    
     data_args <- attr(object$data, "args")
     
     data_call <- attr(object$data, "call")
@@ -841,8 +883,10 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     
     if (data_call == "CreateDtm") {
       dtm_newdata <- do.call(CreateDtm, data_args)
+
     } else if (data_call == "CreateTcm") {
       dtm_newdata <- do.call(CreateTcm, data_args)
+      
     } else {
       stop("Something is wrong with object$data. Cannot find attribute 'call'.
            Prediction where newdata is of class character is in beta and something went wrong.
@@ -881,7 +925,15 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   if (method[1] == "dot") { # dot product method
     
     result <- dtm_newdata[,vocab_original]
-    result <- (result / Matrix::rowSums(result)) %*% t(object$gamma[ ,vocab_original])
+    
+    # handle differently if one row
+    if (nrow(dtm_newdata) == 1) {
+      result <- result / sum(result)
+    } else {
+      result <- result / Matrix::rowSums(result)
+    }
+    
+    result <- result %*% t(object$gamma[ ,vocab_original])
     result <- as.matrix(result)
     result[is.na(result)] <- 0
     
