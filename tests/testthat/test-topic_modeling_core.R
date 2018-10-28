@@ -114,18 +114,59 @@ test_that("predict.ctm_topic_model performs as expected", {
 ### FitLsaModel ----
 test_that("FitLsaModel", {
   
+  m <- FitLsaModel(d, k = 2, calc_coherence = FALSE)
   
+  # check dimensions
+  expect_true(length(m$sv) == 2)
+  
+  expect_true(nrow(m$theta) == nrow(d))
+  
+  expect_true(ncol(m$theta) == length(m$sv))
+  
+  expect_true(nrow(m$phi) == length(m$sv))
+  
+  expect_true(ncol(m$phi) == ncol(d))
+  
+  expect_true(sum(dim(m$phi) == dim(m$gamma)) == 2)
+  
+  # check sums not necessary b/c LSA does not fit probabilities
   
 })
 
 ### predict.lsa_topic_model ----
+test_that("predict.lsa_topic_model", {
+  
+  m <- FitLsaModel(d, k = 2, calc_coherence = FALSE)
+  
+  # predictions for many documents
+  p <- predict(m, d)
+  
+  expect_true(nrow(p) == nrow(d))
+  
+  expect_true(ncol(p) == 2)
+  
+  # predictions for a single document
+  p <- predict(m, d[1,])
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == 2)
 
+})
 
 ### Dtm2Lexicon ----
-
+expect_that("Dtm2Lexicon", {
+  
+  l <- Dtm2Lexicon(d, cpus = 2)
+  
+  # check dimensions and sums
+  expect_true(length(l) == nrow(d))
+  
+  expect_false(FALSE %in% (rowSums(d) == sapply(l, length)))
+  
+})
 
 ### FitLdaModel ----
-
 
 ### predict.lda_topic_model ----
 
