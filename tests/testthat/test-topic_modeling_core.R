@@ -155,7 +155,7 @@ test_that("predict.lsa_topic_model", {
 })
 
 ### Dtm2Lexicon ----
-expect_that("Dtm2Lexicon", {
+test_that("Dtm2Lexicon", {
   
   l <- Dtm2Lexicon(d, cpus = 2)
   
@@ -164,12 +164,137 @@ expect_that("Dtm2Lexicon", {
   
   expect_false(FALSE %in% (rowSums(d) == sapply(l, length)))
   
+  # check a single document
+  l <- Dtm2Lexicon(d[1,], cpus = 2)
+  
 })
 
 ### FitLdaModel ----
+test_that("FitLdaModel", {
+  
+  # check dimensions of standard fitting with burnin
+  m <- FitLdaModel(dtm = d, k = 2, 
+                   iterations = 200, 
+                   burnin = 175)
+  
+  expect_true(nrow(m$theta) == nrow(d))
+  
+  expect_true(ncol(m$theta) == 2)
+  
+  expect_true(nrow(m$phi) == ncol(m$theta))
+  
+  expect_true(ncol(m$phi) == ncol(d))
+  
+  expect_true(sum(dim(m$phi) == dim(m$gamma)) == 2)
+  
+  expect_true(round(mean(rowSums(m$theta)),10) == 1)
+  
+  expect_true(round(mean(rowSums(m$phi)), 10) == 1)
+  
+  expect_true(round(mean(colSums(m$gamma)),10) == 1)
+  
+  # check dimensions of standard fitting without burnin
+  m <- FitLdaModel(dtm = d, k = 2, 
+                   iterations = 200)
+  
+  expect_true(nrow(m$theta) == nrow(d))
+  
+  expect_true(ncol(m$theta) == 2)
+  
+  expect_true(nrow(m$phi) == ncol(m$theta))
+  
+  expect_true(ncol(m$phi) == ncol(d))
+  
+  expect_true(sum(dim(m$phi) == dim(m$gamma)) == 2)
+  
+  expect_true(round(mean(rowSums(m$theta)),10) == 1)
+  
+  expect_true(round(mean(rowSums(m$phi)), 10) == 1)
+  
+  expect_true(round(mean(colSums(m$gamma)),10) == 1)
+  
+  
+  # set burnin equal to iterations
+  expect_error(
+    m <- FitLdaModel(dtm = d, k = 2, 
+                   iterations = 200, 
+                   burnin = 200)
+  )
+
+  # set an illegal value for burnin
+  expect_error(
+    m <- FitLdaModel(dtm = d, k = 2, 
+                     iterations = 200, 
+                     burnin = 300)
+  )
+  
+  
+  # optimize alpha doesn't throw an error
+  m <- FitLdaModel(dtm = d, k = 2, 
+                   iterations = 200, 
+                   burnin = 175,
+                   optimize_alpha = TRUE)
+  
+  # liklihood is in good shape
+  m <- FitLdaModel(dtm = d, k = 2, 
+                   iterations = 200, 
+                   burnin = 175,
+                   optimize_alpha = TRUE,
+                   calc_likelihood = TRUE)
+   
+  expect_true(sum(is.na(m$log_likelihood)) == 0)
+  
+  expect_true(ncol(m$log_likelihood) == 2)
+  
+})
+
+
 
 ### predict.lda_topic_model ----
-
+test_that("predict.lda_topic_model",{
+  m <- FitLdaModel(dtm = d, k = 2, 
+                   iterations = 200, 
+                   burnin = 175,
+                   optimize_alpha = TRUE)
+  
+  # gibbs sampling many documents
+  p <- predict(m, d, iterations = 200, burnin = 175)
+  
+  expect_true(nrow(p) == nrow(d))
+  
+  expect_true(ncol(p) == 2)
+  
+  expect_true(round(mean(rowSums(p)),10) == 1)
+  
+  
+  # gibbs sampling a single document
+  p <- predict(m, d[1,], iterations = 200, burnin = 175)
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == 2)
+  
+  expect_true(round(mean(rowSums(p)),10) == 1)
+  
+  # dot many documents
+  p <- predict(m, d, method = "dot")
+  
+  expect_true(nrow(p) == nrow(d))
+  
+  expect_true(ncol(p) == 2)
+  
+  expect_true(round(mean(rowSums(p)),10) == 1)
+  
+  # dot single document
+  p <- predict(m, d[1,], method = "dot")
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == 2)
+  
+  expect_true(round(mean(rowSums(p)),10) == 1)
+  
+})
 
 
 
