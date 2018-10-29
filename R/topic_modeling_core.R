@@ -484,6 +484,28 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
 #' @export 
 Dtm2Lexicon <- function(dtm, ...) {
   
+  # check inputs
+  if (class(dtm) != "dgCMatrix" & class(dtm) != "numeric") {
+    stop("dtm must be of class dgCMatrix or, if a single document, a numeric vector")
+  }
+  
+  if (class(dtm) == "numeric") {
+    
+    if (is.null(names(dtm))) {
+      stop("it looks like you passed a numeric vector without names. 
+           Did you mean to pass a single document?
+           If so, it needs a names attribute to index tokens")
+      
+    }
+    
+    vocab <- names(dtm)
+    
+    dtm <- Matrix(dtm, nrow = 1, sparse = TRUE)
+    
+    colnames(dtm) <- vocab
+    
+  }
+  
   # do in parallel in batches of about 3000 if we have more than 3000 docs
   if(nrow(dtm) > 3000){
     
