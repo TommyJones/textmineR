@@ -1,11 +1,15 @@
 context("Functions related to corpus management")
 
+# declare some globals
+docs <- c("This is my first document.",
+          "My 2nd document!",
+          "skills, son, skills. Skillz!")
+
+
+
 ### CreateDtm ----
 test_that("CreateDtm performs as expected",{
-  docs <- c("This is my first document.",
-            "My 2nd document!",
-            "skills, son, skills. Skillz!")
-  
+
   d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
                  ngram_window = c(1,2),
                  stopword_vec = "the", 
@@ -38,9 +42,6 @@ test_that("CreateDtm performs as expected",{
 
 ### CreateTcm ----
 test_that("CreateTcm performs as expected",{
-  docs <- c("This is my first document.",
-            "My 2nd document!",
-            "skills, son, skills. Skillz!")
   
   d <- CreateTcm(doc_vec = docs, 
                  skipgram_window = 3,
