@@ -281,7 +281,7 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
     newdata <- newdata[intersect_names]
     
     # coerce into a dgCMatrix
-    newdata <- Matrix::Matrix(newdata, nrow = 1)
+    newdata <- Matrix::Matrix(newdata, nrow = 1, sparse = TRUE)
     
     colnames(newdata) <- intersect_names
     
@@ -447,7 +447,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
     newdata <- newdata[intersect_names]
     
     # coerce into a dgCMatrix
-    newdata <- Matrix::Matrix(newdata, nrow = 1)
+    newdata <- Matrix::Matrix(newdata, nrow = 1, sparse = TRUE)
     
     colnames(newdata) <- intersect_names
     
@@ -500,7 +500,7 @@ Dtm2Lexicon <- function(dtm, ...) {
     
     vocab <- names(dtm)
     
-    dtm <- Matrix(dtm, nrow = 1, sparse = TRUE)
+    dtm <- Matrix::Matrix(dtm, nrow = 1, sparse = TRUE)
     
     colnames(dtm) <- vocab
     
@@ -782,7 +782,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     
     vocab <- names(newdata)
     
-    newdata <- Matrix::Matrix(newdata, nrow = 1)
+    newdata <- Matrix::Matrix(newdata, nrow = 1, sparse = TRUE)
     
     colnames(newdata) <- vocab
     
@@ -811,7 +811,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   dtm_newdata <- Matrix::cbind2(dtm_newdata, add_mat)
   
   if (nrow(dtm_newdata) == 1) {
-    dtm_newdata <- Matrix::Matrix(dtm_newdata[,vocab_original], nrow = 1)
+    dtm_newdata <- Matrix::Matrix(dtm_newdata[,vocab_original], nrow = 1, sparse = TRUE)
     
     colnames(dtm_newdata) <- vocab_original
     
