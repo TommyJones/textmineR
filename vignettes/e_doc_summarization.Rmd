@@ -37,7 +37,7 @@ data(movie_review, package = "text2vec")
 # let's take a sample so the demo will run quickly
 # note: textmineR is generally quite scaleable, depending on your system
 set.seed(123)
-s <- sample(1:nrow(movie_review), 500)
+s <- sample(1:nrow(movie_review), 200)
 
 movie_review <- movie_review[ s , ]
 
@@ -61,9 +61,9 @@ embeddings <- FitLdaModel(dtm = tcm,
                           alpha = 0.1,
                           beta = 0.05,
                           optimize_alpha = TRUE,
-                          calc_likelihood = TRUE,
-                          calc_coherence = TRUE,
-                          calc_r2 = TRUE,
+                          calc_likelihood = FALSE,
+                          calc_coherence = FALSE,
+                          calc_r2 = FALSE,
                           cpus = 2)
 
 ```

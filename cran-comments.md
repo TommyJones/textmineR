@@ -10,6 +10,10 @@ Mac and Windows testing environements are:
   - MacOS 4m 56.6s for vignettes and 10m 4.9s total
   - win-builder (devel) 5m 53s for vignettes and 12m 16s total
   - win-builder (release) 5m 41s for vignettes and 11m 18s total
+  
+In a future version, I plan to migrate the bulk of the vignette code to a stand-
+alone website, which will save the CRAN check farm CPU time. For now, I have 
+greatly restricted the scope of vignette examples to keep rebuilding time lower.
 
 ### Test environments
 * local MacOS install, R 3.5.1

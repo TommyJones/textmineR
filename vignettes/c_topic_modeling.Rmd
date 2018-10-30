@@ -417,7 +417,7 @@ data(nih_sample_dtm)
 
 # choose a range of k 
 # - here, the range runs into the corpus size. Not recommended for large corpora!
-k_list <- seq(5, 75, by = 10)
+k_list <- seq(10,85, by=15)
 
 # you may want toset up a temporary directory to store fit models so you get 
 # partial results if the process fails or times out. This is a trivial example, 
