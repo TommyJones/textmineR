@@ -1,3 +1,49 @@
+### Updates for version 3.0.0
+This version significantly changes textmineR.
+
+* Several functions that were slated for deletion in version 2.1.3 are now gone.
+  - RecursiveRbind
+  - Vec2Dtm
+  - JSD
+  - HellDist
+  - GetPhiPrime
+  - FormatRawLdaOutput
+  - Files2Vec
+  - DepluralizeDtm
+  - CorrectS
+  - CalcPhiPrime
+  
+* FitLdaModel has changed significantly. 
+  - Now only Gibbs sampling is a supported training method. The Gibbs sampler is
+    no longer wrapping lda::lda_collapsed_gibbs_sampler. It is now native to 
+    textmineR. It's a little slower, but has additional features.
+  - Asymmetric priors are supported for both alpha and beta.
+  - There is an option, optimize_alpha, which updates alpha every 10 iterations
+    based on the value of theta at the current iteration. 
+  - The log liklihood of the data given estimates of phi and thenta is optionally 
+    calculated every 10 iterations. 
+  - Probabilistic coherence is optionally calculated at the time of model fit.
+  - R-squared is optionally calculated at the time of model fit.
+  
+* Supported topic models (LDA, LSA, CTM) are now object-oriented, creating their
+  own S3 classes. These classes have their own predict methods, meaning you do
+  not have to do your own math to make predictions for new documents.
+  
+* A new function SummarizeTopics has been added.
+
+* tm is no longer a dependency for stopwords. We now use the stopwords package. 
+  The extended result of this is that there is no longer *any* Java dependency.
+
+* Several packages have been moved from "Imports" to "Suggests". The result is 
+  a faster install and lower likelihood of install failure based on packages with
+  system dependencies. (Looking at you, topicmodels!)
+  
+* Finally, I have changed the textmineR license to the MIT license. Note, however,
+  that some dependencies may have more restrictive licenses. So if you're looking
+  to use textmineR in a commercial project, you may want to dig deeper into 
+  what is/isn't permissable.
+
+
 ### Updates for version 2.1.3
 * Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0. 
 * Functions slated for deletion:

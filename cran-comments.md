@@ -1,24 +1,23 @@
-### Patch version 2.1.3
-I have addressed CRAN comments on vignette length. Additional updates are described below.
+### Major release version 3.0.0
+This version significantly changes textmineR. Changes are listed below.
 
-In this version, I have deprecated many functions. I am preparing a release of version 3.0 which drops or significantly modifies the behaviour of several functions. I am planning the major update for late October.
+Since vingette build time has been an issue in the past, my build times for
+Mac and Windows testing environements are: 
+  - MacOS 4m 56.6s
+  - win-builder 4m 30s
 
-* Functions slated for deletion:
-  - RecursiveRbind
-  - Vec2Dtm
-  - JSD
-  - HellDist
-  - GetPhiPrime
-  - FormatRawLdaOutput
-  - Files2Vec
-  - DepluralizeDtm
-  - CorrectS
-  - CalcPhiPrime
-  
-* In addition: FitLdaModel is going to change significantly in its functionality and argument calls. When run, it issues a warning.
+A summary of changes:
+* Several functions that were slated for deletion in version 2.1.3 are now gone
+* The function FitLdaModel has changed significantly in its behavior. 
+* I have added many unit tests using the testthat package.
+* I have added a new function SummarizeTopics
+* I have changed package dependencies, adding some, removing others, and shifting
+  some from Imports to Suggests.
+* I have changed the license from GPL to MIT and added a LICENSE file.
+
 
 ### Test environments
-* local OS X install, R 3.5.1
+* local MacOS install, R 3.5.1
 * Ubuntu 14.04 LTS (on travis ci), R 3.5.1
 * win-builder (devel and release)
 
