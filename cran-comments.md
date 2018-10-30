@@ -1,3 +1,19 @@
+### Patch release version 3.0.1
+This version is in response to issues revealed by automatic checks on package submission.
+
+I have
+* Used the CRAN template for my MIT LICENSE file
+* 
+
+Since vingette build time has been an issue in the past, my build times for
+Mac and Windows testing environements are: 
+  - MacOS 4m 56.6s
+  - win-builder (devel) 5m 53s
+  - win-builder (release)
+
+
+
+
 ### Major release version 3.0.0
 This version significantly changes textmineR. Changes are listed below.
 

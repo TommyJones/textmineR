@@ -28,16 +28,9 @@ at your own risk/discretion.
 }
 \examples{
 # make a dtm with unigrams and bigrams
-data(nih_sample)
+data(nih_sample_topic_model)
 
-dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
-                 doc_names = nih_sample$APPLICATION_ID,
-                 ngram_window = c(1,2),
-                 cpus = 2)
-
-# make a topic model
-m <- FitLsaModel(dtm = dtm,
-                 k = 10)
+m <- nih_sample_topic_model
 
 assignments <- t(apply(m$theta, 1, function(x){
   x[ x < 0.05 ] <- 0
