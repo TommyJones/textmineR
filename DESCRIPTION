@@ -18,13 +18,11 @@ Depends:
     Matrix
 Imports:
     methods,
-    lda,
     parallel,
     text2vec (>= 0.5),
     stopwords,
     stringr,
-    SnowballC,
-    Rcpp (>= 0.12.12),
+    Rcpp,
     RcppProgress,
     RSpectra
 Suggests:
@@ -33,6 +31,7 @@ Suggests:
     knitr,
     MASS,
     rmarkdown,
+    SnowballC,
     stringi,
     testthat,
     topicmodels,
