@@ -92,7 +92,7 @@ test_that("Dtm2Docs",{
                   cpus = 2)
   
   # make sure we get the same thing back
-  expect_true(sum(d2 != d) == 0)
+  expect_true(sum(d2[,colnames(d2)] != d[,colnames(d2)]) == 0)
   
 })
 
