@@ -34,7 +34,7 @@ test_that("CalcGamma works as expected",{
 
 ### Cluster2TopicModel ----
 test_that("Cluster2TopicModel works as expected",{
-  cl <- Cluster2TopicModel(nih_sample_dtm, nih_sample$ADMINISTERING_IC)
+  cl <- Cluster2TopicModel(nih_sample_dtm, nih_sample$ADMINISTERING_IC, cpus = 2)
   
   # check dimensions
   expect_true(nrow(cl$theta) == nrow(nih_sample_dtm))
