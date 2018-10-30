@@ -6,7 +6,7 @@
 #' @param cpus Number of CPU cores to use, defaults to the value returned by 
 #' \code{\link[parallel]{detectCores}}.
 #' @param export A character vector of objects in the workspace to export when 
-#' using a Windows machine. Defauts to \code{NULL}
+#' using a Windows machine. Defaults to \code{NULL}
 #' @param libraries A character vector of library/package names to load on to
 #' each cluster if using a Windows machine. Defaults to \code{NULL}
 #' @param envir Environment from which to export variables in varlist

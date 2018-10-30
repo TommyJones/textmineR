@@ -147,7 +147,7 @@ Using the `igraph` package (with its own objects) to calculate eigenvector centr
 
 # Pulling it all together
 
-The code below puts itall together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a singel function call. 
+The code below puts it all together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a single function call. 
 
 ```{r summaries}
 

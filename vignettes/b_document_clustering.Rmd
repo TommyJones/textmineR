@@ -46,7 +46,7 @@ tf_mat <- TermDocFreq(dtm)
 ```
 
 
-First, we must re-weight the word counts in the document term matrix. We do this by multiplying the term frequency (in this case, count of words in documents) by an inverse document frequncy (IDF) vector. textmineR calculates IDF for the $i$-th word as
+First, we must re-weight the word counts in the document term matrix. We do this by multiplying the term frequency (in this case, count of words in documents) by an inverse document frequency (IDF) vector. textmineR calculates IDF for the $i$-th word as
 
 \begin{align}
   IDF_i = ln\big(\frac{N}{\sum_{j = 1}^N C(word_i, doc_j)}\big)

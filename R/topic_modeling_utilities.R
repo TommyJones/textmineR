@@ -13,7 +13,7 @@
 #'          negative values (as may be the case with an LSA model), a constant is
 #'          added so that the least prevalent topic has a prevalence of 0.
 #'          
-#'          'coherence' is calcuated using \link[textmineR]{CalcProbCoherence}.
+#'          'coherence' is calculated using \link[textmineR]{CalcProbCoherence}.
 #'          
 #'          'label' is assigned using the top label from \link[textmineR]{LabelTopics}.
 #'          This requires an "assignment" matrix. This matrix is like a "theta" matrix

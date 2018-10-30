@@ -22,13 +22,13 @@ knitr::opts_chunk$set(
 
 ## Create a term co-occurrence matrix
 
-The first step in fitting a text embedding model is to [create a term co-occurrence matrix](https://stackoverflow.com/questions/24073030/what-are-co-occurance-matrixes-and-how-are-they-used-in-nlp) or TCM. In a TCM, both columns and rows index tokens. The $(i,j)$ entries of the matrix are a count of the number of times word $i$ co-occures with $j$. However, there are several ways to count co-occurrence. textmineR gives you three.
+The first step in fitting a text embedding model is to [create a term co-occurrence matrix](https://stackoverflow.com/questions/24073030/what-are-co-occurance-matrixes-and-how-are-they-used-in-nlp) or TCM. In a TCM, both columns and rows index tokens. The $(i,j)$ entries of the matrix are a count of the number of times word $i$ co-occurs with $j$. However, there are several ways to count co-occurrence. textmineR gives you three.
 
-The most useful way of counting co-occurrence for text embeddings is called the skip-gram model. Under the skip-gram model, the count would be the number of times word $j$ appears within a certain window of $i$. A skip-gram window of two, for example, would count the number of times word $j$ occured in the two words immediately before word $i$ or the two words immediately after word $i$. This helps capture the local context of words. In fact, you can think of a text embedding as being a topic model based on the local context of words. Whereas a traditional topic model is modeling words in their global context. 
+The most useful way of counting co-occurrence for text embeddings is called the skip-gram model. Under the skip-gram model, the count would be the number of times word $j$ appears within a certain window of $i$. A skip-gram window of two, for example, would count the number of times word $j$ occurred in the two words immediately before word $i$ or the two words immediately after word $i$. This helps capture the local context of words. In fact, you can think of a text embedding as being a topic model based on the local context of words. Whereas a traditional topic model is modeling words in their global context. 
 
 To read more about the skip-gram model, which was popularized in the embedding model word2vec, look [here](https://becominghuman.ai/how-does-word2vecs-skip-gram-work-f92e0525def4).
 
-The other types of co-occurence matrix textmineR provides are both global. One is a count of the number of documents in which words $i$ and $j$ co-occur. The other is the number of terms that co-occur between _documents_ $i$ and $j$. See `help(CreateTcm)` for info on these.
+The other types of co-occurrence matrix textmineR provides are both global. One is a count of the number of documents in which words $i$ and $j$ co-occur. The other is the number of terms that co-occur between _documents_ $i$ and $j$. See `help(CreateTcm)` for info on these.
 
 ```{r}
 
@@ -72,7 +72,7 @@ embeddings <- FitLdaModel(dtm = tcm,
 
 ## Interpretation of $\Phi$ and $\Theta$
 
-In the language of text embeddings, $\Theta$ gives us our tokens embedded in a probability space (because we used LDA, Euclidean space if we used LSA). $\Phi$ defines the dimensions of our embbeding space. The rows of $\Phi$ can still be interpreted as topics. But they are topics of local contexts, rather than within whole documents.
+In the language of text embeddings, $\Theta$ gives us our tokens embedded in a probability space (because we used LDA, Euclidean space if we used LSA). $\Phi$ defines the dimensions of our embedding space. The rows of $\Phi$ can still be interpreted as topics. But they are topics of local contexts, rather than within whole documents.
 
 ## Evaluating the model
 
@@ -146,7 +146,7 @@ embedding_assignments <- predict(embeddings, dtm_embed, method = "gibbs",
                                  iterations = 200, burnin = 180)
 ```
 
-Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculaing R-squared and coherence.
+Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculatingR-squared and coherence.
 
 ```{r}
 # get a goodness of fit relative to the DTM

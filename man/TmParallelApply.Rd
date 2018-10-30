@@ -16,7 +16,7 @@ TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL,
 \code{\link[parallel]{detectCores}}.}
 
 \item{export}{A character vector of objects in the workspace to export when 
-using a Windows machine. Defauts to \code{NULL}}
+using a Windows machine. Defaults to \code{NULL}}
 
 \item{libraries}{A character vector of library/package names to load on to
 each cluster if using a Windows machine. Defaults to \code{NULL}}
