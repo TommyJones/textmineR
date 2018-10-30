@@ -30,7 +30,7 @@ checking installed package size ... NOTE
 This just started. Not sure what there is to do here. The compiled size of the 
 libs directory on my computer is 365 Kb and I'm not getting that NOTE from the 
 win-builder. Possibly this is a result of my poor configuration of the travis ci 
-instance.
+instance, but I'm not able to reproduce it on other systems.
 
 ### Downstream dependencies
 There are no downstream dependencies. 
