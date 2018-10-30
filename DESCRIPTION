@@ -29,6 +29,7 @@ Suggests:
     digest,
     igraph,
     knitr,
+    lda,
     MASS,
     rmarkdown,
     SnowballC,
