@@ -58,7 +58,7 @@ Once we have a TCM, we can use the same procedure to make an embedding model as 
 # This will take considerably longer as the TCM matrix has many more rows 
 # than your average DTM
 embeddings <- FitLdaModel(dtm = tcm,
-                          k = 100,
+                          k = 50,
                           iterations = 200,
                           burnin = 180,
                           alpha = 0.1,
