@@ -66,7 +66,35 @@ test_that("CreateTcm performs as expected",{
 
 
 ### Dtm2Docs ----
-
+test_that("Dtm2Docs",{
+  
+  # create a dtm with unigrams only for testing purposes
+  d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
+                 ngram_window = c(1,1),
+                 stopword_vec = "the", 
+                 lower = TRUE,
+                 remove_punctuation = TRUE,
+                 remove_numbers = TRUE,
+                 cpus = 2)
+  
+  
+  dd <- Dtm2Docs(d, cpus = 2)
+  
+  expect_true(length(dd) == nrow(d))
+  
+  # create a second dtm with the same call as the first
+  d2 <- CreateDtm(doc_vec = dd, doc_names = seq_along(dd),
+                  ngram_window = c(1,1),
+                  stopword_vec = "the", 
+                  lower = TRUE,
+                  remove_punctuation = TRUE,
+                  remove_numbers = TRUE,
+                  cpus = 2)
+  
+  # make sure we get the same thing back
+  expect_true(sum(d2 != d) == 0)
+  
+})
 
 
 ### Dtm2Tcm ----
