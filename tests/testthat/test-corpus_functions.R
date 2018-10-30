@@ -98,7 +98,7 @@ test_that("Dtm2Docs",{
 
 
 ### Dtm2Tcm ----
-expect_that("Dtm2Tcm",{
+test_that("Dtm2Tcm",{
   
   d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
                  ngram_window = c(1,2),
@@ -120,3 +120,29 @@ expect_that("Dtm2Tcm",{
 
 
 ### TermDocFreq ----
+test_that("TermDocFreq",{
+
+  d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
+                 ngram_window = c(1,2),
+                 stopword_vec = "the", 
+                 lower = TRUE,
+                 remove_punctuation = TRUE,
+                 remove_numbers = TRUE,
+                 cpus = 2)
+  
+  tf <- TermDocFreq(d)
+  
+  expect_true(nrow(tf) == ncol(d))
+  
+  expect_true(ncol(tf) == 4)
+  
+  expect_true(sum(colnames(tf) == c("term", "term_freq", "doc_freq", "idf")) == 4)
+  
+  expect_true(sum(colnames(d) %in% tf$term) == ncol(d))
+  
+})
+
+
+
+
+
