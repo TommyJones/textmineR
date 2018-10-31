@@ -1,3 +1,15 @@
+### Updates for version 3.0.1
+This version is a patch in response to issues revealed by automatic checks upon 
+submission to CRAN plus an additional issue I encountered along the way.
+
+I have
+* Used the CRAN template for my MIT LICENSE file
+* Modified the example of the LabelTopics function to speed up run time for that example
+* Modified vignettes to run in less time 
+* Added a Makevars file to keep compiled code small on Ubuntu.
+
+Please read below for major updates between v2.x.x and v3.x.x
+
 ### Updates for version 3.0.0
 This version significantly changes textmineR.
 
