@@ -17,6 +17,7 @@ NULL
 #' @importFrom Rcpp sourceCpp
 #' @import RcppProgress
 #' @importFrom methods as
+#' @importFrom stopwords stopwords
 #' @export CalcLikelihoodC
 #' @export CalcSumSquares
 #' @export Dtm2DocsC
