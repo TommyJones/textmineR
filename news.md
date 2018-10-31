@@ -1,3 +1,7 @@
+### Updates for version 3.0.2
+This version is a patch. I've changed some elements of NAMESPACE to pass additional
+CRAN checks.
+
 ### Updates for version 3.0.1
 This version is a patch in response to issues revealed by automatic checks upon 
 submission to CRAN plus an additional issue I encountered along the way.
