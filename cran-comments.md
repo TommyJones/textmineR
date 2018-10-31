@@ -9,10 +9,10 @@ I have
 * Added a Makevars file to keep compiled code small on Ubuntu.
 
 Since build and check time has been an issue in the past, my build times for
-Mac and Windows testing environements are: 
+my testing environements are: 
   - MacOS 3m 23s for vignettes and 8m 34s total
   - Ubuntu unknown for vignettes and 9m 58s total
-  - win-builder (devel) 4m 5s for vignettes and 10m 43s total
+  - win-builder (devel) 4m 20s for vignettes and 11m 11s total
   - win-builder (release) 3m 53ss for vignettes and 9m 45s total
   
 In a future version, I plan to migrate the bulk of the vignette code to a stand-
