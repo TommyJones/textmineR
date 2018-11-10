@@ -457,7 +457,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
   
 
   ### get predictions ----
-  out <- newdata %*% t(object$gamma[,intersect_names])
+  out <- newdata[,intersect_names] %*% t(object$gamma[,intersect_names])
   
   out <- as.matrix(out)
   
