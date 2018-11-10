@@ -265,18 +265,18 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
   }
   
   if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
-    if (is.null(names(newdata))) {
+    if (is.null(colnames(newdata))) {
       stop("it looks like newdata is a numeric vector without names. 
            Did you mean to pass a single document?
            If so, it needs a names attribute to index tokens")
     }
     
     # align vocabulary
-    intersect_names <- intersect(names(newdata), colnames(object$gamma))
+    intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
     
     if (length(intersect_names) == 0)
       stop("No common vocabulary terms between model and newdata. 
-           See `intersect(names(newdata), colnames(object$gamma))`")
+           See `intersect(colnames(newdata), colnames(object$gamma))`")
     
     newdata <- newdata[intersect_names]
     
@@ -431,18 +431,18 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
   }
   
   if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
-    if (is.null(names(newdata))) {
+    if (is.null(colnames(newdata))) {
       stop("it looks like newdata is a numeric vector without names. 
            Did you mean to pass a single document?
            If so, it needs a names attribute to index tokens")
     }
     
     # align vocabulary
-    intersect_names <- intersect(names(newdata), colnames(object$gamma))
+    intersect_names <- intersect(colnames(newdata), colnames(object$gamma))
     
     if (length(intersect_names) == 0)
       stop("No common vocabulary terms between model and newdata. 
-           See `intersect(names(newdata), colnames(object$gamma))`")
+           See `intersect(colnames(newdata), colnames(object$gamma))`")
     
     newdata <- newdata[intersect_names]
     
@@ -774,7 +774,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   }
   
   if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
-    if (is.null(names(newdata))) {
+    if (is.null(colnames(newdata))) {
       stop("it looks like newdata is a numeric vector without names. 
            Did you mean to pass a single document?
            If so, it needs a names attribute to index tokens")
