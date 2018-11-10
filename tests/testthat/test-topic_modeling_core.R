@@ -170,7 +170,6 @@ test_that("predict.lsa_topic_model", {
   
   expect_true(ncol(p) == ncol(m$theta))
   
-  expect_true(round(sum(p),10) == 1)
   
   # predict with one document as a dgCMatrix
   p <- predict(m, d2)
@@ -179,7 +178,7 @@ test_that("predict.lsa_topic_model", {
   
   expect_true(ncol(p) == ncol(m$theta))
   
-  expect_true(round(sum(p),10) == 1)
+ 
 })
 
 ### Dtm2Lexicon ----
