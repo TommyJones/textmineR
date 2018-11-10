@@ -13,6 +13,14 @@ d <- CreateDtm(doc_vec = docs, doc_names = seq_along(docs),
                remove_numbers = TRUE,
                cpus = 2)
 
+d2 <- CreateDtm(doc_vec = "all my documents have skills", 
+                doc_names = 1,
+                ngram_window = c(1,2),
+                stopword_vec = "the", 
+                lower = TRUE,
+                remove_punctuation = TRUE,
+                remove_numbers = TRUE,
+                cpus = 2)
 
 ### CalcGamma ----
 test_that("CalcGamma works as expected",{
@@ -100,14 +108,24 @@ test_that("predict.ctm_topic_model performs as expected", {
   
   expect_true(round(mean(rowSums(p)),10) == 1)
   
-  # predict with one document
-  p <- predict(m, d[1,])
+  # predict with one document as a numeric vector
+  p <- predict(m, d2[1,])
   
   expect_true(nrow(p) == 1)
   
   expect_true(ncol(p) == ncol(m$theta))
   
   expect_true(round(sum(p),10) == 1)
+  
+  # predict with one document as a dgCMatrix
+  p <- predict(m, d2)
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == ncol(m$theta))
+  
+  expect_true(round(sum(p),10) == 1)
+  
   
 })
 
@@ -145,13 +163,23 @@ test_that("predict.lsa_topic_model", {
   
   expect_true(ncol(p) == 2)
   
-  # predictions for a single document
-  p <- predict(m, d[1,])
+  # predict with one document as a numeric vector
+  p <- predict(m, d2[1,])
   
   expect_true(nrow(p) == 1)
   
-  expect_true(ncol(p) == 2)
-
+  expect_true(ncol(p) == ncol(m$theta))
+  
+  expect_true(round(sum(p),10) == 1)
+  
+  # predict with one document as a dgCMatrix
+  p <- predict(m, d2)
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == ncol(m$theta))
+  
+  expect_true(round(sum(p),10) == 1)
 })
 
 ### Dtm2Lexicon ----
@@ -267,14 +295,24 @@ test_that("predict.lda_topic_model",{
   expect_true(round(mean(rowSums(p)),10) == 1)
   
   
-  # gibbs sampling a single document
-  p <- predict(m, d[1,], iterations = 200, burnin = 175)
+  # gibbs sampling a single document as a numeric vector
+  p <- predict(m, d2[1,], iterations = 200, burnin = 175)
   
   expect_true(nrow(p) == 1)
   
   expect_true(ncol(p) == 2)
   
   expect_true(round(mean(rowSums(p)),10) == 1)
+  
+  # gibbs sampling a single document as a dgCMatrix
+  p <- predict(m, d2, iterations = 200, burnin = 175)
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == 2)
+  
+  expect_true(round(mean(rowSums(p)),10) == 1)
+  
   
   # dot many documents
   p <- predict(m, d, method = "dot")
@@ -285,14 +323,24 @@ test_that("predict.lda_topic_model",{
   
   expect_true(round(mean(rowSums(p)),10) == 1)
   
-  # dot single document
-  p <- predict(m, d[1,], method = "dot")
+  # dot single document as a numeric vector
+  p <- predict(m, d2[1,], method = "dot")
   
   expect_true(nrow(p) == 1)
   
   expect_true(ncol(p) == 2)
   
   expect_true(round(mean(rowSums(p)),10) == 1)
+  
+  # dot single document as a dgCMatrix
+  p <- predict(m, d2, method = "dot")
+  
+  expect_true(nrow(p) == 1)
+  
+  expect_true(ncol(p) == 2)
+  
+  expect_true(round(mean(rowSums(p)),10) == 1)
+  
   
 })
 
