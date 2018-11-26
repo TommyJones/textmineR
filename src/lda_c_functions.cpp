@@ -65,9 +65,9 @@ List dtm_to_lexicon_c(arma::sp_mat x) {
 // This is a collapsed gibbs sampler for LDA.
 // Pre-processing and post-processing is assumed in R
 // [[Rcpp::export]]
-List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph, 
-               NumericVector &beta, int &iterations, int &burnin,
-               bool &optimize_alpha, bool &calc_likelihood) {
+List fit_lda_c2(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph, 
+                NumericMatrix &beta, int &iterations, int &burnin,
+                bool &optimize_alpha, bool &calc_likelihood) {
   
   // print a status so we can see where we are
   // std::cout << "declaring variables\n";
@@ -80,7 +80,7 @@ List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph,
   
   double sum_alpha = sum(alpha); // rcpp sugar here, I guess
   
-  NumericVector k_beta = beta * Nk; // rcpp sugar here, I guess
+  NumericMatrix k_beta = beta * Nk; // rcpp sugar here, I guess
   
   // Declare data structures
   int i, d, n, k; // indices for loops
@@ -190,15 +190,11 @@ List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph,
         
         n_z[z] -= 1;
         
-        // n_d[d] -= 1;
-        
         // sample topic index
         for (k = 0; k < Nk; k++) {
           
-          p_z[k] = (phi_counts(k,doc[n]) + beta[doc[n]]) / (n_z[k] + k_beta[doc[n]]) *
+          p_z[k] = (phi_counts(k,doc[n]) + beta(k,doc[n])) / (n_z[k] + k_beta(k,doc[n])) *
             (theta_counts(d,k) + alpha[k]) / (n_d[d] + sum_alpha);
-          
-          // p_z[k] = (phi_counts(k,doc[n]) + beta[doc[n]]) * (theta_counts(d,k) + alpha[k]);
           
         }
         
@@ -312,38 +308,6 @@ List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph,
       ll(i / 10, 1) = lpd; // log probability of whole corpus under the model w/o priors
       
       ll(i / 10, 2) = lpd + lp_alpha + lp_beta;
-      
-      // double ld(0.0); // if calc_likelihood, we need this term
-      // 
-      // double lk(0.0); // if calc_likelihood, we need this term
-      // 
-      // int theta_counts_sum(0);
-      // 
-      // int phi_counts_sum(0);
-      // 
-      // for (k = 0; k < Nk; k++) {
-      // 
-      //   for (d = 0; d < Nd; d++) {
-      //     ld += lgamma(theta_counts(d,k) + alpha[k]);
-      // 
-      //     theta_counts_sum += theta_counts(d,k);
-      //   }
-      // 
-      //   for (n = 0; n < Nv; n++) {
-      //     lk += lgamma(phi_counts(k,n) + beta[n]);
-      // 
-      //     phi_counts_sum += phi_counts(k,n);
-      //   }
-      // 
-      // }
-      // 
-      // ld -= lgamma(theta_counts_sum);
-      // 
-      // lk -= lgamma(phi_counts_sum);
-      // 
-      // ll(i / 10, 0) = i;
-      // 
-      // ll(i / 10, 1) = ld - lgalpha + lk - lgbeta;
       
     }
     
