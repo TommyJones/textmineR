@@ -633,6 +633,11 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   ### Format inputs ----
   
+  # make beta a matrix to format for C funciton
+  
+  beta <- t(beta + matrix(0, nrow = length(beta), ncol = k))
+  
+  # other formatting
   docs <- Dtm2Lexicon(dtm,...)
   
   Nd <- nrow(dtm)
