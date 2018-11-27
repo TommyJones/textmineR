@@ -385,8 +385,6 @@ test_that("update.lda_topic_model",{
                iterations = 200,
                burnin = 175)
   
-  # expect_true(ncol(m$))
-  
   
   # add topics to an existing model
   m5 <- update(object = m,
