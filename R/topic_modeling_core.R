@@ -992,6 +992,11 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   # Need solution of how to not use defaults first
   ##############################################################################
   
+  if (! is.null(new_alpha) | ! is.null(new_beta)) {
+    warning("methods for new_alpha and new_beta are not yet implemented. 
+            See 'details' under help(update.lda_topic_model) for more information.")
+  }
+  
   # alpha and beta?
   # if (! is.numeric(alpha) | sum(is.na(alpha)) > 0)
   #   stop("alpha must be a numeric scalar or vector with no missing values")
