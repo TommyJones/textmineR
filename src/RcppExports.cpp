@@ -45,6 +45,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// HellingerMat
+NumericMatrix HellingerMat(NumericMatrix A);
+RcppExport SEXP _textmineR_HellingerMat(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(HellingerMat(A));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Hellinger_cpp
 double Hellinger_cpp(NumericVector p, NumericVector q);
 RcppExport SEXP _textmineR_Hellinger_cpp(SEXP pSEXP, SEXP qSEXP) {
@@ -54,17 +65,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
     rcpp_result_gen = Rcpp::wrap(Hellinger_cpp(p, q));
-    return rcpp_result_gen;
-END_RCPP
-}
-// HellingerMat
-NumericMatrix HellingerMat(NumericMatrix A);
-RcppExport SEXP _textmineR_HellingerMat(SEXP ASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(HellingerMat(A));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -103,7 +103,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // fit_lda_c
-List fit_lda_c(List& docs, int& Nk, int& Nd, int& Nv, NumericVector alph, NumericVector& beta, int& iterations, int& burnin, bool& optimize_alpha, bool& calc_likelihood);
+List fit_lda_c(List& docs, int& Nk, int& Nd, int& Nv, NumericVector alph, NumericMatrix& beta, int& iterations, int& burnin, bool& optimize_alpha, bool& calc_likelihood);
 RcppExport SEXP _textmineR_fit_lda_c(SEXP docsSEXP, SEXP NkSEXP, SEXP NdSEXP, SEXP NvSEXP, SEXP alphSEXP, SEXP betaSEXP, SEXP iterationsSEXP, SEXP burninSEXP, SEXP optimize_alphaSEXP, SEXP calc_likelihoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -113,7 +113,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int& >::type Nd(NdSEXP);
     Rcpp::traits::input_parameter< int& >::type Nv(NvSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alph(alphSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type beta(betaSEXP);
     Rcpp::traits::input_parameter< int& >::type iterations(iterationsSEXP);
     Rcpp::traits::input_parameter< int& >::type burnin(burninSEXP);
     Rcpp::traits::input_parameter< bool& >::type optimize_alpha(optimize_alphaSEXP);
@@ -144,8 +144,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_textmineR_CalcLikelihoodC", (DL_FUNC) &_textmineR_CalcLikelihoodC, 3},
     {"_textmineR_CalcSumSquares", (DL_FUNC) &_textmineR_CalcSumSquares, 4},
     {"_textmineR_Dtm2DocsC", (DL_FUNC) &_textmineR_Dtm2DocsC, 2},
-    {"_textmineR_Hellinger_cpp", (DL_FUNC) &_textmineR_Hellinger_cpp, 2},
     {"_textmineR_HellingerMat", (DL_FUNC) &_textmineR_HellingerMat, 1},
+    {"_textmineR_Hellinger_cpp", (DL_FUNC) &_textmineR_Hellinger_cpp, 2},
     {"_textmineR_JSD_cpp", (DL_FUNC) &_textmineR_JSD_cpp, 2},
     {"_textmineR_JSDmat", (DL_FUNC) &_textmineR_JSDmat, 1},
     {"_textmineR_dtm_to_lexicon_c", (DL_FUNC) &_textmineR_dtm_to_lexicon_c, 1},

@@ -13,12 +13,12 @@ Dtm2DocsC <- function(dtm, vocab) {
     .Call(`_textmineR_Dtm2DocsC`, dtm, vocab)
 }
 
-Hellinger_cpp <- function(p, q) {
-    .Call(`_textmineR_Hellinger_cpp`, p, q)
-}
-
 HellingerMat <- function(A) {
     .Call(`_textmineR_HellingerMat`, A)
+}
+
+Hellinger_cpp <- function(p, q) {
+    .Call(`_textmineR_Hellinger_cpp`, p, q)
 }
 
 JSD_cpp <- function(p, q) {
