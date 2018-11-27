@@ -36,7 +36,7 @@ This version significantly changes textmineR.
   - Asymmetric priors are supported for both alpha and beta.
   - There is an option, optimize_alpha, which updates alpha every 10 iterations
     based on the value of theta at the current iteration. 
-  - The log liklihood of the data given estimates of phi and thenta is optionally 
+  - The log likelihood of the data given estimates of phi and theta is optionally 
     calculated every 10 iterations. 
   - Probabilistic coherence is optionally calculated at the time of model fit.
   - R-squared is optionally calculated at the time of model fit.
