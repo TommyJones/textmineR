@@ -661,7 +661,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   
   theta <- result$theta
   
-  phi <- t(t(phi) + beta)
+  phi <- phi + beta # t(t(phi) + beta)
   
   phi <- phi / rowSums(phi, na.rm = TRUE)
   
@@ -946,7 +946,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #'              burnin = 175)
 #' 
 #' }
-updata.lda_topic_model <- function(object, dtm, additional_k = 0, 
+update.lda_topic_model <- function(object, dtm, additional_k = 0, 
                                    iterations = NULL, burnin = -1, 
                                    new_alpha = NULL, new_beta = NULL, 
                                    optimize_alpha = FALSE, calc_likelihood = FALSE, 
