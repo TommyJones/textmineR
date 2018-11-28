@@ -245,6 +245,7 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 #' in the textmineR vignette "c_topic_modeling".
 #' @examples
 #' # Load a pre-formatted dtm 
+#' \dontrun{
 #' data(nih_sample_dtm) 
 #' 
 #' model <- FitCtmModel(dtm = nih_sample_dtm[1:20,], k = 3,
@@ -252,6 +253,7 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 #' 
 #' # Get predictions on the next 50 documents
 #' pred <- predict(model, nih_sample_dtm[21:100,])
+#' }
 #' @export
 predict.ctm_topic_model <- function(object, newdata, ...) {
   ### Check inputs ----
