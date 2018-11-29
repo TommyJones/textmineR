@@ -39,31 +39,27 @@ m <- FitLdaModel(dtm = d,
 # below is equivalent to tidy_beta <- tidy(x = m, matrix = "beta")
 tidy_beta <- data.frame(topic = as.integer(stringr::str_replace_all(rownames(m$phi), "t_", "")), 
                 m$phi, 
-                stringsAsFactors = FALSE)
-
-tidy_beta <- reshape2::melt(tidy_beta, 
-                            id.vars = "topic", 
-                            variable.name = "term",
-                            value.name = "beta")
+                stringsAsFactors = FALSE) %>%
+  reshape2::melt(id.vars = "topic", 
+             variable.name = "term",
+             value.name = "beta") %>%
+  tibble::as.tibble()
 
 tidy_beta$term <- as.character(tidy_beta$term)
-
-tidy_beta <- tibble::as.tibble(tidy_beta)
 
 tidy_beta
 
 # below is equivalent to tidy_gamma <- tidy(x = m, matrix = "gamma")
 tidy_gamma <- data.frame(document = rownames(m$theta),
                          m$theta,
-                         stringsAsFactors = FALSE)
+                         stringsAsFactors = FALSE) %>%
+  reshape2::melt(id.vars = "document", 
+                 variable.name = "topic",
+                 value.name = "gamma") %>%
+  tibble::as.tibble()
 
-tidy_gamma <- reshape2::melt(tidy_gamma, 
-                             id.vars = "document", 
-                             variable.name = "topic",
-                             value.name = "gamma")
-
-tidy_gamma$topic <- as.integer(stringr::str_replace_all(as.character(tidy_gamma$topic), "t_", ""))
-
-tidy_gamma <- tibble::as.tibble(tidy_gamma)
+tidy_gamma$topic <- as.character(tidy_gamma$topic) %>%
+  stringr::str_replace_all("t_", "") %>%
+  as.integer()
 
 tidy_gamma
