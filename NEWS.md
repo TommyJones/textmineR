@@ -5,6 +5,7 @@ This version is a patch. In this version I have
 * added an update method for the lda_topic_model class. This allows users to add
   documents to an existing model (and even add new topics) without chaning the 
   indices of previously-trained topics. e.g. topic 5 is still topic 5.
+* added a vignette for using `tidytext` alongside `textmineR`
 
 ### Updates for version 3.0.1
 This version is a patch in response to issues revealed by automatic checks upon 
