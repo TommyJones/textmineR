@@ -4,9 +4,9 @@ appeared on CRAN. I have modified the NAMESPACE to explicitly say
 "importFrom(stopwords,stopwords)" to address the issue.
 
 ### Test environments
-* local MacOS install, R 3.5.1
+* local MacOS install, R 3.5.2
 * Ubuntu 14.04 LTS (on travis ci), R 3.5.1
-* win-builder (devel and release)
+* win-builder (devel, release, and oldrel)
 
 ### R CMD check results
 There are no WARNINGs, ERRORs, or NOTEs.

@@ -25,6 +25,7 @@ in the textmineR vignette "c_topic_modeling".
 }
 \examples{
 # Load a pre-formatted dtm 
+\dontrun{
 data(nih_sample_dtm) 
 
 model <- FitCtmModel(dtm = nih_sample_dtm[1:20,], k = 3,
@@ -32,4 +33,5 @@ model <- FitCtmModel(dtm = nih_sample_dtm[1:20,], k = 3,
 
 # Get predictions on the next 50 documents
 pred <- predict(model, nih_sample_dtm[21:100,])
+}
 }
