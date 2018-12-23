@@ -35,6 +35,7 @@ Suggests:
     SnowballC,
     stringi,
     testthat,
+    tidytext,
     topicmodels,
     wordcloud
 License: MIT + file LICENSE
