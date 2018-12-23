@@ -1,7 +1,9 @@
 ### Patch release version 3.0.2
-This version is in response to a NOTE that appeared during checks after v3.0.1
-appeared on CRAN. I have modified the NAMESPACE to explicitly say 
+This version is a patch that addresses two issues:
+
+* I have modified the NAMESPACE to explicitly say 
 "importFrom(stopwords,stopwords)" to address the issue.
+* I have added an update method for the lda_topic_model class.
 
 ### Test environments
 * local MacOS install, R 3.5.2
