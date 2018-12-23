@@ -27,6 +27,7 @@ Imports:
     RSpectra
 Suggests:
     digest,
+    dplyr,
     igraph,
     knitr,
     lda,
@@ -35,6 +36,8 @@ Suggests:
     SnowballC,
     stringi,
     testthat,
+    tibble,
+    tidyr,
     tidytext,
     topicmodels,
     wordcloud
@@ -45,5 +48,5 @@ LazyData: true
 LinkingTo: Rcpp,
     RcppArmadillo,
     RcppProgress
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
