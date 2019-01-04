@@ -168,7 +168,7 @@ summarizer <- function(doc, gamma) {
   names(sent) <- seq_along(sent) # so we know index and order
   
   # embed the sentences in the model
-  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE)
+  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE, cpus = 2)
   
   # remove any documents with 2 or fewer words
   e <- e[ rowSums(e) > 2 , ]
