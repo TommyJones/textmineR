@@ -361,7 +361,7 @@ One key mathematical difference is how you calculate $\Gamma$. For LSA the opera
 # Get topic predictions for all 5,000 documents
 
 # set up the assignments matrix and a simple dot product gives us predictions
-lsa_assignments <- t(dtm) * tf_sample$idf
+lsa_assignments <- t(dtm / rowSums(dtm)) * tf_sample$idf
 
 lsa_assignments <- t(lsa_assignments)
 
@@ -370,7 +370,7 @@ lsa_assignments <- predict(lsa_model, lsa_assignments)
 
 ```
 
-In this case, there is no Bayesian/frequentist difference. So there's only one way to predict. Note that in the case above, we had to do the IDF reweighting before passing to `predict.lsa_topic_model`. If you pass a character vector (which is possible), `predict.lsa_topic_model` will only calculate a count DTM (or TCM), not do any reweighting.
+In this case, there is no Bayesian/frequentist difference. So there's only one way to predict. Note that in the case above, we had to do the IDF reweighting before passing to `predict.lsa_topic_model`. 
 
 ```{r fig.width = 7.5, fig.height = 4}
 # compare the "fit" assignments to the predicted ones
