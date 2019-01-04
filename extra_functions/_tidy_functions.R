@@ -12,6 +12,9 @@ create_dtm <- function (doc_vec,
   
   
   # check inputs ----
+  if (verbose) 
+    warning("verbose is deprecated and will be removed in a future version.")
+  
   if (is.null(doc_names) & is.null(names(doc_vec))) {
     message("No document names detected. Assigning 1:length(doc_vec) as names.")
     doc_names <- 1:length(doc_vec)
@@ -48,14 +51,28 @@ create_dtm <- function (doc_vec,
   }
   
   if (length(stopword_vec) > 0) {
+    
+    # this "if statement" has to be first to preserve proper stopword removal
+    if (ngram_window[2] > 1) { # stopwords from ngram entries
+
+      mega_regex <- paste0("(^| )(", paste(stopword_vec, collapse = "|"), ")( |$)")
+      
+      tidy_docs$word <- tidy_docs$word %>%
+        stringr::str_remove_all(mega_regex) 
+      
+    }
+    
+    # this has to be second
     tidy_docs <- tidy_docs %>%
       anti_join(data_frame(word = stopword_vec), by = "word")
+    
+    
   }
   
   if (remove_numbers) { 
     # regex removes all strings of numbers even if they contain punctuation
     tidy_docs <- tidy_docs %>%
-      filter(! stringr::str_detect(tidy_docs$word, "^[0-9[:punct:]]+$"))
+      filter(! stringr::str_detect(tidy_docs$word, "(^| )[0-9[:punct:]]+( |$)"))
     
     # removes any numeric characters in words that contain letters and numbers
     # EDIT: not doing this as many of these terms contain information e.g. "1980s"
@@ -74,6 +91,10 @@ create_dtm <- function (doc_vec,
     tidy_docs$word <- tidy_docs$word %>%
       stem_lemma_function()
   }
+  
+  # remove empty slot that may have appeard from above cleanup
+  tidy_docs <- tidy_docs %>%
+    anti_join(data_frame(word = c("", " ")), by = "word")
     
   # cast to document term matrix ----
   dtm <- tidy_docs %>%
@@ -101,6 +122,8 @@ create_tcm <- function(doc_vec,
                        verbose = FALSE, ...) {
   
   # check inputs ----
+  if (verbose) 
+    warning("verbose is deprecated and will be removed in a future version.")
   
   if (!is.numeric(skipgram_window)) {
     stop("skipgram_window must be a positive integer (including 0) or Inf")
