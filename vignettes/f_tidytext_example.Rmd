@@ -78,7 +78,7 @@ tidy_gamma <- data.frame(document = rownames(m$theta),
                          m$theta,
                          stringsAsFactors = FALSE) %>%
   gather(topic, gamma, -document) %>%
-  tibble::as.tibble()
+  tibble::as_tibble()
 
 ```
 
