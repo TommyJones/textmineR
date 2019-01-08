@@ -71,7 +71,7 @@ tidy_beta <- data.frame(topic = as.integer(stringr::str_replace_all(rownames(m$p
                         m$phi, 
                         stringsAsFactors = FALSE) %>%
   gather(term, beta, -topic) %>% 
-  tibble::as.tibble()
+  tibble::as_tibble()
 
 # below is equivalent to tidy_gamma <- tidy(x = m, matrix = "gamma")
 tidy_gamma <- data.frame(document = rownames(m$theta),
