@@ -4,7 +4,7 @@ author: "Thomas W. Jones"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{1. Start here}
+  %\VignetteIndexEntry{6. Using tidytext with textmineR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
