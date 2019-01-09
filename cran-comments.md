@@ -1,6 +1,9 @@
 ### Patch release version 3.0.2
 This version is a patch where I have:
 
+* addressed some issues from CRAN's automatic checks. I added a new vignette and
+  (a) spawned too many processes during execution and (b) copied another vignette's
+  title. Both issues have been fixed.
 * modified the NAMESPACE to explicitly say "importFrom(stopwords,stopwords)" to 
   address an issue that came up during checks for some systems after going to CRAN.
 * added an update method for the lda_topic_model class.
