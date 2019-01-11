@@ -8,7 +8,6 @@
 ^ToDo\.numbers$
 ^cran-comments.md$
 ^\.gitignore$
-^news.md
 ^models_*
 ^data/nih.rda
 ^\.travis\.yml$
