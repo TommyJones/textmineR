@@ -1,4 +1,4 @@
-### Updates for version 3.0.2
+# textmineR 3.0.2
 This version is a patch. In this version I have
 
 * changed some elements of NAMESPACE to pass additional CRAN checks.
@@ -7,7 +7,7 @@ This version is a patch. In this version I have
   indices of previously-trained topics. e.g. topic 5 is still topic 5.
 * added a vignette for using `tidytext` alongside `textmineR`
 
-### Updates for version 3.0.1
+# textmineR 3.0.1
 This version is a patch in response to issues revealed by automatic checks upon 
 submission to CRAN plus an additional issue I encountered along the way.
 
@@ -19,7 +19,7 @@ I have
 
 Please read below for major updates between v2.x.x and v3.x.x
 
-### Updates for version 3.0.0
+# textmineR 3.0.0
 This version significantly changes textmineR.
 
 * Several functions that were slated for deletion in version 2.1.3 are now gone.
@@ -65,7 +65,7 @@ This version significantly changes textmineR.
   what is/isn't permissable.
 
 
-### Updates for version 2.1.3
+# textmineR 2.1.3
 * Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0. 
 * Functions slated for deletion:
   - RecursiveRbind
@@ -80,35 +80,35 @@ This version significantly changes textmineR.
   - CalcPhiPrime
 * In addition: FitLdaModel is going to change significantly in its functionality and argument calls.
 
-### Updates for version 2.1.2
+# textmineR 2.1.2
 * Deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.
 
-### Updates for version 2.1.1
+# textmineR 2.1.1
 * Corrected some code in the vignettes that caused errors on Linux machines.
 
-### Updates for version 2.1.0
+# textmineR 2.1.0
 * Added vignettes for common use cases of textmineR
 * Modified averaging for `CalcProbCoherence`
 * Updated documentation to `CreateTcm`
 
-### Updates for version 2.0.6
+# textmineR 2.0.6
 * Back-end changes to CreateTcm in response to new `text2vec` API. Functionality is unchanged.
 * Changes to how the package interfaces with Rcpp
 
-### Updates for version 2.0.5
+# textmineR 2.0.5
 * Add `verbose` option to `CreateDtm` and `CreateTcm` to surpress status messages.
 * Add function `GetVocabFromDtm` to get `text2vec` vocabulary object from a `dgCMatrix` 
   document term matrix.
   
-### Updates for version 2.0.4
+# textmineR 2.0.4
 * Patching errors introduced in version 2.0.3
 
-### Updates for version 2.0.3
+# textmineR 2.0.3
 
 * Patches to `CreateDtm` and `CreateTcm` in response to updates to `text2vec`.
 * More formal update to take advantage of `text2vec`'s latest optimizations to follow.
 
-### Updates for version 2.0.2
+# textmineR 2.0.2
 
 * Patched `CreateDtm` and `CreateTcm`. remove_punctuation now supports non-English 
   characters.
@@ -127,11 +127,11 @@ This version significantly changes textmineR.
   implementation is much faster.
 
 
-### Updates for version 2.0.1
+# textmineR 2.0.1
 
 * Patched CreateDtm and CreateTcm. An error caused stopwords to not be removed
 
-### Updates for version 2.0.0
+# textmineR 2.0.0
 
 * Vec2Dtm is now deprecated in favor of CreateDtm
 * A function, CreateTcm, now exists to create term co-occurence matrices
@@ -157,7 +157,7 @@ This version significantly changes textmineR.
   This is to conform to a naming convention where functions are "verbs".
 
 
-### Updates for version 1.7.0
+# textmineR 1.7.0
 
 * Added modeling capability for latent semantic analysis in FitLsaModel()
 * Added CalcProbCoherence() function which replaces ProbCoherence() and can calculate
@@ -167,7 +167,7 @@ This version significantly changes textmineR.
 * Added variational em method for FitLdaModel()
 * Added function to represent document clustering as a topic model Cluster2TopicModel()
 
-### Updates for version 1.6.0
+# textmineR 1.6.0
 
 * Add deprecation warning to ProbCoherence 
 * Allow for arguments of number of cores to be passed to every function that 
