@@ -9,6 +9,6 @@ articles:
   e_doc_summarization: e_doc_summarization.html
   f_tidytext_example: f_tidytext_example.html
 urls:
-  reference: https://www.textmineR.com/reference
-  article: https://www.textmineR.com/articles
+  reference: https://www.rtextmineR.com/reference
+  article: https://www.rtextmineR.com/articles
 
