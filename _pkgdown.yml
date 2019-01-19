@@ -2,7 +2,7 @@ title: textmineR
 url: https://www.rtextmineR.com
 template: 
   params:
-    bootswatch: flatly
+    bootswatch: lux
 
 navbar:
   type: inverse
