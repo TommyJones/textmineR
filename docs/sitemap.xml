@@ -1,111 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.textmineR.com/index.html</loc>
+    <loc>https://www.rtextmineR.com/index.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CalcGamma.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CalcGamma.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CalcHellingerDist.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CalcHellingerDist.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CalcJSDivergence.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CalcJSDivergence.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CalcLikelihood.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CalcLikelihood.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CalcProbCoherence.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CalcProbCoherence.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CalcTopicModelR2.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CalcTopicModelR2.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/Cluster2TopicModel.html</loc>
+    <loc>https://www.rtextmineR.com/reference/Cluster2TopicModel.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CreateDtm.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CreateDtm.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/CreateTcm.html</loc>
+    <loc>https://www.rtextmineR.com/reference/CreateTcm.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/Dtm2Docs.html</loc>
+    <loc>https://www.rtextmineR.com/reference/Dtm2Docs.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/Dtm2Lexicon.html</loc>
+    <loc>https://www.rtextmineR.com/reference/Dtm2Lexicon.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/Dtm2Tcm.html</loc>
+    <loc>https://www.rtextmineR.com/reference/Dtm2Tcm.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/FitCtmModel.html</loc>
+    <loc>https://www.rtextmineR.com/reference/FitCtmModel.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/FitLdaModel.html</loc>
+    <loc>https://www.rtextmineR.com/reference/FitLdaModel.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/FitLsaModel.html</loc>
+    <loc>https://www.rtextmineR.com/reference/FitLsaModel.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/GetProbableTerms.html</loc>
+    <loc>https://www.rtextmineR.com/reference/GetProbableTerms.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/GetTopTerms.html</loc>
+    <loc>https://www.rtextmineR.com/reference/GetTopTerms.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/InternalFunctions.html</loc>
+    <loc>https://www.rtextmineR.com/reference/InternalFunctions.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/LabelTopics.html</loc>
+    <loc>https://www.rtextmineR.com/reference/LabelTopics.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/SummarizeTopics.html</loc>
+    <loc>https://www.rtextmineR.com/reference/SummarizeTopics.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/TermDocFreq.html</loc>
+    <loc>https://www.rtextmineR.com/reference/TermDocFreq.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/TmParallelApply.html</loc>
+    <loc>https://www.rtextmineR.com/reference/TmParallelApply.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/nih.html</loc>
+    <loc>https://www.rtextmineR.com/reference/nih.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/predict.ctm_topic_model.html</loc>
+    <loc>https://www.rtextmineR.com/reference/predict.ctm_topic_model.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/predict.lda_topic_model.html</loc>
+    <loc>https://www.rtextmineR.com/reference/predict.lda_topic_model.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/predict.lsa_topic_model.html</loc>
+    <loc>https://www.rtextmineR.com/reference/predict.lsa_topic_model.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/textmineR-deprecated.html</loc>
+    <loc>https://www.rtextmineR.com/reference/textmineR-deprecated.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/textmineR.html</loc>
+    <loc>https://www.rtextmineR.com/reference/textmineR.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/reference/update.lda_topic_model.html</loc>
+    <loc>https://www.rtextmineR.com/reference/update.lda_topic_model.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/articles/a_start_here.html</loc>
+    <loc>https://www.rtextmineR.com/articles/a_start_here.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/articles/b_document_clustering.html</loc>
+    <loc>https://www.rtextmineR.com/articles/b_document_clustering.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/articles/c_topic_modeling.html</loc>
+    <loc>https://www.rtextmineR.com/articles/c_topic_modeling.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/articles/d_text_embeddings.html</loc>
+    <loc>https://www.rtextmineR.com/articles/d_text_embeddings.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/articles/e_doc_summarization.html</loc>
+    <loc>https://www.rtextmineR.com/articles/e_doc_summarization.html</loc>
   </url>
   <url>
-    <loc>https://www.textmineR.com/articles/f_tidytext_example.html</loc>
+    <loc>https://www.rtextmineR.com/articles/f_tidytext_example.html</loc>
   </url>
 </urlset>
