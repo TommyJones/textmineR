@@ -1,0 +1,14 @@
+pandoc: 1.19.2.1
+pkgdown: 1.3.0
+pkgdown_sha: ~
+articles:
+  a_start_here: a_start_here.html
+  b_document_clustering: b_document_clustering.html
+  c_topic_modeling: c_topic_modeling.html
+  d_text_embeddings: d_text_embeddings.html
+  e_doc_summarization: e_doc_summarization.html
+  f_tidytext_example: f_tidytext_example.html
+urls:
+  reference: https://www.textmineR.com/reference
+  article: https://www.textmineR.com/articles
+
