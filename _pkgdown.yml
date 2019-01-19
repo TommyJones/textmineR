@@ -1,0 +1,9 @@
+title: textmineR
+url: https://www.textmineR.com
+template: 
+  params:
+    bootswatch: flatly
+
+navbar:
+  type: inverse
+  
