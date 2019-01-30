@@ -4,7 +4,7 @@ Title: Functions for Text Mining and Topic Modeling
 Version: 3.0.2.999
 Date: 2019-01-09
 Authors@R: c(
-    person("Thomas", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
+    person("Tommy", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
     person("William", "Doane", email = "wil@drdoane.com", role = "ctb")
     )
 Description: An aid for text mining in R, with a syntax that
@@ -42,7 +42,7 @@ Suggests:
     topicmodels,
     wordcloud
 License: MIT + file LICENSE
-URL: https://github.com/TommyJones/textmineR
+URL: https://www.rtextminer.com/
 BugReports: https://github.com/TommyJones/textmineR/issues
 LazyData: true
 LinkingTo: Rcpp,
