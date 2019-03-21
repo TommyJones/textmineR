@@ -1,3 +1,10 @@
+# textmineR 3.0.3
+This version is a patch. In this version I have
+
+* fixed an error related to the `update.lda_topic_model` method.
+* added a method `posterior.lda_topic_model` to sample from the posterior of an
+  LDA topic model. 
+
 # textmineR 3.0.2
 This version is a patch. In this version I have
 

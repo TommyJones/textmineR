@@ -10,7 +10,7 @@
 
 Functions for Text Mining and Topic Modeling 
 
-Copyright 2018 by Thomas W. Jones
+Copyright 2019 by Thomas W. Jones
 
 An aid for text mining in R, with a syntax that
     is more familiar to experienced R users. Also, implements various functions
