@@ -4,6 +4,8 @@ library(textmineR)
 library(magrittr)
 data("nih_sample_topic_model")
 
+posterior <- function(object, ...) UseMethod("posterior")
+
 posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100, ...) {
   
   ### check inputs ----
