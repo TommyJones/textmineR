@@ -13,3 +13,4 @@
 ^data/nih.rda
 ^\.travis\.yml$
 ^docs$
+^pkgdown
