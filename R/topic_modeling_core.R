@@ -1,3 +1,12 @@
+#' Update methods for topic models
+#' @description \code{update} will update a previously-trained topic model based
+#' on new data. Useful for updates or transfer learning.
+#' @param object An existing trained topic model
+#' @param ... Additional arguments to the call
+#' @export
+update <- function(object, ...) UseMethod("update")
+
+
 #' Calculate a matrix whose rows represent P(topic_i|tokens)
 #' 
 #' @description This function takes a phi matrix (P(token|topic)) and a theta 

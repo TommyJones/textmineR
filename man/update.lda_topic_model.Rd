@@ -4,7 +4,7 @@
 \alias{update.lda_topic_model}
 \title{Update a Latent Dirichlet Allocation topic model with new data}
 \usage{
-update.lda_topic_model(object, dtm, additional_k = 0,
+\method{update}{lda_topic_model}(object, dtm, additional_k = 0,
   iterations = NULL, burnin = -1, new_alpha = NULL,
   new_beta = NULL, optimize_alpha = FALSE, calc_likelihood = FALSE,
   calc_coherence = TRUE, calc_r2 = FALSE, ...)
