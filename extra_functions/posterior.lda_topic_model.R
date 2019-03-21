@@ -68,7 +68,7 @@ posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100
   # 
   # class(samples) <- "lda_posterior"
   
-  samples <- do.call(rbind, samples)
+  samples <- do.call(cbind, samples)
   
   samples
   

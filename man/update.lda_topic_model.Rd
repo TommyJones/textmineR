@@ -44,13 +44,10 @@ Defaults to \code{FALSE}.}
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
-Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
+Returns an S3 object of class c("LDA", "TopicModel").
 }
 \description{
 Update an LDA model with new data using collapsed Gibbs sampling.
-}
-\details{
-EXPLAIN IMPLEMENTATION DETAILS
 }
 \examples{
 \dontrun{

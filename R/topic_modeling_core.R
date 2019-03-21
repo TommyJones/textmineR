@@ -6,6 +6,111 @@
 #' @export
 update <- function(object, ...) UseMethod("update")
 
+#' Posterior methods for topic models
+#' @description \code{posterior} will draw from the posterior distribution of a
+#' topic model
+#' @param object An existing trained topic model
+#' @param ... Additional arguments to the call
+#' @export
+posterior <- function(object, ...) UseMethod("posterior")
+
+
+#' Draw from the posterior of an LDA topic model
+#' @description This function takes an object of class \code{lda_topic_model} and
+#' draws samples from the posterior of either \code{phi} or \code{theta}. This is 
+#' useful for quantifying uncertainty around parametrs of the final model.
+#' @param object An object of class \code{lda_topic_model}
+#' @param which A character of either 'theta' or 'phi', indicating from which
+#' matrix to draw posterior samples
+#' @param num_samples Integer number of samples to draw
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @references 
+#' Heinrich, G. (2005) Parameter estimation for text analysis. Technical report. 
+#' \link{http://www.arbylon.net/publications/text-est.pdf}
+#' @return Returns a data frame where each row is a single sample from the posterior. 
+#' Each column is the distribution over a single parameter. The variable \code{var}
+#' is a facet for subsetting by document (for theta) or topic (for phi).
+#' @export
+#' @examples
+#' \dontrun{
+#' a <- posterior(object = nih_sample_topic_model, which = "theta", num_samples = 20)
+#' 
+#' plot(density(a$t1[a$var == "8693991"]))
+#' 
+#' b <- posterior(object = nih_sample_topic_model, which = "phi", num_samples = 20)
+#' 
+#' plot(denisty(b$research[b$var == "t_5"]))
+#' }
+posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100, ...) {
+  
+  ### check inputs ----
+  if (! class(object) == "lda_topic_model") 
+    stop("object must be of class lda_topic_model")
+  
+  if (num_samples <= 0) {
+    stop("num_samples must be an integer greater than 0")
+  }
+  
+  num_samples <- round(num_samples) # in case someone is cheeky
+  
+  
+  ### set up objects to extract ----
+  if (which == "theta") {
+    # extract dirichlet parameter for theta
+    par <- object$theta * (sum(object$alpha) + rowSums(object$data))
+    
+  } else if (which == "phi") {
+    
+    # need to recover approximate theta count mat to get number of times
+    # each topic was sampled
+    theta_count <- object$theta * (sum(object$alpha) + rowSums(object$data)) 
+    theta_count <- t(theta_count) - object$alpha 
+    theta_count <- t(theta_count) %>% round %>% colSums()
+    
+    # now get the right parameter matrix
+    par <- object$phi * (sum(object$beta) + theta_count)
+    
+  } else {
+    stop("which must be one of 'theta' or 'phi'")
+  }
+  
+  # get appropriate dim names to use later
+  cols <- colnames(par)
+  
+  rows <- rownames(par)
+  
+  
+  ### take samples ----
+  
+  # sample from each row (document or topic)
+  samples <- lapply(seq_len(nrow(par)), function(j) par[j,]) %>%
+    textmineR::TmParallelApply(function(x){
+      p <- gtools::rdirichlet(n = num_samples, alpha = x)
+      
+      colnames(p) <- cols
+      
+      as.data.frame(p)
+    }, export = c("num_samples", "cols"), libraries = "gtools", ...)
+  
+  
+  samples <- mapply(function(x,y){
+    x$var <- y
+    x
+  },x = samples, y = rows,
+  SIMPLIFY = FALSE)
+  
+  # names(samples) <- rows
+  # 
+  # class(samples) <- "lda_posterior"
+  
+  samples <- do.call(rbind, samples)
+  
+  # samples <- cbind(var = samples$var, samples[ -ncol(samples), ])
+  
+  samples
+  
+}
+
 
 #' Calculate a matrix whose rows represent P(topic_i|tokens)
 #' 
@@ -913,8 +1018,8 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
-#' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
-#' @details EXPLAIN IMPLEMENTATION DETAILS
+#' @return Returns an S3 object of class c("LDA", "TopicModel"). 
+#' @export
 #' @examples 
 #' \dontrun{
 #' # load a document term matrix
