@@ -40,5 +40,5 @@ plot(denisty(b$research[b$var == "t_5"]))
 }
 \references{
 Heinrich, G. (2005) Parameter estimation for text analysis. Technical report. 
-\link{http://www.arbylon.net/publications/text-est.pdf}
+\href{http://www.arbylon.net/publications/text-est.pdf}{http://www.arbylon.net/publications/text-est.pdf}
 }

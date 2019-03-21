@@ -26,7 +26,7 @@ posterior <- function(object, ...) UseMethod("posterior")
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
 #' @references 
 #' Heinrich, G. (2005) Parameter estimation for text analysis. Technical report. 
-#' \link{http://www.arbylon.net/publications/text-est.pdf}
+#' \href{http://www.arbylon.net/publications/text-est.pdf}{http://www.arbylon.net/publications/text-est.pdf}
 #' @return Returns a data frame where each row is a single sample from the posterior. 
 #' Each column is the distribution over a single parameter. The variable \code{var}
 #' is a facet for subsetting by document (for theta) or topic (for phi).
