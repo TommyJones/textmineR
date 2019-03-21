@@ -18,6 +18,7 @@ Depends:
     Matrix
 Imports:
     gtools,
+    magrittr,
     methods,
     parallel,
     text2vec (>= 0.5),
