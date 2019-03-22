@@ -36,6 +36,12 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<script src="../docsearch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 <meta property="og:title" content="Update a Latent Dirichlet Allocation topic model with new data — update.lda_topic_model" />
 
@@ -72,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.2.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.3</span>
       </span>
     </div>
 
@@ -120,13 +126,14 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/TommyJones/textmineR">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
+      
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -139,7 +146,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Update a Latent Dirichlet Allocation topic model with new data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TommyJones/textmineR/blob/master/R/topic_modeling_core.R'><code>R/topic_modeling_core.R</code></a></small>
+    
     <div class="hidden name"><code>update.lda_topic_model.Rd</code></div>
     </div>
 
@@ -149,7 +156,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>update.lda_topic_model</span>(<span class='no'>object</span>, <span class='no'>dtm</span>, <span class='kw'>additional_k</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+    <pre class="usage"><span class='co'># S3 method for lda_topic_model</span>
+<span class='fu'><a href='update.html'>update</a></span>(<span class='no'>object</span>, <span class='no'>dtm</span>, <span class='kw'>additional_k</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> -<span class='fl'>1</span>, <span class='kw'>new_alpha</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>new_beta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>optimize_alpha</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>calc_likelihood</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>calc_coherence</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>calc_r2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
@@ -218,11 +226,7 @@ Defaults to <code>FALSE</code>.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>EXPLAIN IMPLEMENTATION DETAILS</p>
+    <p>Returns an S3 object of class c("LDA", "TopicModel").</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -241,26 +245,26 @@ Defaults to <code>FALSE</code>.</p></td>
                  <span class='kw'>calc_r2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># update an existing model by adding documents</span>
-<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/update'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
+<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='update.html'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
              <span class='kw'>dtm</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='no'>d1</span>, <span class='no'>d2</span>),
              <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>200</span>,
              <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>175</span>)
 
 <span class='co'># use an old model as a prior for a new model</span>
-<span class='no'>m3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/update'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
+<span class='no'>m3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='update.html'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
              <span class='kw'>dtm</span> <span class='kw'>=</span> <span class='no'>d2</span>, <span class='co'># new documents only</span>
              <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>200</span>,
              <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>175</span>)
 
 <span class='co'># add topics while updating a model by adding documents</span>
-<span class='no'>m4</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/update'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
+<span class='no'>m4</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='update.html'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
              <span class='kw'>dtm</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='no'>d1</span>, <span class='no'>d2</span>),
              <span class='kw'>additional_k</span> <span class='kw'>=</span> <span class='fl'>3</span>,
              <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>200</span>,
              <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>175</span>)
 
 <span class='co'># add topics to an existing model</span>
-<span class='no'>m5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/update'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
+<span class='no'>m5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='update.html'>update</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='no'>m</span>,
              <span class='kw'>dtm</span> <span class='kw'>=</span> <span class='no'>d1</span>, <span class='co'># this is the old data</span>
              <span class='kw'>additional_k</span> <span class='kw'>=</span> <span class='fl'>3</span>,
              <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>200</span>,
@@ -274,8 +278,6 @@ Defaults to <code>FALSE</code>.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
@@ -285,7 +287,7 @@ Defaults to <code>FALSE</code>.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Thomas Jones.</p>
+  <p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
@@ -295,6 +297,23 @@ Defaults to <code>FALSE</code>.</p></td>
    </div>
 
   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '3c26218210734fb0fe605f17d745faba',
+    indexName: 'rtextminer',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

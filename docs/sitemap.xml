@@ -73,6 +73,12 @@
     <loc>https://www.rtextmineR.com/reference/nih.html</loc>
   </url>
   <url>
+    <loc>https://www.rtextmineR.com/reference/posterior.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/reference/posterior.lda_topic_model.html</loc>
+  </url>
+  <url>
     <loc>https://www.rtextmineR.com/reference/predict.ctm_topic_model.html</loc>
   </url>
   <url>
@@ -86,6 +92,9 @@
   </url>
   <url>
     <loc>https://www.rtextmineR.com/reference/textmineR.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/reference/update.html</loc>
   </url>
   <url>
     <loc>https://www.rtextmineR.com/reference/update.lda_topic_model.html</loc>

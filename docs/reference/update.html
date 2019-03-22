@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get predictions from a Latent Dirichlet Allocation model — predict.lda_topic_model • textmineR</title>
+<title>Update methods for topic models — update • textmineR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -43,9 +43,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Get predictions from a Latent Dirichlet Allocation model — predict.lda_topic_model" />
+<meta property="og:title" content="Update methods for topic models — update" />
 
-<meta property="og:description" content="Obtains predictions of topics for new documents from a fitted LDA model" />
+<meta property="og:description" content="update will update a previously-trained topic model based
+on new data. Useful for updates or transfer learning." />
 
 <meta property="og:image" content="https://www.rtextmineR.com/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -145,92 +146,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get predictions from a Latent Dirichlet Allocation model</h1>
+    <h1>Update methods for topic models</h1>
     
-    <div class="hidden name"><code>predict.lda_topic_model.Rd</code></div>
+    <div class="hidden name"><code>update.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Obtains predictions of topics for new documents from a fitted LDA model</p>
+    <p><code>update</code> will update a previously-trained topic model based
+on new data. Useful for updates or transfer learning.</p>
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for lda_topic_model</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/predict'>predict</a></span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"gibbs"</span>,
-  <span class='st'>"dot"</span>), <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> -<span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>update</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>a fitted object of class <code>lda_topic_model</code></p></td>
-    </tr>
-    <tr>
-      <th>newdata</th>
-      <td><p>a DTM or TCM of class <code>dgCMatrix</code> or a numeric vector</p></td>
-    </tr>
-    <tr>
-      <th>method</th>
-      <td><p>one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
-and <code>iterations</code> must be specified.</p></td>
-    </tr>
-    <tr>
-      <th>iterations</th>
-      <td><p>If <code>method = "gibbs"</code>, an integer number of iterations 
-for the Gibbs sampler to run. A future version may include automatic stopping criteria.</p></td>
-    </tr>
-    <tr>
-      <th>burnin</th>
-      <td><p>If <code>method = "gibbs"</code>, an integer number of burnin iterations. 
-If <code>burnin</code> is greater than -1, the entries of the resulting "theta" matrix 
-are an average over all iterations greater than <code>burnin</code>.</p></td>
+      <td><p>An existing trained topic model</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments to be passed to <code><a href='TmParallelApply.html'>TmParallelApply</a></code></p></td>
+      <td><p>Additional arguments to the call</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a "theta" matrix with one row per document and one column per topic</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># load some data</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>nih_sample_dtm</span>)
-
-<span class='co'># fit a model </span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>12345</span>)
-
-<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='FitLdaModel.html'>FitLdaModel</a></span>(<span class='kw'>dtm</span> <span class='kw'>=</span> <span class='no'>nih_sample_dtm</span>[<span class='fl'>1</span>:<span class='fl'>20</span>,], <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-                 <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>200</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>175</span>)
-
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>m</span>)
-
-<span class='co'># predict on held-out documents using gibbs sampling "fold in"</span>
-<span class='no'>p1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/predict'>predict</a></span>(<span class='no'>m</span>, <span class='no'>nih_sample_dtm</span>[<span class='fl'>21</span>:<span class='fl'>100</span>,], <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"gibbs"</span>,
-              <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>200</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>175</span>)
-
-<span class='co'># predict on held-out documents using the dot product method</span>
-<span class='no'>p2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/predict'>predict</a></span>(<span class='no'>m</span>, <span class='no'>nih_sample_dtm</span>[<span class='fl'>21</span>:<span class='fl'>100</span>,], <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"dot"</span>)
-
-<span class='co'># compare the methods</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/barplot'>barplot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='no'>p1</span>[<span class='fl'>1</span>,],<span class='no'>p2</span>[<span class='fl'>1</span>,]), <span class='kw'>beside</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>
