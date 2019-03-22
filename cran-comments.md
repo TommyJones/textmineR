@@ -13,7 +13,10 @@ This version is a patch where I have:
 * win-builder (devel, release, and oldrel)
 
 ### R CMD check results
-There are no WARNINGs, ERRORs, or NOTEs.
+There are no WARNINGs or ERRORs.
+
+There is one NOTE indicating that I changed "Thomas Jones" to "Tommy Jones" in
+the maintainer field.
 
 ### Downstream dependencies
 There are no downstream dependencies. 
