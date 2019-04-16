@@ -1,4 +1,6 @@
+# copied from https://github.com/vinecopulib/rvinecopulib
 # strip debug symbols for smaller Linux binaries
-strippedLib: $(SHLIB)
-		if test -e "/usr/bin/strip" & test -e "/bin/uname" & [[ `uname` == "Linux" ]] ; then /usr/bin/strip --strip-debug $(SHLIB); fi
-.phony: strippedLib
+# strippedLib: $(SHLIB)
+#     if test -e "/usr/bin/strip" & test -e "/bin/uname" & [[ `uname` == "Linux" ]] ; \
+#         then /usr/bin/strip --strip-debug $(SHLIB); fi
+# .phony: strippedLib
