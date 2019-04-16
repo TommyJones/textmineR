@@ -801,12 +801,16 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   gamma <- CalcGamma(phi = phi, theta = theta, 
                                    p_docs = Matrix::rowSums(dtm))
   
-  names(result$alpha) <- rownames(result$phi)
+  names(result$alpha) <- rownames(phi)
   
-  names(result$beta) <- colnames(result$phi)
+  colnames(result$beta) <- colnames(phi) # because this is still a matrix
   
-  result <- list(phi = phi, theta = theta, gamma = gamma,
-                 data = dtm, alpha = result$alpha, beta = result$beta,
+  result <- list(phi = phi, 
+                 theta = theta, 
+                 gamma = gamma,
+                 data = dtm, 
+                 alpha = result$alpha, 
+                 beta = result$beta[1, ], # make beta a vector again
                  log_likelihood = data.frame(result$log_likelihood)[,1:2] # drop 3rd col for now
                  ) # add other things here
   
