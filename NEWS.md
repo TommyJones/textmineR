@@ -1,3 +1,9 @@
+# textmineR 3.0.4
+This version is a patch. In this version I have
+
+* Removed unconditional stripping in MAKEVARs as specified by CRAN
+* Improved outputs of `FitLdaModel`
+
 # textmineR 3.0.3
 This version is a patch. In this version I have
 
