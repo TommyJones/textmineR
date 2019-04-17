@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.3.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.4</span>
       </span>
     </div>
 
@@ -147,9 +147,20 @@
       
     </div>
 
+    <div id="textminer-3-0-4" class="section level1">
+<h1 class="page-header">
+<a href="#textminer-3-0-4" class="anchor"></a>textmineR 3.0.4<small> Unreleased </small>
+</h1>
+<p>This version is a patch. In this version I have</p>
+<ul>
+<li>Removed unconditional stripping in MAKEVARs as specified by CRAN</li>
+<li>Improved outputs of <code>FitLdaModel</code>
+</li>
+</ul>
+</div>
     <div id="textminer-3-0-3" class="section level1">
 <h1 class="page-header">
-<a href="#textminer-3-0-3" class="anchor"></a>textmineR 3.0.3<small> Unreleased </small>
+<a href="#textminer-3-0-3" class="anchor"></a>textmineR 3.0.3<small> 2019-03-22 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
 <ul>
@@ -189,7 +200,8 @@
 </h1>
 <p>This version significantly changes textmineR.</p>
 <ul>
-<li>Several functions that were slated for deletion in version 2.1.3 are now gone.</li>
+<li>Several functions that were slated for deletion in version 2.1.3 are now gone.
+<ul>
 <li>RecursiveRbind</li>
 <li>Vec2Dtm</li>
 <li>JSD</li>
@@ -199,14 +211,19 @@
 <li>Files2Vec</li>
 <li>DepluralizeDtm</li>
 <li>CorrectS</li>
-<li><p>CalcPhiPrime</p></li>
-<li>FitLdaModel has changed significantly.</li>
+<li>CalcPhiPrime</li>
+</ul>
+</li>
+<li>FitLdaModel has changed significantly.
+<ul>
 <li>Now only Gibbs sampling is a supported training method. The Gibbs sampler is no longer wrapping lda::lda_collapsed_gibbs_sampler. It is now native to textmineR. It’s a little slower, but has additional features.</li>
 <li>Asymmetric priors are supported for both alpha and beta.</li>
 <li>There is an option, optimize_alpha, which updates alpha every 10 iterations based on the value of theta at the current iteration.</li>
 <li>The log likelihood of the data given estimates of phi and theta is optionally calculated every 10 iterations.</li>
 <li>Probabilistic coherence is optionally calculated at the time of model fit.</li>
-<li><p>R-squared is optionally calculated at the time of model fit.</p></li>
+<li>R-squared is optionally calculated at the time of model fit.</li>
+</ul>
+</li>
 <li><p>Supported topic models (LDA, LSA, CTM) are now object-oriented, creating their own S3 classes. These classes have their own predict methods, meaning you do not have to do your own math to make predictions for new documents.</p></li>
 <li><p>A new function SummarizeTopics has been added.</p></li>
 <li><p>tm is no longer a dependency for stopwords. We now use the stopwords package. The extended result of this is that there is no longer <em>any</em> Java dependency.</p></li>
@@ -220,7 +237,8 @@
 </h1>
 <ul>
 <li>Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0.</li>
-<li>Functions slated for deletion:</li>
+<li>Functions slated for deletion:
+<ul>
 <li>RecursiveRbind</li>
 <li>Vec2Dtm</li>
 <li>JSD</li>
@@ -231,6 +249,8 @@
 <li>DepluralizeDtm</li>
 <li>CorrectS</li>
 <li>CalcPhiPrime</li>
+</ul>
+</li>
 <li>In addition: FitLdaModel is going to change significantly in its functionality and argument calls.</li>
 </ul>
 </div>
@@ -325,20 +345,29 @@
 <ul>
 <li>Vec2Dtm is now deprecated in favor of CreateDtm</li>
 <li>A function, CreateTcm, now exists to create term co-occurence matrices</li>
-<li>CreateDtm and CreateTcm are implemented with a parallel C++ back end through the text2vec library</li>
+<li>CreateDtm and CreateTcm are implemented with a parallel C++ back end through the text2vec library
+<ul>
 <li>the implementation is <em>much</em> faster! I’ve clocked 2X - 10X speedups, depending on options</li>
 <li>adds external dependencies - C++ compiler and GNU make - and takes away an external dependency - Java.</li>
 <li>now <em>all</em> tokens will be included, regardless of length. (tm’s framework silently dropped all tokens of fewer than 3 characters.)</li>
-<li>Allow generic stemming and stopwords in CreateDtm &amp; CreateTcm</li>
+</ul>
+</li>
+<li>Allow generic stemming and stopwords in CreateDtm &amp; CreateTcm
+<ul>
 <li>Now there is only one argument for stopwords, making it clearer how to use custom or non-English stopwords</li>
 <li>Now the stemming argument allows for passing of stem/lemmatization functions.</li>
+</ul>
+</li>
 <li>Function for fitting correlated topic models</li>
 <li>Function to turn a document term matrix to term co-occurence matrix</li>
 <li>Allowed LabelTopics to use unigrams, if you want. (n-grams are still better.)</li>
 <li>More robust error checking for CalcTopicModelR2 and CalcLikelihood</li>
-<li>All function arguments use “_“, not”.“.</li>
-<li>CalcPhiPrime replaces (the now deprecated) GetPhiPrime</li>
+<li>All function arguments use "_“, not”.".</li>
+<li>CalcPhiPrime replaces (the now deprecated) GetPhiPrime
+<ul>
 <li>Allows you to pass an argument to specify non-uniform probabilities of each document</li>
+</ul>
+</li>
 <li>Similarly, CalcHellingerDist and CalcJSDivergence replace HellDist and JSD. This is to conform to a naming convention where functions are “verbs”.</li>
 </ul>
 </div>
@@ -373,6 +402,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#textminer-3-0-4">3.0.4</a></li>
         <li><a href="#textminer-3-0-3">3.0.3</a></li>
         <li><a href="#textminer-3-0-2">3.0.2</a></li>
         <li><a href="#textminer-3-0-1">3.0.1</a></li>
