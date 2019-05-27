@@ -78,9 +78,19 @@ posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100
     # # now get the right parameter matrix
     # par <- object$phi * (sum(object$beta) + theta_count)
     
-    par <- t(object$counts$phi_counts) + object$beta
+    if (class(object$beta) == "matrix") {
+      
+      par <- object$counts$phi_counts + object$beta
+      
+    } else {
+      
+      par <- t(object$counts$phi_counts) + object$beta
+      
+      par <- t(par)
+      
+    }
     
-    par <- t(par)
+
     
     colnames(par) <- colnames(object$phi)
     
