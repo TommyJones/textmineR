@@ -666,6 +666,8 @@ Dtm2Lexicon <- function(dtm, ...) {
 #'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
+#' @param return_data Do you want to return the input DTM/TCM (given by argument
+#'        \code{dtm})? Defaults to \code{FALSE}.
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
@@ -692,7 +694,8 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' @export
 FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
                         optimize_alpha = FALSE, calc_likelihood = FALSE, 
-                        calc_coherence = TRUE, calc_r2 = FALSE, ...){
+                        calc_coherence = TRUE, calc_r2 = FALSE, 
+                        return_data = FALSE, ...){
   
   ### Check inputs are of correct dimensionality ----
   
@@ -823,6 +826,10 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   class(result) <- "lda_topic_model"
   
   ### calculate additional things ----
+  if (! return_data) {
+    result$data <- NULL
+  }
+  
   if (calc_coherence) {
     result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
   }
