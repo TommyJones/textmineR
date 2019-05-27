@@ -63,6 +63,10 @@ posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100
     
     par <- t(par)
     
+    colnames(par) <- colnames(object$theta)
+    
+    rownames(par) <- rownames(object$theta)
+    
   } else if (which == "phi") {
     
     # # need to recover approximate theta count mat to get number of times
@@ -77,6 +81,10 @@ posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100
     par <- t(object$counts$phi_counts) + object$beta
     
     par <- t(par)
+    
+    colnames(par) <- colnames(object$phi)
+    
+    rownames(par) <- rownames(object$phi)
     
   } else {
     stop("which must be one of 'theta' or 'phi'")
