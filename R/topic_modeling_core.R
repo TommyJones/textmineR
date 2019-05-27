@@ -813,7 +813,10 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
                  beta = result$beta[1, ], # make beta a vector again
                  log_likelihood = data.frame(result$log_likelihood)[,1:2], # drop 3rd col for now
                  counts = list(theta_counts = result$theta,
-                               phi_counts = result$phi)) # add other things here
+                               phi_counts = result$phi,
+                               n_d = result$n_d,
+                               n_z = result$n_z,
+                               z_dn = result$z_dn)) # add other things here
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
   

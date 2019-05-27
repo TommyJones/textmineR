@@ -354,14 +354,20 @@ List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph,
                         Named("phi") = phi,
                         Named("log_likelihood") = ll,
                         Named("alpha") = alpha,
-                        Named("beta") = beta);
+                        Named("beta") = beta,
+                        Named("n_d") = n_d,
+                        Named("n_z") = n_z,
+                        Named("z_dn") = z_dn);
     
   } else {
     return List::create(Named("theta") = theta_counts,
                         Named("phi") = phi_counts,
                         Named("log_likelihood") = ll,
                         Named("alpha") = alpha,
-                        Named("beta") = beta);
+                        Named("beta") = beta,
+                        Named("n_d") = n_d,
+                        Named("n_z") = n_z,
+                        Named("z_dn") = z_dn);
   }
   
   
