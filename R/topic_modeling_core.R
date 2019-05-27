@@ -1058,6 +1058,8 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
+#' @param return_data Do you want to return the input DTM/TCM (given by argument
+#'        \code{dtm})? Defaults to \code{FALSE}.
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). 
 #' @export
@@ -1107,7 +1109,8 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
                                    iterations = NULL, burnin = -1, 
                                    new_alpha = NULL, new_beta = NULL, 
                                    optimize_alpha = FALSE, calc_likelihood = FALSE, 
-                                   calc_coherence = TRUE, calc_r2 = FALSE, ...) {
+                                   calc_coherence = TRUE, calc_r2 = FALSE, 
+                                   return_data = FALSE, ...) {
   
   ### Check inputs are of correct dimensionality ----
   
@@ -1267,16 +1270,30 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   
   names(result$beta) <- colnames(result$phi)
   
-  result <- list(phi = phi, theta = theta, gamma = gamma,
-                 data = dtm, alpha = result$alpha, beta = result$beta,
-                 log_likelihood = data.frame(result$log_likelihood)[,1:2] # drop 3rd col for now
-  ) # add other things here
+  result <- list(phi = phi, 
+                 theta = theta, 
+                 gamma = gamma,
+                 data = dtm, 
+                 alpha = result$alpha, 
+                 beta = result$beta, # make beta a vector again
+                 log_likelihood = data.frame(result$log_likelihood)[,1:2], # drop 3rd col for now
+                 counts = list(theta_counts = result$theta,
+                               phi_counts = result$phi,
+                               n_d = result$n_d,
+                               n_z = result$n_z,
+                               z_dn = result$z_dn)) # add other things here
+  
+  
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
   
   class(result) <- "lda_topic_model"
   
   ### calculate additional things ----
+  if (! return_data) {
+    result$data <- NULL
+  }
+  
   if (calc_coherence) {
     result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
   }
