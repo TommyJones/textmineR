@@ -57,18 +57,26 @@ posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100
   ### set up objects to extract ----
   if (which == "theta") {
     # extract dirichlet parameter for theta
-    par <- object$theta * (sum(object$alpha) + rowSums(object$data))
+    # par <- object$theta * (sum(object$alpha) + rowSums(object$data))
+    
+    par <- t(object$counts$theta_counts) + object$alpha
+    
+    par <- t(par)
     
   } else if (which == "phi") {
     
-    # need to recover approximate theta count mat to get number of times
-    # each topic was sampled
-    theta_count <- object$theta * (sum(object$alpha) + rowSums(object$data)) 
-    theta_count <- t(theta_count) - object$alpha 
-    theta_count <- t(theta_count) %>% round %>% colSums()
+    # # need to recover approximate theta count mat to get number of times
+    # # each topic was sampled
+    # theta_count <- object$theta * (sum(object$alpha) + rowSums(object$data)) 
+    # theta_count <- t(theta_count) - object$alpha 
+    # theta_count <- t(theta_count) %>% round %>% colSums()
+    # 
+    # # now get the right parameter matrix
+    # par <- object$phi * (sum(object$beta) + theta_count)
     
-    # now get the right parameter matrix
-    par <- object$phi * (sum(object$beta) + theta_count)
+    par <- t(object$counts$phi_counts) + object$beta
+    
+    par <- t(par)
     
   } else {
     stop("which must be one of 'theta' or 'phi'")
@@ -934,7 +942,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   
   ### Align vocabulary ----
   # this is fancy because of how we do indexing in gibbs sampling
-  vocab_original <- colnames(object$data) # tokens in training set
+  vocab_original <- colnames(object$phi) # tokens in training set
   
   vocab_intersect <- intersect(vocab_original, colnames(dtm_newdata))
   
