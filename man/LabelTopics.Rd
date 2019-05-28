@@ -39,6 +39,7 @@ assignments <- t(apply(m$theta, 1, function(x){
 
 assignments[is.na(assignments)] <- 0
 
-labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
+labels <- LabelTopics(assignments = assignments, 
+                      dtm = nih_sample_dtm, M = 2)
 
 }

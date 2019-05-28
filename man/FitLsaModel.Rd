@@ -4,7 +4,8 @@
 \alias{FitLsaModel}
 \title{Fit a topic model using Latent Semantic Analysis}
 \usage{
-FitLsaModel(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...)
+FitLsaModel(dtm, k, calc_coherence = TRUE, return_data = FALSE,
+  return_all = FALSE, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{Matrix::dgCMatrix}}
@@ -13,6 +14,9 @@ FitLsaModel(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...)
 
 \item{calc_coherence}{Do you want to calculate probabilistic coherence of topics
 after the model is trained? Defaults to \code{TRUE}.}
+
+\item{return_data}{Do you want to return the input DTM/TCM (given by argument
+\code{dtm})? Defaults to \code{FALSE}.}
 
 \item{return_all}{Should all objects returned from \code{RSpectra::svds} be
 returned here? Defaults to \code{FALSE}}

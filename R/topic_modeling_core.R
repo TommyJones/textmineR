@@ -459,6 +459,8 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
 #' @param k Number of topics
 #' @param calc_coherence Do you want to calculate probabilistic coherence of topics
 #'        after the model is trained? Defaults to \code{TRUE}. 
+#' @param return_data Do you want to return the input DTM/TCM (given by argument
+#'        \code{dtm})? Defaults to \code{FALSE}.
 #' @param return_all Should all objects returned from \code{RSpectra::svds} be
 #'        returned here? Defaults to \code{FALSE}
 #' @param ... Other arguments to pass to \code{\link[RSpectra]{svds}} through 
@@ -488,7 +490,9 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
 #' str(model)
 #' 
 #' @export
-FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
+FitLsaModel <- function(dtm, k, calc_coherence = TRUE, 
+                        return_data = FALSE, 
+                        return_all = FALSE, ...){
   
   opts <- list(...)
   
@@ -522,7 +526,9 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...){
   
   
   # keep dtm/tcm for predict method etc.
-  lsa$data <- dtm
+  if (return_data) {
+    lsa$data <- dtm
+  }
   
   if(! return_all ){
     lsa$niter <- NULL

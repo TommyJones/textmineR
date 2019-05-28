@@ -3,6 +3,7 @@
 #' @param model A list (or S3 object) with three named matrices: phi, theta, and gamma.
 #'        These conform to outputs of many of \link[textmineR]{textmineR}'s native
 #'        topic modeling functions such as \link[textmineR]{FitLdaModel}. 
+#' @param dtm A document term matrix of class \code{Matrix::dgCMatrix}
 #' @return An object of class \code{data.frame} with 6 columns: 'topic' is the 
 #'         name of the topic, 'prevalence' is the rough prevalence of the topic 
 #'         in all documents across the corpus, 'coherence' is the probabilistic
@@ -23,10 +24,10 @@
 #'          ensures that each document has at least one topic assigned to it.
 #' @examples
 #' \dontrun{
-#' SummarizeTopics(nih_sample_topic_model)
+#' SummarizeTopics(model = nih_sample_topic_model, dtm = nih_sample_dtm)
 #' }
 #' @export
-SummarizeTopics <- function(model){
+SummarizeTopics <- function(model, dtm = NULL){
   
   # check inputs
   if (! "phi" %in% names(model) | ! "theta" %in% names(model)) {
@@ -37,7 +38,13 @@ SummarizeTopics <- function(model){
   if ("coherence" %in% names(model)) {
     coherence <- model$coherence
   } else {
-    coherence <- CalcProbCoherence(model$phi, model$data)
+    
+    if (! is.null(dtm)) {
+      coherence <- CalcProbCoherence(model$phi, dtm)
+    } else {
+      stop("If model does not have pre-calculated coherence, you must supply dtm")
+    }
+    
   }
   
   # get prevalence - this gets fancy to account for negatives in LSA models
@@ -64,13 +71,22 @@ SummarizeTopics <- function(model){
   })
   
   # get labels
-  m <- apply(model$theta, 1, max, na.rm = TRUE)
+  if ("label" %in% names(model) & class(model[["label"]] == "character")) {
+    
+    labels <- model$label
+    
+  } else {
+    
+    m <- apply(model$theta, 1, max, na.rm = TRUE)
+    
+    m <- min(m, na.rm = TRUE)
+    
+    a <- model$theta >= m # (mean(model$theta) + 0 * sd(model$theta))
+    
+    labels <- LabelTopics(a, model$data, M = 1)
+    
+  }
   
-  m <- min(m, na.rm = TRUE)
-  
-  a <- model$theta >= m # (mean(model$theta) + 0 * sd(model$theta))
-  
-  labels <- LabelTopics(a, model$data, M = 1)
   
   # prepare output
   out <- data.frame(topic = rownames(model$phi),
@@ -169,7 +185,8 @@ GetProbableTerms <- function(docnames, dtm, p_terms=NULL){
 #' 
 #' assignments[is.na(assignments)] <- 0
 #'
-#' labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
+#' labels <- LabelTopics(assignments = assignments, 
+#'                       dtm = nih_sample_dtm, M = 2)
 #' 
 LabelTopics <- function(assignments, dtm, M=2){
   # figure out a threshold

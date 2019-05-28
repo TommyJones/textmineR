@@ -4,12 +4,14 @@
 \alias{SummarizeTopics}
 \title{Summarize topics in a topic model}
 \usage{
-SummarizeTopics(model)
+SummarizeTopics(model, dtm = NULL)
 }
 \arguments{
 \item{model}{A list (or S3 object) with three named matrices: phi, theta, and gamma.
 These conform to outputs of many of \link[textmineR]{textmineR}'s native
 topic modeling functions such as \link[textmineR]{FitLdaModel}.}
+
+\item{dtm}{A document term matrix of class \code{Matrix::dgCMatrix}}
 }
 \value{
 An object of class \code{data.frame} with 6 columns: 'topic' is the 
@@ -38,6 +40,6 @@ Create a data frame summarizing the contents of each topic in a model
 }
 \examples{
 \dontrun{
-SummarizeTopics(nih_sample_topic_model)
+SummarizeTopics(model = nih_sample_topic_model, dtm = nih_sample_dtm)
 }
 }
