@@ -71,7 +71,7 @@ SummarizeTopics <- function(model, dtm = NULL){
   })
   
   # get labels
-  if ("label" %in% names(model) & class(model[["label"]] == "character")) {
+  if ("label" %in% names(model) & class(model[["label"]]) == "character") {
     
     labels <- model$label
     
