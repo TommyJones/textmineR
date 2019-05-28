@@ -83,7 +83,7 @@ SummarizeTopics <- function(model, dtm = NULL){
     
     a <- model$theta >= m # (mean(model$theta) + 0 * sd(model$theta))
     
-    labels <- LabelTopics(a, model$data, M = 1)
+    labels <- LabelTopics(a, dtm, M = 1)
     
   }
   
