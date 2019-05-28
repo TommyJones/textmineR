@@ -39,7 +39,7 @@ test_that("GetTopTerms performs as expected",{
 ### SummarizeTopics ----
 test_that("SummarizeTopics performs as expected",{
   
-  s <- SummarizeTopics(model = m)
+  s <- SummarizeTopics(model = m, dtm = d)
   
   # number of rows is same as number of topics
   expect_true(nrow(s) == nrow(m$phi))
