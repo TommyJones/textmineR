@@ -851,7 +851,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
                                phi_counts = result$phi,
                                n_d = result$n_d,
                                n_z = result$n_z,
-                               z_dn = result$z_dn)) # add other things here
+                               z_dn = result$z_dn,
+                               p_z = result$p_z)) # add other things here
   
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
   
@@ -1287,7 +1288,8 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
                                phi_counts = result$phi,
                                n_d = result$n_d,
                                n_z = result$n_z,
-                               z_dn = result$z_dn)) # add other things here
+                               z_dn = result$z_dn,
+                               p_z = p_z)) # add other things here
   
   
   

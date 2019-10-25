@@ -357,7 +357,8 @@ List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph,
                         Named("beta") = beta,
                         Named("n_d") = n_d,
                         Named("n_z") = n_z,
-                        Named("z_dn") = z_dn);
+                        Named("z_dn") = z_dn,
+                        Named("p_z") = p_z);
     
   } else {
     return List::create(Named("theta") = theta_counts,
@@ -367,7 +368,8 @@ List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph,
                         Named("beta") = beta,
                         Named("n_d") = n_d,
                         Named("n_z") = n_z,
-                        Named("z_dn") = z_dn);
+                        Named("z_dn") = z_dn,
+                        Named("p_z") = p_z);
   }
   
   
