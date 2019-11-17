@@ -13,8 +13,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="1. Start here">
@@ -39,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.4.999</span>
       </span>
     </div>
 
@@ -47,7 +48,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -86,7 +87,7 @@
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
-<form class="navbar-form navbar-right" role="search">
+<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
@@ -100,13 +101,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>1. Start here</h1>
                         <h4 class="author">Thomas W. Jones</h4>
             
-            <h4 class="date">2019-04-17</h4>
+            <h4 class="date">2019-11-16</h4>
       
       
       <div class="hidden name"><code>a_start_here.Rmd</code></div>
@@ -140,9 +142,9 @@
 <h3 class="hasAnchor">
 <a href="#creating-a-dtm" class="anchor"></a>Creating a DTM</h3>
 <p>The basic object of analysis for most text mining applications is a document term matrix, or DTM. This is a matrix where every row represents a document and every column represents a token (word, bi-gram, stem, etc.)</p>
-<p>You can create a DTM with textmineR by passing a character vector. There are options for stopword removal, creation of n-grams, and other standard data cleaning. There is an option for passing a stemming or lemmatization function if you desire. (See <code><a href="https://www.rdocumentation.org/packages/utils/topics/help">help(CreateDtm)</a></code> for an example using Porter’s word stemmer.)</p>
+<p>You can create a DTM with textmineR by passing a character vector. There are options for stopword removal, creation of n-grams, and other standard data cleaning. There is an option for passing a stemming or lemmatization function if you desire. (See <code><a href="https://rdrr.io/r/utils/help.html">help(CreateDtm)</a></code> for an example using Porter’s word stemmer.)</p>
 <p>The code below uses a dataset of movie reviews included with the <code>text2vec</code> package. This dataset is used for sentiment analysis. In addition to the text of the reviews. There is a binary variable indicating positive or negative sentiment. More on this later…</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(textmineR)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(textmineR)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; Loading required package: Matrix</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; Attaching package: 'textmineR'</span></a>
@@ -154,9 +156,9 @@
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt;     update</span></a>
 <a class="sourceLine" id="cb1-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co"># load movie_review dataset from text2vec</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(movie_review, <span class="dt">package =</span> <span class="st">"text2vec"</span>)</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(movie_review, <span class="dt">package =</span> <span class="st">"text2vec"</span>)</a>
 <a class="sourceLine" id="cb1-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(movie_review)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(movie_review)</a>
 <a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt; 'data.frame':    5000 obs. of  3 variables:</span></a>
 <a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt;  $ id       : chr  "5814_8" "2381_9" "7759_3" "3630_4" ...</span></a>
 <a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt;  $ sentiment: int  1 1 0 0 1 1 0 0 0 1 ...</span></a>
@@ -164,82 +166,82 @@
 <a class="sourceLine" id="cb1-20" data-line-number="20"></a>
 <a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co"># let's take a sample so the demo will run quickly</span></a>
 <a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co"># note: textmineR is generally quite scaleable, depending on your system</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb1-24" data-line-number="24">s &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(movie_review), <span class="dv">500</span>)</a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">s &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(movie_review), <span class="dv">500</span>)</a>
 <a class="sourceLine" id="cb1-25" data-line-number="25"></a>
 <a class="sourceLine" id="cb1-26" data-line-number="26">movie_review &lt;-<span class="st"> </span>movie_review[ s , ]</a>
 <a class="sourceLine" id="cb1-27" data-line-number="27"></a>
 <a class="sourceLine" id="cb1-28" data-line-number="28"><span class="co"># create a document term matrix </span></a>
 <a class="sourceLine" id="cb1-29" data-line-number="29">dtm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CreateDtm.html">CreateDtm</a></span>(<span class="dt">doc_vec =</span> movie_review<span class="op">$</span>review, <span class="co"># character vector of documents</span></a>
 <a class="sourceLine" id="cb1-30" data-line-number="30">                 <span class="dt">doc_names =</span> movie_review<span class="op">$</span>id, <span class="co"># document names, optional</span></a>
-<a class="sourceLine" id="cb1-31" data-line-number="31">                 <span class="dt">ngram_window =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="co"># minimum and maximum n-gram length</span></a>
-<a class="sourceLine" id="cb1-32" data-line-number="32">                 <span class="dt">stopword_vec =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(stopwords<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stopwords/topics/stopwords">stopwords</a></span>(<span class="st">"en"</span>), <span class="co"># stopwords from tm</span></a>
-<a class="sourceLine" id="cb1-33" data-line-number="33">                                  stopwords<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stopwords/topics/stopwords">stopwords</a></span>(<span class="dt">source =</span> <span class="st">"smart"</span>)), <span class="co"># this is the default value</span></a>
+<a class="sourceLine" id="cb1-31" data-line-number="31">                 <span class="dt">ngram_window =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="co"># minimum and maximum n-gram length</span></a>
+<a class="sourceLine" id="cb1-32" data-line-number="32">                 <span class="dt">stopword_vec =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(stopwords<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span>(<span class="st">"en"</span>), <span class="co"># stopwords from tm</span></a>
+<a class="sourceLine" id="cb1-33" data-line-number="33">                                  stopwords<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span>(<span class="dt">source =</span> <span class="st">"smart"</span>)), <span class="co"># this is the default value</span></a>
 <a class="sourceLine" id="cb1-34" data-line-number="34">                 <span class="dt">lower =</span> <span class="ot">TRUE</span>, <span class="co"># lowercase - this is the default value</span></a>
 <a class="sourceLine" id="cb1-35" data-line-number="35">                 <span class="dt">remove_punctuation =</span> <span class="ot">TRUE</span>, <span class="co"># punctuation - this is the default</span></a>
 <a class="sourceLine" id="cb1-36" data-line-number="36">                 <span class="dt">remove_numbers =</span> <span class="ot">TRUE</span>, <span class="co"># numbers - this is the default</span></a>
 <a class="sourceLine" id="cb1-37" data-line-number="37">                 <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="co"># Turn off status bar for this demo</span></a>
 <a class="sourceLine" id="cb1-38" data-line-number="38">                 <span class="dt">cpus =</span> <span class="dv">2</span>) <span class="co"># by default, this will be the max number of cpus available</span></a></code></pre></div>
 <p>Even though a <code>dgCMatrix</code> isn’t a traditional matrix, it has methods that make it similar to standard R matrices.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(dtm) </a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; [1]   500 55459</span></a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(dtm) </a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; [1]   500 56023</span></a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(dtm) </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(dtm) </a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; [1] 500</span></a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(dtm) </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; [1] 55459</span></a></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(dtm))</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; [1] "making_debut"       "bureau_lowly"       "scenes_thing"      </span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; [4] "injections"         "frying_pan"         "renounced_assassin"</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(dtm) </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; [1] 56023</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(dtm))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; [1] "tension_creepy"     "underappreciated"   "ends_sparing"      </span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; [4] "settings_conjuring" "sarandon"           "everone"</span></a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">colnames(dtm)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">making_debut</td>
+<td align="left">tension_creepy</td>
 </tr>
 <tr class="even">
-<td align="left">bureau_lowly</td>
+<td align="left">underappreciated</td>
 </tr>
 <tr class="odd">
-<td align="left">scenes_thing</td>
+<td align="left">ends_sparing</td>
 </tr>
 <tr class="even">
-<td align="left">injections</td>
+<td align="left">settings_conjuring</td>
 </tr>
 <tr class="odd">
-<td align="left">frying_pan</td>
+<td align="left">sarandon</td>
 </tr>
 <tr class="even">
-<td align="left">renounced_assassin</td>
+<td align="left">everone</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(dtm))</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(dtm))</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">rownames(dtm)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">2595_9</td>
+<td align="left">4273_1</td>
 </tr>
 <tr class="even">
-<td align="left">8892_2</td>
+<td align="left">7112_4</td>
 </tr>
 <tr class="odd">
-<td align="left">8620_8</td>
+<td align="left">1891_3</td>
 </tr>
 <tr class="even">
-<td align="left">2892_10</td>
+<td align="left">6252_10</td>
 </tr>
 <tr class="odd">
-<td align="left">232_1</td>
+<td align="left">9929_2</td>
 </tr>
 <tr class="even">
-<td align="left">4364_1</td>
+<td align="left">8970_10</td>
 </tr>
 </tbody>
 </table>
@@ -248,19 +250,19 @@
 <div id="basic-corpus-statistics" class="section level1">
 <h1 class="hasAnchor">
 <a href="#basic-corpus-statistics" class="anchor"></a>Basic corpus statistics</h1>
-<p>The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function <code>TermDocFreq</code> gives term frequencies (equivalent to <code><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colSums(dtm)</a></code>), the number of documents in which each term appears (equivalent to <code><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colSums(dtm &gt; 0)</a></code>), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.</p>
+<p>The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function <code>TermDocFreq</code> gives term frequencies (equivalent to <code><a href="https://rdrr.io/r/base/colSums.html">colSums(dtm)</a></code>), the number of documents in which each term appears (equivalent to <code><a href="https://rdrr.io/r/base/colSums.html">colSums(dtm &gt; 0)</a></code>), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># get counts of tokens across the corpus</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">tf_mat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span>(<span class="dt">dtm =</span> dtm)</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(tf_mat) </a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 'data.frame':    55459 obs. of  4 variables:</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;  $ term     : chr  "making_debut" "bureau_lowly" "scenes_thing" "injections" ...</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(tf_mat) </a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 'data.frame':    56023 obs. of  4 variables:</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;  $ term     : chr  "tension_creepy" "underappreciated" "ends_sparing" "settings_conjuring" ...</span></a>
 <a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt;  $ term_freq: num  1 1 1 1 1 1 1 1 1 1 ...</span></a>
 <a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;  $ doc_freq : int  1 1 1 1 1 1 1 1 1 1 ...</span></a>
 <a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt;  $ idf      : num  6.21 6.21 6.21 6.21 6.21 ...</span></a></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># look at the most frequent tokens</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_mat[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_mat<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_mat[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_mat<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Ten most frequent tokens</caption>
 <thead><tr class="header">
@@ -274,78 +276,78 @@
 <tr class="odd">
 <td>br</td>
 <td align="left">br</td>
-<td align="right">2148</td>
-<td align="right">312</td>
-<td align="right">0.4716049</td>
+<td align="right">1990</td>
+<td align="right">289</td>
+<td align="right">0.5481814</td>
 </tr>
 <tr class="even">
 <td>br_br</td>
 <td align="left">br_br</td>
-<td align="right">1078</td>
-<td align="right">312</td>
-<td align="right">0.4716049</td>
+<td align="right">999</td>
+<td align="right">289</td>
+<td align="right">0.5481814</td>
 </tr>
 <tr class="odd">
-<td>movie</td>
-<td align="left">movie</td>
-<td align="right">878</td>
-<td align="right">310</td>
-<td align="right">0.4780358</td>
-</tr>
-<tr class="even">
 <td>film</td>
 <td align="left">film</td>
-<td align="right">835</td>
-<td align="right">284</td>
-<td align="right">0.5656339</td>
+<td align="right">909</td>
+<td align="right">294</td>
+<td align="right">0.5310283</td>
+</tr>
+<tr class="even">
+<td>movie</td>
+<td align="left">movie</td>
+<td align="right">774</td>
+<td align="right">290</td>
+<td align="right">0.5447272</td>
 </tr>
 <tr class="odd">
 <td>good</td>
 <td align="left">good</td>
-<td align="right">333</td>
-<td align="right">203</td>
-<td align="right">0.9014021</td>
+<td align="right">337</td>
+<td align="right">209</td>
+<td align="right">0.8722738</td>
 </tr>
 <tr class="even">
-<td>story</td>
-<td align="left">story</td>
-<td align="right">277</td>
+<td>time</td>
+<td align="left">time</td>
+<td align="right">252</td>
 <td align="right">167</td>
 <td align="right">1.0966143</td>
 </tr>
 <tr class="odd">
-<td>time</td>
-<td align="left">time</td>
-<td align="right">271</td>
-<td align="right">180</td>
-<td align="right">1.0216512</td>
+<td>people</td>
+<td align="left">people</td>
+<td align="right">238</td>
+<td align="right">143</td>
+<td align="right">1.2517635</td>
 </tr>
 <tr class="even">
-<td>bad</td>
-<td align="left">bad</td>
-<td align="right">199</td>
-<td align="right">118</td>
-<td align="right">1.4439235</td>
+<td>story</td>
+<td align="left">story</td>
+<td align="right">230</td>
+<td align="right">143</td>
+<td align="right">1.2517635</td>
 </tr>
 <tr class="odd">
 <td>great</td>
 <td align="left">great</td>
-<td align="right">195</td>
-<td align="right">138</td>
-<td align="right">1.2873544</td>
+<td align="right">181</td>
+<td align="right">125</td>
+<td align="right">1.3862944</td>
 </tr>
 <tr class="even">
-<td>made</td>
-<td align="left">made</td>
-<td align="right">173</td>
-<td align="right">137</td>
-<td align="right">1.2946272</td>
+<td>bad</td>
+<td align="left">bad</td>
+<td align="right">176</td>
+<td align="right">121</td>
+<td align="right">1.4188176</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># look at the most frequent bigrams</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">tf_bigrams &lt;-<span class="st"> </span>tf_mat[ stringr<span class="op">::</span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(tf_mat<span class="op">$</span>term, <span class="st">"_"</span>) , ]</a></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_bigrams[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_bigrams<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_bigrams[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_bigrams<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Ten most frequent bi-grams</caption>
 <thead><tr class="header">
@@ -359,97 +361,97 @@
 <tr class="odd">
 <td>br_br</td>
 <td align="left">br_br</td>
-<td align="right">1078</td>
-<td align="right">312</td>
-<td align="right">0.4716049</td>
+<td align="right">999</td>
+<td align="right">289</td>
+<td align="right">0.5481814</td>
 </tr>
 <tr class="even">
 <td>br_film</td>
 <td align="left">br_film</td>
-<td align="right">48</td>
 <td align="right">41</td>
-<td align="right">2.5010360</td>
+<td align="right">35</td>
+<td align="right">2.6592600</td>
 </tr>
 <tr class="odd">
 <td>br_movie</td>
 <td align="left">br_movie</td>
-<td align="right">41</td>
-<td align="right">36</td>
-<td align="right">2.6310892</td>
-</tr>
-<tr class="even">
-<td>film_br</td>
-<td align="left">film_br</td>
-<td align="right">32</td>
-<td align="right">26</td>
-<td align="right">2.9565116</td>
-</tr>
-<tr class="odd">
-<td>movie_br</td>
-<td align="left">movie_br</td>
-<td align="right">29</td>
-<td align="right">27</td>
-<td align="right">2.9187712</td>
+<td align="right">34</td>
+<td align="right">31</td>
+<td align="right">2.7806209</td>
 </tr>
 <tr class="even">
 <td>special_effects</td>
 <td align="left">special_effects</td>
-<td align="right">21</td>
-<td align="right">19</td>
-<td align="right">3.2701691</td>
+<td align="right">28</td>
+<td align="right">24</td>
+<td align="right">3.0365543</td>
 </tr>
 <tr class="odd">
+<td>film_br</td>
+<td align="left">film_br</td>
+<td align="right">20</td>
+<td align="right">17</td>
+<td align="right">3.3813948</td>
+</tr>
+<tr class="even">
 <td>good_movie</td>
 <td align="left">good_movie</td>
+<td align="right">18</td>
+<td align="right">17</td>
+<td align="right">3.3813948</td>
+</tr>
+<tr class="odd">
+<td>low_budget</td>
+<td align="left">low_budget</td>
+<td align="right">18</td>
 <td align="right">16</td>
-<td align="right">15</td>
-<td align="right">3.5065579</td>
+<td align="right">3.4420194</td>
 </tr>
 <tr class="even">
-<td>long_time</td>
-<td align="left">long_time</td>
-<td align="right">15</td>
+<td>waste_time</td>
+<td align="left">waste_time</td>
+<td align="right">17</td>
 <td align="right">15</td>
 <td align="right">3.5065579</td>
 </tr>
 <tr class="odd">
-<td>high_school</td>
-<td align="left">high_school</td>
+<td>movie_good</td>
+<td align="left">movie_good</td>
 <td align="right">15</td>
-<td align="right">10</td>
-<td align="right">3.9120230</td>
+<td align="right">14</td>
+<td align="right">3.5755508</td>
 </tr>
 <tr class="even">
-<td>scooby_doo</td>
-<td align="left">scooby_doo</td>
+<td>movie_br</td>
+<td align="left">movie_br</td>
 <td align="right">15</td>
-<td align="right">1</td>
-<td align="right">6.2146081</td>
+<td align="right">15</td>
+<td align="right">3.5065579</td>
 </tr>
 </tbody>
 </table>
 <p>It looks like we have stray html tags (“&lt;br&gt;”) in the documents. These aren’t giving us any relevant information about content. (Except, perhaps, that these documents were originally part of web pages.)</p>
 <p>The most intuitive approach, perhaps, is to strip these tags from our documents, re-construct a document term matrix, and re-calculate the objects as above. However, a simpler approach would be to simply remove the tokens containing “br” from the DTM we already calculated. This is much more computationally efficient and gives us the same result anyway.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># remove offending tokens from the DTM</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">dtm &lt;-<span class="st"> </span>dtm[ , <span class="op">!</span><span class="st"> </span>stringr<span class="op">::</span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(dtm),</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">dtm &lt;-<span class="st"> </span>dtm[ , <span class="op">!</span><span class="st"> </span>stringr<span class="op">::</span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(dtm),</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">                                    <span class="st">"(^br$)|(_br$)|(^br_)"</span>) ]</a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co"># re-construct tf_mat and tf_bigrams</span></a>
 <a class="sourceLine" id="cb9-6" data-line-number="6">tf_mat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span>(dtm)</a>
 <a class="sourceLine" id="cb9-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb9-8" data-line-number="8">tf_bigrams &lt;-<span class="st"> </span>tf_mat[ stringr<span class="op">::</span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(tf_mat<span class="op">$</span>term, <span class="st">"_"</span>) , ]</a></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_mat[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_mat<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt;        term term_freq doc_freq       idf</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; movie movie       878      310 0.4780358</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; film   film       835      284 0.5656339</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; good   good       333      203 0.9014021</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; story story       277      167 1.0966143</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; time   time       271      180 1.0216512</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; bad     bad       199      118 1.4439235</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; great great       195      138 1.2873544</span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; made   made       173      137 1.2946272</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt; watch watch       158      127 1.3704210</span></a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt; films films       153       93 1.6820086</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_mat[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_mat<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt;                term term_freq doc_freq       idf</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; film           film       909      294 0.5310283</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; movie         movie       774      290 0.5447272</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; good           good       337      209 0.8722738</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; time           time       252      167 1.0966143</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; people       people       238      143 1.2517635</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; story         story       230      143 1.2517635</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; great         great       181      125 1.3862944</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; bad             bad       176      121 1.4188176</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt; made           made       170      140 1.2729657</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt; character character       169      108 1.5324769</span></a></code></pre></div>
 <table class="table">
 <caption>Ten most frequent terms, ‘&lt;br&gt;’ removed</caption>
 <thead><tr class="header">
@@ -461,78 +463,78 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>movie</td>
-<td align="left">movie</td>
-<td align="right">878</td>
-<td align="right">310</td>
-<td align="right">0.4780358</td>
-</tr>
-<tr class="even">
 <td>film</td>
 <td align="left">film</td>
-<td align="right">835</td>
-<td align="right">284</td>
-<td align="right">0.5656339</td>
+<td align="right">909</td>
+<td align="right">294</td>
+<td align="right">0.5310283</td>
+</tr>
+<tr class="even">
+<td>movie</td>
+<td align="left">movie</td>
+<td align="right">774</td>
+<td align="right">290</td>
+<td align="right">0.5447272</td>
 </tr>
 <tr class="odd">
 <td>good</td>
 <td align="left">good</td>
-<td align="right">333</td>
-<td align="right">203</td>
-<td align="right">0.9014021</td>
+<td align="right">337</td>
+<td align="right">209</td>
+<td align="right">0.8722738</td>
 </tr>
 <tr class="even">
-<td>story</td>
-<td align="left">story</td>
-<td align="right">277</td>
+<td>time</td>
+<td align="left">time</td>
+<td align="right">252</td>
 <td align="right">167</td>
 <td align="right">1.0966143</td>
 </tr>
 <tr class="odd">
-<td>time</td>
-<td align="left">time</td>
-<td align="right">271</td>
-<td align="right">180</td>
-<td align="right">1.0216512</td>
+<td>people</td>
+<td align="left">people</td>
+<td align="right">238</td>
+<td align="right">143</td>
+<td align="right">1.2517635</td>
 </tr>
 <tr class="even">
-<td>bad</td>
-<td align="left">bad</td>
-<td align="right">199</td>
-<td align="right">118</td>
-<td align="right">1.4439235</td>
+<td>story</td>
+<td align="left">story</td>
+<td align="right">230</td>
+<td align="right">143</td>
+<td align="right">1.2517635</td>
 </tr>
 <tr class="odd">
 <td>great</td>
 <td align="left">great</td>
-<td align="right">195</td>
-<td align="right">138</td>
-<td align="right">1.2873544</td>
+<td align="right">181</td>
+<td align="right">125</td>
+<td align="right">1.3862944</td>
 </tr>
 <tr class="even">
-<td>made</td>
-<td align="left">made</td>
-<td align="right">173</td>
-<td align="right">137</td>
-<td align="right">1.2946272</td>
+<td>bad</td>
+<td align="left">bad</td>
+<td align="right">176</td>
+<td align="right">121</td>
+<td align="right">1.4188176</td>
 </tr>
 <tr class="odd">
-<td>watch</td>
-<td align="left">watch</td>
-<td align="right">158</td>
-<td align="right">127</td>
-<td align="right">1.3704210</td>
+<td>made</td>
+<td align="left">made</td>
+<td align="right">170</td>
+<td align="right">140</td>
+<td align="right">1.2729657</td>
 </tr>
 <tr class="even">
-<td>films</td>
-<td align="left">films</td>
-<td align="right">153</td>
-<td align="right">93</td>
-<td align="right">1.6820086</td>
+<td>character</td>
+<td align="left">character</td>
+<td align="right">169</td>
+<td align="right">108</td>
+<td align="right">1.5324769</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_bigrams[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_bigrams<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_bigrams[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_bigrams<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Ten most frequent bi-grams, ‘&lt;br&gt;’ removed</caption>
 <thead><tr class="header">
@@ -546,96 +548,96 @@
 <tr class="odd">
 <td>special_effects</td>
 <td align="left">special_effects</td>
-<td align="right">21</td>
-<td align="right">19</td>
-<td align="right">3.270169</td>
+<td align="right">28</td>
+<td align="right">24</td>
+<td align="right">3.036554</td>
 </tr>
 <tr class="even">
 <td>good_movie</td>
 <td align="left">good_movie</td>
-<td align="right">16</td>
-<td align="right">15</td>
-<td align="right">3.506558</td>
+<td align="right">18</td>
+<td align="right">17</td>
+<td align="right">3.381395</td>
 </tr>
 <tr class="odd">
-<td>long_time</td>
-<td align="left">long_time</td>
-<td align="right">15</td>
-<td align="right">15</td>
-<td align="right">3.506558</td>
-</tr>
-<tr class="even">
-<td>high_school</td>
-<td align="left">high_school</td>
-<td align="right">15</td>
-<td align="right">10</td>
-<td align="right">3.912023</td>
-</tr>
-<tr class="odd">
-<td>scooby_doo</td>
-<td align="left">scooby_doo</td>
-<td align="right">15</td>
-<td align="right">1</td>
-<td align="right">6.214608</td>
-</tr>
-<tr class="even">
 <td>low_budget</td>
 <td align="left">low_budget</td>
+<td align="right">18</td>
+<td align="right">16</td>
+<td align="right">3.442019</td>
+</tr>
+<tr class="even">
+<td>waste_time</td>
+<td align="left">waste_time</td>
+<td align="right">17</td>
 <td align="right">15</td>
-<td align="right">13</td>
-<td align="right">3.649659</td>
+<td align="right">3.506558</td>
 </tr>
 <tr class="odd">
+<td>movie_good</td>
+<td align="left">movie_good</td>
+<td align="right">15</td>
+<td align="right">14</td>
+<td align="right">3.575551</td>
+</tr>
+<tr class="even">
 <td>watch_movie</td>
 <td align="left">watch_movie</td>
 <td align="right">14</td>
 <td align="right">13</td>
 <td align="right">3.649659</td>
 </tr>
+<tr class="odd">
+<td>real_life</td>
+<td align="left">real_life</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">3.816713</td>
+</tr>
 <tr class="even">
-<td>make_film</td>
-<td align="left">make_film</td>
+<td>watching_movie</td>
+<td align="left">watching_movie</td>
 <td align="right">14</td>
 <td align="right">13</td>
 <td align="right">3.649659</td>
 </tr>
 <tr class="odd">
-<td>years_ago</td>
-<td align="left">years_ago</td>
-<td align="right">14</td>
+<td>high_school</td>
+<td align="left">high_school</td>
 <td align="right">13</td>
-<td align="right">3.649659</td>
+<td align="right">7</td>
+<td align="right">4.268698</td>
 </tr>
 <tr class="even">
-<td>movie_good</td>
-<td align="left">movie_good</td>
+<td>horror_films</td>
+<td align="left">horror_films</td>
 <td align="right">13</td>
-<td align="right">13</td>
-<td align="right">3.649659</td>
+<td align="right">8</td>
+<td align="right">4.135167</td>
 </tr>
 </tbody>
 </table>
 <p>We can also calculate how many tokens each document contains from the DTM. Note that this reflects the modifications we made in constructing the DTM (removing stop words, punctuation, numbers, etc.).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># summary of document lengths</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">doc_lengths &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(dtm)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">doc_lengths &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(dtm)</a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(doc_lengths)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(doc_lengths)</a>
 <a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#&gt;    23.0    96.0   140.5   186.1   245.0   768.0</span></a></code></pre></div>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#&gt;      20      97     139     188     222     928</span></a></code></pre></div>
 <p>Often,it’s useful to prune your vocabulary and remove any tokens that appear in a small number of documents. This will greatly reduce the vocabulary size (see <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf’s law</a>) and improve computation time.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># remove any tokens that were in 3 or fewer documents</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">dtm &lt;-<span class="st"> </span>dtm[ , <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colSums</a></span>(dtm <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span> ] <span class="co"># alternatively: dtm[ , tf_mat$term_freq &gt; 3 ]</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">dtm &lt;-<span class="st"> </span>dtm[ , <span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span>(dtm <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span> ] <span class="co"># alternatively: dtm[ , tf_mat$term_freq &gt; 3 ]</span></a>
 <a class="sourceLine" id="cb13-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">tf_mat &lt;-<span class="st"> </span>tf_mat[ tf_mat<span class="op">$</span>term <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(dtm) , ]</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">tf_mat &lt;-<span class="st"> </span>tf_mat[ tf_mat<span class="op">$</span>term <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(dtm) , ]</a>
 <a class="sourceLine" id="cb13-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">tf_bigrams &lt;-<span class="st"> </span>tf_bigrams[ tf_bigrams<span class="op">$</span>term <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(dtm) , ]</a></code></pre></div>
+<a class="sourceLine" id="cb13-6" data-line-number="6">tf_bigrams &lt;-<span class="st"> </span>tf_bigrams[ tf_bigrams<span class="op">$</span>term <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(dtm) , ]</a></code></pre></div>
 <p>The movie review data set contains more than just text of reviews. It also contains a variable tagging the review as positive (<code>movie_review$sentiment</code> <span class="math inline">\(=1\)</span>) or negative (<code>movie_review$sentiment</code> <span class="math inline">\(=0\)</span>). We can examine terms associated with positive and negative reviews. If we wanted, we could use them to build a simple classifier.</p>
 <p>However, as we will see immediately below, looking at only the most frequent terms in each category is not helpful. Because of Zipf’s law, the most frequent terms in just about <em>any</em> category will be the same.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># what words are most associated with sentiment?</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">tf_sentiment &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">positive =</span> <span class="kw"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span>(dtm[ movie_review<span class="op">$</span>sentiment <span class="op">==</span><span class="st"> </span><span class="dv">1</span> , ]),</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">tf_sentiment &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">positive =</span> <span class="kw"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span>(dtm[ movie_review<span class="op">$</span>sentiment <span class="op">==</span><span class="st"> </span><span class="dv">1</span> , ]),</a>
 <a class="sourceLine" id="cb14-3" data-line-number="3">                     <span class="dt">negative =</span> <span class="kw"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span>(dtm[ movie_review<span class="op">$</span>sentiment <span class="op">==</span><span class="st"> </span><span class="dv">0</span> , ]))</a></code></pre></div>
 <p>These are basically the same. Not helpful at all.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_sentiment<span class="op">$</span>positive[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_sentiment<span class="op">$</span>positive<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_sentiment<span class="op">$</span>positive[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_sentiment<span class="op">$</span>positive<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Ten most-frequent positive tokens</caption>
 <thead><tr class="header">
@@ -647,78 +649,78 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>movie</td>
-<td align="left">movie</td>
-<td align="right">358</td>
-<td align="right">128</td>
-<td align="right">0.5990082</td>
-</tr>
-<tr class="even">
 <td>film</td>
 <td align="left">film</td>
-<td align="right">349</td>
-<td align="right">125</td>
-<td align="right">0.6227247</td>
-</tr>
-<tr class="odd">
-<td>story</td>
-<td align="left">story</td>
-<td align="right">143</td>
-<td align="right">82</td>
-<td align="right">1.0443192</td>
+<td align="right">483</td>
+<td align="right">151</td>
+<td align="right">0.4591837</td>
 </tr>
 <tr class="even">
-<td>good</td>
-<td align="left">good</td>
-<td align="right">138</td>
-<td align="right">83</td>
-<td align="right">1.0321978</td>
+<td>movie</td>
+<td align="left">movie</td>
+<td align="right">340</td>
+<td align="right">130</td>
+<td align="right">0.6089291</td>
 </tr>
 <tr class="odd">
-<td>time</td>
-<td align="left">time</td>
-<td align="right">125</td>
-<td align="right">82</td>
-<td align="right">1.0443192</td>
+<td>good</td>
+<td align="left">good</td>
+<td align="right">180</td>
+<td align="right">106</td>
+<td align="right">0.8130245</td>
 </tr>
 <tr class="even">
 <td>great</td>
 <td align="left">great</td>
-<td align="right">119</td>
-<td align="right">79</td>
-<td align="right">1.0815906</td>
+<td align="right">142</td>
+<td align="right">93</td>
+<td align="right">0.9438641</td>
 </tr>
 <tr class="odd">
-<td>watch</td>
-<td align="left">watch</td>
-<td align="right">82</td>
-<td align="right">59</td>
-<td align="right">1.3735010</td>
+<td>time</td>
+<td align="left">time</td>
+<td align="right">138</td>
+<td align="right">88</td>
+<td align="right">0.9991267</td>
 </tr>
 <tr class="even">
+<td>story</td>
+<td align="left">story</td>
+<td align="right">124</td>
+<td align="right">75</td>
+<td align="right">1.1589754</td>
+</tr>
+<tr class="odd">
+<td>people</td>
+<td align="left">people</td>
+<td align="right">107</td>
+<td align="right">65</td>
+<td align="right">1.3020763</td>
+</tr>
+<tr class="even">
+<td>films</td>
+<td align="left">films</td>
+<td align="right">102</td>
+<td align="right">56</td>
+<td align="right">1.4511119</td>
+</tr>
+<tr class="odd">
 <td>love</td>
 <td align="left">love</td>
-<td align="right">71</td>
-<td align="right">49</td>
-<td align="right">1.5592182</td>
-</tr>
-<tr class="odd">
-<td>life</td>
-<td align="left">life</td>
-<td align="right">69</td>
-<td align="right">49</td>
-<td align="right">1.5592182</td>
+<td align="right">82</td>
+<td align="right">53</td>
+<td align="right">1.5061716</td>
 </tr>
 <tr class="even">
-<td>character</td>
-<td align="left">character</td>
-<td align="right">69</td>
-<td align="right">53</td>
-<td align="right">1.4807465</td>
+<td>made</td>
+<td align="left">made</td>
+<td align="right">81</td>
+<td align="right">67</td>
+<td align="right">1.2717709</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_sentiment<span class="op">$</span>negative[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_sentiment<span class="op">$</span>negative<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_sentiment<span class="op">$</span>negative[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_sentiment<span class="op">$</span>negative<span class="op">$</span>term_freq, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Ten most-frequent negative tokens</caption>
 <thead><tr class="header">
@@ -732,72 +734,72 @@
 <tr class="odd">
 <td>movie</td>
 <td align="left">movie</td>
-<td align="right">520</td>
-<td align="right">182</td>
-<td align="right">0.3832420</td>
+<td align="right">434</td>
+<td align="right">160</td>
+<td align="right">0.4893466</td>
 </tr>
 <tr class="even">
 <td>film</td>
 <td align="left">film</td>
-<td align="right">486</td>
-<td align="right">159</td>
-<td align="right">0.5183445</td>
+<td align="right">426</td>
+<td align="right">143</td>
+<td align="right">0.6016758</td>
 </tr>
 <tr class="odd">
 <td>good</td>
 <td align="left">good</td>
-<td align="right">195</td>
-<td align="right">120</td>
-<td align="right">0.7997569</td>
-</tr>
-<tr class="even">
-<td>bad</td>
-<td align="left">bad</td>
-<td align="right">164</td>
-<td align="right">90</td>
-<td align="right">1.0874390</td>
-</tr>
-<tr class="odd">
-<td>time</td>
-<td align="left">time</td>
-<td align="right">146</td>
-<td align="right">98</td>
-<td align="right">1.0022812</td>
-</tr>
-<tr class="even">
-<td>story</td>
-<td align="left">story</td>
-<td align="right">134</td>
-<td align="right">85</td>
-<td align="right">1.1445974</td>
-</tr>
-<tr class="odd">
-<td>made</td>
-<td align="left">made</td>
-<td align="right">111</td>
-<td align="right">83</td>
-<td align="right">1.1684081</td>
+<td align="right">157</td>
+<td align="right">103</td>
+<td align="right">0.9297914</td>
 </tr>
 <tr class="even">
 <td>people</td>
 <td align="left">people</td>
-<td align="right">104</td>
-<td align="right">68</td>
-<td align="right">1.3677410</td>
+<td align="right">131</td>
+<td align="right">78</td>
+<td align="right">1.2078116</td>
 </tr>
 <tr class="odd">
-<td>acting</td>
-<td align="left">acting</td>
-<td align="right">102</td>
+<td>bad</td>
+<td align="left">bad</td>
+<td align="right">130</td>
+<td align="right">82</td>
+<td align="right">1.1578012</td>
+</tr>
+<tr class="even">
+<td>time</td>
+<td align="left">time</td>
+<td align="right">114</td>
 <td align="right">79</td>
-<td align="right">1.2178008</td>
+<td align="right">1.1950726</td>
+</tr>
+<tr class="odd">
+<td>story</td>
+<td align="left">story</td>
+<td align="right">106</td>
+<td align="right">68</td>
+<td align="right">1.3450127</td>
+</tr>
+<tr class="even">
+<td>character</td>
+<td align="left">character</td>
+<td align="right">95</td>
+<td align="right">60</td>
+<td align="right">1.4701758</td>
+</tr>
+<tr class="odd">
+<td>made</td>
+<td align="left">made</td>
+<td align="right">89</td>
+<td align="right">73</td>
+<td align="right">1.2740610</td>
 </tr>
 <tr class="even">
 <td>make</td>
 <td align="left">make</td>
-<td align="right">89</td>
-<td align="right">70</td>
-<td align="right">1.3387534</td>
+<td align="right">86</td>
+<td align="right">63</td>
+<td align="right">1.4213857</td>
 </tr>
 </tbody>
 </table>
@@ -811,19 +813,19 @@
 <p>The difference method is applied to both words overall and bi-grams in the code below.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co"># let's reweight by probability by class</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">p_words &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colSums</a></span>(dtm) <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(dtm) <span class="co"># alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">p_words &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span>(dtm) <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(dtm) <span class="co"># alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)</span></a>
 <a class="sourceLine" id="cb17-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb17-5" data-line-number="5">tf_sentiment<span class="op">$</span>positive<span class="op">$</span>conditional_prob &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="st">  </span>tf_sentiment<span class="op">$</span>positive<span class="op">$</span>term_freq <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(tf_sentiment<span class="op">$</span>positive<span class="op">$</span>term_freq)</a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="st">  </span>tf_sentiment<span class="op">$</span>positive<span class="op">$</span>term_freq <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(tf_sentiment<span class="op">$</span>positive<span class="op">$</span>term_freq)</a>
 <a class="sourceLine" id="cb17-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb17-8" data-line-number="8">tf_sentiment<span class="op">$</span>positive<span class="op">$</span>prob_lift &lt;-<span class="st"> </span>tf_sentiment<span class="op">$</span>positive<span class="op">$</span>conditional_prob <span class="op">-</span><span class="st"> </span>p_words</a>
 <a class="sourceLine" id="cb17-9" data-line-number="9"></a>
 <a class="sourceLine" id="cb17-10" data-line-number="10">tf_sentiment<span class="op">$</span>negative<span class="op">$</span>conditional_prob &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb17-11" data-line-number="11"><span class="st">  </span>tf_sentiment<span class="op">$</span>negative<span class="op">$</span>term_freq <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(tf_sentiment<span class="op">$</span>negative<span class="op">$</span>term_freq)</a>
+<a class="sourceLine" id="cb17-11" data-line-number="11"><span class="st">  </span>tf_sentiment<span class="op">$</span>negative<span class="op">$</span>term_freq <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(tf_sentiment<span class="op">$</span>negative<span class="op">$</span>term_freq)</a>
 <a class="sourceLine" id="cb17-12" data-line-number="12"></a>
 <a class="sourceLine" id="cb17-13" data-line-number="13">tf_sentiment<span class="op">$</span>negative<span class="op">$</span>prob_lift &lt;-<span class="st"> </span>tf_sentiment<span class="op">$</span>negative<span class="op">$</span>conditional_prob <span class="op">-</span><span class="st"> </span>p_words</a></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># let's look again with new weights</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_sentiment<span class="op">$</span>positive[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_sentiment<span class="op">$</span>positive<span class="op">$</span>prob_lift, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_sentiment<span class="op">$</span>positive[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_sentiment<span class="op">$</span>positive<span class="op">$</span>prob_lift, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Reweighted: ten most relevant terms for positive sentiment</caption>
 <thead><tr class="header">
@@ -839,96 +841,96 @@
 <tr class="odd">
 <td>great</td>
 <td align="left">great</td>
-<td align="right">119</td>
-<td align="right">79</td>
-<td align="right">1.081591</td>
-<td align="right">0.0081168</td>
-<td align="right">0.0022971</td>
+<td align="right">142</td>
+<td align="right">93</td>
+<td align="right">0.9438641</td>
+<td align="right">0.0084009</td>
+<td align="right">0.0029998</td>
 </tr>
 <tr class="even">
-<td>heart</td>
-<td align="left">heart</td>
-<td align="right">42</td>
-<td align="right">17</td>
-<td align="right">2.617825</td>
-<td align="right">0.0028647</td>
-<td align="right">0.0015217</td>
+<td>film</td>
+<td align="left">film</td>
+<td align="right">483</td>
+<td align="right">151</td>
+<td align="right">0.4591837</td>
+<td align="right">0.0285748</td>
+<td align="right">0.0014502</td>
 </tr>
 <tr class="odd">
-<td>story</td>
-<td align="left">story</td>
-<td align="right">143</td>
+<td>love</td>
+<td align="left">love</td>
 <td align="right">82</td>
-<td align="right">1.044319</td>
-<td align="right">0.0097538</td>
-<td align="right">0.0014868</td>
+<td align="right">53</td>
+<td align="right">1.5061716</td>
+<td align="right">0.0048512</td>
+<td align="right">0.0012406</td>
 </tr>
 <tr class="even">
-<td>life</td>
-<td align="left">life</td>
-<td align="right">69</td>
-<td align="right">49</td>
-<td align="right">1.559218</td>
-<td align="right">0.0047064</td>
-<td align="right">0.0012444</td>
+<td>films</td>
+<td align="left">films</td>
+<td align="right">102</td>
+<td align="right">56</td>
+<td align="right">1.4511119</td>
+<td align="right">0.0060344</td>
+<td align="right">0.0010810</td>
 </tr>
 <tr class="odd">
+<td>performance</td>
+<td align="left">performance</td>
+<td align="right">55</td>
+<td align="right">32</td>
+<td align="right">2.0107276</td>
+<td align="right">0.0032539</td>
+<td align="right">0.0008667</td>
+</tr>
+<tr class="even">
+<td>role</td>
+<td align="left">role</td>
+<td align="right">52</td>
+<td align="right">38</td>
+<td align="right">1.8388774</td>
+<td align="right">0.0030764</td>
+<td align="right">0.0008384</td>
+</tr>
+<tr class="odd">
+<td>charlie</td>
+<td align="left">charlie</td>
+<td align="right">28</td>
+<td align="right">3</td>
+<td align="right">4.3778513</td>
+<td align="right">0.0016565</td>
+<td align="right">0.0007911</td>
+</tr>
+<tr class="even">
 <td>excellent</td>
 <td align="left">excellent</td>
-<td align="right">38</td>
-<td align="right">33</td>
-<td align="right">1.954531</td>
-<td align="right">0.0025919</td>
-<td align="right">0.0012191</td>
-</tr>
-<tr class="even">
-<td>beautiful</td>
-<td align="left">beautiful</td>
-<td align="right">39</td>
-<td align="right">28</td>
-<td align="right">2.118834</td>
-<td align="right">0.0026601</td>
-<td align="right">0.0011977</td>
+<td align="right">36</td>
+<td align="right">31</td>
+<td align="right">2.0424763</td>
+<td align="right">0.0021298</td>
+<td align="right">0.0006975</td>
 </tr>
 <tr class="odd">
-<td>find</td>
-<td align="left">find</td>
-<td align="right">51</td>
-<td align="right">41</td>
-<td align="right">1.737466</td>
-<td align="right">0.0034786</td>
-<td align="right">0.0009418</td>
+<td>performances</td>
+<td align="left">performances</td>
+<td align="right">34</td>
+<td align="right">21</td>
+<td align="right">2.4319411</td>
+<td align="right">0.0020115</td>
+<td align="right">0.0006687</td>
 </tr>
 <tr class="even">
-<td>world</td>
-<td align="left">world</td>
-<td align="right">49</td>
-<td align="right">38</td>
-<td align="right">1.813452</td>
-<td align="right">0.0033422</td>
-<td align="right">0.0008950</td>
-</tr>
-<tr class="odd">
-<td>watch</td>
-<td align="left">watch</td>
-<td align="right">82</td>
-<td align="right">59</td>
-<td align="right">1.373501</td>
-<td align="right">0.0055931</td>
-<td align="right">0.0008776</td>
-</tr>
-<tr class="even">
-<td>years</td>
-<td align="left">years</td>
-<td align="right">60</td>
-<td align="right">43</td>
-<td align="right">1.689838</td>
-<td align="right">0.0040925</td>
-<td align="right">0.0008693</td>
+<td>time</td>
+<td align="left">time</td>
+<td align="right">138</td>
+<td align="right">88</td>
+<td align="right">0.9991267</td>
+<td align="right">0.0081642</td>
+<td align="right">0.0006445</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_sentiment<span class="op">$</span>negative[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(tf_sentiment<span class="op">$</span>negative<span class="op">$</span>prob_lift, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_sentiment<span class="op">$</span>negative[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(tf_sentiment<span class="op">$</span>negative<span class="op">$</span>prob_lift, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ], <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Reweighted: ten most relevant terms for negative sentiment</caption>
 <thead><tr class="header">
@@ -942,103 +944,103 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>bad</td>
-<td align="left">bad</td>
-<td align="right">164</td>
-<td align="right">90</td>
-<td align="right">1.0874390</td>
-<td align="right">0.0087021</td>
-<td align="right">0.0027631</td>
-</tr>
-<tr class="even">
 <td>movie</td>
 <td align="left">movie</td>
-<td align="right">520</td>
-<td align="right">182</td>
-<td align="right">0.3832420</td>
-<td align="right">0.0275921</td>
-<td align="right">0.0013886</td>
-</tr>
-<tr class="odd">
-<td>people</td>
-<td align="left">people</td>
-<td align="right">104</td>
-<td align="right">68</td>
-<td align="right">1.3677410</td>
-<td align="right">0.0055184</td>
-<td align="right">0.0011313</td>
+<td align="right">434</td>
+<td align="right">160</td>
+<td align="right">0.4893466</td>
+<td align="right">0.0261304</td>
+<td align="right">0.0030342</td>
 </tr>
 <tr class="even">
+<td>bad</td>
+<td align="left">bad</td>
+<td align="right">130</td>
+<td align="right">82</td>
+<td align="right">1.1578012</td>
+<td align="right">0.0078271</td>
+<td align="right">0.0025752</td>
+</tr>
+<tr class="odd">
 <td>worst</td>
 <td align="left">worst</td>
-<td align="right">55</td>
-<td align="right">48</td>
-<td align="right">1.7160476</td>
-<td align="right">0.0029184</td>
-<td align="right">0.0011277</td>
-</tr>
-<tr class="odd">
-<td>script</td>
-<td align="left">script</td>
-<td align="right">62</td>
-<td align="right">50</td>
-<td align="right">1.6752257</td>
-<td align="right">0.0032898</td>
-<td align="right">0.0009023</td>
+<td align="right">47</td>
+<td align="right">39</td>
+<td align="right">1.9009588</td>
+<td align="right">0.0028298</td>
+<td align="right">0.0012483</td>
 </tr>
 <tr class="even">
-<td>acting</td>
-<td align="left">acting</td>
-<td align="right">102</td>
-<td align="right">79</td>
-<td align="right">1.2178008</td>
-<td align="right">0.0054123</td>
-<td align="right">0.0008759</td>
+<td>pretty</td>
+<td align="left">pretty</td>
+<td align="right">54</td>
+<td align="right">41</td>
+<td align="right">1.8509483</td>
+<td align="right">0.0032512</td>
+<td align="right">0.0010729</td>
 </tr>
 <tr class="odd">
-<td>film</td>
-<td align="left">film</td>
-<td align="right">486</td>
-<td align="right">159</td>
-<td align="right">0.5183445</td>
-<td align="right">0.0257880</td>
-<td align="right">0.0008678</td>
+<td>poor</td>
+<td align="left">poor</td>
+<td align="right">42</td>
+<td align="right">34</td>
+<td align="right">2.0381599</td>
+<td align="right">0.0025287</td>
+<td align="right">0.0009771</td>
 </tr>
 <tr class="even">
 <td>guy</td>
 <td align="left">guy</td>
-<td align="right">55</td>
-<td align="right">33</td>
-<td align="right">2.0907411</td>
-<td align="right">0.0029184</td>
-<td align="right">0.0008591</td>
+<td align="right">56</td>
+<td align="right">28</td>
+<td align="right">2.2323159</td>
+<td align="right">0.0033717</td>
+<td align="right">0.0009248</td>
 </tr>
 <tr class="odd">
-<td>thing</td>
-<td align="left">thing</td>
-<td align="right">66</td>
-<td align="right">56</td>
-<td align="right">1.5618970</td>
-<td align="right">0.0035021</td>
-<td align="right">0.0007564</td>
+<td>part</td>
+<td align="left">part</td>
+<td align="right">57</td>
+<td align="right">43</td>
+<td align="right">1.8033203</td>
+<td align="right">0.0034319</td>
+<td align="right">0.0008955</td>
 </tr>
 <tr class="even">
-<td>awful</td>
-<td align="left">awful</td>
-<td align="right">35</td>
+<td>black</td>
+<td align="left">black</td>
+<td align="right">41</td>
+<td align="right">20</td>
+<td align="right">2.5687881</td>
+<td align="right">0.0024685</td>
+<td align="right">0.0008870</td>
+</tr>
+<tr class="odd">
+<td>minutes</td>
+<td align="left">minutes</td>
+<td align="right">44</td>
+<td align="right">32</td>
+<td align="right">2.0987845</td>
+<td align="right">0.0026492</td>
+<td align="right">0.0008588</td>
+</tr>
+<tr class="even">
+<td>stupid</td>
+<td align="left">stupid</td>
+<td align="right">31</td>
 <td align="right">24</td>
-<td align="right">2.4091948</td>
-<td align="right">0.0018572</td>
-<td align="right">0.0007529</td>
+<td align="right">2.3864666</td>
+<td align="right">0.0018665</td>
+<td align="right">0.0008519</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co"># what about bi-grams?</span></a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">tf_sentiment_bigram &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(tf_sentiment, <span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">tf_sentiment_bigram &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(tf_sentiment, <span class="cf">function</span>(x){</a>
 <a class="sourceLine" id="cb20-3" data-line-number="3">  x &lt;-<span class="st"> </span>x[ stringr<span class="op">::</span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span>(x<span class="op">$</span>term, <span class="st">"_"</span>) , ]</a>
-<a class="sourceLine" id="cb20-4" data-line-number="4">  x[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(x<span class="op">$</span>prob_lift, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ]</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">  x[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(x<span class="op">$</span>prob_lift, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) , ]</a>
 <a class="sourceLine" id="cb20-5" data-line-number="5">})</a></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_sentiment_bigram<span class="op">$</span>positive, <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_sentiment_bigram<span class="op">$</span>positive, <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Reweighted: ten most relevant bigrams for positive sentiment</caption>
 <thead><tr class="header">
@@ -1052,98 +1054,98 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>highly_recommend</td>
-<td align="left">highly_recommend</td>
-<td align="right">11</td>
-<td align="right">11</td>
-<td align="right">3.053143</td>
-<td align="right">0.0007503</td>
-<td align="right">0.0003922</td>
-</tr>
-<tr class="even">
-<td>big_screen</td>
-<td align="left">big_screen</td>
-<td align="right">8</td>
-<td align="right">5</td>
-<td align="right">3.841601</td>
-<td align="right">0.0005457</td>
-<td align="right">0.0002771</td>
-</tr>
-<tr class="odd">
-<td>real_life</td>
-<td align="left">real_life</td>
-<td align="right">9</td>
-<td align="right">8</td>
-<td align="right">3.371597</td>
-<td align="right">0.0006139</td>
-<td align="right">0.0002557</td>
-</tr>
-<tr class="even">
-<td>world_war</td>
-<td align="left">world_war</td>
-<td align="right">8</td>
-<td align="right">5</td>
-<td align="right">3.841601</td>
-<td align="right">0.0005457</td>
-<td align="right">0.0002174</td>
-</tr>
-<tr class="odd">
-<td>watched_movie</td>
-<td align="left">watched_movie</td>
-<td align="right">7</td>
-<td align="right">7</td>
-<td align="right">3.505128</td>
-<td align="right">0.0004775</td>
-<td align="right">0.0002089</td>
-</tr>
-<tr class="even">
-<td>enjoy_watching</td>
-<td align="left">enjoy_watching</td>
-<td align="right">6</td>
-<td align="right">6</td>
-<td align="right">3.659279</td>
-<td align="right">0.0004092</td>
-<td align="right">0.0002003</td>
-</tr>
-<tr class="odd">
-<td>years_ago</td>
-<td align="left">years_ago</td>
-<td align="right">9</td>
-<td align="right">8</td>
-<td align="right">3.371597</td>
-<td align="right">0.0006139</td>
-<td align="right">0.0001961</td>
-</tr>
-<tr class="even">
 <td>makes_movie</td>
 <td align="left">makes_movie</td>
-<td align="right">5</td>
-<td align="right">5</td>
-<td align="right">3.841601</td>
-<td align="right">0.0003410</td>
-<td align="right">0.0001918</td>
-</tr>
-<tr class="odd">
-<td>loved_movie</td>
-<td align="left">loved_movie</td>
-<td align="right">5</td>
-<td align="right">5</td>
-<td align="right">3.841601</td>
-<td align="right">0.0003410</td>
-<td align="right">0.0001918</td>
+<td align="right">10</td>
+<td align="right">8</td>
+<td align="right">3.397022</td>
+<td align="right">0.0005916</td>
+<td align="right">0.0002932</td>
 </tr>
 <tr class="even">
-<td>movie_worth</td>
-<td align="left">movie_worth</td>
+<td>good_movie</td>
+<td align="left">good_movie</td>
+<td align="right">14</td>
+<td align="right">14</td>
+<td align="right">2.837406</td>
+<td align="right">0.0008283</td>
+<td align="right">0.0002911</td>
+</tr>
+<tr class="odd">
+<td>high_school</td>
+<td align="left">high_school</td>
+<td align="right">11</td>
+<td align="right">5</td>
+<td align="right">3.867026</td>
+<td align="right">0.0006508</td>
+<td align="right">0.0002629</td>
+</tr>
+<tr class="even">
+<td>star_wars</td>
+<td align="left">star_wars</td>
+<td align="right">9</td>
+<td align="right">5</td>
+<td align="right">3.867026</td>
+<td align="right">0.0005324</td>
+<td align="right">0.0002340</td>
+</tr>
+<tr class="odd">
+<td>great_movie</td>
+<td align="left">great_movie</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">3.397022</td>
+<td align="right">0.0004733</td>
+<td align="right">0.0002047</td>
+</tr>
+<tr class="even">
+<td>highly_recommended</td>
+<td align="left">highly_recommended</td>
 <td align="right">6</td>
 <td align="right">6</td>
-<td align="right">3.659279</td>
-<td align="right">0.0004092</td>
-<td align="right">0.0001705</td>
+<td align="right">3.684704</td>
+<td align="right">0.0003550</td>
+<td align="right">0.0001759</td>
+</tr>
+<tr class="odd">
+<td>great_film</td>
+<td align="left">great_film</td>
+<td align="right">8</td>
+<td align="right">7</td>
+<td align="right">3.530553</td>
+<td align="right">0.0004733</td>
+<td align="right">0.0001749</td>
+</tr>
+<tr class="even">
+<td>movie_great</td>
+<td align="left">movie_great</td>
+<td align="right">8</td>
+<td align="right">7</td>
+<td align="right">3.530553</td>
+<td align="right">0.0004733</td>
+<td align="right">0.0001749</td>
+</tr>
+<tr class="odd">
+<td>academy_award</td>
+<td align="left">academy_award</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="right">4.090169</td>
+<td align="right">0.0002958</td>
+<td align="right">0.0001466</td>
+</tr>
+<tr class="even">
+<td>melvyn_douglas</td>
+<td align="left">melvyn_douglas</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="right">4.090169</td>
+<td align="right">0.0002958</td>
+<td align="right">0.0001466</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tf_sentiment_bigram<span class="op">$</span>negative, <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tf_sentiment_bigram<span class="op">$</span>negative, <span class="dv">10</span>)</a></code></pre></div>
 <table class="table">
 <caption>Reweighted: ten most relevant bigrams for negative sentiment</caption>
 <thead><tr class="header">
@@ -1157,94 +1159,94 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>good_thing</td>
-<td align="left">good_thing</td>
-<td align="right">11</td>
-<td align="right">11</td>
-<td align="right">3.189353</td>
-<td align="right">0.0005837</td>
-<td align="right">0.0002554</td>
-</tr>
-<tr class="even">
 <td>waste_time</td>
 <td align="left">waste_time</td>
-<td align="right">12</td>
-<td align="right">11</td>
-<td align="right">3.189353</td>
-<td align="right">0.0006367</td>
-<td align="right">0.0002488</td>
-</tr>
-<tr class="odd">
-<td>acting_bad</td>
-<td align="left">acting_bad</td>
-<td align="right">10</td>
-<td align="right">9</td>
-<td align="right">3.390024</td>
-<td align="right">0.0005306</td>
-<td align="right">0.0002322</td>
+<td align="right">16</td>
+<td align="right">14</td>
+<td align="right">2.925463</td>
+<td align="right">0.0009633</td>
+<td align="right">0.0004561</td>
 </tr>
 <tr class="even">
-<td>bad_acting</td>
-<td align="left">bad_acting</td>
-<td align="right">9</td>
-<td align="right">9</td>
-<td align="right">3.390024</td>
-<td align="right">0.0004776</td>
-<td align="right">0.0002090</td>
+<td>special_effects</td>
+<td align="left">special_effects</td>
+<td align="right">20</td>
+<td align="right">16</td>
+<td align="right">2.791932</td>
+<td align="right">0.0012042</td>
+<td align="right">0.0003686</td>
 </tr>
 <tr class="odd">
-<td>worst_movie</td>
-<td align="left">worst_movie</td>
+<td>movie_made</td>
+<td align="left">movie_made</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="right">3.284664</td>
-<td align="right">0.0005306</td>
-<td align="right">0.0002023</td>
-</tr>
-<tr class="even">
-<td>read_book</td>
-<td align="left">read_book</td>
-<td align="right">8</td>
-<td align="right">6</td>
-<td align="right">3.795489</td>
-<td align="right">0.0004245</td>
-<td align="right">0.0001857</td>
-</tr>
-<tr class="odd">
-<td>comic_book</td>
-<td align="left">comic_book</td>
-<td align="right">8</td>
-<td align="right">6</td>
-<td align="right">3.795489</td>
-<td align="right">0.0004245</td>
-<td align="right">0.0001857</td>
-</tr>
-<tr class="even">
-<td>great_idea</td>
-<td align="left">great_idea</td>
-<td align="right">7</td>
-<td align="right">7</td>
-<td align="right">3.641338</td>
-<td align="right">0.0003714</td>
-<td align="right">0.0001625</td>
-</tr>
-<tr class="odd">
-<td>bad_guys</td>
-<td align="left">bad_guys</td>
-<td align="right">8</td>
-<td align="right">6</td>
-<td align="right">3.795489</td>
-<td align="right">0.0004245</td>
-<td align="right">0.0001559</td>
+<td align="right">3.261935</td>
+<td align="right">0.0006021</td>
+<td align="right">0.0002440</td>
 </tr>
 <tr class="even">
 <td>make_sense</td>
 <td align="left">make_sense</td>
+<td align="right">9</td>
+<td align="right">6</td>
+<td align="right">3.772761</td>
+<td align="right">0.0005419</td>
+<td align="right">0.0002136</td>
+</tr>
+<tr class="odd">
+<td>scooby_doo</td>
+<td align="left">scooby_doo</td>
+<td align="right">8</td>
+<td align="right">4</td>
+<td align="right">4.178226</td>
+<td align="right">0.0004817</td>
+<td align="right">0.0002131</td>
+</tr>
+<tr class="even">
+<td>worst_movie</td>
+<td align="left">worst_movie</td>
+<td align="right">7</td>
+<td align="right">6</td>
+<td align="right">3.772761</td>
+<td align="right">0.0004215</td>
+<td align="right">0.0002126</td>
+</tr>
+<tr class="odd">
+<td>read_book</td>
+<td align="left">read_book</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">3.485079</td>
+<td align="right">0.0004817</td>
+<td align="right">0.0001833</td>
+</tr>
+<tr class="even">
+<td>part_movie</td>
+<td align="left">part_movie</td>
 <td align="right">8</td>
 <td align="right">6</td>
-<td align="right">3.795489</td>
-<td align="right">0.0004245</td>
-<td align="right">0.0001559</td>
+<td align="right">3.772761</td>
+<td align="right">0.0004817</td>
+<td align="right">0.0001833</td>
+</tr>
+<tr class="odd">
+<td>good_idea</td>
+<td align="left">good_idea</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">3.772761</td>
+<td align="right">0.0003612</td>
+<td align="right">0.0001822</td>
+</tr>
+<tr class="even">
+<td>main_character</td>
+<td align="left">main_character</td>
+<td align="right">8</td>
+<td align="right">6</td>
+<td align="right">3.772761</td>
+<td align="right">0.0004817</td>
+<td align="right">0.0001534</td>
 </tr>
 </tbody>
 </table>
@@ -1252,6 +1254,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -1266,13 +1269,15 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 

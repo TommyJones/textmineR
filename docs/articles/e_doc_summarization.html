@@ -13,8 +13,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="5. Document summarization">
@@ -39,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.4.999</span>
       </span>
     </div>
 
@@ -47,7 +48,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -86,7 +87,7 @@
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
-<form class="navbar-form navbar-right" role="search">
+<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
@@ -100,13 +101,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>5. Document summarization</h1>
                         <h4 class="author">Thomas W. Jones</h4>
             
-            <h4 class="date">2019-04-17</h4>
+            <h4 class="date">2019-11-16</h4>
       
       
       <div class="hidden name"><code>e_doc_summarization.Rmd</code></div>
@@ -123,7 +125,7 @@
 <h1 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting started</h1>
 <p>We’ll use the movie review data set from <code>text2vec</code> again. The first thing we need to do is create a TCM and embedding model. We will skip evaluation such as R-squared, coherence, inspecting top terms, etc. However, in any real application, I’d strongly suggest evaluating your models at every step of the way.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(textmineR)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(textmineR)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; Loading required package: Matrix</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; Attaching package: 'textmineR'</span></a>
@@ -135,12 +137,12 @@
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt;     update</span></a>
 <a class="sourceLine" id="cb1-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co"># load the data</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(movie_review, <span class="dt">package =</span> <span class="st">"text2vec"</span>)</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(movie_review, <span class="dt">package =</span> <span class="st">"text2vec"</span>)</a>
 <a class="sourceLine" id="cb1-14" data-line-number="14"></a>
 <a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co"># let's take a sample so the demo will run quickly</span></a>
 <a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co"># note: textmineR is generally quite scaleable, depending on your system</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">s &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(movie_review), <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">s &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(movie_review), <span class="dv">200</span>)</a>
 <a class="sourceLine" id="cb1-19" data-line-number="19"></a>
 <a class="sourceLine" id="cb1-20" data-line-number="20">movie_review &lt;-<span class="st"> </span>movie_review[ s , ]</a>
 <a class="sourceLine" id="cb1-21" data-line-number="21"></a>
@@ -177,23 +179,23 @@
 <p>The variable <code>doc</code> represents a single document, or a single element of a character vector.</p>
 <p>In the code chunk below, we split the document into sentences using the <code>stringi</code> package. Then we embed each sentence under the model built on our whole corpus, above.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">  <span class="co"># parse it into sentences</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  sent &lt;-<span class="st"> </span>stringi<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stringi/topics/stri_split_boundaries">stri_split_boundaries</a></span>(doc, <span class="dt">type =</span> <span class="st">"sentence"</span>)[[ <span class="dv">1</span> ]]</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  sent &lt;-<span class="st"> </span>stringi<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/stringi/man/stri_split_boundaries.html">stri_split_boundaries</a></span>(doc, <span class="dt">type =</span> <span class="st">"sentence"</span>)[[ <span class="dv">1</span> ]]</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">  </a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(sent) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_along</a></span>(sent) <span class="co"># so we know index and order</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(sent) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(sent) <span class="co"># so we know index and order</span></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">  </a>
 <a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="co"># embed the sentences in the model</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">  e &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CreateDtm.html">CreateDtm</a></span>(sent, <span class="dt">ngram_window =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cpus =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  e &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CreateDtm.html">CreateDtm</a></span>(sent, <span class="dt">ngram_window =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cpus =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb2-8" data-line-number="8">  </a>
 <a class="sourceLine" id="cb2-9" data-line-number="9">  <span class="co"># remove any documents with 2 or fewer words</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">  e &lt;-<span class="st"> </span>e[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(e) <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> , ]</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  e &lt;-<span class="st"> </span>e[ <span class="kw"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(e) <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> , ]</a>
 <a class="sourceLine" id="cb2-11" data-line-number="11">  </a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">  vocab &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sets">intersect</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(e), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(gamma))</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">  vocab &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(e), <span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(gamma))</a>
 <a class="sourceLine" id="cb2-13" data-line-number="13">  </a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">  e &lt;-<span class="st"> </span>e <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(e)</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">  e &lt;-<span class="st"> </span>e <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(e)</a>
 <a class="sourceLine" id="cb2-15" data-line-number="15">  </a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">  e &lt;-<span class="st"> </span>e[ , vocab ] <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(gamma[ , vocab ])</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">  e &lt;-<span class="st"> </span>e[ , vocab ] <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(gamma[ , vocab ])</a>
 <a class="sourceLine" id="cb2-17" data-line-number="17">  </a>
-<a class="sourceLine" id="cb2-18" data-line-number="18">  e &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(e)</a></code></pre></div>
+<a class="sourceLine" id="cb2-18" data-line-number="18">  e &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(e)</a></code></pre></div>
 <p>Next, we measure the distance between each of the sentences within the embedding space.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">  <span class="co"># get the pairwise distances between each embedded sentence</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">  e_dist &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CalcHellingerDist.html">CalcHellingerDist</a></span>(e)</a></code></pre></div>
@@ -202,16 +204,16 @@
 <a class="sourceLine" id="cb4-2" data-line-number="2">  g &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>e_dist) <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a></code></pre></div>
 <p>If you consider a similarity matrix to be an adjacency matrix, then you have a fully-connected graph. For the sake of potentially faster computation and with the hope of eliminating some noise, we will delete some edges. Going row-by-row, we will keep connections only to the top 3 most similar sentences.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">  <span class="co"># we don't need sentences connected to themselves</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(g) &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">  <span class="kw"><a href="https://rdrr.io/r/base/diag.html">diag</a></span>(g) &lt;-<span class="st"> </span><span class="dv">0</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">  </a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="co"># turn into a nearest-neighbor graph</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(g, <span class="dv">1</span>, <span class="cf">function</span>(x){</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">    x[ x <span class="op">&lt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sort">sort</a></span>(x, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">3</span> ] ] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(g, <span class="dv">1</span>, <span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">    x[ x <span class="op">&lt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sort.html">sort</a></span>(x, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">3</span> ] ] &lt;-<span class="st"> </span><span class="dv">0</span></a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">    x</a>
 <a class="sourceLine" id="cb5-8" data-line-number="8">  })</a>
 <a class="sourceLine" id="cb5-9" data-line-number="9"></a>
 <a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="co"># by taking pointwise max, we'll make the matrix symmetric again</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">pmax</a></span>(g, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(g))</a></code></pre></div>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span>(g, <span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(g))</a></code></pre></div>
 <p>Using the <code>igraph</code> package (with its own objects) to calculate eigenvector centrality. From there, we’ll take the top three sentences.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">  g &lt;-<span class="st"> </span><span class="kw">graph.adjacency</span>(g, <span class="dt">mode =</span> <span class="st">"undirected"</span>, <span class="dt">weighted =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">  </a>
@@ -219,18 +221,18 @@
 <a class="sourceLine" id="cb6-4" data-line-number="4">  ev &lt;-<span class="st"> </span><span class="kw">evcent</span>(g)</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">  </a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">  <span class="co"># format the result</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">  result &lt;-<span class="st"> </span>sent[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(ev<span class="op">$</span>vector)[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(ev<span class="op">$</span>vector, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ] ] ]</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">  result &lt;-<span class="st"> </span>sent[ <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(ev<span class="op">$</span>vector)[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(ev<span class="op">$</span>vector, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ] ] ]</a>
 <a class="sourceLine" id="cb6-8" data-line-number="8">  </a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">  result &lt;-<span class="st"> </span>result[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(result))) ]</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">  result &lt;-<span class="st"> </span>result[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(result))) ]</a>
 <a class="sourceLine" id="cb6-10" data-line-number="10">  </a>
-<a class="sourceLine" id="cb6-11" data-line-number="11">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(result, <span class="dt">collapse =</span> <span class="st">" "</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb6-11" data-line-number="11">  <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(result, <span class="dt">collapse =</span> <span class="st">" "</span>)</a></code></pre></div>
 </div>
 <div id="pulling-it-all-together" class="section level1">
 <h1 class="hasAnchor">
 <a href="#pulling-it-all-together" class="anchor"></a>Pulling it all together</h1>
 <p>The code below puts it all together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a single function call.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(igraph) </a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(igraph) </a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; Attaching package: 'igraph'</span></a>
 <a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; The following objects are masked from 'package:stats':</span></a>
@@ -245,28 +247,28 @@
 <a class="sourceLine" id="cb7-14" data-line-number="14">summarizer &lt;-<span class="st"> </span><span class="cf">function</span>(doc, gamma) {</a>
 <a class="sourceLine" id="cb7-15" data-line-number="15">  </a>
 <a class="sourceLine" id="cb7-16" data-line-number="16">  <span class="co"># recursive fanciness to handle multiple docs at once</span></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17">  <span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(doc) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> )</a>
+<a class="sourceLine" id="cb7-17" data-line-number="17">  <span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(doc) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> )</a>
 <a class="sourceLine" id="cb7-18" data-line-number="18">    <span class="co"># use a try statement to catch any weirdness that may arise</span></a>
-<a class="sourceLine" id="cb7-19" data-line-number="19">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/function">return</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">sapply</a></span>(doc, <span class="cf">function</span>(d) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/try">try</a></span>(<span class="kw">summarizer</span>(d, gamma))))</a>
+<a class="sourceLine" id="cb7-19" data-line-number="19">    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(doc, <span class="cf">function</span>(d) <span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span>(<span class="kw">summarizer</span>(d, gamma))))</a>
 <a class="sourceLine" id="cb7-20" data-line-number="20">  </a>
 <a class="sourceLine" id="cb7-21" data-line-number="21">  <span class="co"># parse it into sentences</span></a>
-<a class="sourceLine" id="cb7-22" data-line-number="22">  sent &lt;-<span class="st"> </span>stringi<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stringi/topics/stri_split_boundaries">stri_split_boundaries</a></span>(doc, <span class="dt">type =</span> <span class="st">"sentence"</span>)[[ <span class="dv">1</span> ]]</a>
+<a class="sourceLine" id="cb7-22" data-line-number="22">  sent &lt;-<span class="st"> </span>stringi<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/stringi/man/stri_split_boundaries.html">stri_split_boundaries</a></span>(doc, <span class="dt">type =</span> <span class="st">"sentence"</span>)[[ <span class="dv">1</span> ]]</a>
 <a class="sourceLine" id="cb7-23" data-line-number="23">  </a>
-<a class="sourceLine" id="cb7-24" data-line-number="24">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(sent) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_along</a></span>(sent) <span class="co"># so we know index and order</span></a>
+<a class="sourceLine" id="cb7-24" data-line-number="24">  <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(sent) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(sent) <span class="co"># so we know index and order</span></a>
 <a class="sourceLine" id="cb7-25" data-line-number="25">  </a>
 <a class="sourceLine" id="cb7-26" data-line-number="26">  <span class="co"># embed the sentences in the model</span></a>
-<a class="sourceLine" id="cb7-27" data-line-number="27">  e &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CreateDtm.html">CreateDtm</a></span>(sent, <span class="dt">ngram_window =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cpus =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb7-27" data-line-number="27">  e &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CreateDtm.html">CreateDtm</a></span>(sent, <span class="dt">ngram_window =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cpus =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb7-28" data-line-number="28">  </a>
 <a class="sourceLine" id="cb7-29" data-line-number="29">  <span class="co"># remove any documents with 2 or fewer words</span></a>
-<a class="sourceLine" id="cb7-30" data-line-number="30">  e &lt;-<span class="st"> </span>e[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(e) <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> , ]</a>
+<a class="sourceLine" id="cb7-30" data-line-number="30">  e &lt;-<span class="st"> </span>e[ <span class="kw"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(e) <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> , ]</a>
 <a class="sourceLine" id="cb7-31" data-line-number="31">  </a>
-<a class="sourceLine" id="cb7-32" data-line-number="32">  vocab &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sets">intersect</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(e), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(gamma))</a>
+<a class="sourceLine" id="cb7-32" data-line-number="32">  vocab &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(e), <span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(gamma))</a>
 <a class="sourceLine" id="cb7-33" data-line-number="33">  </a>
-<a class="sourceLine" id="cb7-34" data-line-number="34">  e &lt;-<span class="st"> </span>e <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(e)</a>
+<a class="sourceLine" id="cb7-34" data-line-number="34">  e &lt;-<span class="st"> </span>e <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(e)</a>
 <a class="sourceLine" id="cb7-35" data-line-number="35">  </a>
-<a class="sourceLine" id="cb7-36" data-line-number="36">  e &lt;-<span class="st"> </span>e[ , vocab ] <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(gamma[ , vocab ])</a>
+<a class="sourceLine" id="cb7-36" data-line-number="36">  e &lt;-<span class="st"> </span>e[ , vocab ] <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(gamma[ , vocab ])</a>
 <a class="sourceLine" id="cb7-37" data-line-number="37">  </a>
-<a class="sourceLine" id="cb7-38" data-line-number="38">  e &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(e)</a>
+<a class="sourceLine" id="cb7-38" data-line-number="38">  e &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(e)</a>
 <a class="sourceLine" id="cb7-39" data-line-number="39">  </a>
 <a class="sourceLine" id="cb7-40" data-line-number="40">  <span class="co"># get the pairwise distances between each embedded sentence</span></a>
 <a class="sourceLine" id="cb7-41" data-line-number="41">  e_dist &lt;-<span class="st"> </span><span class="kw"><a href="../reference/CalcHellingerDist.html">CalcHellingerDist</a></span>(e)</a>
@@ -275,48 +277,49 @@
 <a class="sourceLine" id="cb7-44" data-line-number="44">  g &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>e_dist) <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a>
 <a class="sourceLine" id="cb7-45" data-line-number="45">  </a>
 <a class="sourceLine" id="cb7-46" data-line-number="46">  <span class="co"># we don't need sentences connected to themselves</span></a>
-<a class="sourceLine" id="cb7-47" data-line-number="47">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(g) &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb7-47" data-line-number="47">  <span class="kw"><a href="https://rdrr.io/r/base/diag.html">diag</a></span>(g) &lt;-<span class="st"> </span><span class="dv">0</span></a>
 <a class="sourceLine" id="cb7-48" data-line-number="48">  </a>
 <a class="sourceLine" id="cb7-49" data-line-number="49">  <span class="co"># turn into a nearest-neighbor graph</span></a>
-<a class="sourceLine" id="cb7-50" data-line-number="50">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(g, <span class="dv">1</span>, <span class="cf">function</span>(x){</a>
-<a class="sourceLine" id="cb7-51" data-line-number="51">    x[ x <span class="op">&lt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sort">sort</a></span>(x, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">3</span> ] ] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb7-50" data-line-number="50">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(g, <span class="dv">1</span>, <span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb7-51" data-line-number="51">    x[ x <span class="op">&lt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sort.html">sort</a></span>(x, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">3</span> ] ] &lt;-<span class="st"> </span><span class="dv">0</span></a>
 <a class="sourceLine" id="cb7-52" data-line-number="52">    x</a>
 <a class="sourceLine" id="cb7-53" data-line-number="53">  })</a>
 <a class="sourceLine" id="cb7-54" data-line-number="54"></a>
 <a class="sourceLine" id="cb7-55" data-line-number="55">  <span class="co"># by taking pointwise max, we'll make the matrix symmetric again</span></a>
-<a class="sourceLine" id="cb7-56" data-line-number="56">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">pmax</a></span>(g, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(g))</a>
+<a class="sourceLine" id="cb7-56" data-line-number="56">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span>(g, <span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(g))</a>
 <a class="sourceLine" id="cb7-57" data-line-number="57">  </a>
-<a class="sourceLine" id="cb7-58" data-line-number="58">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/igraph/topics/graph_from_adjacency_matrix">graph.adjacency</a></span>(g, <span class="dt">mode =</span> <span class="st">"undirected"</span>, <span class="dt">weighted =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-58" data-line-number="58">  g &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/igraph/man/graph_from_adjacency_matrix.html">graph.adjacency</a></span>(g, <span class="dt">mode =</span> <span class="st">"undirected"</span>, <span class="dt">weighted =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb7-59" data-line-number="59">  </a>
 <a class="sourceLine" id="cb7-60" data-line-number="60">  <span class="co"># calculate eigenvector centrality</span></a>
-<a class="sourceLine" id="cb7-61" data-line-number="61">  ev &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/igraph/topics/eigen_centrality">evcent</a></span>(g)</a>
+<a class="sourceLine" id="cb7-61" data-line-number="61">  ev &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/igraph/man/eigen_centrality.html">evcent</a></span>(g)</a>
 <a class="sourceLine" id="cb7-62" data-line-number="62">  </a>
 <a class="sourceLine" id="cb7-63" data-line-number="63">  <span class="co"># format the result</span></a>
-<a class="sourceLine" id="cb7-64" data-line-number="64">  result &lt;-<span class="st"> </span>sent[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(ev<span class="op">$</span>vector)[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(ev<span class="op">$</span>vector, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ] ] ]</a>
+<a class="sourceLine" id="cb7-64" data-line-number="64">  result &lt;-<span class="st"> </span>sent[ <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(ev<span class="op">$</span>vector)[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(ev<span class="op">$</span>vector, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ] ] ]</a>
 <a class="sourceLine" id="cb7-65" data-line-number="65">  </a>
-<a class="sourceLine" id="cb7-66" data-line-number="66">  result &lt;-<span class="st"> </span>result[ <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(result))) ]</a>
+<a class="sourceLine" id="cb7-66" data-line-number="66">  result &lt;-<span class="st"> </span>result[ <span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(result))) ]</a>
 <a class="sourceLine" id="cb7-67" data-line-number="67">  </a>
-<a class="sourceLine" id="cb7-68" data-line-number="68">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(result, <span class="dt">collapse =</span> <span class="st">" "</span>)</a>
+<a class="sourceLine" id="cb7-68" data-line-number="68">  <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(result, <span class="dt">collapse =</span> <span class="st">" "</span>)</a>
 <a class="sourceLine" id="cb7-69" data-line-number="69">}</a></code></pre></div>
 <p>How well did we do? Let’s look at summaries from the first three reviews.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Let's see the summary of the first couple of reviews</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">docs &lt;-<span class="st"> </span>movie_review<span class="op">$</span>review[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ]</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(docs) &lt;-<span class="st"> </span>movie_review<span class="op">$</span>id[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ]</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(docs) &lt;-<span class="st"> </span>movie_review<span class="op">$</span>id[ <span class="dv">1</span><span class="op">:</span><span class="dv">3</span> ]</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">sums &lt;-<span class="st"> </span><span class="kw">summarizer</span>(docs, <span class="dt">gamma =</span> embeddings<span class="op">$</span>gamma)</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb8-7" data-line-number="7">sums</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            2595_9 </span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; "Brilliant adaptation of the largely interior monologues of Leopold Bloom, Stephen Dedalus, and Molly Bloom by Joseph Strick in recreating the endearing portrait of Dublin on June 16, 1904 - Bloomsday - a day to be celebrated - double entendre intended!  Bravo director Strick, screenwriter Haines, as well as casting director and cinematographer in creating this masterpiece.  Gunter Grass' novel, The Tin Drum filmed by Volker Schlndorff (1979)is another fine film adaptation of interior monologue which I favorably compare with Strick's film.While there are clearly recognized Dublin landmarks in the original novel and in the film, there are also recognizable characters, although with different names in the novel. " </span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            8892_2 </span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "I would have poured it in her mouth to shut her up!  Anthony Andrews...yikes!  And don't get me started on Romeo...puhleasssssee! " </span></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            8620_8 </span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "Blues, Country/Folk and Rock Ballads do not belong here and every time they are used we all broke out in laughter.  There are many uses of silence as well as slow-motion photography that work beautifully.  I really wish I could erase the music but alas.Seek this out. "</span></a></code></pre></div>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 4273_1 </span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; "And being introduced to some of the most mind numbing shady immoral character of the Twin Peaks.To the Mind numbing almost pedophilia disgusting way the movie seems to romantically tell of the destruction of a Human Life through some random psychedelic phenomena in the Movie Twin Peak:Fire Come Walk with me.  Save your self the agony the suspense and watch anything else that at least has the ability to tell a story, rather then seduce you into some kind mental porn movie.I have heard a lot of reviews, rants and raves about how great David Lynch.  Because of his ability to define misery and and tragedy and making it into some kind of a wonderful thing. " </span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 7112_4 </span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                       "The large mansion in which it takes place is pretty creepy, especially since it's mostly unfurnished (probably due to budgetary reasons?). It definitely inspires more laughs than screams, however.  Just try not to get the giggles when the wife (who does more than her share of screaming) goes into the greenhouse and is confronted with the ghost of her husband's ex." </span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 1891_3 </span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;                                                                                                                                                                                                                                "Documentary about nomadic Persians making a treacherous traverse of massive mountains to get their herds to grass.  Watching this silent, black and white feature, marred in part by a twink-twink-twink Oriental music score that could not have been used in the original exhibition, is even duller than it sounds.  I loved Nanook of the North and March of the Penguins, but despised this movie, notwithstanding the similarity of the theme. "</span></a></code></pre></div>
 <p>Compare that to the whole reviews yourself.</p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -331,13 +334,15 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
