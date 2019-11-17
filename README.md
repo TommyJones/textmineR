@@ -1,5 +1,5 @@
 
-# textmineR <img src="man/figures/textmineR_v8.png" align="right" alt="textmineR logo" />
+# textmineR <img src="man/figures/textmineR_v8.png" align="right" alt="textmineR logo"   width="200"/>
 
 [![Travis-CI Build Status](https://travis-ci.org/TommyJones/textmineR.svg?branch=master)](https://travis-ci.org/TommyJones/textmineR)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/textmineR)](https://cran.r-project.org/package=textmineR)
