@@ -19,8 +19,9 @@ and \code{iterations} must be specified.}
 for the Gibbs sampler to run. A future version may include automatic stopping criteria.}
 
 \item{burnin}{If \code{method = "gibbs"}, an integer number of burnin iterations. 
-If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
-are an average over all iterations greater than \code{burnin}.}
+If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix
+are an average over all iterations greater than \code{burnin}.
+Behavior is the same as documented in \code{\link[textmineR]{FitLdaTopicModel}}.}
 
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }

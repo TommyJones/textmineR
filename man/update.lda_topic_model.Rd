@@ -2,55 +2,56 @@
 % Please edit documentation in R/topic_modeling_core.R
 \name{update.lda_topic_model}
 \alias{update.lda_topic_model}
-\title{Update a Latent Dirichlet Allocation topic model with new data}
+\title{Update a Latent Dirichlet Allocation topic model}
 \usage{
 \method{update}{lda_topic_model}(object, dtm, additional_k = 0,
-  iterations = NULL, burnin = -1, new_alpha = NULL,
-  new_beta = NULL, optimize_alpha = FALSE, calc_likelihood = FALSE,
-  calc_coherence = TRUE, calc_r2 = FALSE, return_data = FALSE, ...)
+  phi_as_prior = FALSE, iterations = NULL, burnin = -1,
+  optimize_alpha = FALSE, calc_likelihood = FALSE,
+  calc_coherence = FALSE, calc_r2 = FALSE, return_data = FALSE, ...)
 }
 \arguments{
-\item{object}{a fitted object of class \code{lda_topic_model}}
+\item{object}{a fitted object of class \code{lda_topic_model}.}
 
 \item{dtm}{A document term matrix or term co-occurrence matrix of class dgCMatrix.}
 
 \item{additional_k}{Integer number of topics to add, defaults to 0.}
 
-\item{iterations}{Integer number of iterations for the Gibbs sampler to run. A
-future version may include automatic stopping criteria.}
+\item{phi_as_prior}{Logical. Do you want to replace \code{beta} with \code{phi}
+from the previous model as the prior for words over topics?}
+
+\item{iterations}{Integer number of iterations for the Gibbs sampler to run.}
 
 \item{burnin}{Integer number of burnin iterations. If \code{burnin} is greater than -1,
 the resulting "phi" and "theta" matrices are an average over all iterations
 greater than \code{burnin}.}
 
-\item{new_alpha}{For now not used. This is the prior for topics over documents
-used when updating the model}
+\item{optimize_alpha}{Logical. Do you want to optimize alpha every iteration?
+Defaults to \code{FALSE}. See 'details' of documentation for
+\code{\link[textmineR]{FitLdaModel}}for more information.}
 
-\item{new_beta}{For now not used. This is the prior for words over topics
-used when updating the model.}
-
-\item{optimize_alpha}{Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-Defaults to \code{FALSE}.}
-
-\item{calc_likelihood}{Do you want to calculate the likelihood every 10 Gibbs iterations?
+\item{calc_likelihood}{Logical. Do you want to calculate the log likelihood every iteration?
 Useful for assessing convergence. Defaults to \code{FALSE}.}
 
-\item{calc_coherence}{Do you want to calculate probabilistic coherence of topics
-after the model is trained? Defaults to \code{TRUE}.}
+\item{calc_coherence}{Logical. Do you want to calculate probabilistic coherence of topics
+after the model is trained? Defaults to \code{FALSE}. This calls
+\code{\link[textmineR]{CalcProbCoherence}}.}
 
-\item{calc_r2}{Do you want to calculate R-squared after the model is trained?
-Defaults to \code{FALSE}.}
+\item{calc_r2}{Logical. Do you want to calculate R-squared after the model is trained?
+Defaults to \code{FALSE}. This calls \code{\link[textmineR]{CalcTopicModelR2}}.}
 
-\item{return_data}{Do you want to return the input DTM/TCM (given by argument
-\code{dtm})? Defaults to \code{FALSE}.}
+\item{return_data}{Logical. Do you want \code{dtm} returned as part of the model object?}
 
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
-Returns an S3 object of class c("LDA", "TopicModel").
+Returns an S3 object of class c("lda_topic_model").
 }
 \description{
-Update an LDA model with new data using collapsed Gibbs sampling.
+Update an LDA model using collapsed Gibbs sampling.
+}
+\details{
+prior + counts vs. counts only. Vocab alignment + uniform prior over new words. 
+         Adding additional topics. works best with significant vocab overlap
 }
 \examples{
 \dontrun{

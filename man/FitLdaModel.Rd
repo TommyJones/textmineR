@@ -6,51 +6,77 @@
 \usage{
 FitLdaModel(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1,
   beta = 0.05, optimize_alpha = FALSE, calc_likelihood = FALSE,
-  calc_coherence = TRUE, calc_r2 = FALSE, return_data = FALSE, ...)
+  calc_coherence = FALSE, calc_r2 = FALSE, return_data = FALSE, ...)
 }
 \arguments{
-\item{dtm}{A document term matrix or term co-occurrence matrix of class dgCMatrix}
+\item{dtm}{A document term matrix or term co-occurrence matrix of class dgCMatrix.}
 
-\item{k}{Integer number of topics}
+\item{k}{Integer number of topics.}
 
-\item{iterations}{Integer number of iterations for the Gibbs sampler to run. A
-future version may include automatic stopping criteria.}
+\item{iterations}{Integer number of iterations for the Gibbs sampler to run.}
 
 \item{burnin}{Integer number of burnin iterations. If \code{burnin} is greater than -1,
 the resulting "phi" and "theta" matrices are an average over all iterations
 greater than \code{burnin}.}
 
-\item{alpha}{Vector of length \code{k} for asymmetric or a number for symmetric.
-This is the prior for topics over documents}
+\item{alpha}{Numeric scalar or vector of length \code{k}. This is the prior 
+for topics over documents.}
 
-\item{beta}{Vector of length \code{ncol(dtm)} for asymmetric or a number for symmetric.
+\item{beta}{Numeric scalar, numeric vector of length \code{ncol(dtm)}, 
+or numeric matrix with \code{k} rows and \code{ncol(dtm)} columns.
 This is the prior for words over topics.}
 
-\item{optimize_alpha}{Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-Defaults to \code{FALSE}.}
+\item{optimize_alpha}{Logical. Do you want to optimize alpha every iteration?
+Defaults to \code{FALSE}. See 'details' below for more information.}
 
-\item{calc_likelihood}{Do you want to calculate the likelihood every 10 Gibbs iterations?
+\item{calc_likelihood}{Logical. Do you want to calculate the log likelihood every iteration?
 Useful for assessing convergence. Defaults to \code{FALSE}.}
 
-\item{calc_coherence}{Do you want to calculate probabilistic coherence of topics
-after the model is trained? Defaults to \code{TRUE}.}
+\item{calc_coherence}{Logical. Do you want to calculate probabilistic coherence of topics
+after the model is trained? Defaults to \code{FALSE}. This calls
+\code{\link[textmineR]{CalcProbCoherence}}.}
 
-\item{calc_r2}{Do you want to calculate R-squared after the model is trained?
-Defaults to \code{FALSE}.}
+\item{calc_r2}{Logical. Do you want to calculate R-squared after the model is trained?
+Defaults to \code{FALSE}. This calls \code{\link[textmineR]{CalcTopicModelR2}}.}
 
-\item{return_data}{Do you want to return the input DTM/TCM (given by argument
-\code{dtm})? Defaults to \code{FALSE}.}
+\item{return_data}{Logical. Do you want \code{dtm} returned as part of the model object?}
 
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
-Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
+Returns an S3 object of class c("lda_topic_model").
 }
 \description{
 Fit a Latent Dirichlet Allocation topic model using collapsed Gibbs sampling.
 }
 \details{
-EXPLAIN IMPLEMENTATION DETAILS
+This function calls a collapsed Gibbs sampler for Latent Dirichlet Allocation
+  written using the excellent Rcpp package. Some implementation notes follow:
+  
+  When you use burn-in iterations (i.e. \code{burnin = TRUE}), the resulting 
+  \code{phi} and \code{theta} matrices are calculated by averaging over every 
+  iteration after the specified  number of burn-in iterations. If you do not 
+  use burn-in iterations, then the matrices are calculated from the last run
+  only. Ideally, you'd burn in every iteration before convergence, then average
+  over the chain after its converved (and thus every observation is independent).
+  
+  If you set \code{optimize_alpha} to \code{TRUE}, then each element of \code{alpha}
+  is proportional to the number of times each topic has be sampled that iteration
+  averaged with the value of \code{alpha} from the previous iteration. This lets
+  you start with a symmetric \code{alpha} and drift into an asymmetric one. 
+  However, (a) this probably means that convergence will take longer to happen 
+  or convergence may not happen at all. And (b) I make no guarantees that doing this
+  will give you any benefit or that it won't hurt your model. Caveat emptor!
+  
+  The log likelihood calculation is the same that can be found on page 9 of
+  \url{https://arxiv.org/pdf/1510.08628.pdf}. The only difference is that the
+  version in \code{\link[textmineR]{textmineR}} allows \code{beta} to be a
+  vector or matrix. (Vector used in this function, matrix used for model
+  updates in \code{\link[textmineR]{update.lda_topic_model}}. At present, the 
+  log likelihood function appears to be ok for assessing convergence. i.e. It 
+  has the right shape. However, it is, as of this writing, returning positive
+  numbers, rather than the expected negative numbers. Looking into that, but 
+  in the meantime caveat emptor once again.
 }
 \examples{
 # load some data

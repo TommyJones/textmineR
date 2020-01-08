@@ -810,7 +810,7 @@ initialize_topic_counts <- function(dtm, k, alpha, beta, phi_initial = NULL,
 #' 
 #' # fit a model 
 #' set.seed(12345)
-#' m <- fit_lda_model(dtm = nih_sample_dtm[1:20,], k = 5,
+#' m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
 #'                  iterations = 200, burnin = 175)
 #'
 #' str(m)
@@ -825,7 +825,7 @@ initialize_topic_counts <- function(dtm, k, alpha, beta, phi_initial = NULL,
 #' # compare the methods
 #' barplot(rbind(p1[1,],p2[1,]), beside = TRUE, col = c("red", "blue")) 
 #' @export
-fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
+FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
                           optimize_alpha = FALSE, calc_likelihood = FALSE, 
                           calc_coherence = FALSE, calc_r2 = FALSE, 
                           return_data = FALSE, ...) {

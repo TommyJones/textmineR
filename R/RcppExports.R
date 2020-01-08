@@ -29,15 +29,11 @@ JSDmat <- function(A) {
     .Call(`_textmineR_JSDmat`, A)
 }
 
-dtm_to_lexicon_c <- function(x) {
-    .Call(`_textmineR_dtm_to_lexicon_c`, x)
+create_lexicon <- function(Cd, Phi, dtm, alpha, freeze_topics) {
+    .Call(`_textmineR_create_lexicon`, Cd, Phi, dtm, alpha, freeze_topics)
 }
 
-fit_lda_c <- function(docs, Nk, Nd, Nv, alph, beta, iterations, burnin, optimize_alpha, calc_likelihood) {
-    .Call(`_textmineR_fit_lda_c`, docs, Nk, Nd, Nv, alph, beta, iterations, burnin, optimize_alpha, calc_likelihood)
-}
-
-predict_lda_c <- function(docs, Nk, Nd, alpha, phi, iterations, burnin) {
-    .Call(`_textmineR_predict_lda_c`, docs, Nk, Nd, alpha, phi, iterations, burnin)
+fit_lda_c <- function(docs, Nk, beta, alpha, Cd, Cv, Ck, Zd, Phi, iterations, burnin, freeze_topics, calc_likelihood, optimize_alpha) {
+    .Call(`_textmineR_fit_lda_c`, docs, Nk, beta, alpha, Cd, Cv, Ck, Zd, Phi, iterations, burnin, freeze_topics, calc_likelihood, optimize_alpha)
 }
 
