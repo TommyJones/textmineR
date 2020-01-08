@@ -613,103 +613,204 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
   
 }
 
-#' Turn a document term matrix into a list for LDA Gibbs sampling
-#' @description Represents a document term matrix as a list. 
-#' @param dtm A document term matrix (or term co-occurrence matrix) of class 
-#' \code{dgCMatrix}. 
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
-#' @return Returns a list. Each element of the list represents a row of the input
-#' matrix. Each list element contains a numeric vector with as many entries as
-#' tokens in the original document. The entries are the column index for that token, minus 1. 
-#' @examples
-#' \dontrun{
-#' # Load pre-formatted data for use
-#' data(nih_sample_dtm)
-#' 
-#' result <- Dtm2Lexicon(dtm = nih_sample_dtm, 
-#'                       cpus = 2)
-#' }
-#' @export 
-Dtm2Lexicon <- function(dtm, ...) {
+# Turn a document term matrix into a list for LDA Gibbs sampling
+# This is an internal function, not exported to users
+initialize_topic_counts <- function(dtm, k, alpha, beta, phi_initial = NULL, 
+                                    theta_initial = NULL, freeze_topics = FALSE, 
+                                    ...) {
   
   # check inputs
-  if (class(dtm) != "dgCMatrix" & class(dtm) != "numeric") {
-    stop("dtm must be of class dgCMatrix or, if a single document, a numeric vector")
+  
+  # initialize phi if not already specified
+  # this phi is used to sample topics for inital counts in the C++ function
+  if (is.null(phi_initial)) {
+    # phi_initial <- gtools::rdirichlet(n = k, alpha = beta)
+    
+    phi_initial <- apply(beta, 1, function(x){
+      gtools::rdirichlet(n = 1, alpha = x)
+    })
+    
+    phi_initial <- t(phi_initial)
   }
   
-  if (class(dtm) == "numeric") {
+  # initialize theta if not already specified
+  # if not specified (e.g. if this is a new model) make a matrix by sampling
+  # from alpha. 
+  if (is.null(theta_initial)) {
     
-    if (is.null(names(dtm))) {
-      stop("it looks like you passed a numeric vector without names. 
-           Did you mean to pass a single document?
-           If so, it needs a names attribute to index tokens")
-      
-    }
-    
-    vocab <- names(dtm)
-    
-    dtm <- Matrix::Matrix(dtm, nrow = 1, sparse = TRUE)
-    
-    colnames(dtm) <- vocab
+    theta_initial <- gtools::rdirichlet(n = nrow(dtm), alpha = alpha)
     
   }
   
-  # do in parallel in batches of about 3000 if we have more than 3000 docs
-  if(nrow(dtm) > 3000){
+  # initalize Cd by sampling from theta_initial. 
+  # for asymmetric alpha, encodes more/less probable topics
+  # we don't need to initialize Cv because we can use the probabilities in phi, 
+  # along with our sampled Cd to do a single Gibbs iteration to populate all three
+  # of Cd, Ck, and Cv
+  cd_sampler <- function(size, prob){
+    stats::rmultinom(n = 1, size = size, prob = prob)
+  }
+  
+  if (nrow(dtm) <= 3000) { # if a small corpus, do sequential
+    
+    # Cd_start <- sapply(X = Matrix::rowSums(dtm),
+    #                    FUN = cd_sampler)
+    
+    Cd_start <- mapply(FUN = cd_sampler,
+                       size = Matrix::rowSums(dtm),
+                       prob = as.list(data.frame(t(theta_initial)))) 
+    
+    Cd_start <- t(Cd_start)
+    
+  } else { # otherwise do it in parallel
     
     batches <- seq(1, nrow(dtm), by = 3000)
     
-    dtm_list <- lapply(batches, function(x) dtm[ x:min(x + 2999, nrow(dtm)) , ])
+    iterator <- textmineR::TmParallelApply(batches, function(b){
+      
+      rows <- b:min(b + 2999, nrow(dtm))
+      
+      if (length(rows) > 1) {
+        
+        size <- Matrix::rowSums(dtm[rows, ])
+        
+        prob <- as.list(data.frame(t(theta_initial[rows, ])))
+        
+      } else {
+        size <- sum(dtm[rows, ])
+        
+        prob <- theta_initial[rows, ]
+      }
+      
+      list(size = size, prob = prob)
+      
+    }, export = c("dtm", "theta_initial"),
+    ...)
     
-    out <- TmParallelApply(X = dtm_list, FUN = function(y){
-      dtm_to_lexicon_c(x = y)
-    }, ...)
+    Cd_start <- textmineR::TmParallelApply(X = iterator,
+                                           FUN = function(x){
+                                             out <- mapply(FUN = cd_sampler,
+                                                           size = x$size,
+                                                           prob = x$prob)
+                                             
+                                             t(out)
+                                           },
+                                           export = "cd_sampler",
+                                           ...)
     
-    out <- do.call(c, out)
+    Cd_start <- do.call(rbind, Cd_start)
     
-  }else{
-    out <- dtm_to_lexicon_c(x = dtm)
   }
   
-  names(out) <- rownames(dtm)
+  # Initialize objects with that single Gibbs iteration mentioned above
+  if(nrow(dtm) > 3000){  # if we have more than 3,000 docs, do it in parallel
+    
+    batches <- seq(1, nrow(dtm), by = 3000)
+    
+    lexicon <- textmineR::TmParallelApply(batches, function(b){
+      
+      rows <- b:min(b + 2999, nrow(dtm))
+      
+      l <- create_lexicon(Cd = Cd_start[rows,],
+                          Phi = phi_initial,
+                          dtm = dtm[rows,],
+                          alpha = alpha,
+                          freeze_topics = freeze_topics)
+      
+    }, 
+    export = c("alpha", "Cd_start", "phi_initial", "dtm", "freeze_topics"),
+    ...)
+    
+    # combine 
+    Zd <- Reduce("c", lapply(lexicon, function(l) l$Zd))
+    
+    docs <- Reduce("c", lapply(lexicon, function(l) l$docs))
+    
+    Cv <- Reduce("+", lapply(lexicon, function(l) l$Cv))
+    
+    Ck <- Reduce("+", lapply(lexicon, function(l) l$Ck))
+    
+    Cd <- do.call(rbind, lapply(lexicon, function(l) l$Cd))
+    
+    out <- list(docs = docs,
+                Zd = Zd,
+                Cd = Cd,
+                Cv = Cv,
+                Ck = Ck)
+    
+  }else{ # if we have 3,000 or fewer docs do it sequentially
+    out <- create_lexicon(Cd = Cd_start,
+                          Phi = phi_initial,
+                          dtm = dtm,
+                          alpha = alpha,
+                          freeze_topics = freeze_topics)
+  }
   
   out
   
 }
 
+
 #' Fit a Latent Dirichlet Allocation topic model
 #' @description Fit a Latent Dirichlet Allocation topic model using collapsed Gibbs sampling. 
-#' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix
-#' @param k Integer number of topics
-#' @param iterations Integer number of iterations for the Gibbs sampler to run. A
-#'        future version may include automatic stopping criteria.
+#' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix.
+#' @param k Integer number of topics.
+#' @param iterations Integer number of iterations for the Gibbs sampler to run. 
 #' @param burnin Integer number of burnin iterations. If \code{burnin} is greater than -1,
 #'        the resulting "phi" and "theta" matrices are an average over all iterations
 #'        greater than \code{burnin}.
-#' @param alpha Vector of length \code{k} for asymmetric or a number for symmetric.
-#'        This is the prior for topics over documents
-#' @param beta Vector of length \code{ncol(dtm)} for asymmetric or a number for symmetric.
+#' @param alpha Numeric scalar or vector of length \code{k}. This is the prior 
+#'        for topics over documents.
+#' @param beta Numeric scalar, numeric vector of length \code{ncol(dtm)}, 
+#'        or numeric matrix with \code{k} rows and \code{ncol(dtm)} columns.
 #'        This is the prior for words over topics.
-#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-#'        Defaults to \code{FALSE}.
-#' @param calc_likelihood Do you want to calculate the likelihood every 10 Gibbs iterations?
+#' @param optimize_alpha Logical. Do you want to optimize alpha every iteration?
+#'        Defaults to \code{FALSE}. See 'details' below for more information.
+#' @param calc_likelihood Logical. Do you want to calculate the log likelihood every iteration?
 #'        Useful for assessing convergence. Defaults to \code{FALSE}. 
-#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
-#'        after the model is trained? Defaults to \code{TRUE}. 
-#' @param calc_r2 Do you want to calculate R-squared after the model is trained?
-#'        Defaults to \code{FALSE}.
-#' @param return_data Do you want to return the input DTM/TCM (given by argument
-#'        \code{dtm})? Defaults to \code{FALSE}.
+#' @param calc_coherence Logical. Do you want to calculate probabilistic coherence of topics
+#'        after the model is trained? Defaults to \code{FALSE}. This calls
+#'        \code{\link[textmineR]{CalcProbCoherence}}.
+#' @param calc_r2 Logical. Do you want to calculate R-squared after the model is trained?
+#'        Defaults to \code{FALSE}. This calls \code{\link[textmineR]{CalcTopicModelR2}}.
+#' @param return_data Logical. Do you want \code{dtm} returned as part of the model object?
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
-#' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
-#' @details EXPLAIN IMPLEMENTATION DETAILS
+#' @return Returns an S3 object of class c("lda_topic_model"). 
+#' @details This function calls a collapsed Gibbs sampler for Latent Dirichlet Allocation
+#'   written using the excellent Rcpp package. Some implementation notes follow:
+#'   
+#'   When you use burn-in iterations (i.e. \code{burnin = TRUE}), the resulting 
+#'   \code{phi} and \code{theta} matrices are calculated by averaging over every 
+#'   iteration after the specified  number of burn-in iterations. If you do not 
+#'   use burn-in iterations, then the matrices are calculated from the last run
+#'   only. Ideally, you'd burn in every iteration before convergence, then average
+#'   over the chain after its converved (and thus every observation is independent).
+#'   
+#'   If you set \code{optimize_alpha} to \code{TRUE}, then each element of \code{alpha}
+#'   is proportional to the number of times each topic has be sampled that iteration
+#'   averaged with the value of \code{alpha} from the previous iteration. This lets
+#'   you start with a symmetric \code{alpha} and drift into an asymmetric one. 
+#'   However, (a) this probably means that convergence will take longer to happen 
+#'   or convergence may not happen at all. And (b) I make no guarantees that doing this
+#'   will give you any benefit or that it won't hurt your model. Caveat emptor!
+#'   
+#'   The log likelihood calculation is the same that can be found on page 9 of
+#'   \url{https://arxiv.org/pdf/1510.08628.pdf}. The only difference is that the
+#'   version in \code{\link[textmineR]{textmineR}} allows \code{beta} to be a
+#'   vector or matrix. (Vector used in this function, matrix used for model
+#'   updates in \code{\link[textmineR]{update.lda_topic_model}}. At present, the 
+#'   log likelihood function appears to be ok for assessing convergence. i.e. It 
+#'   has the right shape. However, it is, as of this writing, returning positive
+#'   numbers, rather than the expected negative numbers. Looking into that, but 
+#'   in the meantime caveat emptor once again.
+#'   
 #' @examples 
 #' # load some data
 #' data(nih_sample_dtm)
 #' 
 #' # fit a model 
 #' set.seed(12345)
-#' m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
+#' m <- fit_lda_model(dtm = nih_sample_dtm[1:20,], k = 5,
 #'                  iterations = 200, burnin = 175)
 #'
 #' str(m)
@@ -724,12 +825,12 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' # compare the methods
 #' barplot(rbind(p1[1,],p2[1,]), beside = TRUE, col = c("red", "blue")) 
 #' @export
-FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
-                        optimize_alpha = FALSE, calc_likelihood = FALSE, 
-                        calc_coherence = TRUE, calc_r2 = FALSE, 
-                        return_data = FALSE, ...){
+fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05, 
+                          optimize_alpha = FALSE, calc_likelihood = FALSE, 
+                          calc_coherence = FALSE, calc_r2 = FALSE, 
+                          return_data = FALSE, ...) {
   
-  ### Check inputs are of correct dimensionality ----
+  ### check validity of inputs ----
   
   # iterations and burnin acceptable?
   if (burnin >= iterations) {
@@ -757,22 +858,50 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
     stop("You must specify number of iterations")
   
   # alpha and beta?
-  if (! is.numeric(alpha) | sum(is.na(alpha)) > 0)
-    stop("alpha must be a numeric scalar or vector with no missing values")
+  if (! is.numeric(alpha) | sum(is.na(alpha)) > 0 | sum(alpha == 0) == length(alpha))
+    stop("alpha must be a numeric scalar or vector of length 'k' with no missing 
+          values and at least one non-zero value")
   
   if (length(alpha) == 1) {
     alpha <- numeric(k) + alpha
   } else if (length(alpha) != k){
-    stop("alpha must be a scalar or vector of length k")
+    stop("alpha must be a scalar or vector of length 'k'")
   }
   
-  if (! is.numeric(beta) | sum(is.na(beta)) > 0)
-    stop("beta must be a numeric scalar or vector with no missing values")
+  if (! is.numeric(beta) | sum(is.na(beta)) > 0 | sum(beta == 0) == length(beta))
+    stop("beta must be a numeric scalar, a numeric vector of length 'ncol(dtm)', or
+         a numeric matrix with 'k' rows and 'ncol(dtm)' columns with no missing 
+         values and at least one non-zero value.")
   
-  if (length(beta) == 1) {
-    beta <- numeric(ncol(dtm)) + beta
-  } else if (length(beta) != ncol(dtm)){
-    stop("beta must be a scalar or vector of length ncol(dtm)")
+  if (length(beta) == 1) { # if beta is a scalar
+    
+    beta <- matrix(beta, nrow = k, ncol = ncol(dtm))
+    
+    beta_class <- "scalar"
+    
+  } else if (is.vector(beta)){ # if beta is a vector
+    
+    if (length(beta) != ncol(dtm)) # if you didn't specify this vector right
+      stop("beta must be a numeric scalar, a numeric vector of length 'ncol(dtm)', or
+         a numeric matrix with 'k' rows and 'ncol(dtm)' columns with no missing 
+         values and at least one non-zero value.")
+    
+    # otherwise let's carry on...
+    # make beta a matrix to format for C++ funciton
+    beta <- t(beta + matrix(0, nrow = length(beta), ncol = k))
+    
+    beta_class <- "vector"
+    
+  } else if (is.matrix(beta)) { # if beta is a matrix
+    
+    beta_class <- "matrix"
+    
+  } else { # if beta is of an un supported data type
+    
+    stop("beta must be a numeric scalar, a numeric vector of length 'ncol(dtm)', or
+         a numeric matrix with 'k' rows and 'ncol(dtm)' columns with no missing 
+         values and at least one non-zero value.")
+    
   }
   
   if (! is.logical(calc_coherence))
@@ -781,90 +910,102 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   if (! is.logical(calc_r2))
     stop("calc_r2 must be logical")
   
+  ### format inputs ----
   
-  ### Format inputs ----
-  
-  # make beta a matrix to format for C funciton
-  
-  beta <- t(beta + matrix(0, nrow = length(beta), ncol = k))
   
   # other formatting
-  docs <- Dtm2Lexicon(dtm,...)
+  counts <- initialize_topic_counts(dtm = dtm, k = 10, 
+                                    alpha = alpha, beta = beta)
   
-  Nd <- nrow(dtm)
-  
-  Nk <- k
-  
-  Nv <- ncol(dtm)
   
   ### run C++ gibbs sampler ----
+  lda <- fit_lda_c(docs = counts$docs,
+                   Nk = k,
+                   alpha = alpha,
+                   beta = beta,
+                   Cd = counts$Cd,
+                   Cv = counts$Cv,
+                   Ck = counts$Ck,
+                   Zd = counts$Zd,
+                   Phi = counts$Cv, # this is actually ignored as freeze_topics = FALSE for initial fitting
+                   iterations = iterations,
+                   burnin = burnin,
+                   freeze_topics = FALSE, # this stays FALSE for initial fitting 
+                   calc_likelihood = calc_likelihood, 
+                   optimize_alpha = optimize_alpha) 
   
-  result <- fit_lda_c(docs = docs, Nk = Nk, Nd = Nd, Nv = Nv, 
-                      alph = alpha, beta = beta,
-                      iterations = iterations, burnin = burnin,
-                      optimize_alpha = optimize_alpha,
-                      calc_likelihood = calc_likelihood)
+  ### format posteriors correctly ----
+  if (burnin > -1) { # if you used burnin iterations use Cd_mean etc.
+    
+    phi <- lda$Cv_mean + beta
+    
+    theta <- t(t(lda$Cd_mean) + alpha)
+    
+  } else { # if you didn't use burnin use standard counts (Cd etc.)
+    
+    phi <- lda$Cv + beta
+    
+    theta <- t(t(lda$Cd) + alpha)
+    
+  }
   
+  phi <- phi / rowSums(phi)
   
-  ### Format posteriors correctly ----
+  phi[is.na(phi)] <- 0 # just in case of a numeric issue
   
-  phi <- result$phi
+  theta <- theta / rowSums(theta)
   
-  theta <- result$theta
-  
-  phi <- phi + beta # t(t(phi) + beta)
-  
-  phi <- phi / rowSums(phi, na.rm = TRUE)
-  
-  phi[ is.na(phi) ] <- 0
-  
-  theta <- t(t(theta) + alpha)
-  
-  theta <- theta / rowSums(theta, na.rm = TRUE)
-  
-  theta[ is.na(theta) ] <- 0
+  theta[is.na(theta)] <- 0 # just in case of a numeric issue
   
   colnames(phi) <- colnames(dtm)
   
-  rownames(phi) <- paste0("t_", seq_len(Nk))
+  rownames(phi) <- seq_len(k) # changed from previous: paste0("t_", seq_len(Nk))
   
   colnames(theta) <- rownames(phi)
   
   rownames(theta) <- rownames(dtm)
   
-  ### collect the result ----
+  ### collect the results ----
   gamma <- CalcGamma(phi = phi, theta = theta, 
-                                   p_docs = Matrix::rowSums(dtm))
+                     p_docs = Matrix::rowSums(dtm))
   
-  names(result$alpha) <- rownames(phi)
+  names(lda$alpha) <- rownames(phi)
   
-  colnames(result$beta) <- colnames(phi) # because this is still a matrix
+  colnames(lda$beta) <- colnames(phi)
   
-  result <- list(phi = phi, 
-                 theta = theta, 
+  if (beta_class == "scalar") {
+    
+    beta_out <- beta[1, 1]
+    
+  } else if (beta_class == "vector") {
+    
+    beta_out <- beta[1, ]
+    
+  } else if (beta_class == "matrix") {
+    
+    beta_out <- beta
+    
+  } else { # this should be impossible, but science is hard and I am dumb.
+    beta_out <- beta
+    
+    message("something went wrong with 'beta'. This isn't your fault. Please 
+            contact Tommy at jones.thos.w[at]gmail.com and tell him to fix it.")
+  }
+  
+  result <- list(phi = phi,
+                 theta = theta,
                  gamma = gamma,
-                 data = dtm, 
-                 alpha = result$alpha, 
-                 beta = result$beta[1, ], # make beta a vector again
-                 log_likelihood = data.frame(result$log_likelihood)[,1:2], # drop 3rd col for now
-                 counts = list(theta_counts = result$theta,
-                               phi_counts = result$phi,
-                               n_d = result$n_d,
-                               n_z = result$n_z,
-                               z_dn = result$z_dn,
-                               p_z = result$p_z)) # add other things here
-  
-  names(result$log_likelihood) <- c("iteration", "log_likelihood")
+                 alpha = lda$alpha,
+                 beta = beta_out,
+                 log_likelihood = data.frame(iteration = lda$log_likelihood[1,],
+                                             log_likelihood = lda$log_likelihood[2, ])
+  ) # add other things here if necessary
   
   class(result) <- "lda_topic_model"
   
-  ### calculate additional things ----
-  if (! return_data) {
-    result$data <- NULL
-  }
-  
+  ### calculate and add other things ---
   if (calc_coherence) {
-    result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
+    result$coherence <- CalcProbCoherence(result$phi, dtm)
   }
   
   if (calc_r2) {
@@ -875,8 +1016,9 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
     result$log_likelihood <- NULL
   }
   
-  ### return result ----
+  ### return the final result ----
   result
+  
 }
 
 ### Predict method for LDA objects
@@ -889,8 +1031,9 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 #' @param iterations If \code{method = "gibbs"}, an integer number of iterations 
 #'        for the Gibbs sampler to run. A future version may include automatic stopping criteria.
 #' @param burnin If \code{method = "gibbs"}, an integer number of burnin iterations. 
-#'        If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
+#'        If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix
 #'        are an average over all iterations greater than \code{burnin}.
+#'        Behavior is the same as documented in \code{\link[textmineR]{FitLdaTopicModel}}. 
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
@@ -924,7 +1067,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   if (method[1] == "gibbs") {
     
     if (is.null(iterations)) {
-      stop("when using method 'gibs' iterations must be specified.")
+      stop("when using method 'gibbs' iterations must be specified.")
     }
     
     if (burnin >= iterations) {
@@ -949,6 +1092,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
            If so, it needs a names attribute to index tokens")
     }
     
+    
     vocab <- names(newdata)
     
     newdata <- Matrix::Matrix(newdata, nrow = 1, sparse = TRUE)
@@ -962,7 +1106,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   if (sum(c("gibbs", "dot") %in% method) == 0) {
     stop("method must be one of 'gibbs' or 'dot'")
   }
-
+  
   dtm_newdata <- newdata
   
   ### Align vocabulary ----
@@ -990,12 +1134,12 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     dtm_newdata <- dtm_newdata[, vocab_original]
     
   }
-
+  
   ### Get predictions ----
   
   if (method[1] == "dot") { # dot product method
     
-    result <- dtm_newdata[,vocab_original]
+    result <- dtm_newdata[, vocab_original]
     
     # handle differently if one row
     if (nrow(dtm_newdata) == 1) {
@@ -1010,21 +1154,45 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     
   } else { # gibbs method
     # format inputs
-    docs <- Dtm2Lexicon(dtm_newdata)
     
-    Nd <- nrow(dtm_newdata)
+    # get initial distribution with recursive call to "dot" method
+    theta_initial <- predict.lda_topic_model(object = object, newdata = newdata, method = "dot")
     
-    Nk <- nrow(object$phi)
+    lex <- initialize_topic_counts(dtm = dtm_newdata,
+                                   k = nrow(object$phi),
+                                   alpha = object$alpha,
+                                   beta = object$beta,
+                                   phi_initial = object$phi,
+                                   theta_initial = theta_initial,
+                                   freeze_topics = TRUE)
     
     # pass inputs to C function
-    theta <- predict_lda_c(docs = docs, Nk = Nk, Nd = Nd, 
-                           alpha = object$alpha, phi = object$phi,
-                           iterations = iterations, burnin = burnin)
+    theta <- fit_lda_c(docs = lex$docs,
+                       Nk = nrow(object$phi),
+                       beta = t(object$beta + matrix(0, nrow = length(object$beta), 
+                                                     ncol = length(object$alpha))),
+                       alpha = object$alpha,
+                       Cd = lex$Cd,
+                       Cv = lex$Cv,
+                       Ck = lex$Ck,
+                       Zd = lex$Zd,
+                       Phi = object$phi,
+                       iterations = iterations,
+                       burnin = burnin,
+                       freeze_topics = TRUE,
+                       calc_likelihood = FALSE,
+                       optimize_alpha = FALSE)
     
-    theta <- theta$theta
-    
-    # format outputs
-    theta <- t(t(theta) + object$alpha)
+    # format posterior prediction
+    if (burnin > -1) { # if you used burnin iterations use Cd_mean etc.
+      
+      theta <- t(t(theta$Cd_mean) + object$alpha)
+      
+    } else { # if you didn't use burnin use standard counts (Cd etc.)
+      
+      theta <- t(t(theta$Cd) + object$alpha)
+      
+    }
     
     theta <- theta / rowSums(theta, na.rm = TRUE)
     
@@ -1042,33 +1210,33 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   
 }
 
-
-#' Update a Latent Dirichlet Allocation topic model with new data
-#' @description Update an LDA model with new data using collapsed Gibbs sampling. 
-#' @param object a fitted object of class \code{lda_topic_model}
+#' Update a Latent Dirichlet Allocation topic model
+#' @description Update an LDA model using collapsed Gibbs sampling. 
+#' @param object a fitted object of class \code{lda_topic_model}.
 #' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix.
 #' @param additional_k Integer number of topics to add, defaults to 0.
-#' @param iterations Integer number of iterations for the Gibbs sampler to run. A
-#'        future version may include automatic stopping criteria.
+#' @param phi_as_prior Logical. Do you want to replace \code{beta} with \code{phi}
+#'        from the previous model as the prior for words over topics?
+#' @param iterations Integer number of iterations for the Gibbs sampler to run. 
 #' @param burnin Integer number of burnin iterations. If \code{burnin} is greater than -1,
 #'        the resulting "phi" and "theta" matrices are an average over all iterations
 #'        greater than \code{burnin}.
-#' @param new_alpha For now not used. This is the prior for topics over documents
-#'        used when updating the model
-#' @param new_beta For now not used. This is the prior for words over topics
-#'        used when updating the model.
-#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-#'        Defaults to \code{FALSE}.
-#' @param calc_likelihood Do you want to calculate the likelihood every 10 Gibbs iterations?
+#' @param optimize_alpha Logical. Do you want to optimize alpha every iteration?
+#'        Defaults to \code{FALSE}. See 'details' of documentation for
+#'        \code{\link[textmineR]{FitLdaModel}}for more information.
+#' @param calc_likelihood Logical. Do you want to calculate the log likelihood every iteration?
 #'        Useful for assessing convergence. Defaults to \code{FALSE}. 
-#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
-#'        after the model is trained? Defaults to \code{TRUE}. 
-#' @param calc_r2 Do you want to calculate R-squared after the model is trained?
-#'        Defaults to \code{FALSE}.
-#' @param return_data Do you want to return the input DTM/TCM (given by argument
-#'        \code{dtm})? Defaults to \code{FALSE}.
+#' @param calc_coherence Logical. Do you want to calculate probabilistic coherence of topics
+#'        after the model is trained? Defaults to \code{FALSE}. This calls
+#'        \code{\link[textmineR]{CalcProbCoherence}}.
+#' @param calc_r2 Logical. Do you want to calculate R-squared after the model is trained?
+#'        Defaults to \code{FALSE}. This calls \code{\link[textmineR]{CalcTopicModelR2}}.
+#' @param return_data Logical. Do you want \code{dtm} returned as part of the model object?
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
-#' @return Returns an S3 object of class c("LDA", "TopicModel"). 
+#' @return Returns an S3 object of class c("lda_topic_model"). 
+#' @details 
+#' prior + counts vs. counts only. Vocab alignment + uniform prior over new words. 
+#'          Adding additional topics. works best with significant vocab overlap
 #' @export
 #' @examples 
 #' \dontrun{
@@ -1113,10 +1281,10 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #' 
 #' }
 update.lda_topic_model <- function(object, dtm, additional_k = 0, 
+                                   phi_as_prior = FALSE,
                                    iterations = NULL, burnin = -1, 
-                                   new_alpha = NULL, new_beta = NULL, 
                                    optimize_alpha = FALSE, calc_likelihood = FALSE, 
-                                   calc_coherence = TRUE, calc_r2 = FALSE, 
+                                   calc_coherence = FALSE, calc_r2 = FALSE, 
                                    return_data = FALSE, ...) {
   
   ### Check inputs are of correct dimensionality ----
@@ -1132,7 +1300,7 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   
   # dtm of the correct format?
   if (! "dgCMatrix" %in% class(dtm)) {
-    message("dtm is not of class dgCMatrix, attempting to convert...")
+    message("'dtm' is not of class dgCMatrix, attempting to convert...")
     
     dtm <- try(methods::as(dtm, "dgCMatrix", strict = TRUE)) # requires Matrix in namespace
     
@@ -1153,157 +1321,264 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   if (is.null(iterations))
     stop("You must specify number of iterations")
   
-  
-  ##############################################################################
-  # Check dimensions of additional alpha and beta
-  # Need solution of how to not use defaults first
-  ##############################################################################
-  
-  if (! is.null(new_alpha) | ! is.null(new_beta)) {
-    warning("methods for new_alpha and new_beta are not yet implemented. 
-            See 'details' under help(update.lda_topic_model) for more information.")
-  }
-  
-  # alpha and beta?
-  # if (! is.numeric(alpha) | sum(is.na(alpha)) > 0)
-  #   stop("alpha must be a numeric scalar or vector with no missing values")
-  # 
-  # if (length(alpha) == 1) {
-  #   alpha <- numeric(k) + alpha
-  # } else if (length(alpha) != k){
-  #   stop("alpha must be a scalar or vector of length k")
-  # }
-  # 
-  # if (! is.numeric(beta) | sum(is.na(beta)) > 0)
-  #   stop("beta must be a numeric scalar or vector with no missing values")
-  # 
-  # if (length(beta) == 1) {
-  #   beta <- numeric(ncol(dtm)) + beta
-  # } else if (length(beta) != ncol(dtm)){
-  #   stop("beta must be a scalar or vector of length ncol(dtm)")
-  # }
-  
   if (! is.logical(calc_coherence))
-    stop("calc_coherence must be logical")
+    stop("calc_coherence must be TRUE or FALSE")
   
   if (! is.logical(calc_r2))
-    stop("calc_r2 must be logical")
+    stop("calc_r2 must be TRUE or FALSE")
   
-  ### Format inputs ----
+  if (! is.logical(calc_likelihood))
+    stop("calc_likelihood must be TRUE or FALSE")
+  
+  if (! is.logical(phi_as_prior))
+    stop("phi_as_prior must be TRUE or FALSE")
   
   
-  # beta prior inherets from object$phi
+  ### Pull out objects used for update ----
+  
+  # format of beta
+  if (phi_as_prior) {
+    
+    beta <- object$phi
+    
+    beta_class <- "matrix"
+    
+    # re-scale so that beta has the same magnitude of the old beta
+    
+    if (is.matrix(object$beta)) {
+      
+      beta <- beta * rowSums(object$beta)
+      
+    } else if (is.vector(object$beta)) {
+      
+      beta <- beta * sum(object$beta)
+      
+    } else if (length(object$beta) == 1) {
+      
+      beta <- beta * (object$beta * ncol(object$phi))
+      
+    } else { # this case shouldn't happen
+      
+      stop("object$beta must be a numeric scalar, a numeric vector of length 
+         'ncol(object$phi)', or a numeric matrix with 'nrow(object$phi)' rows 
+         and 'ncol(object$phi)' columns with no missing  values and at least 
+         one non-zero value.")
+      
+    }
+    
+  } else {
+    
+    if (is.matrix(object$beta)) {
+      
+      beta <- object$beta
+      
+      beta_class <- "matrix"
+      
+    } else if (is.vector(object$beta)) {
+      
+      beta <- t(object$beta + matrix(0, nrow = length(object$beta), ncol = k))
+      
+      beta_class <- "vector"
+      
+    } else if (length(object$beta) == 1) {
+      
+      beta <- matrix(object$beta, nrow = k, ncol = ncol(dtm))
+      
+      beta_class <- "scalar"
+      
+    } else { # this condition should never happen...
+      
+      stop("object$beta must be a numeric scalar, a numeric vector of length 
+         'ncol(object$phi)', or a numeric matrix with 'nrow(object$phi)' rows 
+         and 'ncol(object$phi)' columns with no missing  values and at least 
+         one non-zero value.")
+      
+    }
+    
+  }
+  
+  dimnames(beta) <- dimnames(object$phi)
+  
+  # phi_initial and theta_initial
+  phi_initial <- object$phi
+  
+  theta_initial <- predict.lda_topic_model(object = object,
+                                           newdata = dtm,
+                                           method = "dot")
+  
+  # pull out alpha
+  alpha <- object$alpha
+  
+  ### Vocabulary alignment and new topic (if any) alignment ----
   
   # align vocab in intelligent way for adding new vocab
-  beta <- object$phi
+  v_diff <- setdiff(colnames(dtm), colnames(phi_initial))
   
-  v_diff <- setdiff(colnames(dtm), colnames(object$phi))
-  
-  m_add <- matrix(0, nrow = nrow(object$phi), ncol = length(v_diff))
+  m_add <- matrix(0, nrow = nrow(phi_initial), ncol = length(v_diff))
   
   colnames(m_add) <- v_diff
   
-  m_add <- m_add + mean(object$phi) # uniform prior over new words
+  beta <- cbind(beta, m_add+ median(beta)) # uniform prior over new words
   
-  beta <- cbind(beta, m_add)
+  beta <- beta[, colnames(dtm)]
   
-  beta <- beta[,colnames(dtm)]
+  phi_initial <- cbind(phi_initial, m_add + median(phi_initial)) 
   
-  # add topics 
+  phi_initial <- phi_initial[, colnames(dtm)] / rowSums(phi_initial[, colnames(dtm)])
+  
+  # add topics to beta and phi_initial
+  # prior for topics inherets from beta, specifically colMeans(beta)
+  # basically means that new topics are an average of old topics. If you used
+  # a scalar or vector for object$beta, then prior for new topics will be 
+  # identical to prior for old topics. If object$beta was a matrix where rows
+  # were not identical (i.e. you seeded specific topics), then your new topics
+  # will have a prior that is the average of all old topics.
   m_add <- matrix(0, 
                   nrow = additional_k, 
                   ncol = ncol(beta))
   
-  m_add <- m_add + mean(object$phi) # uniform prior for all words in new topics
+  m_add <- t(t(m_add) + colMeans(beta)) 
   
-  beta <- rbind(beta, m_add)
+  beta <- rbind(beta, m_add) # add new topics to beta
   
-  # magnitude of rows of beta prior, also hack MUST FIX
-  beta <- beta / rowSums(beta) # normalize rows
+  phi_initial <- rbind(phi_initial, m_add / rowSums(m_add)) # new topics to phi
   
-  beta <- (mean(object$beta) * ncol(beta)) * beta
+  # add topics to alpha and theta_initial
+  # prior for new topics is uniform, similar to beta, it's the median of alpha
+  # adding new topics to theta_inital is a little more complicated. We take the
+  # median of each row of theta_initial, add that to the new topics and then
+  # reweight so each row still sums to 1.
+  alpha <- c(alpha, rep(median(alpha), additional_k)) # uniform prior for new topics
   
-  # alpha prior inherets from object$alpha
-  alpha <- c(object$alpha, rep(mean(object$alpha), additional_k)) # rep(0.1, Nk)
+  m_add <- apply(theta_initial, 1, function(x){
+    rep(median(x), additional_k)
+  })
   
-  # additional constants for fitting
-  docs <- Dtm2Lexicon(dtm,...)
+  # handle cases on what m_add could be
+  if (is.matrix(m_add)) { # if we add more than one topic
+    
+    m_add <- t(m_add)
+    
+    colnames(m_add) <- (max(as.numeric(colnames(theta_initial))) + 1):
+      (max(as.numeric(colnames(theta_initial))) + additional_k)
+    
+    theta_initial <- cbind(theta_initial, m_add)
+    
+    theta_initial <- theta_initial / rowSums(theta_initial)
+    
+    
+  } else if (length(m_add) == 0) { # we add no topics and get nothing back
+    
+    # do nothing, actually
+    
+  } else { # we add only one topic and get a vector back
+    
+    theta_initial <- cbind(theta_initial, m_add)
+    
+    theta_initial <- theta_initial / rowSums(theta_initial)
+    
+  }
   
-  Nd <- nrow(dtm)
   
-  Nk <- nrow(beta)
-  
-  Nv <- ncol(dtm)
+  ### get initial counts to feed to gibbs sampler ----
+  counts <- initialize_topic_counts(dtm = dtm, 
+                                    k = nrow(phi_initial),
+                                    alpha = alpha,
+                                    beta = beta,
+                                    phi_initial = phi_initial,
+                                    theta_initial = theta_initial,
+                                    freeze_topics = FALSE) # false because this is an update
   
   ### run C++ gibbs sampler ----
+  lda <- fit_lda_c(docs = counts$docs,
+                   Nk = nrow(phi_initial),
+                   alpha = alpha,
+                   beta = beta,
+                   Cd = counts$Cd,
+                   Cv = counts$Cv,
+                   Ck = counts$Ck,
+                   Zd = counts$Zd,
+                   Phi = counts$Cv, # this is actually ignored as freeze_topics = FALSE 
+                   iterations = iterations,
+                   burnin = burnin,
+                   freeze_topics = FALSE, # this stays FALSE for updates 
+                   calc_likelihood = calc_likelihood, 
+                   optimize_alpha = optimize_alpha) 
   
-  result <- fit_lda_c(docs = docs, Nk = Nk, Nd = Nd, Nv = Nv, 
-                      alph = alpha, beta = beta,
-                      iterations = iterations, burnin = burnin,
-                      optimize_alpha = optimize_alpha,
-                      calc_likelihood = calc_likelihood)
+  
   
   ### Format posteriors correctly ----
+  if (burnin > -1) { # if you used burnin iterations use Cd_mean etc.
+    
+    phi <- lda$Cv_mean + beta
+    
+    theta <- t(t(lda$Cd_mean) + alpha)
+    
+  } else { # if you didn't use burnin use standard counts (Cd etc.)
+    
+    phi <- lda$Cv + beta
+    
+    theta <- t(t(lda$Cd) + alpha)
+    
+  }
   
-  phi <- result$phi
+  phi <- phi / rowSums(phi)
   
-  theta <- result$theta
+  phi[is.na(phi)] <- 0 # just in case of a numeric issue
   
-  phi <- phi + beta
+  theta <- theta / rowSums(theta)
   
-  phi <- phi / rowSums(phi, na.rm = TRUE)
-  
-  phi[ is.na(phi) ] <- 0
-  
-  theta <- t(t(theta) + alpha)
-  
-  theta <- theta / rowSums(theta, na.rm = TRUE)
-  
-  theta[ is.na(theta) ] <- 0
+  theta[is.na(theta)] <- 0 # just in case of a numeric issue
   
   colnames(phi) <- colnames(dtm)
   
-  rownames(phi) <- paste0("t_", seq_len(Nk))
+  rownames(phi) <- seq_len(nrow(phi)) 
   
   colnames(theta) <- rownames(phi)
   
   rownames(theta) <- rownames(dtm)
   
-  ### collect the result ----
+  ### collect the results ----
   gamma <- CalcGamma(phi = phi, theta = theta, 
                      p_docs = Matrix::rowSums(dtm))
   
-  names(result$alpha) <- rownames(result$phi)
+  names(lda$alpha) <- rownames(phi)
   
-  names(result$beta) <- colnames(result$phi)
+  colnames(lda$beta) <- colnames(phi)
   
-  result <- list(phi = phi, 
-                 theta = theta, 
+  if (beta_class == "scalar") {
+    
+    beta_out <- beta[1, 1]
+    
+  } else if (beta_class == "vector") {
+    
+    beta_out <- beta[1, ]
+    
+  } else if (beta_class == "matrix") {
+    
+    beta_out <- beta
+    
+  } else { # this should be impossible, but science is hard and I am dumb.
+    beta_out <- beta
+    
+    message("something went wrong with 'beta'. This isn't your fault. Please 
+            contact Tommy at jones.thos.w[at]gmail.com and tell him to fix it.")
+  }
+  
+  result <- list(phi = phi,
+                 theta = theta,
                  gamma = gamma,
-                 data = dtm, 
-                 alpha = result$alpha, 
-                 beta = result$beta, # make beta a vector again
-                 log_likelihood = data.frame(result$log_likelihood)[,1:2], # drop 3rd col for now
-                 counts = list(theta_counts = result$theta,
-                               phi_counts = result$phi,
-                               n_d = result$n_d,
-                               n_z = result$n_z,
-                               z_dn = result$z_dn,
-                               p_z = p_z)) # add other things here
-  
-  
-  
-  names(result$log_likelihood) <- c("iteration", "log_likelihood")
+                 alpha = lda$alpha,
+                 beta = beta_out,
+                 log_likelihood = data.frame(iteration = lda$log_likelihood[1,],
+                                             log_likelihood = lda$log_likelihood[2, ])
+  ) # add other things here if necessary
   
   class(result) <- "lda_topic_model"
   
-  ### calculate additional things ----
-  if (! return_data) {
-    result$data <- NULL
-  }
-  
+  ### calculate and add other things ---
   if (calc_coherence) {
-    result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
+    result$coherence <- CalcProbCoherence(result$phi, dtm)
   }
   
   if (calc_r2) {
@@ -1314,7 +1589,7 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
     result$log_likelihood <- NULL
   }
   
-  ### return result ----
+  ### return the final result ----
   result
   
 }

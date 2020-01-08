@@ -1,5 +1,9 @@
-// [[Rcpp::depends(RcppArmadillo)]]
+// Functions to make a collapsed gibbs sampler for LDA
 
+// NOTE TO TOMMY: USE ROXYGEN DOCUMENTATION FOR ALL EXPORTED FUNCTIONS
+// DO SO WHEN INTEGRATING BACK INTO textmineR
+
+// [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadilloExtensions/sample.h>
 #include <R.h>
 #include <cmath>
@@ -7,508 +11,397 @@
 #define ARMA_64BIT_WORD
 using namespace Rcpp;
 
-// This turns a dgCMatrix DTM into a list of indices for looping over in
-// an LDA gibbs sampler
-// [[Rcpp::export]]
-List dtm_to_lexicon_c(arma::sp_mat x) {
+// Make a lexicon for looping over in the gibbs sampler
+//[[Rcpp::export]]
+List create_lexicon(IntegerMatrix &Cd, 
+                    NumericMatrix &Phi, 
+                    arma::sp_mat &dtm,
+                    NumericVector alpha,
+                    bool freeze_topics) {
   
-  // initialize some variables
+  // ***************************************************************************
+  // Initialize some variables
+  // ***************************************************************************
   
-  int d,v; // iteration indices
+  double sum_alpha = sum(alpha);
   
-  int Nd = x.n_rows; // number of docs
+  List docs(dtm.n_rows); 
   
-  int Nw = x.n_cols; // number of words
+  List Zd(dtm.n_rows);
   
-  IntegerVector doc_sums(Nd); // gives length of each output vector
+  int Nk = Cd.ncol();
   
-  List out(Nd); // list to hold output vectors
+  NumericVector qz(Nk);
   
-  // loop over each document
-  for (d = 0; d < Nd; d++) {
+  IntegerVector topic_index = seq_len(Nk) - 1;
+  
+  // ***************************************************************************
+  // Go through each document and split it into a lexicon and then sample a 
+  // topic for each token within that document
+  // ***************************************************************************
+  for (int d = 0; d < dtm.n_rows; d++) {
     
-    // count tokens in each document for length of output vector
-    for (v = 0; v < Nw; v++) {
-      doc_sums[d] += x(d,v);
+    // make a temporary vector to hold token indices
+    int nd = 0;
+    
+    for (int v = 0; v < dtm.n_cols; v++) {
+      nd += dtm(d,v);
     }
     
-    IntegerVector tmp(doc_sums[d]); // temporary vector to be inserted into output
+    IntegerVector doc(nd);
     
-    int k = 0; // index of tmp, advances when we have non-zero entries 
+    IntegerVector zd(nd);
     
-    for (v = 0; v < Nw; v++) {
+    IntegerVector z(1);
+    
+    // fill in with token indices
+    int j = 0; // index of doc, advances when we have non-zero entries 
+    
+    for (int v = 0; v < dtm.n_cols; v++) {
       
-      if (x(d,v) > 0) { // if non-zero, add elements to tmp
+      if (dtm(d,v) > 0) { // if non-zero, add elements to doc
         
-        int idx = k + x(d,v); // where to stop the loop below
+        // calculate probability of topics based on initially-sampled Phi and Cd
+        for (int k = 0; k < Nk; k++) {
+          qz[k] = Phi(k, v) * ((double)Cd(d, k) + alpha[k]) / ((double)nd + sum_alpha - 1);
+        }
         
-        while (k < idx) {
+        int idx = j + dtm(d,v); // where to stop the loop below
+        
+        while (j < idx) {
           
-          tmp[k] = v;
+          doc[j] = v;
           
-          k += 1;
+          z = RcppArmadillo::sample(topic_index, 1, false, qz);
+          
+          zd[j] = z[0];
+          
+          j += 1;
         }
         
       }
-      
     }
     
-    out[d] = tmp;
+    // fill in docs[d] with the matrix we made
+    docs[d] = doc;
+    
+    Zd[d] = zd;
+    
+    R_CheckUserInterrupt();
+    
   }
   
-  return out;
+  // ***************************************************************************
+  // Calculate Cd, Cv, and Ck from the sampled topics
+  // ***************************************************************************
+  IntegerMatrix Cd_out(dtm.n_rows, Nk);
+  
+  IntegerVector Ck(Nk);
+  
+  IntegerMatrix Cv(Nk, dtm.n_cols);
+  
+  for (int d = 0; d < Zd.length(); d++) {
+    
+    IntegerVector zd = Zd[d]; 
+    
+    IntegerVector doc = docs[d];
+    
+    for (int n = 0; n < zd.length(); n++) {
+      
+      Cd_out(d, zd[n]) += 1;
+      
+      Ck[zd[n]] += 1;
+      
+      if (! freeze_topics) {
+        Cv(zd[n], doc[n]) += 1;
+      }
+      
+    } 
+    
+  }
+  
+  // ***************************************************************************
+  // Prepare output and expel it from this function
+  // ***************************************************************************
+  
+  return List::create(Named("docs") = docs,
+                      Named("Zd") = Zd,
+                      Named("Cd") = Cd_out,
+                      Named("Cv") = Cv,
+                      Named("Ck") = Ck);
   
 }
 
-
-
-// This is a collapsed gibbs sampler for LDA.
-// Pre-processing and post-processing is assumed in R
+// main lda function
+// assumes that count matrices are handed to it
 // [[Rcpp::export]]
-List fit_lda_c(List &docs, int &Nk, int &Nd, int &Nv, NumericVector alph, 
-                NumericMatrix &beta, int &iterations, int &burnin,
-                bool &optimize_alpha, bool &calc_likelihood) {
+List fit_lda_c(List &docs,
+               int &Nk,
+               NumericMatrix &beta,
+               NumericVector alpha,
+               IntegerMatrix Cd,
+               IntegerMatrix Cv,
+               IntegerVector Ck,
+               List Zd,
+               NumericMatrix &Phi,
+               int &iterations,
+               int &burnin,
+               bool &freeze_topics,
+               bool &calc_likelihood,
+               bool &optimize_alpha) {
   
-  // print a status so we can see where we are
-  // std::cout << "declaring variables\n";
+  // ***********************************************************************
+  // Check quality of inputs to minimize risk of crashing the program
+  // ***********************************************************************
   
-  // Declare some initial variables
   
-  NumericVector alpha = alph; // don't overwrite inputs
   
-  int sumtokens(0); // number of unique tokens
   
-  double sum_alpha = sum(alpha); // rcpp sugar here, I guess
+  // ***********************************************************************
+  // Variables and other set up
+  // ***********************************************************************
   
-  NumericMatrix k_beta = beta * Nk; // rcpp sugar here, I guess
+  int Nv = Cv.cols();
   
-  // Declare data structures
-  int i, d, n, k; // indices for loops
+  int Nd = Cd.rows();
   
-  NumericVector p_z(Nk);
+  NumericVector k_alpha = alpha * Nk;
   
-  IntegerVector z1; // placeholder for topic sampled
+  NumericMatrix v_beta = beta * Nv;
   
-  int z = 0; // placeholder for topic sampled
+  double sum_alpha = sum(alpha);
   
-  int v = 0; // placeholder for word index
+  double sum_beta = sum(beta(1, _));
   
-  IntegerVector topic_sample = seq_len(Nk) -1;
+  int sumtokens = sum(Ck);
   
-  List z_dn(Nd) ; // count of topic/term assignments by document
+  double phi_kv(0.0);
   
-  IntegerMatrix theta_counts(Nd, Nk); // count of topics over documents
+  int t, d, n, k, v; // indices for loops
   
-  IntegerMatrix phi_counts(Nk, Nv); // count of terms over topics
+  NumericVector qz(Nk);
   
-  IntegerVector n_d(Nd); // total count of term document totals
+  IntegerVector topic_index = seq_len(Nk) - 1;
   
-  IntegerVector n_z(Nk); // total count of topic totals
+  qz = qz + 1; // uniform initialization
   
-  IntegerMatrix theta_sums(Nd, Nk); // initialize matrix for averaging over iterations if burnin > -1
+  IntegerVector z(1); // for sampling topics
   
-  IntegerMatrix phi_sums(Nk, Nv); // initialize matrix for averaging over iterations if burnin > -1
+  // related to burnin and averaging
+  IntegerMatrix Cv_sum(Nk, Nv);
   
-  NumericMatrix ll(iterations / 10, 3); // if calc_likelihood, store it here
+  NumericMatrix Cv_mean(Nk, Nv);
   
-  double lgbeta(0.0); // if calc_likelihood, we need this term
+  IntegerMatrix Cd_sum(Nd, Nk);
   
-  double lgalpha(0.0); // if calc_likelihood, we need this term
+  NumericMatrix Cd_mean(Nd, Nk);
   
-  if (calc_likelihood) { // if calc_likelihood, actually populate this stuff
+  // related to the likelihood calculation
+  NumericMatrix log_likelihood(2, iterations);
+  
+  double lgbeta(0.0); // calculated immediately below
+  
+  double lgalpha(0.0); // calculated immediately below
+  
+  double lg_alpha_len(0.0); // calculated immediately below
+  
+  double lg_beta_count1(0.0); // calculated at the bottom of the iteration loop
+  
+  double lg_beta_count2(0.0); // calculated at the bottom of the iteration loop
+  
+  double lg_alpha_count(0.0); // calculated at the bottom of the iteration loop
+  
+  if (calc_likelihood && ! freeze_topics) { // if calc_likelihood, actually populate this stuff
     
     for (n = 0; n < Nv; n++) {
       lgbeta += lgamma(beta[n]);
     }
     
-    lgbeta = (lgbeta - lgamma(sum(beta))) * Nk; // rcpp sugar here
+    lgbeta = (lgbeta - lgamma(sum_beta)) * Nk; // rcpp sugar here
     
     for (k = 0; k < Nk; k++) {
       lgalpha += lgamma(alpha[k]);
     }
     
     lgalpha = (lgalpha - lgamma(sum_alpha)) * Nd;
-  }
-  
-  
-  // Assign initial values at random
-  // std::cout << "assigning initial values \n";
-  
-  for(d = 0; d < Nd; d++){
-    IntegerVector doc = docs[d];
     
-    IntegerVector z_dn_row(doc.length());
-    
-    for(n = 0; n < doc.length(); n++){
+    for (d = 0; d < Nd; d++) {
+      IntegerVector doc = docs[d];
       
-      // sample a topic at random
-      z1 = RcppArmadillo::sample(topic_sample, 1, false, NumericVector::create());
-      
-      z = z1[0];
-      
-      theta_counts(d,z) += 1;
-      
-      v = doc[n];
-      
-      phi_counts(z,v) += 1;
-      
-      n_d[d] = n_d[d] + 1; // count the number of tokens in the document
-      
-      n_z[z] += 1; // count the that topic overall
-      
-      z_dn_row[n] = z; // # count that topic for that word in the document
-      
+      lg_alpha_len += lgamma(sum_alpha + doc.length());
     }
     
-    z_dn[d] = z_dn_row; // update topic-doc-word tracking
-    
+    lg_alpha_len *= -1;
   }
   
-  sumtokens = sum(n_d); // rcpp sugar, also get sum of tokens
   
-  // Gibbs iterations
-  // std::cout << "beginning Gibbs \n";
-  for (i = 0; i < iterations; i++) { // for each iteration
+  
+  // ***********************************************************************
+  // BEGIN ITERATIONS
+  // ***********************************************************************
+  
+  for (t = 0; t < iterations; t++) {
     
-    for (d = 0; d < Nd; d++) { // for each document
-      // std::cout << "document " << d << "\n";
+    for (d = 0; d < Nd; d++) {
       
       R_CheckUserInterrupt();
       
-      IntegerVector doc = docs[d]; // placeholder for a document
+      IntegerVector doc = docs[d];
       
-      IntegerVector z_dn_row = z_dn[d]; // placeholder for doc-word-topic assigment
+      IntegerVector zd = Zd[d];
       
-      for (n = 0; n < n_d[d]; n++) { // for each word in that document
+      for (n = 0; n < doc.length(); n++) {
         
-        // discount for the n-th word with topic z
-        z = z_dn_row[n];
+        // discount counts from previous run ***
+        Cd(d, zd[n]) -= 1; 
         
-        theta_counts(d,z) -= 1; 
         
-        phi_counts(z,doc[n]) -= 1;
-        
-        n_z[z] -= 1;
-        
-        // sample topic index
-        for (k = 0; k < Nk; k++) {
+        if (! freeze_topics) {
+          Cv(zd[n], doc[n]) -= 1; 
           
-          p_z[k] = (phi_counts(k,doc[n]) + beta(k,doc[n])) / (n_z[k] + k_beta(k,doc[n])) *
-            (theta_counts(d,k) + alpha[k]) / (n_d[d] + sum_alpha);
+          Ck[zd[n]] -= 1;
+        }
+        
+        
+        // update probabilities of each topic ***
+        for (int k = 0; k < qz.length(); k++) {
           
-        }
-        
-        
-        // update counts
-        z1 = RcppArmadillo::sample(topic_sample, 1, false, p_z);
-        
-        z = z1[0];
-        
-        theta_counts(d,z) += 1; // update document topic count
-        
-        phi_counts(z,doc[n]) += 1; // update topic word count
-        
-        // n_d[d] = n_d[d] + 1; // count that topic in that document overall
-        
-        n_z[z] += 1; // count the that topic overall
-        
-        z_dn_row[n] = z; // # count that topic for that word in the document
-        
-      }
-    }
-    
-    // if using burnin, update sums
-    if (burnin > -1 && i >= burnin) {
-      
-      for (k = 0; k < Nk; k++) {
-        
-        for (d = 0; d < Nd; d++) {
-          theta_sums(d,k) += theta_counts(d,k);
-        }
-        
-        for (v = 0; v < Nv; v++) {
-          phi_sums(k,v) += phi_counts(k,v);
-        }
-      }
-      
-    }
-    
-    // if calculating log likelihood, do so every 10 iterations
-    if (calc_likelihood && i % 10 == 0) {
-      
-      // get phi probability matrix @ this iteration
-      NumericMatrix phi_prob(Nk,Nv);
-      
-      double denom(0.0);
-      
-      double lp_beta(0.0); // log probability of beta prior
-      
-      for (k = 0; k < Nk; k++) {
-        
-        // get the denominator
-        for (v = 0; v < Nv; v++) {
-          denom += phi_counts(k,v) + beta[v];
-        }
-        
-        // get the probability
-        for (v = 0; v < Nv; v++) {
-          phi_prob(k,v) = ((double)phi_counts(k,v) + beta[v]) / denom;
-          
-          lp_beta += (beta[v] - 1) * log(phi_prob(k,v));
-        }
-      }
-      
-      lp_beta += lgbeta;
-      
-      // for each document, get the log probability of the words
-      
-      double lp_alpha(0.0); // log probability of alpha prior
-      
-      double lpd(0.0); // log probability of documents
-      
-      for (d = 0; d < Nd; d++) {
-        
-        NumericVector theta_prob(Nk); // probability of each topic in this document
-        
-        IntegerVector doc = docs[d];
-        
-        NumericVector lp(doc.length()); // log probability of each word under the model
-        
-        double denom(0.0);
-        
-        for (k = 0; k < Nk; k++) {
-          denom += (double)theta_counts(d,k) + alpha[k];
-        }
-        
-        for (k = 0; k < Nk; k++) {
-          theta_prob[k] = ((double)theta_counts(d,k) + alpha[k]) / denom;
-          
-          lp_alpha += (alpha[k] - 1) * log(theta_prob[k]);
-        }
-        
-        for (n = 0; n < doc.length(); n++) {
-          
-          lp[n] = 0.0;
-          
-          for (k = 0; k < Nk; k++) {
-            
-            lp[n] += theta_prob[k] * phi_prob(k,doc[n]);
-            
+          // get the correct term depending on if we freeze topics or not
+          if (freeze_topics) {
+            phi_kv = Phi(k, doc[n]);
+          } else {
+            phi_kv = ((double)Cv(k, doc[n]) + beta(k, doc[n])) /
+              ((double)Ck[k] + sum_beta);
           }
           
-          lpd += log(lp[n]);
+          qz[k] =  phi_kv * ((double)Cd(d, k) + alpha[k]) / 
+            ((double)doc.length() + sum_alpha - 1);
+          
+        }
+        
+        
+        // sample a topic ***
+        z = RcppArmadillo::sample(topic_index, 1, false, qz);
+        
+        // update counts ***
+        Cd(d, z[0]) += 1; 
+        
+        if (! freeze_topics) {
+          
+          Cv(z[0], doc[n]) += 1; 
+          
+          Ck[z[0]] += 1;
+          
+        }
+        
+        // record this topic for this token/doc combination
+        zd[n] = z[0];
+        
+      } // end loop over each token in doc
+    } // end loop over docs
+    
+    // calc likelihood ***
+    if (calc_likelihood && ! freeze_topics) {
+      
+      // calculate lg_beta_count1, lg_beta_count2, lg_alph_count for this iter
+      // start by zeroing them out
+      lg_beta_count1 = 0.0;
+      lg_beta_count2 = 0.0;
+      lg_alpha_count = 0.0;
+      
+      for (k = 0; k < Nk; k++) {
+        
+        lg_beta_count1 += lgamma(sum_beta + Ck[k]);
+        
+        for (d = 0; d < Nd; d++) {
+          lg_alpha_count += lgamma(alpha[k] + Cd(d,k));
+        }
+        
+        for (v = 0; v < Nv; v++) {
+          lg_beta_count2 += lgamma(beta(k,v) + Cv(k,v));
         }
         
       }
       
-      lp_alpha += lgalpha;
+      lg_beta_count1 *= -1;
       
-      ll(i / 10, 0) = i;
+      log_likelihood(0, t) = t;
       
-      ll(i / 10, 1) = lpd; // log probability of whole corpus under the model w/o priors
-      
-      ll(i / 10, 2) = lpd + lp_alpha + lp_beta;
+      log_likelihood(1, t) = lgalpha + lgbeta + lg_alpha_len + lg_alpha_count + 
+        lg_beta_count1 + lg_beta_count2;
       
     }
-    
-    // if optimizing alpha, do so
-    if (optimize_alpha) {
+    // optimize alpha ***
+    if (optimize_alpha && ! freeze_topics) {
+      
       NumericVector new_alpha(Nk);
       
       for (k = 0; k < Nk; k++) {
-        for (d = 0; d < Nd; d++) {
-          new_alpha[k] += (double)theta_counts(d,k) / (double)sumtokens * (double)sum_alpha;
-        }
+        
+        new_alpha[k] += (double)Ck[k] / (double)sumtokens * (double)sum_alpha;
+        
+        new_alpha[k] += (new_alpha[k] + alpha[k]) / 2;
+        
       }
       
       alpha = new_alpha;
       
     }
     
-  }
-  
-  
-  // return the result
-  // std::cout << "prepare result\n";
-  
-  if (burnin > -1) {
-    int i_diff = iterations - burnin;
+    // aggregate counts after burnin ***
+    if (burnin > -1 && t >= burnin) {
+      
+      for (k = 0; k < Nk; k++) {
+        for (d = 0; d < Nd; d++) {
+          
+          Cd_sum(d, k) += Cd(d, k);
+          
+        }
+        if (! freeze_topics) {
+          for (v = 0; v < Nv; v++) {
+            
+            Cv_sum(k, v) += Cv(k, v);
+            
+          }
+        }
+      }
+      
+    }
     
-    NumericMatrix theta(Nd,Nk);
+  } // end iterations
+  
+  // ***********************************************************************
+  // Cleanup and return list
+  // ***********************************************************************
+  
+  // change sum over iterations to average over iterations ***
+  
+  if (burnin >-1) {
     
-    NumericMatrix phi(Nk,Nv);
+    double diff = iterations - burnin;
     
     // average over chain after burnin 
     for (k = 0; k < Nk; k++) {
       
       for (d = 0; d < Nd; d++) {
-        theta(d,k) = (theta_sums(d,k) / i_diff);
+        Cd_mean(d,k) = ((double)Cd_sum(d,k) / diff);
       }
       
       for (v = 0; v < Nv; v++) {
-        phi(k,v) = (phi_sums(k,v) / i_diff);
+        Cv_mean(k,v) = ((double)Cv_sum(k,v) / diff);
       }
     }
-    
-    return List::create(Named("theta") = theta,
-                        Named("phi") = phi,
-                        Named("log_likelihood") = ll,
-                        Named("alpha") = alpha,
-                        Named("beta") = beta,
-                        Named("n_d") = n_d,
-                        Named("n_z") = n_z,
-                        Named("z_dn") = z_dn,
-                        Named("p_z") = p_z);
-    
-  } else {
-    return List::create(Named("theta") = theta_counts,
-                        Named("phi") = phi_counts,
-                        Named("log_likelihood") = ll,
-                        Named("alpha") = alpha,
-                        Named("beta") = beta,
-                        Named("n_d") = n_d,
-                        Named("n_z") = n_z,
-                        Named("z_dn") = z_dn,
-                        Named("p_z") = p_z);
   }
   
+  // Return the final list ***
   
-}
-
-// [[Rcpp::export]]
-List predict_lda_c(List &docs, int &Nk, int &Nd, NumericVector &alpha, 
-                   NumericMatrix &phi, int &iterations, int &burnin) {
-  
-  /* Declare some initial variables */
-  double sum_alpha = sum(alpha); // rcpp sugar here, I guess
-  
-  /* Declare data structures */
-  int i, d, n, k; // indices for loops
-  
-  NumericVector p_z(Nk);
-  
-  IntegerVector z1; // placeholder for topic sampled
-  
-  int z = 0; // placeholder for topic sampled
-  
-  IntegerVector topic_sample = seq_len(Nk) -1; // index of topics from which to sample
-  
-  List z_dn(Nd) ; // count of topic/term assignments by document
-  
-  IntegerMatrix theta_counts(Nd, Nk); // count of topics over documents
-  
-  IntegerVector n_d(Nd); // total count of term document totals
-  
-  IntegerMatrix theta_sums(Nd, Nk); // initialize matrix for averaging over iterations
-  
-  
-  /* Assign initial values at random */
-  // std::cout << "assigning initial values \n";
-  
-  for(d = 0; d < Nd; d++){
-    IntegerVector doc = docs[d];
-    
-    IntegerVector z_dn_row(doc.length());
-    
-    for(n = 0; n < doc.length(); n++){
-      
-      // sample a topic at random
-      z1 = RcppArmadillo::sample(topic_sample, 1, false, NumericVector::create());
-      
-      z = z1[0]; // type conversion
-      
-      theta_counts(d,z) += 1; // update counts of topics in documents
-      
-      n_d[d] = n_d[d] + 1; // count the number of tokens in the document
-      
-      z_dn_row[n] = z; // # count that topic for that word in the document
-      
-    }
-    
-    z_dn[d] = z_dn_row; // update topic-doc-word tracking
-    
-  }
-  
-  
-  /* Gibbs iterations */
-  // std::cout << "beginning Gibbs \n";
-  for (i = 0; i < iterations; i++) { // for each iteration
-    
-    for (d = 0; d < Nd; d++) { // for each document
-      // std::cout << "document " << d << "\n";
-      
-      R_CheckUserInterrupt();
-      
-      IntegerVector doc = docs[d]; // placeholder for a document
-      
-      IntegerVector z_dn_row = z_dn[d]; // placeholder for doc-word-topic assigment
-      
-      for (n = 0; n < n_d[d]; n++) { // for each word in that document
-        
-        // discount for the n-th word with topic z
-        z = z_dn_row[n];
-        
-        theta_counts(d,z) -= 1; 
-        
-        // sample topic index
-        
-        for (k = 0; k < Nk; k++) {
-          
-          p_z[k] = (phi(k,doc[n])) * (theta_counts(d,k) + alpha[k]) / (n_d[d] + sum_alpha);
-          
-        }
-        
-        
-        // update counts
-        z1 = RcppArmadillo::sample(topic_sample, 1, false, p_z);
-        
-        z = z1[0];
-        
-        theta_counts(d,z) += 1; // update document topic count
-        
-        z_dn_row[n] = z; // # count that topic for that word in the document
-        
-      }
-    }
-    
-    // if using burnin, update sums
-    if (burnin > -1 && i >= burnin) {
-      
-      for (k = 0; k < Nk; k++) {
-        
-        for (d = 0; d < Nd; d++) {
-          theta_sums(d,k) += theta_counts(d,k);
-        }
-        
-      }
-      
-    }
-    
-  }
-  
-  
-  /* Return the result */
-  // std::cout << "prepare result\n";
-  
-  if (burnin > -1) {
-    int i_diff = iterations - burnin;
-    
-    NumericMatrix theta(Nd,Nk);
-    
-    // average over chain after burnin 
-    for (k = 0; k < Nk; k++) {
-      
-      for (d = 0; d < Nd; d++) {
-        theta(d,k) = (theta_sums(d,k) / i_diff);
-      }
-      
-    }
-    
-    return List::create(Named("theta") = theta);
-    
-  } else {
-    return List::create(Named("theta") = theta_counts);
-  }
-  
+  return List::create(Named("Cd") = Cd,
+                      Named("Cv") = Cv,
+                      Named("Ck") = Ck,
+                      Named("Cd_mean") = Cd_mean,
+                      Named("Cv_mean") = Cv_mean,
+                      Named("log_likelihood") = log_likelihood,
+                      Named("alpha") = alpha,
+                      Named("beta") = beta);  
 }
 

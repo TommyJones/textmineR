@@ -13,6 +13,7 @@
 NULL
 
 #' @importFrom magrittr %>%
+#' @importFrom gtools rdirichlet
 #' @import Matrix
 #' @import Rcpp
 #' @importFrom Rcpp sourceCpp
@@ -26,8 +27,6 @@ NULL
 #' @export HellingerMat
 #' @export JSD_cpp
 #' @export JSDmat
-#' @export dtm_to_lexicon_c
 #' @export fit_lda_c
-#' @export predict_lda_c
 #' @useDynLib "textmineR", .registration=TRUE
 NULL
