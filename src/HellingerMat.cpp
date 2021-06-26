@@ -5,7 +5,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericMatrix HellingerMat(NumericMatrix A){
     
-   NumericMatrix A2 = A; // don't overwrite inputs
+   NumericMatrix A2 = Rcpp::clone(A); // don't overwrite inputs
     
     int rows = A2.nrow();
     int cols = A2.ncol();
