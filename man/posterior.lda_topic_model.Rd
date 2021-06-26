@@ -4,8 +4,7 @@
 \alias{posterior.lda_topic_model}
 \title{Draw from the posterior of an LDA topic model}
 \usage{
-\method{posterior}{lda_topic_model}(object, which = "theta",
-  num_samples = 100, ...)
+\method{posterior}{lda_topic_model}(object, which = "theta", num_samples = 100, ...)
 }
 \arguments{
 \item{object}{An object of class \code{lda_topic_model}}

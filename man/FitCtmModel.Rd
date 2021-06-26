@@ -4,8 +4,14 @@
 \alias{FitCtmModel}
 \title{Fit a Correlated Topic Model}
 \usage{
-FitCtmModel(dtm, k, calc_coherence = TRUE, calc_r2 = FALSE,
-  return_all = TRUE, ...)
+FitCtmModel(
+  dtm,
+  k,
+  calc_coherence = TRUE,
+  calc_r2 = FALSE,
+  return_all = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix}}
@@ -21,7 +27,8 @@ Defaults to \code{FALSE}.}
 \item{return_all}{Logical. Do you want the raw results of the underlying 
 function returned along with the formatted results? Defaults to \code{TRUE}.}
 
-\item{...}{Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.}
+\item{...}{Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.
+See note below.}
 }
 \value{
 Returns a list with a minimum of two objects, \code{phi} and 
@@ -31,6 +38,62 @@ The rows of \code{theta} index documents and the columns index topics.
 \description{
 A wrapper for the \link[topicmodels]{CTM} function based on 
 Blei's original code that returns a nicely-formatted topic model.
+}
+\note{
+When passing additional arguments to \link[topicmodels]{CTM}, you must unlist the 
+elements in the \code{control} argument and pass them one by one. For example,
+the below will fail:
+
+\code{
+control_CTM_VEM <- list(
+estimate.beta = TRUE,
+verbose = 0,
+prefix = tempfile(), 
+save = 0, 
+keep = 0,
+seed = as.integer(Sys.time()), 
+nstart = 1L, 
+best = TRUE,
+var = list(iter.max = 500, tol = 10^-6),
+em = list(iter.max = 1000, tol = 10^-4),
+initialize = "random",
+cg = list(iter.max = 500, tol = 10^-5)
+)
+
+topics_CTM <- FitCtmModel(
+  dtm = dtm, 
+  k = 10, 
+  calc_coherence = TRUE, 
+  calc_r2 = TRUE,
+  return_all = TRUE,
+  method = "VEM",
+  control = control_CTM_VEM
+)
+}
+
+However, this will work:
+
+\code{
+topics_CTM <- FitCtmModel(
+dtm = dtm,
+k = 10,
+calc_coherence = TRUE,
+calc_r2 = TRUE,
+return_all = TRUE,
+estimate.beta = TRUE,
+verbose = 0,
+prefix = tempfile(),
+save = 0,
+keep = 0,
+seed = as.integer(Sys.time()),
+nstart = 1L,
+best = TRUE,
+var = list(iter.max = 500, tol = 10^-6),
+em = list(iter.max = 1000, tol = 10^-4),
+initialize = "random",
+cg = list(iter.max = 500, tol = 10^-5)
+)
+}
 }
 \examples{
 # Load a pre-formatted dtm 

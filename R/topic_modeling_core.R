@@ -285,10 +285,66 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
-#' @param ... Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}. 
+#' @param ... Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.
+#'   See note below.
 #' @return Returns a list with a minimum of two objects, \code{phi} and 
 #' \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
 #' The rows of \code{theta} index documents and the columns index topics.
+#' @note 
+#' When passing additional arguments to \link[topicmodels]{CTM}, you must unlist the 
+#' elements in the \code{control} argument and pass them one by one. For example,
+#' the below will fail:
+#' 
+#' \code{
+#' control_CTM_VEM <- list(
+#' estimate.beta = TRUE,
+#' verbose = 0,
+#' prefix = tempfile(), 
+#' save = 0, 
+#' keep = 0,
+#' seed = as.integer(Sys.time()), 
+#' nstart = 1L, 
+#' best = TRUE,
+#' var = list(iter.max = 500, tol = 10^-6),
+#' em = list(iter.max = 1000, tol = 10^-4),
+#' initialize = "random",
+#' cg = list(iter.max = 500, tol = 10^-5)
+#' )
+#' 
+#' topics_CTM <- FitCtmModel(
+#'   dtm = dtm, 
+#'   k = 10, 
+#'   calc_coherence = TRUE, 
+#'   calc_r2 = TRUE,
+#'   return_all = TRUE,
+#'   method = "VEM",
+#'   control = control_CTM_VEM
+#' )
+#' }
+#' 
+#' However, this will work:
+#' 
+#' \code{
+#' topics_CTM <- FitCtmModel(
+#' dtm = dtm,
+#' k = 10,
+#' calc_coherence = TRUE,
+#' calc_r2 = TRUE,
+#' return_all = TRUE,
+#' estimate.beta = TRUE,
+#' verbose = 0,
+#' prefix = tempfile(),
+#' save = 0,
+#' keep = 0,
+#' seed = as.integer(Sys.time()),
+#' nstart = 1L,
+#' best = TRUE,
+#' var = list(iter.max = 500, tol = 10^-6),
+#' em = list(iter.max = 1000, tol = 10^-4),
+#' initialize = "random",
+#' cg = list(iter.max = 500, tol = 10^-5)
+#' )
+#' }
 #' @examples
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 

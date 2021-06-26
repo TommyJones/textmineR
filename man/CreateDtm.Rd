@@ -4,11 +4,18 @@
 \alias{CreateDtm}
 \title{Convert a character vector to a document term matrix.}
 \usage{
-CreateDtm(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1),
-  stopword_vec = c(stopwords::stopwords("en"),
-  stopwords::stopwords(source = "smart")), lower = TRUE,
-  remove_punctuation = TRUE, remove_numbers = TRUE,
-  stem_lemma_function = NULL, verbose = FALSE, ...)
+CreateDtm(
+  doc_vec,
+  doc_names = names(doc_vec),
+  ngram_window = c(1, 1),
+  stopword_vec = c(stopwords::stopwords("en"), stopwords::stopwords(source = "smart")),
+  lower = TRUE,
+  remove_punctuation = TRUE,
+  remove_numbers = TRUE,
+  stem_lemma_function = NULL,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{doc_vec}{A character vector of documents.}

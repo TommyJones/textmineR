@@ -4,8 +4,14 @@
 \alias{predict.lda_topic_model}
 \title{Get predictions from a Latent Dirichlet Allocation model}
 \usage{
-\method{predict}{lda_topic_model}(object, newdata, method = c("gibbs",
-  "dot"), iterations = NULL, burnin = -1, ...)
+\method{predict}{lda_topic_model}(
+  object,
+  newdata,
+  method = c("gibbs", "dot"),
+  iterations = NULL,
+  burnin = -1,
+  ...
+)
 }
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}

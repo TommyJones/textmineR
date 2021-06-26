@@ -2,7 +2,6 @@ Package: textmineR
 Type: Package
 Title: Functions for Text Mining and Topic Modeling
 Version: 3.0.4.999
-Date: 2019-04-17
 Authors@R: c(
     person("Tommy", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
     person("William", "Doane", email = "wil@drdoane.com", role = "ctb")
@@ -50,5 +49,5 @@ LazyData: true
 LinkingTo: Rcpp,
     RcppArmadillo,
     RcppProgress
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

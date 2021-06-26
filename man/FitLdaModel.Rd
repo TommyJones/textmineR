@@ -4,9 +4,19 @@
 \alias{FitLdaModel}
 \title{Fit a Latent Dirichlet Allocation topic model}
 \usage{
-FitLdaModel(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1,
-  beta = 0.05, optimize_alpha = FALSE, calc_likelihood = FALSE,
-  calc_coherence = TRUE, calc_r2 = FALSE, ...)
+FitLdaModel(
+  dtm,
+  k,
+  iterations = NULL,
+  burnin = -1,
+  alpha = 0.1,
+  beta = 0.05,
+  optimize_alpha = FALSE,
+  calc_likelihood = FALSE,
+  calc_coherence = TRUE,
+  calc_r2 = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dtm}{A document term matrix or term co-occurrence matrix of class dgCMatrix}
