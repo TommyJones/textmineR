@@ -1,3 +1,12 @@
+# textmineR 3.0.5
+This version is a patch. In this version I have
+
+* Fixed a bug in `CalcHellignerDist()` and `CalcJSDivergence()` that sometimes
+  caused inputs to be overwritten.
+* Fixed some typos in the vignette for topic modeling
+* Updated the documentation on `FitCtmModel()` to better explain how to pass
+  control arguments to CTM's underlying function.
+
 # textmineR 3.0.4
 This version is a patch. In this version I have
 
