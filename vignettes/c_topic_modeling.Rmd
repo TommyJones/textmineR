@@ -186,7 +186,7 @@ knitr::kable(model$summary[ order(model$summary$prevalence, decreasing = TRUE) ,
 
 ```
 
-Ok, you've built a topic model. You've decided how well it fits your data. You've examined coherence, top words, and so on. Now you want to get topic distributions for new documents. (Remember, we only used 500 of our 5,000 documents to train the model.) `textmineR` provides a couple of ways to do this. The full Bayesian approach is to use Gibbs sampling, holding the topic distributions in `phi` fixed. The more frequentist way is using the `gamma` object returned when we ran `FitLdaModel`. (You can also calculate it separately with the `CalcGamma` function.)
+Ok, you've built a topic model. You've decided how well it fits your data. You've examined coherence, top words, and so on. Now you want to get topic distributions for new documents. `textmineR` provides a couple of ways to do this. The full Bayesian approach is to use Gibbs sampling, holding the topic distributions in `phi` fixed. The more frequentist way is using the `gamma` object returned when we ran `FitLdaModel`. (You can also calculate it separately with the `CalcGamma` function.)
 
 
 `gamma` or $\Gamma$ is a matrix whose entries represent $P(\text{topic}|\text{token}). To calculate this, we need Bayes' Rule.  
@@ -428,7 +428,7 @@ k_list <- seq(10,85, by=15)
 model_dir <- paste0("models_", digest::digest(colnames(nih_sample_dtm), algo = "sha1"))
 
 # Fit a bunch of LDA models
-# even on this trivial corpus, it will a bit of time to fit all of these models
+# even on this trivial corpus, it will take a bit of time to fit all of these models
 model_list <- TmParallelApply(X = k_list, FUN = function(k){
 
   m <- FitLdaModel(dtm = nih_sample_dtm, 
