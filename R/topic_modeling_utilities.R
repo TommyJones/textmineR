@@ -219,7 +219,9 @@ LabelTopics <- function(assignments, dtm, M=2){
 #' @description Takes topics by terms matrix and returns top M terms for each topic
 #' @param phi A matrix whose rows index topics and columns index words
 #' @param M An integer for the number of terms to return
-#' @return Returns a \code{data.frame} or \code{tibble} whose columns correspond to a topic and
+#' @return 
+#' If \code{return_matrix = TRUE} (the default) then a matrix. Otherwise,
+#' returns a \code{data.frame} or \code{tibble} whose columns correspond to a topic and
 #' whose m-th row correspond to the m-th top term from the input \code{phi}.
 #' @export
 #' @examples
@@ -230,15 +232,20 @@ LabelTopics <- function(assignments, dtm, M=2){
 #' 
 #' str(top_terms)
 
-GetTopTerms <- function(phi, M){
+GetTopTerms <- function(phi, M, return_matrix = TRUE){
   
   result <- apply(phi, 1, function(x){
     names(x)[ order(x, decreasing=TRUE) ][ 1:M ]
   })
-
+  
+  if (! return_matrix) {
     if ("tibble" %in% row.names(installed.packages())) {
-        result <- tibble::as_tibble(result)
+      result <- tibble::as_tibble(result)
+    } else {
+      result <- as.data.frame(result)
     }
+  }
+
   
   return(result)
 }

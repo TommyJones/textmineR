@@ -6,7 +6,10 @@ This version is a patch. In this version I have
 * Fixed some typos in the vignette for topic modeling
 * Updated the documentation on `FitCtmModel()` to better explain how to pass
   control arguments to CTM's underlying function.
-
+* Enabled return of a `tibble` or `data.frame` (instead of only `data.frame`) in
+  the following functions: `SummarizeTopics`, `GetTopTerms`, `TermDocFreq`
+  (Thanks to Mattias for the PR)
+  
 # textmineR 3.0.4
 This version is a patch. In this version I have
 
