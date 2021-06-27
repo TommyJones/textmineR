@@ -1,30 +1,27 @@
-### Patch release version 3.0.4
+## Patch release version 3.0.5
 This version is a patch where I have:
 
-* Removed unconditional stripping in MAKEVARs as specified by CRAN
-* Improved outputs of `FitLdaModel`
+* Fixed a bug in `CalcHellignerDist()` and `CalcJSDivergence()` that sometimes
+  caused inputs to be overwritten.
+* Fixed some typos in the vignette for topic modeling
+* Updated the documentation on `FitCtmModel()` to better explain how to pass
+  control arguments to CTM's underlying function.
 
 
-### Test environments
-* local MacOS install, R 3.5.3
-* Ubuntu 14.04 LTS (on travis ci), R 3.5.3
-* Ubuntu 16.04 LTS (on R Hub), R-Release
-* win-builder (devel, release, and oldrel)
+## Test environments
+* local macOS install: release
+* macOS (on GitHub actions): release
+* ubuntu 20.04 (on GitHub actions): release
+* win-builder: release, devel, and oldrel
 
-### R CMD check results
-There are no WARNINGs or ERRORs.
+## R CMD check results
+There are no NOTEs, WARNINGs, or ERRORs.
 
-There is one NOTE on Ubuntu 16.04:
+## revdepcheck results
 
-checking installed package size ... NOTE
-  installed size is  5.8Mb
-  sub-directories of 1Mb or more:
-    libs   4.0Mb
+We checked 2 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
 
-This is due to unstripped libraries. I commented out the command to 
-unconditionally strip libraries during compilation as instructed by CRAN in
-an email sent 10 April to me and several other package developers. 
+ * We saw 0 new problems
+ * We failed to check 0 packages
 
-### Downstream dependencies
-There are no downstream dependencies. 
 
