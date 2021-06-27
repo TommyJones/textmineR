@@ -18,7 +18,7 @@ posterior <- function(object, ...) UseMethod("posterior")
 #' Draw from the posterior of an LDA topic model
 #' @description This function takes an object of class \code{lda_topic_model} and
 #' draws samples from the posterior of either \code{phi} or \code{theta}. This is 
-#' useful for quantifying uncertainty around parametrs of the final model.
+#' useful for quantifying uncertainty around parametersof the final model.
 #' @param object An object of class \code{lda_topic_model}
 #' @param which A character of either 'theta' or 'phi', indicating from which
 #' matrix to draw posterior samples

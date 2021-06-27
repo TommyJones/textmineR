@@ -25,7 +25,7 @@ This version is a patch. In this version I have
 
 * changed some elements of NAMESPACE to pass additional CRAN checks.
 * added an update method for the lda_topic_model class. This allows users to add
-  documents to an existing model (and even add new topics) without chaning the 
+  documents to an existing model (and even add new topics) without changing the 
   indices of previously-trained topics. e.g. topic 5 is still topic 5.
 * added a vignette for using `tidytext` alongside `textmineR`
 
@@ -118,7 +118,7 @@ This version significantly changes textmineR.
 * Changes to how the package interfaces with Rcpp
 
 # textmineR 2.0.5
-* Add `verbose` option to `CreateDtm` and `CreateTcm` to surpress status messages.
+* Add `verbose` option to `CreateDtm` and `CreateTcm` to supress status messages.
 * Add function `GetVocabFromDtm` to get `text2vec` vocabulary object from a `dgCMatrix` 
   document term matrix.
   
@@ -156,7 +156,7 @@ This version significantly changes textmineR.
 # textmineR 2.0.0
 
 * Vec2Dtm is now deprecated in favor of CreateDtm
-* A function, CreateTcm, now exists to create term co-occurence matrices
+* A function, CreateTcm, now exists to create term co-occurrence matrices
 * CreateDtm and CreateTcm are implemented with a parallel C++ back end through the text2vec library
   - the implementation is _much_ faster! I've clocked 2X - 10X speedups, depending on options
   - adds external dependencies - C++ compiler and GNU make - and takes away an external
@@ -168,7 +168,7 @@ This version significantly changes textmineR.
     custom or non-English stopwords
   - Now the stemming argument allows for passing of stem/lemmatization functions.
 * Function for fitting correlated topic models
-* Function to turn a document term matrix to term co-occurence matrix
+* Function to turn a document term matrix to term co-occurrence matrix
 * Allowed LabelTopics to use unigrams, if you want. (n-grams are still better.)
 * More robust error checking for CalcTopicModelR2 and CalcLikelihood
 * All function arguments use "_", not ".".
@@ -184,7 +184,7 @@ This version significantly changes textmineR.
 * Added modeling capability for latent semantic analysis in FitLsaModel()
 * Added CalcProbCoherence() function which replaces ProbCoherence() and can calculate
   probabilistic coherence for the whole phi matrix.
-* Added data from NIH research grants instead of borrowd data from tm
+* Added data from NIH research grants instead of borrowed data from tm
 * Removed qcq data 
 * Added variational em method for FitLdaModel()
 * Added function to represent document clustering as a topic model Cluster2TopicModel()

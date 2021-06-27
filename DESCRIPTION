@@ -27,6 +27,7 @@ Imports:
     RcppProgress,
     RSpectra
 Suggests:
+    spelling,
     digest,
     dplyr,
     igraph,
@@ -51,3 +52,4 @@ LinkingTo: Rcpp,
     RcppProgress
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
+Language: en-US

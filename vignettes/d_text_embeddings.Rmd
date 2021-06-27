@@ -146,7 +146,7 @@ embedding_assignments <- predict(embeddings, dtm_embed, method = "gibbs",
                                  iterations = 200, burnin = 180)
 ```
 
-Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculatingR-squared and coherence.
+Once you've embedded your documents, you effectively have a new $\Theta$. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculating R-squared and coherence.
 
 ```{r}
 # get a goodness of fit relative to the DTM

@@ -24,7 +24,7 @@ is a facet for subsetting by document (for theta) or topic (for phi).
 \description{
 This function takes an object of class \code{lda_topic_model} and
 draws samples from the posterior of either \code{phi} or \code{theta}. This is 
-useful for quantifying uncertainty around parametrs of the final model.
+useful for quantifying uncertainty around parametersof the final model.
 }
 \examples{
 \dontrun{
