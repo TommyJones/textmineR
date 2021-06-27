@@ -303,6 +303,7 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #'                      k = 3, return_all = FALSE)
 #'                      
 #' # the correct way to pass control arguments to CTM
+#' \dontrun{
 #' topics_CTM <- FitCtmModel(
 #'     dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ],
 #'     k = 10,
@@ -322,6 +323,7 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #'     initialize = "random",
 #'     cg = list(iter.max = 500, tol = 10^-5)
 #' )
+#' }
 #' @export
 FitCtmModel <- function(dtm, k, calc_coherence = TRUE, 
                         calc_r2 = FALSE, return_all = TRUE, ...){
