@@ -85,7 +85,7 @@ cdist <- as.dist(1 - csim)
 
 The last step is clustering. There are many clustering algorithms out there. My preference is [agglomerative hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering) using [Ward's method](https://en.wikipedia.org/wiki/Ward%27s_method) as the merge rule. Compared to other methods, such as k-means, hierarchical clustering is computationally inexpensive. 
 
-In the example below, I choose to cut the tree at $10$ clusters. This is a somewhat arbitrary choice. I often prefer to use the silhouette coefficient. You can read about this method [here](http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/). Performing this is an exercise I'll leave to the reader.
+In the example below, I choose to cut the tree at $10$ clusters. This is a somewhat arbitrary choice. I often prefer to use the silhouette coefficient. You can read about this method [here](https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/). Performing this is an exercise I'll leave to the reader.
 
 ```{r fig.width = 7.5, fig.height = 4}
 

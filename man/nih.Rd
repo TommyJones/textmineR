@@ -8,7 +8,7 @@
 \description{
   This dataset holds information on research grants awarded by the National
   Institutes of Health (NIH) in 2014. The data set was downloaded in approximately
-  January of 2015 from \url{http://exporter.nih.gov/ExPORTER_Catalog.aspx}. It
+  January of 2015 from \url{https://exporter.nih.gov/ExPORTER_Catalog.aspx}. It
   includes both 'projects' and 'abstracts' files.
 }
 \usage{
@@ -22,6 +22,6 @@
     100 randomly-sampled grants.
   A \code{list} containing a topic model of these 100 sampled grants.
 }
-\source{National Institutes of Health ExPORTER \url{http://exporter.nih.gov/ExPORTER_Catalog.aspx}}
+\source{National Institutes of Health ExPORTER \url{https://exporter.nih.gov/ExPORTER_Catalog.aspx}}
 
 \keyword{datasets}
