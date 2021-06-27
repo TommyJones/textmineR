@@ -54,7 +54,7 @@ model <- FitCtmModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) ,
                      
 # the correct way to pass control arguments to CTM
 topics_CTM <- FitCtmModel(
-    dtm = dtm,
+    dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ],
     k = 10,
     calc_coherence = TRUE,
     calc_r2 = TRUE,
