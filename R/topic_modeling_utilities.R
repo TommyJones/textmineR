@@ -3,7 +3,7 @@
 #' @param model A list (or S3 object) with three named matrices: phi, theta, and gamma.
 #'        These conform to outputs of many of \link[textmineR]{textmineR}'s native
 #'        topic modeling functions such as \link[textmineR]{FitLdaModel}. 
-#' @return An object of class \code{data.frame} with 6 columns: 'topic' is the 
+#' @return An object of class \code{data.frame} or \code{tibble} with 6 columns: 'topic' is the 
 #'         name of the topic, 'prevalence' is the rough prevalence of the topic 
 #'         in all documents across the corpus, 'coherence' is the probabilistic
 #'         coherence of the topic, 'top_terms_phi' are the top 5 terms for each
@@ -80,7 +80,11 @@ SummarizeTopics <- function(model){
                     top_terms_phi = tt_phi,
                     top_terms_gamma = tt_gamma,
                     stringsAsFactors = FALSE)
-  
+
+    if ("tibble" %in% row.names(installed.packages())) {
+        out <- tibble::as_tibble(out)
+    }
+ 
   out
 }
 
@@ -215,7 +219,7 @@ LabelTopics <- function(assignments, dtm, M=2){
 #' @description Takes topics by terms matrix and returns top M terms for each topic
 #' @param phi A matrix whose rows index topics and columns index words
 #' @param M An integer for the number of terms to return
-#' @return Returns a \code{data.frame} whose columns correspond to a topic and
+#' @return Returns a \code{data.frame} or \code{tibble} whose columns correspond to a topic and
 #' whose m-th row correspond to the m-th top term from the input \code{phi}.
 #' @export
 #' @examples
@@ -231,6 +235,10 @@ GetTopTerms <- function(phi, M){
   result <- apply(phi, 1, function(x){
     names(x)[ order(x, decreasing=TRUE) ][ 1:M ]
   })
+
+    if ("tibble" %in% row.names(installed.packages())) {
+        result <- tibble::as_tibble(result)
+    }
   
   return(result)
 }
