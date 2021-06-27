@@ -1,5 +1,5 @@
 pandoc: 2.3.1
-pkgdown: 1.4.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   a_start_here: a_start_here.html
@@ -8,6 +8,7 @@ articles:
   d_text_embeddings: d_text_embeddings.html
   e_doc_summarization: e_doc_summarization.html
   f_tidytext_example: f_tidytext_example.html
+last_built: 2021-06-27T04:40Z
 urls:
   reference: https://www.rtextmineR.com/reference
   article: https://www.rtextmineR.com/articles

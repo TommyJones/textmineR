@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -42,7 +46,7 @@
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
@@ -50,7 +54,6 @@
 
 <meta property="og:title" content="Changelog" />
 <meta property="og:image" content="https://www.rtextmineR.com/logo.png" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -68,7 +71,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -82,7 +85,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.4.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5</span>
       </span>
     </div>
 
@@ -90,7 +93,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -129,7 +132,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/TommyJones/textmineR/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
       <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
@@ -149,12 +157,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
-      
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/TommyJones/textmineR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="textminer-3-0-5" class="section level1">
+<h1 class="page-header" data-toc-text="3.0.5">
+<a href="#textminer-3-0-5" class="anchor"></a>textmineR 3.0.5<small> Unreleased </small>
+</h1>
+<p>This version is a patch. In this version I have</p>
+<ul>
+<li>Fixed a bug in <code>CalcHellignerDist()</code> and <code><a href="../reference/CalcJSDivergence.html">CalcJSDivergence()</a></code> that sometimes caused inputs to be overwritten.</li>
+<li>Fixed some typos in the vignette for topic modeling</li>
+<li>Updated the documentation on <code><a href="../reference/FitCtmModel.html">FitCtmModel()</a></code> to better explain how to pass control arguments to CTM’s underlying function.</li>
+</ul>
+</div>
     <div id="textminer-3-0-4" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="3.0.4">
 <a href="#textminer-3-0-4" class="anchor"></a>textmineR 3.0.4<small> 2019-04-18 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
@@ -165,7 +184,7 @@
 </ul>
 </div>
     <div id="textminer-3-0-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="3.0.3">
 <a href="#textminer-3-0-3" class="anchor"></a>textmineR 3.0.3<small> 2019-03-22 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
@@ -175,19 +194,19 @@
 </ul>
 </div>
     <div id="textminer-3-0-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="3.0.2">
 <a href="#textminer-3-0-2" class="anchor"></a>textmineR 3.0.2<small> 2019-01-09 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
 <ul>
 <li>changed some elements of NAMESPACE to pass additional CRAN checks.</li>
-<li>added an update method for the lda_topic_model class. This allows users to add documents to an existing model (and even add new topics) without chaning the indices of previously-trained topics. e.g. topic 5 is still topic 5.</li>
+<li>added an update method for the lda_topic_model class. This allows users to add documents to an existing model (and even add new topics) without changing the indices of previously-trained topics. e.g. topic 5 is still topic 5.</li>
 <li>added a vignette for using <code>tidytext</code> alongside <code>textmineR</code>
 </li>
 </ul>
 </div>
     <div id="textminer-3-0-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="3.0.1">
 <a href="#textminer-3-0-1" class="anchor"></a>textmineR 3.0.1<small> 2018-10-31 </small>
 </h1>
 <p>This version is a patch in response to issues revealed by automatic checks upon submission to CRAN plus an additional issue I encountered along the way.</p>
@@ -201,7 +220,7 @@
 <p>Please read below for major updates between v2.x.x and v3.x.x</p>
 </div>
     <div id="textminer-3-0-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="3.0.0">
 <a href="#textminer-3-0-0" class="anchor"></a>textmineR 3.0.0<small> Unreleased </small>
 </h1>
 <p>This version significantly changes textmineR.</p>
@@ -238,7 +257,7 @@
 </ul>
 </div>
     <div id="textminer-2-1-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.1.3">
 <a href="#textminer-2-1-3" class="anchor"></a>textmineR 2.1.3<small> 2018-09-11 </small>
 </h1>
 <ul>
@@ -261,7 +280,7 @@
 </ul>
 </div>
     <div id="textminer-2-1-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.1.2">
 <a href="#textminer-2-1-2" class="anchor"></a>textmineR 2.1.2<small> 2018-04-29 </small>
 </h1>
 <ul>
@@ -269,7 +288,7 @@
 </ul>
 </div>
     <div id="textminer-2-1-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.1.1">
 <a href="#textminer-2-1-1" class="anchor"></a>textmineR 2.1.1<small> 2018-03-06 </small>
 </h1>
 <ul>
@@ -277,7 +296,7 @@
 </ul>
 </div>
     <div id="textminer-2-1-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.1.0">
 <a href="#textminer-2-1-0" class="anchor"></a>textmineR 2.1.0<small> Unreleased </small>
 </h1>
 <ul>
@@ -289,7 +308,7 @@
 </ul>
 </div>
     <div id="textminer-2-0-6" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.6">
 <a href="#textminer-2-0-6" class="anchor"></a>textmineR 2.0.6<small> 2017-08-17 </small>
 </h1>
 <ul>
@@ -298,16 +317,16 @@
 </ul>
 </div>
     <div id="textminer-2-0-5" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.5">
 <a href="#textminer-2-0-5" class="anchor"></a>textmineR 2.0.5<small> 2017-04-07 </small>
 </h1>
 <ul>
-<li>Add <code>verbose</code> option to <code>CreateDtm</code> and <code>CreateTcm</code> to surpress status messages.</li>
+<li>Add <code>verbose</code> option to <code>CreateDtm</code> and <code>CreateTcm</code> to supress status messages.</li>
 <li>Add function <code>GetVocabFromDtm</code> to get <code>text2vec</code> vocabulary object from a <code>dgCMatrix</code> document term matrix.</li>
 </ul>
 </div>
     <div id="textminer-2-0-4" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.4">
 <a href="#textminer-2-0-4" class="anchor"></a>textmineR 2.0.4<small> 2016-11-03 </small>
 </h1>
 <ul>
@@ -315,7 +334,7 @@
 </ul>
 </div>
     <div id="textminer-2-0-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.3">
 <a href="#textminer-2-0-3" class="anchor"></a>textmineR 2.0.3<small> 2016-10-06 </small>
 </h1>
 <ul>
@@ -324,7 +343,7 @@
 </ul>
 </div>
     <div id="textminer-2-0-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.2">
 <a href="#textminer-2-0-2" class="anchor"></a>textmineR 2.0.2<small> 2016-06-06 </small>
 </h1>
 <ul>
@@ -337,7 +356,7 @@
 </ul>
 </div>
     <div id="textminer-2-0-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.1">
 <a href="#textminer-2-0-1" class="anchor"></a>textmineR 2.0.1<small> 2016-04-24 </small>
 </h1>
 <ul>
@@ -345,12 +364,12 @@
 </ul>
 </div>
     <div id="textminer-2-0-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.0.0">
 <a href="#textminer-2-0-0" class="anchor"></a>textmineR 2.0.0<small> 2016-04-19 </small>
 </h1>
 <ul>
 <li>Vec2Dtm is now deprecated in favor of CreateDtm</li>
-<li>A function, CreateTcm, now exists to create term co-occurence matrices</li>
+<li>A function, CreateTcm, now exists to create term co-occurrence matrices</li>
 <li>CreateDtm and CreateTcm are implemented with a parallel C++ back end through the text2vec library
 <ul>
 <li>the implementation is <em>much</em> faster! I’ve clocked 2X - 10X speedups, depending on options</li>
@@ -365,7 +384,7 @@
 </ul>
 </li>
 <li>Function for fitting correlated topic models</li>
-<li>Function to turn a document term matrix to term co-occurence matrix</li>
+<li>Function to turn a document term matrix to term co-occurrence matrix</li>
 <li>Allowed LabelTopics to use unigrams, if you want. (n-grams are still better.)</li>
 <li>More robust error checking for CalcTopicModelR2 and CalcLikelihood</li>
 <li>All function arguments use "_“, not”.".</li>
@@ -378,20 +397,20 @@
 </ul>
 </div>
     <div id="textminer-1-7-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.7.0">
 <a href="#textminer-1-7-0" class="anchor"></a>textmineR 1.7.0<small> 2016-03-31 </small>
 </h1>
 <ul>
 <li>Added modeling capability for latent semantic analysis in FitLsaModel()</li>
 <li>Added CalcProbCoherence() function which replaces ProbCoherence() and can calculate probabilistic coherence for the whole phi matrix.</li>
-<li>Added data from NIH research grants instead of borrowd data from tm</li>
+<li>Added data from NIH research grants instead of borrowed data from tm</li>
 <li>Removed qcq data</li>
 <li>Added variational em method for FitLdaModel()</li>
 <li>Added function to represent document clustering as a topic model Cluster2TopicModel()</li>
 </ul>
 </div>
     <div id="textminer-1-6-0" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.6.0">
 <a href="#textminer-1-6-0" class="anchor"></a>textmineR 1.6.0<small> 2016-03-06 </small>
 </h1>
 <ul>
@@ -404,30 +423,10 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#textminer-3-0-4">3.0.4</a></li>
-        <li><a href="#textminer-3-0-3">3.0.3</a></li>
-        <li><a href="#textminer-3-0-2">3.0.2</a></li>
-        <li><a href="#textminer-3-0-1">3.0.1</a></li>
-        <li><a href="#textminer-3-0-0">3.0.0</a></li>
-        <li><a href="#textminer-2-1-3">2.1.3</a></li>
-        <li><a href="#textminer-2-1-2">2.1.2</a></li>
-        <li><a href="#textminer-2-1-1">2.1.1</a></li>
-        <li><a href="#textminer-2-1-0">2.1.0</a></li>
-        <li><a href="#textminer-2-0-6">2.0.6</a></li>
-        <li><a href="#textminer-2-0-5">2.0.5</a></li>
-        <li><a href="#textminer-2-0-4">2.0.4</a></li>
-        <li><a href="#textminer-2-0-3">2.0.3</a></li>
-        <li><a href="#textminer-2-0-2">2.0.2</a></li>
-        <li><a href="#textminer-2-0-1">2.0.1</a></li>
-        <li><a href="#textminer-2-0-0">2.0.0</a></li>
-        <li><a href="#textminer-1-7-0">1.7.0</a></li>
-        <li><a href="#textminer-1-6-0">1.6.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -439,7 +438,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
