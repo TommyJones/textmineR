@@ -2,21 +2,27 @@
 # Make sure distance functions don't overwrite inputs
 testthat::test_that("distnace functions don't overwrite inputs",{
   
-  data("AssociatedPress", package = "topicmodels")
-  
-  lda_owl <- topicmodels::LDA(AssociatedPress, k = 3, method = "Gibbs",
-                              control = list(verbose = 50L, iter = 500, seed = 123))
+  tidy_fun <- function(x) {
+    data.frame(
+      topic = as.integer(stringr::str_replace_all(rownames(x), "t_", "")), 
+      m$phi,
+      stringsAsFactors = FALSE
+    )
+  }
+
   
   # Hellinger
-  beta1 <- lda_owl@beta
+  m <- nih_sample_topic_model
+
+    beta1 <- m$phi
   
-  tidybeta1 <- tidytext::tidy(lda_owl, matrix = "beta")
+  tidybeta1 <- tidy_fun(m$phi)
   
-  dist_owl <- textmineR::CalcHellingerDist(lda_owl@beta)
+  dist_owl <- CalcHellingerDist(m$phi)
   
-  beta2 <- lda_owl@beta
+  beta2 <- m$phi
   
-  tidybeta2 <- tidytext::tidy(lda_owl, matrix = "beta")
+  tidybeta2 <- tidy_fun(m$phi)
   
   testthat::expect_equal(sum(beta1 != beta2), 0) 
   
@@ -24,15 +30,17 @@ testthat::test_that("distnace functions don't overwrite inputs",{
   
   
   # JSD
-  beta1 <- lda_owl@beta
+  m <- nih_sample_topic_model
   
-  tidybeta1 <- tidytext::tidy(lda_owl, matrix = "beta")
+  beta1 <- m$phi
   
-  dist_owl <- textmineR::CalcJSDivergence(lda_owl@beta)
+  tidybeta1 <- tidy_fun(m$phi)
   
-  beta2 <- lda_owl@beta
+  dist_owl <- CalcJSDivergence(m$phi)
   
-  tidybeta2 <- tidytext::tidy(lda_owl, matrix = "beta")
+  beta2 <- m$phi
+  
+  tidybeta2 <- tidy_fun(m$phi)
   
   testthat::expect_equal(sum(beta1 != beta2), 0) 
   
