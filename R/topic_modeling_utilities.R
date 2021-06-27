@@ -81,7 +81,7 @@ SummarizeTopics <- function(model){
                     top_terms_gamma = tt_gamma,
                     stringsAsFactors = FALSE)
 
-    if ("tibble" %in% row.names(installed.packages())) {
+    if ("tibble" %in% row.names(utils::installed.packages())) {
         out <- tibble::as_tibble(out)
     }
  
@@ -219,6 +219,8 @@ LabelTopics <- function(assignments, dtm, M=2){
 #' @description Takes topics by terms matrix and returns top M terms for each topic
 #' @param phi A matrix whose rows index topics and columns index words
 #' @param M An integer for the number of terms to return
+#' @param return_matrix Do you want a \code{matrix} or \code{data.frame}/\code{tibble}
+#'   returned? Defaults to \code{TRUE}.
 #' @return 
 #' If \code{return_matrix = TRUE} (the default) then a matrix. Otherwise,
 #' returns a \code{data.frame} or \code{tibble} whose columns correspond to a topic and
@@ -239,7 +241,7 @@ GetTopTerms <- function(phi, M, return_matrix = TRUE){
   })
   
   if (! return_matrix) {
-    if ("tibble" %in% row.names(installed.packages())) {
+    if ("tibble" %in% row.names(utils::installed.packages())) {
       result <- tibble::as_tibble(result)
     } else {
       result <- as.data.frame(result)

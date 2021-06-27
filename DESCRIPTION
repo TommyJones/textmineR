@@ -5,7 +5,7 @@ Version: 3.0.5
 Authors@R: c(
     person("Tommy", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
     person("William", "Doane", email = "wil@drdoane.com", role = "ctb"),
-    person("Mattias", "Attbom", email = "mattias1126@protonmail.com")
+    person("Mattias", "Attbom", email = "mattias1126@protonmail.com", role = "ctb")
     )
 Description: An aid for text mining in R, with a syntax that
     should be familiar to experienced R users. Provides a wrapper for several 
@@ -26,7 +26,8 @@ Imports:
     stringr,
     Rcpp,
     RcppProgress,
-    RSpectra
+    RSpectra,
+    utils
 Suggests:
     spelling,
     digest,

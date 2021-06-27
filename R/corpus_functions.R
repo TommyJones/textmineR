@@ -450,7 +450,7 @@ TermDocFreq <- function(dtm){
   
   freq.mat$idf <- log(nrow(dtm) / freq.mat$doc_freq)
 
-  if ("tibble" %in% row.names(installed.packages())) {
+  if ("tibble" %in% row.names(utils::installed.packages())) {
       freq.mat <- tibble::as_tibble(freq.mat)
   }
   return(freq.mat)

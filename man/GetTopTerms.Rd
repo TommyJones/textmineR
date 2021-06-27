@@ -4,15 +4,19 @@
 \alias{GetTopTerms}
 \title{Get Top Terms for each topic from a topic model}
 \usage{
-GetTopTerms(phi, M)
+GetTopTerms(phi, M, return_matrix = TRUE)
 }
 \arguments{
 \item{phi}{A matrix whose rows index topics and columns index words}
 
 \item{M}{An integer for the number of terms to return}
+
+\item{return_matrix}{Do you want a \code{matrix} or \code{data.frame}/\code{tibble}
+returned? Defaults to \code{TRUE}.}
 }
 \value{
-Returns a \code{data.frame} whose columns correspond to a topic and
+If \code{return_matrix = TRUE} (the default) then a matrix. Otherwise,
+returns a \code{data.frame} or \code{tibble} whose columns correspond to a topic and
 whose m-th row correspond to the m-th top term from the input \code{phi}.
 }
 \description{
