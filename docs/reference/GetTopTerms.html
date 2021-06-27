@@ -167,7 +167,7 @@
     <p>Takes topics by terms matrix and returns top M terms for each topic</p>
     </div>
 
-    <pre class="usage"><span class='fu'>GetTopTerms</span><span class='op'>(</span><span class='va'>phi</span>, <span class='va'>M</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>GetTopTerms</span><span class='op'>(</span><span class='va'>phi</span>, <span class='va'>M</span>, return_matrix <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,11 +180,17 @@
       <th>M</th>
       <td><p>An integer for the number of terms to return</p></td>
     </tr>
+    <tr>
+      <th>return_matrix</th>
+      <td><p>Do you want a <code>matrix</code> or <code>data.frame</code>/<code>tibble</code>
+returned? Defaults to <code>TRUE</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a <code>data.frame</code> whose columns correspond to a topic and
+    <p>If <code>return_matrix = TRUE</code> (the default) then a matrix. Otherwise,
+returns a <code>data.frame</code> or <code>tibble</code> whose columns correspond to a topic and
 whose m-th row correspond to the m-th top term from the input <code>phi</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

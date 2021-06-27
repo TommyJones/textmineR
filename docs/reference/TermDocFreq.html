@@ -184,11 +184,12 @@ and inverse-document frequency</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a <code>data.frame</code> with 4 columns. The first column, 
-<code>term</code> is a vector of token labels. The second column, <code>term_freq</code>
-is the count of times <code>term</code> appears in the entire corpus. The third
-column <code>doc_freq</code> is the count of the number of documents in which 
-<code>term</code> appears. The fourth column, <code>idf</code> is the log-weighted
+    <p>Returns a <code>data.frame</code> or <code>tibble</code> with 4 columns.
+The first column, <code>term</code> is a vector of token labels.
+The second column, <code>term_freq</code> is the count of times <code>term</code>
+appears in the entire corpus. The third column <code>doc_freq</code> is the
+count of the number of documents in which <code>term</code> appears.
+The fourth column, <code>idf</code> is the log-weighted
 inverse document frequency of <code>term</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -200,11 +201,11 @@ inverse document frequency of <code>term</code>.</p>
 <span class='va'>term_freq_mat</span> <span class='op'>&lt;-</span> <span class='fu'>TermDocFreq</span><span class='op'>(</span><span class='va'>nih_sample_dtm</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>term_freq_mat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 'data.frame':	5210 obs. of  4 variables:
-#&gt;  $ term     : chr  "folding" "tosuprttedprtmnt" "importation" "hd" ...
-#&gt;  $ term_freq: num  1 1 1 1 1 1 1 1 1 1 ...
-#&gt;  $ doc_freq : int  1 1 1 1 1 1 1 1 1 1 ...
-#&gt;  $ idf      : num  4.61 4.61 4.61 4.61 4.61 ...</div></pre>
+</div><div class='output co'>#&gt; tibble [5,210 × 4] (S3: tbl_df/tbl/data.frame)
+#&gt;  $ term     : chr [1:5210] "folding" "tosuprttedprtmnt" "importation" "hd" ...
+#&gt;  $ term_freq: num [1:5210] 1 1 1 1 1 1 1 1 1 1 ...
+#&gt;  $ doc_freq : int [1:5210] 1 1 1 1 1 1 1 1 1 1 ...
+#&gt;  $ idf      : num [1:5210] 4.61 4.61 4.61 4.61 4.61 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

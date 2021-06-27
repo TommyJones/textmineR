@@ -268,18 +268,17 @@
 <span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">)</span> 
-<span class="co">#&gt; 'data.frame':    56023 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ term     : chr  "aaa" "aaa_ball" "aaaaatch" "aaaaatch_kah" ...</span>
-<span class="co">#&gt;  $ term_freq: num  1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ doc_freq : int  1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ idf      : num  6.21 6.21 6.21 6.21 6.21 ...</span></code></pre></div>
+<span class="co">#&gt; tibble [56,023 × 4] (S3: tbl_df/tbl/data.frame)</span>
+<span class="co">#&gt;  $ term     : chr [1:56023] "aaa" "aaa_ball" "aaaaatch" "aaaaatch_kah" ...</span>
+<span class="co">#&gt;  $ term_freq: num [1:56023] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">#&gt;  $ doc_freq : int [1:56023] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">#&gt;  $ idf      : num [1:56023] 6.21 6.21 6.21 6.21 6.21 ...</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># look at the most frequent tokens</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>Ten most frequent tokens</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -288,13 +287,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">br</td>
-<td align="left">br</td>
 <td align="right">1990</td>
 <td align="right">289</td>
 <td align="right">0.5481814</td>
 </tr>
 <tr class="even">
-<td align="left">br_br</td>
 <td align="left">br_br</td>
 <td align="right">999</td>
 <td align="right">289</td>
@@ -302,13 +299,11 @@
 </tr>
 <tr class="odd">
 <td align="left">film</td>
-<td align="left">film</td>
 <td align="right">909</td>
 <td align="right">294</td>
 <td align="right">0.5310283</td>
 </tr>
 <tr class="even">
-<td align="left">movie</td>
 <td align="left">movie</td>
 <td align="right">774</td>
 <td align="right">290</td>
@@ -316,13 +311,11 @@
 </tr>
 <tr class="odd">
 <td align="left">good</td>
-<td align="left">good</td>
 <td align="right">337</td>
 <td align="right">209</td>
 <td align="right">0.8722738</td>
 </tr>
 <tr class="even">
-<td align="left">time</td>
 <td align="left">time</td>
 <td align="right">252</td>
 <td align="right">167</td>
@@ -330,13 +323,11 @@
 </tr>
 <tr class="odd">
 <td align="left">people</td>
-<td align="left">people</td>
 <td align="right">238</td>
 <td align="right">143</td>
 <td align="right">1.2517635</td>
 </tr>
 <tr class="even">
-<td align="left">story</td>
 <td align="left">story</td>
 <td align="right">230</td>
 <td align="right">143</td>
@@ -344,13 +335,11 @@
 </tr>
 <tr class="odd">
 <td align="left">great</td>
-<td align="left">great</td>
 <td align="right">181</td>
 <td align="right">125</td>
 <td align="right">1.3862944</td>
 </tr>
 <tr class="even">
-<td align="left">bad</td>
 <td align="left">bad</td>
 <td align="right">176</td>
 <td align="right">121</td>
@@ -366,7 +355,6 @@
 <table class="table">
 <caption>Ten most frequent bi-grams</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -375,13 +363,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">br_br</td>
-<td align="left">br_br</td>
 <td align="right">999</td>
 <td align="right">289</td>
 <td align="right">0.5481814</td>
 </tr>
 <tr class="even">
-<td align="left">br_film</td>
 <td align="left">br_film</td>
 <td align="right">41</td>
 <td align="right">35</td>
@@ -389,13 +375,11 @@
 </tr>
 <tr class="odd">
 <td align="left">br_movie</td>
-<td align="left">br_movie</td>
 <td align="right">34</td>
 <td align="right">31</td>
 <td align="right">2.7806209</td>
 </tr>
 <tr class="even">
-<td align="left">special_effects</td>
 <td align="left">special_effects</td>
 <td align="right">28</td>
 <td align="right">24</td>
@@ -403,20 +387,17 @@
 </tr>
 <tr class="odd">
 <td align="left">film_br</td>
-<td align="left">film_br</td>
 <td align="right">20</td>
 <td align="right">17</td>
 <td align="right">3.3813948</td>
 </tr>
 <tr class="even">
 <td align="left">good_movie</td>
-<td align="left">good_movie</td>
 <td align="right">18</td>
 <td align="right">17</td>
 <td align="right">3.3813948</td>
 </tr>
 <tr class="odd">
-<td align="left">low_budget</td>
 <td align="left">low_budget</td>
 <td align="right">18</td>
 <td align="right">16</td>
@@ -424,20 +405,17 @@
 </tr>
 <tr class="even">
 <td align="left">waste_time</td>
-<td align="left">waste_time</td>
 <td align="right">17</td>
 <td align="right">15</td>
 <td align="right">3.5065579</td>
 </tr>
 <tr class="odd">
 <td align="left">movie_br</td>
-<td align="left">movie_br</td>
 <td align="right">15</td>
 <td align="right">15</td>
 <td align="right">3.5065579</td>
 </tr>
 <tr class="even">
-<td align="left">movie_good</td>
 <td align="left">movie_good</td>
 <td align="right">15</td>
 <td align="right">14</td>
@@ -458,21 +436,22 @@
 <span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt;                term term_freq doc_freq       idf</span>
-<span class="co">#&gt; film           film       909      294 0.5310283</span>
-<span class="co">#&gt; movie         movie       774      290 0.5447272</span>
-<span class="co">#&gt; good           good       337      209 0.8722738</span>
-<span class="co">#&gt; time           time       252      167 1.0966143</span>
-<span class="co">#&gt; people       people       238      143 1.2517635</span>
-<span class="co">#&gt; story         story       230      143 1.2517635</span>
-<span class="co">#&gt; great         great       181      125 1.3862944</span>
-<span class="co">#&gt; bad             bad       176      121 1.4188176</span>
-<span class="co">#&gt; made           made       170      140 1.2729657</span>
-<span class="co">#&gt; character character       169      108 1.5324769</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 10 x 4</span>
+<span class="co">#&gt;    term      term_freq doc_freq   idf</span>
+<span class="co">#&gt;    &lt;chr&gt;         &lt;dbl&gt;    &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 film            909      294 0.531</span>
+<span class="co">#&gt;  2 movie           774      290 0.545</span>
+<span class="co">#&gt;  3 good            337      209 0.872</span>
+<span class="co">#&gt;  4 time            252      167 1.10 </span>
+<span class="co">#&gt;  5 people          238      143 1.25 </span>
+<span class="co">#&gt;  6 story           230      143 1.25 </span>
+<span class="co">#&gt;  7 great           181      125 1.39 </span>
+<span class="co">#&gt;  8 bad             176      121 1.42 </span>
+<span class="co">#&gt;  9 made            170      140 1.27 </span>
+<span class="co">#&gt; 10 character       169      108 1.53</span></code></pre></div>
 <table class="table">
 <caption>Ten most frequent terms, ‘&lt;br&gt;’ removed</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -481,13 +460,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">film</td>
-<td align="left">film</td>
 <td align="right">909</td>
 <td align="right">294</td>
 <td align="right">0.5310283</td>
 </tr>
 <tr class="even">
-<td align="left">movie</td>
 <td align="left">movie</td>
 <td align="right">774</td>
 <td align="right">290</td>
@@ -495,13 +472,11 @@
 </tr>
 <tr class="odd">
 <td align="left">good</td>
-<td align="left">good</td>
 <td align="right">337</td>
 <td align="right">209</td>
 <td align="right">0.8722738</td>
 </tr>
 <tr class="even">
-<td align="left">time</td>
 <td align="left">time</td>
 <td align="right">252</td>
 <td align="right">167</td>
@@ -509,13 +484,11 @@
 </tr>
 <tr class="odd">
 <td align="left">people</td>
-<td align="left">people</td>
 <td align="right">238</td>
 <td align="right">143</td>
 <td align="right">1.2517635</td>
 </tr>
 <tr class="even">
-<td align="left">story</td>
 <td align="left">story</td>
 <td align="right">230</td>
 <td align="right">143</td>
@@ -523,13 +496,11 @@
 </tr>
 <tr class="odd">
 <td align="left">great</td>
-<td align="left">great</td>
 <td align="right">181</td>
 <td align="right">125</td>
 <td align="right">1.3862944</td>
 </tr>
 <tr class="even">
-<td align="left">bad</td>
 <td align="left">bad</td>
 <td align="right">176</td>
 <td align="right">121</td>
@@ -537,13 +508,11 @@
 </tr>
 <tr class="odd">
 <td align="left">made</td>
-<td align="left">made</td>
 <td align="right">170</td>
 <td align="right">140</td>
 <td align="right">1.2729657</td>
 </tr>
 <tr class="even">
-<td align="left">character</td>
 <td align="left">character</td>
 <td align="right">169</td>
 <td align="right">108</td>
@@ -556,7 +525,6 @@
 <table class="table">
 <caption>Ten most frequent bi-grams, ‘&lt;br&gt;’ removed</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -565,13 +533,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">special_effects</td>
-<td align="left">special_effects</td>
 <td align="right">28</td>
 <td align="right">24</td>
 <td align="right">3.036554</td>
 </tr>
 <tr class="even">
-<td align="left">good_movie</td>
 <td align="left">good_movie</td>
 <td align="right">18</td>
 <td align="right">17</td>
@@ -579,13 +545,11 @@
 </tr>
 <tr class="odd">
 <td align="left">low_budget</td>
-<td align="left">low_budget</td>
 <td align="right">18</td>
 <td align="right">16</td>
 <td align="right">3.442019</td>
 </tr>
 <tr class="even">
-<td align="left">waste_time</td>
 <td align="left">waste_time</td>
 <td align="right">17</td>
 <td align="right">15</td>
@@ -593,13 +557,11 @@
 </tr>
 <tr class="odd">
 <td align="left">movie_good</td>
-<td align="left">movie_good</td>
 <td align="right">15</td>
 <td align="right">14</td>
 <td align="right">3.575551</td>
 </tr>
 <tr class="even">
-<td align="left">real_life</td>
 <td align="left">real_life</td>
 <td align="right">14</td>
 <td align="right">11</td>
@@ -607,13 +569,11 @@
 </tr>
 <tr class="odd">
 <td align="left">watch_movie</td>
-<td align="left">watch_movie</td>
 <td align="right">14</td>
 <td align="right">13</td>
 <td align="right">3.649659</td>
 </tr>
 <tr class="even">
-<td align="left">watching_movie</td>
 <td align="left">watching_movie</td>
 <td align="right">14</td>
 <td align="right">13</td>
@@ -621,13 +581,11 @@
 </tr>
 <tr class="odd">
 <td align="left">high_school</td>
-<td align="left">high_school</td>
 <td align="right">13</td>
 <td align="right">7</td>
 <td align="right">4.268698</td>
 </tr>
 <tr class="even">
-<td align="left">horror_films</td>
 <td align="left">horror_films</td>
 <td align="right">13</td>
 <td align="right">8</td>
@@ -663,7 +621,6 @@
 <table class="table">
 <caption>Ten most-frequent positive tokens</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -672,13 +629,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">film</td>
-<td align="left">film</td>
 <td align="right">483</td>
 <td align="right">151</td>
 <td align="right">0.4591837</td>
 </tr>
 <tr class="even">
-<td align="left">movie</td>
 <td align="left">movie</td>
 <td align="right">340</td>
 <td align="right">130</td>
@@ -686,13 +641,11 @@
 </tr>
 <tr class="odd">
 <td align="left">good</td>
-<td align="left">good</td>
 <td align="right">180</td>
 <td align="right">106</td>
 <td align="right">0.8130245</td>
 </tr>
 <tr class="even">
-<td align="left">great</td>
 <td align="left">great</td>
 <td align="right">142</td>
 <td align="right">93</td>
@@ -700,13 +653,11 @@
 </tr>
 <tr class="odd">
 <td align="left">time</td>
-<td align="left">time</td>
 <td align="right">138</td>
 <td align="right">88</td>
 <td align="right">0.9991267</td>
 </tr>
 <tr class="even">
-<td align="left">story</td>
 <td align="left">story</td>
 <td align="right">124</td>
 <td align="right">75</td>
@@ -714,13 +665,11 @@
 </tr>
 <tr class="odd">
 <td align="left">people</td>
-<td align="left">people</td>
 <td align="right">107</td>
 <td align="right">65</td>
 <td align="right">1.3020763</td>
 </tr>
 <tr class="even">
-<td align="left">films</td>
 <td align="left">films</td>
 <td align="right">102</td>
 <td align="right">56</td>
@@ -728,13 +677,11 @@
 </tr>
 <tr class="odd">
 <td align="left">love</td>
-<td align="left">love</td>
 <td align="right">82</td>
 <td align="right">53</td>
 <td align="right">1.5061716</td>
 </tr>
 <tr class="even">
-<td align="left">made</td>
 <td align="left">made</td>
 <td align="right">81</td>
 <td align="right">67</td>
@@ -747,7 +694,6 @@
 <table class="table">
 <caption>Ten most-frequent negative tokens</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -756,13 +702,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">movie</td>
-<td align="left">movie</td>
 <td align="right">434</td>
 <td align="right">160</td>
 <td align="right">0.4893466</td>
 </tr>
 <tr class="even">
-<td align="left">film</td>
 <td align="left">film</td>
 <td align="right">426</td>
 <td align="right">143</td>
@@ -770,13 +714,11 @@
 </tr>
 <tr class="odd">
 <td align="left">good</td>
-<td align="left">good</td>
 <td align="right">157</td>
 <td align="right">103</td>
 <td align="right">0.9297914</td>
 </tr>
 <tr class="even">
-<td align="left">people</td>
 <td align="left">people</td>
 <td align="right">131</td>
 <td align="right">78</td>
@@ -784,13 +726,11 @@
 </tr>
 <tr class="odd">
 <td align="left">bad</td>
-<td align="left">bad</td>
 <td align="right">130</td>
 <td align="right">82</td>
 <td align="right">1.1578012</td>
 </tr>
 <tr class="even">
-<td align="left">time</td>
 <td align="left">time</td>
 <td align="right">114</td>
 <td align="right">79</td>
@@ -798,13 +738,11 @@
 </tr>
 <tr class="odd">
 <td align="left">story</td>
-<td align="left">story</td>
 <td align="right">106</td>
 <td align="right">68</td>
 <td align="right">1.3450127</td>
 </tr>
 <tr class="even">
-<td align="left">character</td>
 <td align="left">character</td>
 <td align="right">95</td>
 <td align="right">60</td>
@@ -812,13 +750,11 @@
 </tr>
 <tr class="odd">
 <td align="left">made</td>
-<td align="left">made</td>
 <td align="right">89</td>
 <td align="right">73</td>
 <td align="right">1.2740610</td>
 </tr>
 <tr class="even">
-<td align="left">make</td>
 <td align="left">make</td>
 <td align="right">86</td>
 <td align="right">63</td>
@@ -854,7 +790,6 @@
 <table class="table">
 <caption>Reweighted: ten most relevant terms for positive sentiment</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -865,7 +800,6 @@
 <tbody>
 <tr class="odd">
 <td align="left">great</td>
-<td align="left">great</td>
 <td align="right">142</td>
 <td align="right">93</td>
 <td align="right">0.9438641</td>
@@ -873,7 +807,6 @@
 <td align="right">0.0029998</td>
 </tr>
 <tr class="even">
-<td align="left">film</td>
 <td align="left">film</td>
 <td align="right">483</td>
 <td align="right">151</td>
@@ -883,7 +816,6 @@
 </tr>
 <tr class="odd">
 <td align="left">love</td>
-<td align="left">love</td>
 <td align="right">82</td>
 <td align="right">53</td>
 <td align="right">1.5061716</td>
@@ -891,7 +823,6 @@
 <td align="right">0.0012406</td>
 </tr>
 <tr class="even">
-<td align="left">films</td>
 <td align="left">films</td>
 <td align="right">102</td>
 <td align="right">56</td>
@@ -901,7 +832,6 @@
 </tr>
 <tr class="odd">
 <td align="left">performance</td>
-<td align="left">performance</td>
 <td align="right">55</td>
 <td align="right">32</td>
 <td align="right">2.0107276</td>
@@ -909,7 +839,6 @@
 <td align="right">0.0008667</td>
 </tr>
 <tr class="even">
-<td align="left">role</td>
 <td align="left">role</td>
 <td align="right">52</td>
 <td align="right">38</td>
@@ -919,7 +848,6 @@
 </tr>
 <tr class="odd">
 <td align="left">charlie</td>
-<td align="left">charlie</td>
 <td align="right">28</td>
 <td align="right">3</td>
 <td align="right">4.3778513</td>
@@ -927,7 +855,6 @@
 <td align="right">0.0007911</td>
 </tr>
 <tr class="even">
-<td align="left">excellent</td>
 <td align="left">excellent</td>
 <td align="right">36</td>
 <td align="right">31</td>
@@ -937,7 +864,6 @@
 </tr>
 <tr class="odd">
 <td align="left">performances</td>
-<td align="left">performances</td>
 <td align="right">34</td>
 <td align="right">21</td>
 <td align="right">2.4319411</td>
@@ -945,7 +871,6 @@
 <td align="right">0.0006687</td>
 </tr>
 <tr class="even">
-<td align="left">time</td>
 <td align="left">time</td>
 <td align="right">138</td>
 <td align="right">88</td>
@@ -960,7 +885,6 @@
 <table class="table">
 <caption>Reweighted: ten most relevant terms for negative sentiment</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -971,7 +895,6 @@
 <tbody>
 <tr class="odd">
 <td align="left">movie</td>
-<td align="left">movie</td>
 <td align="right">434</td>
 <td align="right">160</td>
 <td align="right">0.4893466</td>
@@ -979,7 +902,6 @@
 <td align="right">0.0030342</td>
 </tr>
 <tr class="even">
-<td align="left">bad</td>
 <td align="left">bad</td>
 <td align="right">130</td>
 <td align="right">82</td>
@@ -989,7 +911,6 @@
 </tr>
 <tr class="odd">
 <td align="left">worst</td>
-<td align="left">worst</td>
 <td align="right">47</td>
 <td align="right">39</td>
 <td align="right">1.9009588</td>
@@ -997,7 +918,6 @@
 <td align="right">0.0012483</td>
 </tr>
 <tr class="even">
-<td align="left">pretty</td>
 <td align="left">pretty</td>
 <td align="right">54</td>
 <td align="right">41</td>
@@ -1007,7 +927,6 @@
 </tr>
 <tr class="odd">
 <td align="left">poor</td>
-<td align="left">poor</td>
 <td align="right">42</td>
 <td align="right">34</td>
 <td align="right">2.0381599</td>
@@ -1015,7 +934,6 @@
 <td align="right">0.0009771</td>
 </tr>
 <tr class="even">
-<td align="left">guy</td>
 <td align="left">guy</td>
 <td align="right">56</td>
 <td align="right">28</td>
@@ -1025,7 +943,6 @@
 </tr>
 <tr class="odd">
 <td align="left">part</td>
-<td align="left">part</td>
 <td align="right">57</td>
 <td align="right">43</td>
 <td align="right">1.8033203</td>
@@ -1033,7 +950,6 @@
 <td align="right">0.0008955</td>
 </tr>
 <tr class="even">
-<td align="left">black</td>
 <td align="left">black</td>
 <td align="right">41</td>
 <td align="right">20</td>
@@ -1043,7 +959,6 @@
 </tr>
 <tr class="odd">
 <td align="left">minutes</td>
-<td align="left">minutes</td>
 <td align="right">44</td>
 <td align="right">32</td>
 <td align="right">2.0987845</td>
@@ -1051,7 +966,6 @@
 <td align="right">0.0008588</td>
 </tr>
 <tr class="even">
-<td align="left">stupid</td>
 <td align="left">stupid</td>
 <td align="right">31</td>
 <td align="right">24</td>
@@ -1072,7 +986,6 @@
 <table class="table">
 <caption>Reweighted: ten most relevant bigrams for positive sentiment</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -1083,7 +996,6 @@
 <tbody>
 <tr class="odd">
 <td align="left">makes_movie</td>
-<td align="left">makes_movie</td>
 <td align="right">10</td>
 <td align="right">8</td>
 <td align="right">3.397022</td>
@@ -1091,7 +1003,6 @@
 <td align="right">0.0002932</td>
 </tr>
 <tr class="even">
-<td align="left">good_movie</td>
 <td align="left">good_movie</td>
 <td align="right">14</td>
 <td align="right">14</td>
@@ -1101,7 +1012,6 @@
 </tr>
 <tr class="odd">
 <td align="left">high_school</td>
-<td align="left">high_school</td>
 <td align="right">11</td>
 <td align="right">5</td>
 <td align="right">3.867026</td>
@@ -1109,7 +1019,6 @@
 <td align="right">0.0002629</td>
 </tr>
 <tr class="even">
-<td align="left">star_wars</td>
 <td align="left">star_wars</td>
 <td align="right">9</td>
 <td align="right">5</td>
@@ -1119,7 +1028,6 @@
 </tr>
 <tr class="odd">
 <td align="left">great_movie</td>
-<td align="left">great_movie</td>
 <td align="right">8</td>
 <td align="right">8</td>
 <td align="right">3.397022</td>
@@ -1127,7 +1035,6 @@
 <td align="right">0.0002047</td>
 </tr>
 <tr class="even">
-<td align="left">highly_recommended</td>
 <td align="left">highly_recommended</td>
 <td align="right">6</td>
 <td align="right">6</td>
@@ -1137,7 +1044,6 @@
 </tr>
 <tr class="odd">
 <td align="left">great_film</td>
-<td align="left">great_film</td>
 <td align="right">8</td>
 <td align="right">7</td>
 <td align="right">3.530553</td>
@@ -1145,7 +1051,6 @@
 <td align="right">0.0001749</td>
 </tr>
 <tr class="even">
-<td align="left">movie_great</td>
 <td align="left">movie_great</td>
 <td align="right">8</td>
 <td align="right">7</td>
@@ -1155,7 +1060,6 @@
 </tr>
 <tr class="odd">
 <td align="left">academy_award</td>
-<td align="left">academy_award</td>
 <td align="right">5</td>
 <td align="right">4</td>
 <td align="right">4.090169</td>
@@ -1163,7 +1067,6 @@
 <td align="right">0.0001466</td>
 </tr>
 <tr class="even">
-<td align="left">acting_great</td>
 <td align="left">acting_great</td>
 <td align="right">5</td>
 <td align="right">5</td>
@@ -1178,7 +1081,6 @@
 <table class="table">
 <caption>Reweighted: ten most relevant bigrams for negative sentiment</caption>
 <thead><tr class="header">
-<th align="left"></th>
 <th align="left">term</th>
 <th align="right">term_freq</th>
 <th align="right">doc_freq</th>
@@ -1189,7 +1091,6 @@
 <tbody>
 <tr class="odd">
 <td align="left">waste_time</td>
-<td align="left">waste_time</td>
 <td align="right">16</td>
 <td align="right">14</td>
 <td align="right">2.925463</td>
@@ -1197,7 +1098,6 @@
 <td align="right">0.0004561</td>
 </tr>
 <tr class="even">
-<td align="left">special_effects</td>
 <td align="left">special_effects</td>
 <td align="right">20</td>
 <td align="right">16</td>
@@ -1207,7 +1107,6 @@
 </tr>
 <tr class="odd">
 <td align="left">movie_made</td>
-<td align="left">movie_made</td>
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">3.261935</td>
@@ -1215,7 +1114,6 @@
 <td align="right">0.0002440</td>
 </tr>
 <tr class="even">
-<td align="left">make_sense</td>
 <td align="left">make_sense</td>
 <td align="right">9</td>
 <td align="right">6</td>
@@ -1225,7 +1123,6 @@
 </tr>
 <tr class="odd">
 <td align="left">scooby_doo</td>
-<td align="left">scooby_doo</td>
 <td align="right">8</td>
 <td align="right">4</td>
 <td align="right">4.178226</td>
@@ -1233,7 +1130,6 @@
 <td align="right">0.0002131</td>
 </tr>
 <tr class="even">
-<td align="left">worst_movie</td>
 <td align="left">worst_movie</td>
 <td align="right">7</td>
 <td align="right">6</td>
@@ -1243,7 +1139,6 @@
 </tr>
 <tr class="odd">
 <td align="left">part_movie</td>
-<td align="left">part_movie</td>
 <td align="right">8</td>
 <td align="right">6</td>
 <td align="right">3.772761</td>
@@ -1251,7 +1146,6 @@
 <td align="right">0.0001833</td>
 </tr>
 <tr class="even">
-<td align="left">read_book</td>
 <td align="left">read_book</td>
 <td align="right">8</td>
 <td align="right">8</td>
@@ -1261,7 +1155,6 @@
 </tr>
 <tr class="odd">
 <td align="left">good_idea</td>
-<td align="left">good_idea</td>
 <td align="right">6</td>
 <td align="right">6</td>
 <td align="right">3.772761</td>
@@ -1269,7 +1162,6 @@
 <td align="right">0.0001822</td>
 </tr>
 <tr class="even">
-<td align="left">main_character</td>
 <td align="left">main_character</td>
 <td align="right">8</td>
 <td align="right">6</td>
