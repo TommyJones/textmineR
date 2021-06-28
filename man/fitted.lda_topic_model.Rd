@@ -4,7 +4,7 @@
 \alias{fitted.lda_topic_model}
 \title{Get the fitted values for a Latent Dirichlet Allocation topic model}
 \usage{
-\method{fitted}{lda_topic_model}(object)
+\method{fitted}{lda_topic_model}(object, ...)
 }
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}

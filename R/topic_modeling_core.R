@@ -1297,6 +1297,6 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
 #' fitted_values <- fitted(nih_sample_topic_model)
 #' fitted_values
 
-fitted.lda_topic_model <- function(object) {
+fitted.lda_topic_model <- function(object, ...) {
     (Matrix::rowSums(object$data) * object$theta) %*% object$phi
 }
