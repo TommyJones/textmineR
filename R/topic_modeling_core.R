@@ -1288,6 +1288,7 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
 #' Get the fitted values for a Latent Dirichlet Allocation topic model
 #' @description Obtains the fitted values for the specified LDA model.
 #' @param object a fitted object of class \code{lda_topic_model}
+#' @param ... other parameters to pass through, currently not used.
 #' @return a matrix of class \code{dgCMatrix}
 #' @export
 #' @examples
