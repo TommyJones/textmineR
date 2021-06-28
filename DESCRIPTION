@@ -27,7 +27,8 @@ Imports:
     Rcpp,
     RcppProgress,
     RSpectra,
-    utils
+    utils,
+    mvrsquared
 Suggests:
     spelling,
     digest,

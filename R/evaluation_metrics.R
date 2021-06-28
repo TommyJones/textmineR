@@ -307,38 +307,12 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...){
   # get ybar, the "center" of the documents
   ybar <- Matrix::colMeans(dtm)
   
-  # do in parallel in batches of about 3000 if we have more than 3000 docs
-  if(nrow(dtm) > 3000){
-    
-    batches <- seq(1, nrow(dtm), by = 3000)
-    
-    data_divided <- lapply(batches, function(j){
-      
-      dtm_divided <- dtm[ j:min(j + 2999, nrow(dtm)) , ]
-      
-      theta_divided <- theta[ j:min(j + 2999, nrow(dtm)) , ]
-      
-      list(dtm_divided=dtm_divided, theta_divided=theta_divided)
-    })
-    
-    result <-TmParallelApply(X = data_divided, FUN = function(x){
-      CalcSumSquares(dtm = x$dtm_divided, 
-                     phi = phi, 
-                     theta = x$theta_divided, 
-                     ybar=ybar)
-    }, export=c("phi", "ybar"), ...)
-    
-    result <- do.call(rbind, result)
-    
-    result <- 1 - sum(result[ , 1 ]) / sum(result[ , 2 ])
-    
-    # do sequentially otherwise
-  }else{
-    sum_squares <- CalcSumSquares(dtm = dtm,  phi = phi, theta = theta, ybar=ybar)
-    
-    result <- 1 - sum_squares[ 1 ] / sum_squares[ 2 ]
-    
-  }
-  
-  result
+  # use mvrsquared to calculate rsquared
+    result <- mvrsquared::calc_rsquared(y = dtm,
+                                        yhat = list(x = Matrix::rowSums(
+                                                                    dtm
+                                                                ) * theta,
+                                                    w = phi),
+                                        ybar = ybar)
+  return(result)
 }
