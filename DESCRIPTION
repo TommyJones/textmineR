@@ -37,6 +37,7 @@ Suggests:
     knitr,
     lda,
     MASS,
+    markdown,
     rmarkdown,
     SnowballC,
     stringi,
