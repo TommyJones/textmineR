@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}
+
+\item{...}{other arguments.}
 }
 \value{
 a matrix of class \code{dgCMatrix}
