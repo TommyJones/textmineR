@@ -224,15 +224,13 @@ CalcProbCoherence<- function(phi, dtm, M = 5){
 #' p(term_i |topic_j)
 #' @param theta A documents by topics dimensional matrix where each entry
 #' is p(topic_j|document_d)
+#' @param cpus An integer of how many threads to use. Defaults to 1 and is
+#' equivalent of setting \code{threads} in \link{mvrsquared}[calc_rsquared].
 #' @param ... Other arguments to be passed to
 #' \code{\link[mvrsquared]{calc_rsquared}}. See note, below.
 #' @return
 #' Returns an object of class \code{numeric} representing the proportion
 #' of variability in the data that is explained by the topic model.
-#' @note
-#' This function performs parallel computation if \code{threads} is set to
-#' more than 1. The default is to use 1 and is handled
-#' by \link{mvrsquared}[mvrsquared]
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model

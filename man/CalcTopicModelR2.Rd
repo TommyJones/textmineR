@@ -4,7 +4,7 @@
 \alias{CalcTopicModelR2}
 \title{Calculate the R-squared of a topic model.}
 \usage{
-CalcTopicModelR2(dtm, phi, theta, ...)
+CalcTopicModelR2(dtm, phi, theta, cpus = 1, ...)
 }
 \arguments{
 \item{dtm}{A documents by terms dimensional document term matrix of class
@@ -15,6 +15,9 @@ p(term_i |topic_j)}
 
 \item{theta}{A documents by topics dimensional matrix where each entry
 is p(topic_j|document_d)}
+
+\item{cpus}{An integer of how many threads to use. Defaults to 1 and is
+equivalent of setting \code{threads} in \link{mvrsquared}[calc_rsquared].}
 
 \item{...}{Other arguments to be passed to
 \code{\link[mvrsquared]{calc_rsquared}}. See note, below.}
@@ -27,11 +30,6 @@ of variability in the data that is explained by the topic model.
 Function to calculate R-squared for a topic model. 
 This is a wrapper for \code{mvrsquared::calc_rsquared} with additional
 checks in place to check for the inputs.
-}
-\note{
-This function performs parallel computation if \code{threads} is set to
-more than 1. The default is to use 1 and is handled
-by \link{mvrsquared}[mvrsquared]
 }
 \examples{
 # Load a pre-formatted dtm and topic model
