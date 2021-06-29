@@ -4,32 +4,32 @@
 \alias{CalcTopicModelR2}
 \title{Calculate the R-squared of a topic model.}
 \usage{
-CalcTopicModelR2(dtm, phi, theta, ...)
+CalcTopicModelR2(dtm, phi, theta, cpus = 1, ...)
 }
 \arguments{
 \item{dtm}{A documents by terms dimensional document term matrix of class
 \code{dgCMatrix} or of class \code{matrix}.}
 
-\item{phi}{A topics by terms dimensional matrix where each entry is p(term_i |topic_j)}
+\item{phi}{A topics by terms dimensional matrix where each entry is
+p(term_i |topic_j)}
 
-\item{theta}{A documents by topics dimensional matrix where each entry is p(topic_j|document_d)}
+\item{theta}{A documents by topics dimensional matrix where each entry
+is p(topic_j|document_d)}
 
-\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.}
+\item{cpus}{An integer of how many threads to use. Defaults to 1 and is
+equivalent of setting \code{threads} in \link{mvrsquared}[calc_rsquared].}
+
+\item{...}{Other arguments to be passed to
+\code{\link[mvrsquared]{calc_rsquared}}. See note, below.}
 }
 \value{
-Returns an object of class \code{numeric} representing the proportion of variability
-in the data that is explained by the topic model.
+Returns an object of class \code{numeric} representing the proportion
+of variability in the data that is explained by the topic model.
 }
 \description{
 Function to calculate R-squared for a topic model. 
-This uses a geometric interpretation of R-squared as the proportion of total distance 
-each document is from the center of all the documents that is explained by the model.
-}
-\note{
-This function performs parallel computation if \code{dtm} has more than 3,000
-rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
-However, this can be modified by passing the \code{cpus} argument when calling
-this function.
+This is a wrapper for \code{mvrsquared::calc_rsquared} with additional
+checks in place to check for the inputs.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
