@@ -310,11 +310,11 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...){
   ybar <- Matrix::colMeans(dtm)
   
   # use mvrsquared to calculate rsquared
-    result <- mvrsquared::calc_rsquared(y = dtm,
-                                        yhat = list(x = Matrix::rowSums(
-                                                                    dtm
-                                                                ) * theta,
-                                                    w = phi),
-                                        ybar = ybar)
+    result <- mvrsquared::calc_rsquared(
+                              y = dtm,
+                              yhat = list(x = Matrix::rowSums(dtm) * theta,
+                                          w = phi),
+                              ybar = ybar, ...
+                          )
   return(result)
 }
