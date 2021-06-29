@@ -246,7 +246,7 @@ CalcProbCoherence<- function(phi, dtm, M = 5){
 #' 
 #' 
 #' r2
-CalcTopicModelR2 <- function(dtm, phi, theta, ...){
+CalcTopicModelR2 <- function(dtm, phi, theta, cpus = 1, ...){
   
   # check that inputs have necessary formats
   if(nrow(dtm) != nrow(theta) ){ 
@@ -307,14 +307,14 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...){
   
   
   # get ybar, the "center" of the documents
-  ybar <- Matrix::colMeans(dtm)
-  
+    ybar <- Matrix::colMeans(dtm)
+
   # use mvrsquared to calculate rsquared
     result <- mvrsquared::calc_rsquared(
                               y = dtm,
                               yhat = list(x = Matrix::rowSums(dtm) * theta,
                                           w = phi),
-                              ybar = ybar, ...
+                              ybar = ybar, threads = cpus, ...
                           )
   return(result)
 }
