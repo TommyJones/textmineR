@@ -1,5 +1,3 @@
-context("Topic Modeling Core")
-
 # common objects
 docs <- c("This is my first document.",
           "My 2nd document!",

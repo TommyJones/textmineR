@@ -1,5 +1,3 @@
-context("Functions related to corpus management")
-
 # declare some globals
 docs <- c("This is my first document.",
           "My 2nd document!",

@@ -1,5 +1,3 @@
-context("topic_modeling_utilities")
-
 docs <- c("This is my first document.",
           "My 2nd document!",
           "skills, son, skills. Skillz!")
