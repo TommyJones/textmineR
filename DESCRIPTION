@@ -44,7 +44,8 @@ Suggests:
     tidyr,
     tidytext,
     topicmodels,
-    wordcloud
+    wordcloud,
+    markdown
 License: MIT + file LICENSE
 URL: https://www.rtextminer.com/
 BugReports: https://github.com/TommyJones/textmineR/issues
