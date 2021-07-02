@@ -8,7 +8,7 @@ matrix.}
 \usage{
 term_doc_freq(dtm)
 
-TermDocFreq(dtm)
+TermDocFreq(...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix}.}

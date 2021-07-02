@@ -3,14 +3,11 @@
 \name{dtm_2_docs}
 \alias{dtm_2_docs}
 \alias{Dtm2Docs}
-\alias{Dtm2Tcm}
 \title{Convert a DTM to a Character Vector of documents}
 \usage{
 dtm_2_docs(dtm, ...)
 
-Dtm2Docs(dtm, ...)
-
-Dtm2Tcm(dtm)
+Dtm2Docs(...)
 }
 \arguments{
 \item{dtm}{A sparse Matrix from the matrix package whose rownames correspond

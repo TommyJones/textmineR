@@ -2,9 +2,12 @@
 % Please edit documentation in R/corpus_functions.R
 \name{dtm_2_tcm}
 \alias{dtm_2_tcm}
+\alias{Dtm2Tcm}
 \title{Turn a document term matrix into a term co-occurrence matrix}
 \usage{
 dtm_2_tcm(dtm)
+
+Dtm2Tcm(...)
 }
 \arguments{
 \item{dtm}{A document term matrix, generally of class \code{dgCMatrix},
