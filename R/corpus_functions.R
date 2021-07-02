@@ -63,7 +63,7 @@
 #' )
 #' }
 #' @export
-CreateDtm <- function(doc_vec, doc_names = names(doc_vec),
+create_dtm <- function(doc_vec, doc_names = names(doc_vec),
                       ngram_window = c(1, 1),
                       stopword_vec = c(stopwords::stopwords("en"),
                                        stopwords::stopwords(source = "smart")),
@@ -176,6 +176,18 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec),
   return(dtm)
 }
 
+#' @rdname create_dtm
+#'
+#' @export
+
+CreateDtm <- function(...) {
+    .Deprecated(
+        new = "create_dtm",
+        package = "textmineR"
+    )
+    create_dtm(...)
+}
+
 #' @title Convert a character vector to a term co-occurrence matrix.
 #' @description This is the main term co-occurrence matrix creating function for
 #' \code{textmineR}.
@@ -252,7 +264,7 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec),
 #' )
 #' }
 #' @export
-CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
+create_tcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                       stopword_vec = c(stopwords::stopwords("en"),
                                        stopwords::stopwords(source = "smart")),
                       lower = TRUE, remove_punctuation = TRUE,
@@ -399,6 +411,17 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   return(tcm)
 }
 
+#' @rdname create_tcm
+#' @export
+
+CreateTcm <- function(...) {
+    .Deprecated(
+        new = "create_tcm",
+        package = "textmineR"
+    )
+    create_tcm(...)
+}
+
 #' Convert a DTM to a Character Vector of documents
 #'
 #' @description This function takes a sparse matrix (DTM) as input and returns
@@ -430,7 +453,7 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
 #' new_docs <- Dtm2Docs(dtm = nih_sample_dtm)
 #'
 #' new_docs[1:3]
-Dtm2Docs <- function(dtm, ...) {
+dtm_2_docs <- function(dtm, ...) {
 
   # do in parallel in batches of about 3000 if we have more than 3000 docs
   if (nrow(dtm) > 3000) {
@@ -452,6 +475,17 @@ Dtm2Docs <- function(dtm, ...) {
   out
 }
 
+#' @rdname dtm_2_docs
+#' @export
+
+Dtm2Docs <- function(...) {
+    .Deprecated(
+        new = "dtm_2_docs",
+        package = "textmineR"
+    )
+    dtm_2_docs(...)
+}
+
 #' @title Turn a document term matrix into a term co-occurrence matrix
 #' @description Turn a document term matrix, whose rows index documents and
 #' whose columns index terms, into a term co-occurrence matrix.
@@ -468,7 +502,7 @@ Dtm2Docs <- function(dtm, ...) {
 #'
 #' tcm <- Dtm2Tcm(nih_sample_dtm)
 #' @export
-Dtm2Tcm <- function(dtm) {
+dtm_2_tcm <- function(dtm) {
 
   # create a binary matrix
   dtm_binary <- dtm > 0
@@ -479,6 +513,15 @@ Dtm2Tcm <- function(dtm) {
   result
 }
 
+#' @rdname dtm_2_tcm
+#' @export
+Dtm2Tcm <- function(...) {
+    .Deprecated(
+        new = "dtm_2_tcm",
+        package = "textmineR"
+    )
+    dtm_2_tcm(...)
+}
 
 #' @title Get term frequencies and document frequencies from a document term
 #' matrix.
@@ -503,7 +546,7 @@ Dtm2Tcm <- function(dtm) {
 #' term_freq_mat <- TermDocFreq(nih_sample_dtm)
 #'
 #' str(term_freq_mat)
-TermDocFreq <- function(dtm) {
+term_doc_freq <- function(dtm) {
   freq_mat <- data.frame(
     term = colnames(dtm),
     term_freq = Matrix::colSums(dtm),
@@ -517,4 +560,15 @@ TermDocFreq <- function(dtm) {
     freq_mat <- tibble::as_tibble(freq_mat)
   }
   return(freq_mat)
+}
+
+#' @rdname term_doc_freq
+#' @export
+
+TermDocFreq <- function(...) {
+    .Deprecated(
+        new = "term_doc_freq",
+        package = "textmineR"
+    )
+    term_doc_freq(...)
 }
