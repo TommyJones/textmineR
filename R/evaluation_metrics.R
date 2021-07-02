@@ -1,22 +1,25 @@
-#' @name CalcLikelihood
-#' @title Calculate the log likelihood of a document term matrix given a topic model
+#' @title Calculate the log likelihood of a document term matrix given a topic
+#' model
 #' @param dtm The document term matrix of class \code{dgCMatrix}.
 #' @param phi The phi matrix whose rows index topics and columns index words.
 #' The i, j entries are P(word_i | topic_j)
-#' @param theta The theta matrix whose rows index documents and columns index topics.
-#' The i, j entries are P(topic_i | document_j)
-#' @param ... Other arguments to pass to \code{\link[textmineR]{TmParallelApply}}. See note, below.
+#' @param theta The theta matrix whose rows index documents and columns index
+#' topics. The i, j entries are P(topic_i | document_j).
+#' @param ... Other arguments to pass to
+#' \code{\link[textmineR]{TmParallelApply}}. See note, below.
 #' @description
 #'     This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix
 #'     (P(topic|document)) and returns a single value for the likelihood of the
 #'     data given the model.
 #' @return
-#' Returns an object of class \code{numeric} corresponding to the log likelihood.
+#' Returns an object of class \code{numeric} corresponding to the log
+#' likelihood.
 #' @note
 #' This function performs parallel computation if \code{dtm} has more than 3,000
-#' rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
-#' However, this can be modified by passing the \code{cpus} argument when calling
-#' this function.
+#' rows. The default is to use all available cores according to
+#' \code{\link[parallel]{detectCores}}.
+#' However, this can be modified by passing the \code{cpus} argument when
+#' calling this function.
 #' @examples
 #' # Load a pre-formatted dtm and topic model
 #' data(nih_sample_dtm)
@@ -31,7 +34,7 @@
 #'
 #' ll
 #' @export
-CalcLikelihood <- function(dtm, phi, theta, ...) {
+calc_likelihood <- function(dtm, phi, theta, ...) {
 
   # check that inputs have necessary formats
   if (nrow(dtm) != nrow(theta)) {
@@ -51,38 +54,80 @@ CalcLikelihood <- function(dtm, phi, theta, ...) {
 
   if (is.null(rownames(dtm)) | is.null(rownames(theta))) {
     # doc names exist?
-    warning("missing rownames from one or both of dtm and theta. Row index used instead.")
-    rownames(dtm) <- 1:nrow(dtm)
-    rownames(theta) <- 1:nrow(theta)
+      warning(
+          paste(
+              "missing rownames from one or both of dtm and theta.",
+              " Row index used instead."
+          )
+      )
+
+    rownames(dtm) <- seq_len(nrow(dtm))
+    rownames(theta) <- seq_len(nrow(theta))
   }
 
   if (is.null(colnames(dtm)) | is.null(colnames(phi))) {
     # term names exist?
-    warning("missing colnames from one or both of dtm and phi. Column index used instead")
-    colnames(dtm) <- 1:ncol(dtm)
-    colnames(phi) <- 1:ncol(phi)
+      warning(
+          paste(
+              "missing colnames from one or both of dtm and phi.",
+              "Column index used instead"
+          )
+      )
+    colnames(dtm) <- seq_len(ncol(dtm))
+    colnames(phi) <- seq_len(ncol(phi))
   }
 
   if (is.null(rownames(phi)) | is.null(colnames(theta))) {
     # topic names exist?
-    warning("missing colnames from theta or rownames from phi. Row/column indeces used instead.")
-    colnames(theta) <- 1:ncol(theta)
-    rownames(phi) <- 1:nrow(phi)
+      warning(
+          paste(
+              "missing colnames from theta or rownames from phi.",
+              "Row/column indices used instead."
+          )
+      )
+      colnames(theta) <- seq_len(ncol(theta))
+      rownames(phi) <- seq_len(nrow(phi))
   }
 
-  if (sum(intersect(colnames(dtm), colnames(phi)) %in% union(colnames(dtm), colnames(phi))) != ncol(dtm)) {
+    if (sum(
+        intersect(colnames(dtm),
+                      colnames(phi)) %in% union(colnames(dtm),
+                                                colnames(phi))
+    ) != ncol(dtm)) {
     # all terms in dtm present in phi?
-    stop("vocabulary does not match between dtm and phi. Check colnames of both matrices.")
+        stop(
+            paste(
+                "vocabulary does not match between dtm and phi.",
+                "Check colnames of both matrices."
+            )
+        )
   }
 
-  if (sum(intersect(rownames(dtm), rownames(theta)) %in% union(rownames(dtm), rownames(theta))) != nrow(dtm)) {
+    if (sum(
+        intersect(rownames(dtm),
+                  rownames(theta)) %in% union(rownames(dtm),
+                                              rownames(theta))
+    ) != nrow(dtm)) {
     # all documents in dtm present in theta?
-    stop("document names do not match between dtm and theta. Check rownames of both matrices.")
+        stop(
+            paste(
+                "document names do not match between dtm and theta.",
+                "Check rownames of both matrices."
+            ))
   }
 
-  if (sum(intersect(colnames(theta), rownames(phi)) %in% union(colnames(theta), rownames(phi))) != ncol(theta)) {
+    if (sum(
+        intersect(colnames(theta),
+                  rownames(phi)) %in% union(colnames(theta),
+                                            rownames(phi))
+    ) != ncol(theta)) {
     # all topics in theta present in phi?
-    stop("topic names do not match. Check rownames(phi) and colnames(theta)")
+        stop(
+            paste(
+                "topic names do not match.",
+                "Check rownames(phi) and colnames(theta)"
+            )
+        )
   }
 
   # ensure that all inputs are sorted correctly
@@ -120,6 +165,17 @@ CalcLikelihood <- function(dtm, phi, theta, ...) {
   result
 }
 
+#' @rdname calc_likelihood
+#' @export
+
+CalcLikelihood <- function(...) {
+    .Deprecated(
+        new = "calc_likelihood",
+        package = "textmineR"
+    )
+    calc_likelihood(...)
+}
+
 
 #' Probabilistic coherence of topics
 #' @description Calculates the probabilistic coherence of a topic or topics.
@@ -139,14 +195,15 @@ CalcLikelihood <- function(dtm, phi, theta, ...) {
 #' data(nih_sample_topic_model)
 #' data(nih_sample_dtm)
 #'
-#' CalcProbCoherence(phi = nih_sample_topic_model$phi, dtm = nih_sample_dtm, M = 5)
+#' CalcProbCoherence(phi = nih_sample_topic_model$phi,
+#'                   dtm = nih_sample_dtm, M = 5)
 #' @export
-CalcProbCoherence <- function(phi, dtm, M = 5) {
+calc_prob_coherence <- function(phi, dtm, M = 5) {
 
   # phi is a numeric matrix or numeric vector?
   if (!is.numeric(phi)) {
     stop(
-      "phi must be a numeric matrix whose rows index topics and columns\n",
+      "phi must be a numeric matrix whose rows index topics and columns",
       " index terms or phi must be a numeric vector whose entries index terms."
     )
   }
@@ -165,7 +222,11 @@ CalcProbCoherence <- function(phi, dtm, M = 5) {
   }
 
   if (length(M) != 1) {
-    warning("M is a vector when scalar is expected. Taking only the first value")
+      warning(
+          paste(
+              "M is a vector when scalar is expected.",
+              "Taking only the first value"
+          ))
     M <- M[1]
   }
 
@@ -191,19 +252,19 @@ CalcProbCoherence <- function(phi, dtm, M = 5) {
   # Declare a function to get probabilistic coherence on one topic
   pcoh <- function(topic, dtm, M) {
     terms <- names(topic)[order(topic, decreasing = TRUE)][1:M]
-    dtm.t <- dtm[, terms]
-    dtm.t[dtm.t > 0] <- 1
-    count.mat <- Matrix::t(dtm.t) %*% dtm.t
-    num.docs <- nrow(dtm)
-    p.mat <- count.mat / num.docs
+    dtm_t <- dtm[, terms]
+    dtm_t[dtm_t > 0] <- 1
+    count_mat <- Matrix::t(dtm_t) %*% dtm_t
+    num_docs <- nrow(dtm)
+    p_mat <- count_mat / num_docs
     # result <- sapply(1:(ncol(count.mat) - 1), function(x) {
     #   mean(p.mat[x, (x + 1):ncol(p.mat)]/p.mat[x, x] - Matrix::diag(p.mat)[(x +
     #                                                                           1):ncol(p.mat)], na.rm = TRUE)
     # })
     # mean(result, na.rm = TRUE)
-    result <- sapply(1:(ncol(count.mat) - 1), function(x) {
-      p.mat[x, (x + 1):ncol(p.mat)] / p.mat[x, x] -
-        Matrix::diag(p.mat)[(x + 1):ncol(p.mat)]
+    result <- sapply(1:(ncol(count_mat) - 1), function(x) {
+      p_mat[x, (x + 1):ncol(p_mat)] / p_mat[x, x] -
+        Matrix::diag(p_mat)[(x + 1):ncol(p_mat)]
     })
     mean(unlist(result), na.rm = TRUE)
   }
@@ -219,24 +280,39 @@ CalcProbCoherence <- function(phi, dtm, M = 5) {
   })
 }
 
+#' @rdname calc_prob_coherence
+#' @export
+
+CalcProbCoherence <- function(...) {
+    .Deprecated(
+        new = "calc_prob_coherence",
+        package = "textmineR"
+    )
+    calc_prob_coherence(...)
+}
 
 #' Calculate the R-squared of a topic model.
 #' @description Function to calculate R-squared for a topic model.
-#' This uses a geometric interpretation of R-squared as the proportion of total distance
-#' each document is from the center of all the documents that is explained by the model.
+#' This uses a geometric interpretation of R-squared as the proportion of total
+#' distance each document is from the center of all the documents that is
+#' explained by the model.
 #' @param dtm A documents by terms dimensional document term matrix of class
 #' \code{dgCMatrix} or of class \code{matrix}.
-#' @param phi A topics by terms dimensional matrix where each entry is p(term_i |topic_j)
-#' @param theta A documents by topics dimensional matrix where each entry is p(topic_j|document_d)
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.
+#' @param phi A topics by terms dimensional matrix where each entry is
+#' p(term_i |topic_j)
+#' @param theta A documents by topics dimensional matrix where each entry is
+#' p(topic_j|document_d)
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}. See note, below.
 #' @return
-#' Returns an object of class \code{numeric} representing the proportion of variability
-#' in the data that is explained by the topic model.
+#' Returns an object of class \code{numeric} representing the proportion of
+#' variability in the data that is explained by the topic model.
 #' @note
 #' This function performs parallel computation if \code{dtm} has more than 3,000
-#' rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
-#' However, this can be modified by passing the \code{cpus} argument when calling
-#' this function.
+#' rows. The default is to use all available cores according to
+#' \code{\link[parallel]{detectCores}}.
+#' However, this can be modified by passing the \code{cpus} argument when
+#' calling this function.
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
@@ -252,7 +328,7 @@ CalcProbCoherence <- function(phi, dtm, M = 5) {
 #'
 #'
 #' r2
-CalcTopicModelR2 <- function(dtm, phi, theta, ...) {
+calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
 
   # check that inputs have necessary formats
   if (nrow(dtm) != nrow(theta)) {
@@ -272,38 +348,73 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...) {
 
   if (is.null(rownames(dtm)) | is.null(rownames(theta))) {
     # doc names exist?
-    warning("missing rownames from one or both of dtm and theta. Row index used instead.")
-    rownames(dtm) <- 1:nrow(dtm)
-    rownames(theta) <- 1:nrow(theta)
+      warning(
+          paste(
+              "missing rownames from one or both of dtm and theta.",
+              "Row index used instead."
+          ))
+    rownames(dtm) <- seq_len(nrow(dtm))
+    rownames(theta) <- seq_len(nrow(theta))
   }
 
   if (is.null(colnames(dtm)) | is.null(colnames(phi))) {
     # term names exist?
-    warning("missing colnames from one or both of dtm and phi. Column index used instead")
-    colnames(dtm) <- 1:ncol(dtm)
-    colnames(phi) <- 1:ncol(phi)
+      warning(
+          paste(
+              "missing colnames from one or both of dtm and phi.",
+              "Column index used instead"
+          ))
+    colnames(dtm) <- seq_len(ncol(dtm))
+    colnames(phi) <- seq_len(ncol(phi))
   }
 
   if (is.null(rownames(phi)) | is.null(colnames(theta))) {
     # topic names exist?
-    warning("missing colnames from theta or rownames from phi. Row/column indeces used instead.")
-    colnames(theta) <- 1:ncol(theta)
-    rownames(phi) <- 1:nrow(phi)
+      warning(
+          paste(
+              "missing colnames from theta or rownames from phi.",
+              "Row/column indeces used instead."
+          ))
+    colnames(theta) <- seq_len(ncol(theta))
+    rownames(phi) <- seq_len(nrow(phi))
   }
 
-  if (sum(intersect(colnames(dtm), colnames(phi)) %in% union(colnames(dtm), colnames(phi))) != ncol(dtm)) {
+    if (sum(
+        intersect(colnames(dtm),
+                  colnames(phi)) %in% union(colnames(dtm),
+                                            colnames(phi))) != ncol(dtm)) {
     # all terms in dtm present in phi?
-    stop("vocabulary does not match between dtm and phi. Check colnames of both matrices.")
+        stop(
+            paste(
+                "vocabulary does not match between dtm and phi.",
+                "Check colnames of both matrices."
+            ))
   }
 
-  if (sum(intersect(rownames(dtm), rownames(theta)) %in% union(rownames(dtm), rownames(theta))) != nrow(dtm)) {
+    if (sum(
+        intersect(rownames(dtm),
+                  rownames(theta)) %in% union(rownames(dtm),
+                                              rownames(theta))) != nrow(dtm)) {
     # all documents in dtm present in theta?
-    stop("document names do not match between dtm and theta. Check rownames of both matrices.")
+        stop(
+            paste(
+                "document names do not match between dtm and theta.",
+                "Check rownames of both matrices."
+            )
+        )
   }
 
-  if (sum(intersect(colnames(theta), rownames(phi)) %in% union(colnames(theta), rownames(phi))) != ncol(theta)) {
+    if (sum(
+        intersect(colnames(theta),
+                  rownames(phi)) %in% union(colnames(theta),
+                                            rownames(phi))) != ncol(theta)) {
     # all topics in theta present in phi?
-    stop("topic names do not match. Check rownames(phi) and colnames(theta)")
+        stop(
+            paste(
+                "topic names do not match.",
+                "Check rownames(phi) and colnames(theta)"
+            )
+        )
   }
 
   # ensure that all inputs are sorted correctly
@@ -342,10 +453,22 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...) {
 
     # do sequentially otherwise
   } else {
-    sum_squares <- CalcSumSquares(dtm = dtm, phi = phi, theta = theta, ybar = ybar)
+      sum_squares <- CalcSumSquares(dtm = dtm, phi = phi,
+                                    theta = theta, ybar = ybar)
 
     result <- 1 - sum_squares[1] / sum_squares[2]
   }
 
   result
+}
+
+#' @rdname calc_topic_model_r2
+#' @export
+
+CalcTopicModelR2 <- function(...) {
+    .Deprecated(
+        new = "calc_topic_model_r2",
+        package = "textmineR"
+    )
+    calc_topic_model_r2(...)
 }
