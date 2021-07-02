@@ -21,8 +21,8 @@ Returns an object of class \code{numeric} representing the proportion of variabi
 in the data that is explained by the topic model.
 }
 \description{
-Function to calculate R-squared for a topic model. 
-This uses a geometric interpretation of R-squared as the proportion of total distance 
+Function to calculate R-squared for a topic model.
+This uses a geometric interpretation of R-squared as the proportion of total distance
 each document is from the center of all the documents that is explained by the model.
 }
 \note{
@@ -33,13 +33,15 @@ this function.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
-data(nih_sample_dtm) 
+data(nih_sample_dtm)
 data(nih_sample_topic_model)
 
 # Get the R-squared of the model
-r2 <- CalcTopicModelR2(dtm = nih_sample_dtm, 
-                     phi = nih_sample_topic_model$phi, 
-                     theta = nih_sample_topic_model$theta)
+r2 <- CalcTopicModelR2(
+  dtm = nih_sample_dtm,
+  phi = nih_sample_topic_model$phi,
+  theta = nih_sample_topic_model$theta
+)
 
 
 r2

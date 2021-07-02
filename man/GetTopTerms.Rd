@@ -24,7 +24,7 @@ Takes topics by terms matrix and returns top M terms for each topic
 }
 \examples{
 # Load a pre-formatted dtm and topic model
-data(nih_sample_topic_model) 
+data(nih_sample_topic_model)
 
 top_terms <- GetTopTerms(phi = nih_sample_topic_model$phi, M = 5)
 

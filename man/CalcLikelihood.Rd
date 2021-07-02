@@ -9,10 +9,10 @@ CalcLikelihood(dtm, phi, theta, ...)
 \arguments{
 \item{dtm}{The document term matrix of class \code{dgCMatrix}.}
 
-\item{phi}{The phi matrix whose rows index topics and columns index words. 
+\item{phi}{The phi matrix whose rows index topics and columns index words.
 The i, j entries are P(word_i | topic_j)}
 
-\item{theta}{The theta matrix whose rows index documents and columns index topics. 
+\item{theta}{The theta matrix whose rows index documents and columns index topics.
 The i, j entries are P(topic_i | document_j)}
 
 \item{...}{Other arguments to pass to \code{\link[textmineR]{TmParallelApply}}. See note, below.}
@@ -21,8 +21,8 @@ The i, j entries are P(topic_i | document_j)}
 Returns an object of class \code{numeric} corresponding to the log likelihood.
 }
 \description{
-This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix 
-    (P(topic|document)) and returns a single value for the likelihood of the 
+This function takes a DTM, phi matrix (P(word|topic)), and a theta matrix
+    (P(topic|document)) and returns a single value for the likelihood of the
     data given the model.
 }
 \note{
@@ -33,13 +33,15 @@ this function.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
-data(nih_sample_dtm) 
+data(nih_sample_dtm)
 data(nih_sample_topic_model)
 
 # Get the likelihood of the data given the fitted model parameters
-ll <- CalcLikelihood(dtm = nih_sample_dtm, 
-                     phi = nih_sample_topic_model$phi, 
-                     theta = nih_sample_topic_model$theta)
+ll <- CalcLikelihood(
+  dtm = nih_sample_dtm,
+  phi = nih_sample_topic_model$phi,
+  theta = nih_sample_topic_model$theta
+)
 
 ll
 }

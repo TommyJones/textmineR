@@ -7,7 +7,7 @@
 Dtm2Lexicon(dtm, ...)
 }
 \arguments{
-\item{dtm}{A document term matrix (or term co-occurrence matrix) of class 
+\item{dtm}{A document term matrix (or term co-occurrence matrix) of class
 \code{dgCMatrix}.}
 
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
@@ -25,7 +25,9 @@ Represents a document term matrix as a list.
 # Load pre-formatted data for use
 data(nih_sample_dtm)
 
-result <- Dtm2Lexicon(dtm = nih_sample_dtm, 
-                      cpus = 2)
+result <- Dtm2Lexicon(
+  dtm = nih_sample_dtm,
+  cpus = 2
+)
 }
 }

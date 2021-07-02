@@ -7,29 +7,29 @@
 CalcProbCoherence(phi, dtm, M = 5)
 }
 \arguments{
-\item{phi}{A numeric matrix or a numeric vector. The vector, or rows of the 
+\item{phi}{A numeric matrix or a numeric vector. The vector, or rows of the
 matrix represent the numeric relationship between topic(s) and terms. For
 example, this relationship may be p(word|topic) or p(topic|word).}
 
-\item{dtm}{A document term matrix  or co-occurrence matrix of class 
+\item{dtm}{A document term matrix  or co-occurrence matrix of class
 \code{matrix} or whose class inherits from the \code{Matrix} package. Columns
 must index terms.}
 
-\item{M}{An integer for the number of words to be used in the calculation. 
+\item{M}{An integer for the number of words to be used in the calculation.
 Defaults to 5}
 }
 \value{
-Returns an object of class \code{numeric} corresponding to the 
+Returns an object of class \code{numeric} corresponding to the
 probabilistic coherence of the input topic(s).
 }
 \description{
-Calculates the probabilistic coherence of a topic or topics. 
+Calculates the probabilistic coherence of a topic or topics.
 This approximates semantic coherence or human understandability of a topic.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
 data(nih_sample_topic_model)
-data(nih_sample_dtm) 
+data(nih_sample_dtm)
 
 CalcProbCoherence(phi = nih_sample_topic_model$phi, dtm = nih_sample_dtm, M = 5)
 }

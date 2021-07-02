@@ -7,13 +7,13 @@
 CalcGamma(phi, theta, p_docs = NULL, correct = TRUE)
 }
 \arguments{
-\item{phi}{The phi matrix whose rows index topics and columns index words. 
+\item{phi}{The phi matrix whose rows index topics and columns index words.
 The i, j entries are P(word_i | topic_j)}
 
-\item{theta}{The theta matrix whose rows index documents and columns index 
+\item{theta}{The theta matrix whose rows index documents and columns index
 topics. The i, j entries are P(topic_i | document_j)}
 
-\item{p_docs}{A numeric vector of length \code{nrow(theta)} that is 
+\item{p_docs}{A numeric vector of length \code{nrow(theta)} that is
 proportional to the number of terms in each document. This is
 an optional argument. It defaults to NULL}
 
@@ -26,17 +26,18 @@ Returns a \code{matrix} whose rows correspond to topics and whose columns
 correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 }
 \description{
-This function takes a phi matrix (P(token|topic)) and a theta 
-matrix (P(topic|document)) and returns the phi prime matrix (P(topic|token)). 
+This function takes a phi matrix (P(token|topic)) and a theta
+matrix (P(topic|document)) and returns the phi prime matrix (P(topic|token)).
 Phi prime can be used for classifying new documents and for alternative
 topic labels.
 }
 \examples{
 # Load a pre-formatted dtm and topic model
-data(nih_sample_topic_model) 
+data(nih_sample_topic_model)
 
 # Make a gamma matrix, P(topic|words)
-gamma <- CalcGamma(phi = nih_sample_topic_model$phi, 
-                   theta = nih_sample_topic_model$theta)
-
+gamma <- CalcGamma(
+  phi = nih_sample_topic_model$phi,
+  theta = nih_sample_topic_model$theta
+)
 }

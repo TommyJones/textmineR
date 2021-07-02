@@ -14,14 +14,14 @@ CalcHellingerDist(x, y = NULL, by_rows = TRUE)
 \item{by_rows}{Logical. If \code{x} is a matrix, should distances be calculated by rows?}
 }
 \value{
-If \code{x} is a matrix, this returns an square and symmetric matrix. 
-The i,j entries correspond to the Hellinger Distance between the rows of \code{x} 
+If \code{x} is a matrix, this returns an square and symmetric matrix.
+The i,j entries correspond to the Hellinger Distance between the rows of \code{x}
 (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x} and \code{y}
 are vectors, this returns a numeric scalar whose value is the Hellinger Distance
 between \code{x} and \code{y}.
 }
 \description{
-Calculates the Hellinger distances or the rows or columns of a 
+Calculates the Hellinger distances or the rows or columns of a
 numeric matrix or for two numeric vectors.
 }
 \examples{

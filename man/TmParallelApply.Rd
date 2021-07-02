@@ -18,10 +18,10 @@ TmParallelApply(
 
 \item{FUN}{A function to apply over \code{X}}
 
-\item{cpus}{Number of CPU cores to use, defaults to the value returned by 
+\item{cpus}{Number of CPU cores to use, defaults to the value returned by
 \code{\link[parallel]{detectCores}}.}
 
-\item{export}{A character vector of objects in the workspace to export when 
+\item{export}{A character vector of objects in the workspace to export when
 using a Windows machine. Defaults to \code{NULL}}
 
 \item{libraries}{A character vector of library/package names to load on to
@@ -36,9 +36,9 @@ This function returns a \code{list} of length \code{length(X)}.
 This function takes a vector or list and a function and applies in parallel.
 }
 \details{
-This function is used to parallelize executions in \code{textmineR}. It is 
+This function is used to parallelize executions in \code{textmineR}. It is
 necessary because of differing capabilities between Windows and Unix.
-Unix systems use \code{\link[parallel]{mclapply}}. Windows 
+Unix systems use \code{\link[parallel]{mclapply}}. Windows
 systems use \code{\link[parallel]{parLapply}}.
 }
 \examples{

@@ -12,8 +12,8 @@ These conform to outputs of many of \link[textmineR]{textmineR}'s native
 topic modeling functions such as \link[textmineR]{FitLdaModel}.}
 }
 \value{
-An object of class \code{data.frame} or \code{tibble} with 6 columns: 'topic' is the 
-        name of the topic, 'prevalence' is the rough prevalence of the topic 
+An object of class \code{data.frame} or \code{tibble} with 6 columns: 'topic' is the
+        name of the topic, 'prevalence' is the rough prevalence of the topic
         in all documents across the corpus, 'coherence' is the probabilistic
         coherence of the topic, 'top_terms_phi' are the top 5 terms for each
         topic according to P(word|topic), 'top_terms_gamma' are the top 5 terms
@@ -26,14 +26,14 @@ Create a data frame summarizing the contents of each topic in a model
 'prevalence' is normalized to sum to 100. If your 'theta' matrix has
          negative values (as may be the case with an LSA model), a constant is
          added so that the least prevalent topic has a prevalence of 0.
-         
+
          'coherence' is calculated using \link[textmineR]{CalcProbCoherence}.
-         
+
          'label' is assigned using the top label from \link[textmineR]{LabelTopics}.
          This requires an "assignment" matrix. This matrix is like a "theta" matrix
          except that it is binary. A topic is "in" a document or it is not.
          The assignment is made by comparing each value of theta to the minimum
-         of the largest value for each row of theta (each document). This 
+         of the largest value for each row of theta (each document). This
          ensures that each document has at least one topic assigned to it.
 }
 \examples{

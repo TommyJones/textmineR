@@ -24,54 +24,56 @@ after the model is trained? Defaults to \code{TRUE}.}
 \item{calc_r2}{Do you want to calculate R-squared after the model is trained?
 Defaults to \code{FALSE}.}
 
-\item{return_all}{Logical. Do you want the raw results of the underlying 
+\item{return_all}{Logical. Do you want the raw results of the underlying
 function returned along with the formatted results? Defaults to \code{TRUE}.}
 
 \item{...}{Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.
 See note below.}
 }
 \value{
-Returns a list with a minimum of two objects, \code{phi} and 
+Returns a list with a minimum of two objects, \code{phi} and
 \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
 The rows of \code{theta} index documents and the columns index topics.
 }
 \description{
-A wrapper for the \link[topicmodels]{CTM} function based on 
+A wrapper for the \link[topicmodels]{CTM} function based on
 Blei's original code that returns a nicely-formatted topic model.
 }
 \note{
-When passing additional arguments to \link[topicmodels]{CTM}, you must unlist the 
+When passing additional arguments to \link[topicmodels]{CTM}, you must unlist the
 elements in the \code{control} argument and pass them one by one. See examples for
 how to dot this correctly.
 }
 \examples{
-# Load a pre-formatted dtm 
-data(nih_sample_dtm) 
+# Load a pre-formatted dtm
+data(nih_sample_dtm)
 
 # Fit a CTM model on a sample of documents
-model <- FitCtmModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ], 
-                     k = 3, return_all = FALSE)
-                     
+model <- FitCtmModel(
+  dtm = nih_sample_dtm[sample(1:nrow(nih_sample_dtm), 10), ],
+  k = 3, return_all = FALSE
+)
+
 # the correct way to pass control arguments to CTM
 \dontrun{
 topics_CTM <- FitCtmModel(
-    dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ],
-    k = 10,
-    calc_coherence = TRUE,
-    calc_r2 = TRUE,
-    return_all = TRUE,
-    estimate.beta = TRUE,
-    verbose = 0,
-    prefix = tempfile(),
-    save = 0,
-    keep = 0,
-    seed = as.integer(Sys.time()),
-    nstart = 1L,
-    best = TRUE,
-    var = list(iter.max = 500, tol = 10^-6),
-    em = list(iter.max = 1000, tol = 10^-4),
-    initialize = "random",
-    cg = list(iter.max = 500, tol = 10^-5)
+  dtm = nih_sample_dtm[sample(1:nrow(nih_sample_dtm), 10), ],
+  k = 10,
+  calc_coherence = TRUE,
+  calc_r2 = TRUE,
+  return_all = TRUE,
+  estimate.beta = TRUE,
+  verbose = 0,
+  prefix = tempfile(),
+  save = 0,
+  keep = 0,
+  seed = as.integer(Sys.time()),
+  nstart = 1L,
+  best = TRUE,
+  var = list(iter.max = 500, tol = 10^-6),
+  em = list(iter.max = 1000, tol = 10^-4),
+  initialize = "random",
+  cg = list(iter.max = 500, tol = 10^-5)
 )
 }
 }

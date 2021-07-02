@@ -7,8 +7,8 @@
 Cluster2TopicModel(dtm, clustering, ...)
 }
 \arguments{
-\item{dtm}{A document term matrix of class \code{dgCMatrix} or whose class 
-inherits from the \code{Matrix} package. Columns must index terms, rows must 
+\item{dtm}{A document term matrix of class \code{dgCMatrix} or whose class
+inherits from the \code{Matrix} package. Columns must index terms, rows must
 index documents.}
 
 \item{clustering}{A vector of length \code{nrow(dtm)} whose entries form a
@@ -17,7 +17,7 @@ partitional clustering of the documents.}
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
 }
 \value{
-Returns a list with two elements, phi and theta. 'phi' is a matrix 
+Returns a list with two elements, phi and theta. 'phi' is a matrix
 whose j-th row represents P(terms | cluster_j). 'theta' is a matrix whose
 j-th row represents P(clusters | document_j). Each row of theta should only
 have one non-zero element.
@@ -30,9 +30,11 @@ phi: P(term | cluster) theta: P(cluster | document)
 \dontrun{
 # Load pre-formatted data for use
 data(nih_sample_dtm)
-data(nih_sample) 
+data(nih_sample)
 
-result <- Cluster2TopicModel(dtm = nih_sample_dtm, 
-                             clustering = nih_sample$IC_NAME)
+result <- Cluster2TopicModel(
+  dtm = nih_sample_dtm,
+  clustering = nih_sample$IC_NAME
+)
 }
 }
