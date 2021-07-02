@@ -368,11 +368,11 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
   result$data <- dtm
 
   if (calc_coherence) {
-    result$coherence <- CalcProbCoherence(result$phi, dtm)
+    result$coherence <- calc_prob_coherence(result$phi, dtm)
   }
 
   if (calc_r2) {
-    result$r2 <- CalcTopicModelR2(
+    result$r2 <- calc_topic_model_r2(
       dtm, result$phi, result$theta,
       parallel_args
     )
@@ -530,7 +530,7 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...) 
 
   # calc coherence if desired
   if (calc_coherence) {
-    lsa$coherence <- CalcProbCoherence(lsa$phi, dtm)
+    lsa$coherence <- calc_prob_coherence(lsa$phi, dtm)
   }
 
 
@@ -869,11 +869,11 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 
   ### calculate additional things ----
   if (calc_coherence) {
-    result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
+    result$coherence <- calc_prob_coherence(result$phi, dtm, M = 5)
   }
 
   if (calc_r2) {
-    result$r2 <- CalcTopicModelR2(dtm, result$phi, result$theta, ...)
+    result$r2 <- calc_topic_model_r2(dtm, result$phi, result$theta, ...)
   }
 
   if (!calc_likelihood) {
@@ -1309,11 +1309,11 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
 
   ### calculate additional things ----
   if (calc_coherence) {
-    result$coherence <- CalcProbCoherence(result$phi, dtm, M = 5)
+    result$coherence <- calc_prob_coherence(result$phi, dtm, M = 5)
   }
 
   if (calc_r2) {
-    result$r2 <- CalcTopicModelR2(dtm, result$phi, result$theta, ...)
+    result$r2 <- calc_topic_model_r2(dtm, result$phi, result$theta, ...)
   }
 
   if (!calc_likelihood) {

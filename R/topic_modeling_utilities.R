@@ -37,7 +37,7 @@ SummarizeTopics <- function(model) {
   if ("coherence" %in% names(model)) {
     coherence <- model$coherence
   } else {
-    coherence <- CalcProbCoherence(model$phi, model$data)
+    coherence <- calc_prob_coherence(model$phi, model$data)
   }
 
   # get prevalence - this gets fancy to account for negatives in LSA models
