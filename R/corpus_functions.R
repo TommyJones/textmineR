@@ -1,21 +1,27 @@
 #' @title Convert a character vector to a document term matrix.
-#' @description This is the main document term matrix creating function for \code{textmineR}.
-#' In most cases, all you need to do is import documents as a character vector in R and then
+#' @description This is the main document term matrix creating function for
+#' \code{textmineR}.
+#' In most cases, all you need to do is import documents as a character vector
+#' in R and then
 #' run this function to get a document term matrix that is compatible with the
-#' rest of \code{textmineR}'s functionality and many other libraries. \code{CreateDtm}
+#' rest of \code{textmineR}'s functionality and many other libraries.
+#' \code{CreateDtm}
 #' is built on top of the excellent \code{\link[text2vec]{text2vec}} library.
 #'
 #' @param doc_vec A character vector of documents.
 #' @param doc_names A vector of names for your documents. Defaults to
 #'        \code{names(doc_vec)}. If NULL, then doc_names is set to be
 #'        \code{1:length(doc_vec)}.
-#' @param ngram_window A numeric vector of length 2. The first entry is the minimum
+#' @param ngram_window A numeric vector of length 2. The first entry is the
+#' minimum
 #'        n-gram size; the second entry is the maximum n-gram size. Defaults to
 #'        \code{c(1, 1)}.
 #' @param stopword_vec A character vector of stopwords you would like to remove.
-#'        Defaults to \code{c(stopwords::stopwords("en"), stopwords::stopwords(source = "smart"))}.
-#'        If you do not want stopwords removed, specify \code{stopword_vec = c()}.
-#' @param lower Do you want all words coerced to lower case? Defaults to \code{TRUE}
+#'        Defaults to \code{c(stopwords::stopwords("en"),
+#' stopwords::stopwords(source = "smart"))}.
+#' If you do not want stopwords removed, specify \code{stopword_vec = c()}.
+#' @param lower Do you want all words coerced to lower case? Defaults to
+#' \code{TRUE}
 #' @param remove_punctuation Do you want to convert all non-alpha numeric
 #'        characters to spaces? Defaults to \code{TRUE}
 #' @param remove_numbers Do you want to convert all numbers to spaces? Defaults
@@ -25,7 +31,8 @@
 #'        usage.
 #' @param verbose Defaults to \code{TRUE}. Do you want to see status during
 #'        vectorization?
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}.
 #' @return A document term matrix of class \code{dgCMatrix}. The rows index
 #' documents. The columns index terms. The i, j entries represent the count of
 #' term j appearing in document i.
@@ -56,15 +63,18 @@
 #' )
 #' }
 #' @export
-CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1),
-                      stopword_vec = c(stopwords::stopwords("en"), stopwords::stopwords(source = "smart")),
-                      lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
+CreateDtm <- function(doc_vec, doc_names = names(doc_vec),
+                      ngram_window = c(1, 1),
+                      stopword_vec = c(stopwords::stopwords("en"),
+                                       stopwords::stopwords(source = "smart")),
+                      lower = TRUE, remove_punctuation = TRUE,
+                      remove_numbers = TRUE,
                       stem_lemma_function = NULL, verbose = FALSE, ...) {
 
   ### Pre-process the documents ------------------------------------------------
   if (is.null(doc_names) & is.null(names(doc_vec))) {
     warning("No document names detected. Assigning 1:length(doc_vec) as names.")
-    doc_names <- 1:length(doc_vec)
+    doc_names <- seq_len(length(doc_vec))
   }
 
   if (lower) {
@@ -103,7 +113,9 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 
     batches <- seq(1, length(tokens), 5000)
 
-    tokens <- lapply(batches, function(x) tokens[x:min(x + 4999, length(tokens))])
+    tokens <- lapply(
+      batches, function(x) tokens[x:min(x + 4999, length(tokens))]
+    )
 
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x) {
       lapply(x, function(y) y[!y %in% stopword_vec])
@@ -114,7 +126,9 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 
 
   if (!is.null(stem_lemma_function)) {
-    tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
+    tokens <- textmineR::TmParallelApply(
+      X = tokens, FUN = stem_lemma_function, ...
+    )
   }
 
   tokens <- textmineR::TmParallelApply(
@@ -131,7 +145,6 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
     it = it,
     ngram = ngram_window
   )
-
 
   vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
 
@@ -164,23 +177,30 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 }
 
 #' @title Convert a character vector to a term co-occurrence matrix.
-#' @description This is the main term co-occurrence matrix creating function for \code{textmineR}.
-#' In most cases, all you need to do is import documents as a character vector in R and then
-#' run this function to get a term co-occurrence matrix that is compatible with the
-#' rest of \code{textmineR}'s functionality and many other libraries. \code{CreateTcm}
-#' is built on top of the excellent \code{\link[text2vec]{text2vec}} library.
+#' @description This is the main term co-occurrence matrix creating function for
+#' \code{textmineR}.
+#' In most cases, all you need to do is import documents as a character vector
+#' in R and then
+#' run this function to get a term co-occurrence matrix that is compatible with
+#' the rest of \code{textmineR}'s functionality and many other libraries.
+#' \code{CreateTcm} is built on top of the excellent
+#' \code{\link[text2vec]{text2vec}} library.
 #'
 #' @param doc_vec A character vector of documents.
 #' @param skipgram_window An integer window, from \code{0} to \code{Inf} for
 #'        skip-grams. Defaults to \code{Inf}. See 'Details', below.
-#' @param ngram_window A numeric vector of length 2. The first entry is the minimum
+#' @param ngram_window A numeric vector of length 2. The first entry is the
+#' minimum
 #'        n-gram size; the second entry is the maximum n-gram size. Defaults to
 #'        \code{c(1, 1)}. Must be \code{c(1, 1)} if \code{skipgram_window} is
 #'        not \code{0} or \code{Inf}.
 #' @param stopword_vec A character vector of stopwords you would like to remove.
-#'        Defaults to \code{c(stopwords::stopwords("en"), stopwords::stopwords(source = "smart"))}.
-#'        If you do not want stopwords removed, specify \code{stopword_vec = c()}.
-#' @param lower Do you want all words coerced to lower case? Defaults to \code{TRUE}
+#'        Defaults to \code{c(stopwords::stopwords("en"),
+#' stopwords::stopwords(source = "smart"))}.
+#'        If you do not want stopwords removed, specify
+#' \code{stopword_vec = c()}.
+#' @param lower Do you want all words coerced to lower case? Defaults to
+#' \code{TRUE}
 #' @param remove_punctuation Do you want to convert all non-alpha numeric
 #'        characters to spaces? Defaults to \code{TRUE}
 #' @param remove_numbers Do you want to convert all numbers to spaces? Defaults
@@ -190,13 +210,16 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 #'        usage.
 #' @param verbose Defaults to \code{TRUE}. Do you want to see status during
 #'        vectorization?
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}.
 #' @return A document term matrix of class \code{dgCMatrix}. The rows index
 #' documents. The columns index terms. The i, j entries represent the count of
 #' term j appearing in document i.
 #' @details Setting \code{skipgram_window} counts the number of times that term
-#'          \code{j} appears within \code{skipgram_window} places of term \code{i}.
-#'          \code{Inf} and \code{0} create somewhat special TCMs. Setting \code{skipgram_window}
+#'          \code{j} appears within \code{skipgram_window} places of term
+#' \code{i}.
+#'          \code{Inf} and \code{0} create somewhat special TCMs. Setting
+#' \code{skipgram_window}
 #'          to \code{Inf} counts the number of documents in which term \code{j}
 #'          and term \code{i} occur together. Setting \code{skipgram_window}
 #'          to \code{0} counts the number of terms shared by document \code{j}
@@ -230,9 +253,11 @@ CreateDtm <- function(doc_vec, doc_names = names(doc_vec), ngram_window = c(1, 1
 #' }
 #' @export
 CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
-                      stopword_vec = c(stopwords::stopwords("en"), stopwords::stopwords(source = "smart")),
-                      lower = TRUE, remove_punctuation = TRUE, remove_numbers = TRUE,
-                      stem_lemma_function = NULL, verbose = FALSE, ...) {
+                      stopword_vec = c(stopwords::stopwords("en"),
+                                       stopwords::stopwords(source = "smart")),
+                      lower = TRUE, remove_punctuation = TRUE,
+                      remove_numbers = TRUE, stem_lemma_function = NULL,
+                      verbose = FALSE, ...) {
 
   ### Check inputs -------------------------------------------------------------
   if (!is.numeric(skipgram_window)) {
@@ -241,7 +266,12 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
 
   if (!skipgram_window %in% c(Inf, 0)) {
     if (sum(ngram_window > 1) > 0) {
-      stop("If skipgram_window is greater than 0 or non-infinite, ngram_window must be c(1, 1)")
+        stop(
+            paste(
+                "If skipgram_window is greater than 0 or non-infinite",
+                "ngram_window must be c(1, 1)"
+            )
+        )
     }
   }
 
@@ -282,7 +312,9 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
 
     batches <- seq(1, length(tokens), 5000)
 
-    tokens <- lapply(batches, function(x) tokens[x:min(x + 4999, length(tokens))])
+      tokens <- lapply(
+          batches, function(x) tokens[x:min(x + 4999, length(tokens))]
+      )
 
     tokens <- textmineR::TmParallelApply(X = tokens, FUN = function(x) {
       lapply(x, function(y) y[!y %in% stopword_vec])
@@ -292,7 +324,9 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
   }
 
   if (!is.null(stem_lemma_function)) {
-    tokens <- textmineR::TmParallelApply(X = tokens, FUN = stem_lemma_function, ...)
+      tokens <- textmineR::TmParallelApply(
+                               X = tokens, FUN = stem_lemma_function, ...
+                           )
   }
 
   tokens <- textmineR::TmParallelApply(
@@ -367,19 +401,22 @@ CreateTcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
 
 #' Convert a DTM to a Character Vector of documents
 #'
-#' @description This function takes a sparse matrix (DTM) as input and returns a character vector
+#' @description This function takes a sparse matrix (DTM) as input and returns
+#' a character vector
 #' whose length is equal to the number of rows of the input DTM.
 #' @param dtm A sparse Matrix from the matrix package whose rownames correspond
 #' to documents and colnames correspond to words
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}. See note, below.
 #' @return
 #' Returns a character vector. Each entry of this vector corresponds to the rows
 #' of \code{dtm}.
 #' @note
 #' This function performs parallel computation if \code{dtm} has more than 3,000
-#' rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
-#' However, this can be modified by passing the \code{cpus} argument when calling
-#' this function.
+#' rows. The default is to use all available cores according to
+#' \code{\link[parallel]{detectCores}}.
+#' However, this can be modified by passing the \code{cpus} argument when
+#' calling this function.
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
@@ -402,7 +439,7 @@ Dtm2Docs <- function(dtm, ...) {
     dtm_list <- lapply(batches, function(x) dtm[x:min(x + 2999, nrow(dtm)), ])
 
     out <- TmParallelApply(X = dtm_list, FUN = function(x) {
-      Dtm2DocsC(dtm = x, vocab = colnames(x))
+      Dtm2csC(dtm = x, vocab = colnames(x))
     }, ...)
   } else {
     out <- Dtm2DocsC(dtm = dtm, vocab = colnames(dtm))
@@ -417,10 +454,11 @@ Dtm2Docs <- function(dtm, ...) {
 
 #' @title Turn a document term matrix into a term co-occurrence matrix
 #' @description Turn a document term matrix, whose rows index documents and
-#' whose columns index terms, into a term co-occurrence matrix. A term co-occurrence
-#' matrix's rows and columns both index terms. See \code{details}, below.
-#' @param dtm A document term matrix, generally of class \code{dgCMatrix}, though
-#' other classes, such as \code{dgTMatrix}, may also work without issue.
+#' whose columns index terms, into a term co-occurrence matrix.
+#' A term co-occurrence matrix's rows and columns both index terms.
+#' See \code{details}, below.
+#' @param dtm A document term matrix, generally of class \code{dgCMatrix},
+#' though other classes, such as \code{dgTMatrix}, may also work without issue.
 #' @return Returns a square \code{dgCMatrix} whose rows and columns both index
 #' terms. The i, j entries of this matrix represent the count of term j across
 #' documents containing term i. Note that, while square, this matrix is not
@@ -442,7 +480,8 @@ Dtm2Tcm <- function(dtm) {
 }
 
 
-#' @title Get term frequencies and document frequencies from a document term matrix.
+#' @title Get term frequencies and document frequencies from a document term
+#' matrix.
 #' @description This function takes a document term matrix as input and
 #' returns a data frame with columns for term frequency, document frequency,
 #' and inverse-document frequency
@@ -465,17 +504,17 @@ Dtm2Tcm <- function(dtm) {
 #'
 #' str(term_freq_mat)
 TermDocFreq <- function(dtm) {
-  freq.mat <- data.frame(
+  freq_mat <- data.frame(
     term = colnames(dtm),
     term_freq = Matrix::colSums(dtm),
     doc_freq = Matrix::colSums(dtm > 0),
     stringsAsFactors = FALSE
   )
 
-  freq.mat$idf <- log(nrow(dtm) / freq.mat$doc_freq)
+  freq_mat$idf <- log(nrow(dtm) / freq_mat$doc_freq)
 
   if ("tibble" %in% row.names(utils::installed.packages())) {
-    freq.mat <- tibble::as_tibble(freq.mat)
+    freq_mat <- tibble::as_tibble(freq_mat)
   }
-  return(freq.mat)
+  return(freq_mat)
 }
