@@ -639,7 +639,9 @@ fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1,
   if (!"dgCMatrix" %in% class(dtm)) {
     message("dtm is not of class dgCMatrix, attempting to convert...")
 
-    dtm <- try(methods::as(dtm, "dgCMatrix", strict = TRUE)) # requires Matrix in namespace
+    dtm <- try(
+      methods::as(dtm, "dgCMatrix", strict = TRUE)
+    ) # requires Matrix in namespace
 
     if (!"dgCMatrix" %in% class(dtm)) {
       stop("conversion failed.",
