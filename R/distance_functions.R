@@ -42,7 +42,7 @@ calc_hellinger_dist <- function(x, y = NULL, by_rows = TRUE) {
     }
 
     # this function only calculates the upper triangle
-    result <- textmineR::hellinger_mat(A = x)
+    result <- textmineR::HellingerMat(A = x)
 
     result <- result + t(result)
 
@@ -117,7 +117,7 @@ calc_js_divergence <- function(x, y = NULL, by_rows = TRUE) {
     }
 
     # this function only calculates the upper triangle
-    result <- textmineR::jsd_mat(A = x) 
+    result <- textmineR::JSDmat(A = x)
 
     result <- result + t(result)
 
