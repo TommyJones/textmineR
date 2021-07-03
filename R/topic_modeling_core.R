@@ -1049,14 +1049,18 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 
   vocab_add <- setdiff(vocab_original, vocab_intersect)
 
-  add_mat <- Matrix::Matrix(0, nrow = nrow(dtm_newdata), ncol = length(vocab_add))
+  add_mat <- Matrix::Matrix(
+    0, nrow = nrow(dtm_newdata),
+    ncol = length(vocab_add))
 
   colnames(add_mat) <- vocab_add
 
   dtm_newdata <- Matrix::cbind2(dtm_newdata, add_mat)
 
   if (nrow(dtm_newdata) == 1) {
-    dtm_newdata <- Matrix::Matrix(dtm_newdata[, vocab_original], nrow = 1, sparse = TRUE)
+    dtm_newdata <- Matrix::Matrix(
+      dtm_newdata[, vocab_original], nrow = 1, sparse = TRUE
+    )
 
     colnames(dtm_newdata) <- vocab_original
 
