@@ -371,7 +371,7 @@ fit_ctm_model <- function(dtm, k, calc_coherence = TRUE,
   theta <- model@gamma
 
   rownames(theta) <- model@documents
-  colnames(theta) <- paste("t", 1:ncol(theta), sep = "_")
+  colnames(theta) <- paste("t", seq_len(ncol(theta)), sep = "_")
 
   phi <- exp(model@beta)
   colnames(phi) <- model@terms
@@ -387,7 +387,7 @@ fit_ctm_model <- function(dtm, k, calc_coherence = TRUE,
   result$data <- dtm
 
   if (calc_coherence) {
-    result$coherence <- calc_prob_coherence(result$phi, dtm)
+    result$coherence <- textmineR::calc_prob_coherence(result$phi, dtm)
   }
 
   if (calc_r2) {
@@ -545,7 +545,7 @@ fit_lsa_model <- function(dtm, k, calc_coherence = TRUE,
   names(lsa)[names(lsa) == "v"] <- "phi"
   lsa$phi <- t(lsa$phi)
   colnames(lsa$phi) <- colnames(dtm)
-  rownames(lsa$phi) <- paste("t", 1:nrow(lsa$phi), sep = "_")
+  rownames(lsa$phi) <- paste("t", seq_len(nrow(lsa$phi)), sep = "_")
 
   names(lsa)[names(lsa) == "u"] <- "theta"
   rownames(lsa$theta) <- rownames(dtm)
@@ -713,12 +713,12 @@ dtm_2_lexicon <- function(dtm, ...) {
     dtm_list <- lapply(batches, function(x) dtm[x:min(x + 2999, nrow(dtm)), ])
 
     out <- TmParallelApply(X = dtm_list, FUN = function(y) {
-      dtm_to_lexicon_c(x = y)
+      textmineR::dtm_to_lexicon_c(x = y)
     }, ...)
 
     out <- do.call(c, out)
   } else {
-    out <- dtm_to_lexicon_c(x = dtm)
+    out <- textmineR::dtm_to_lexicon_c(x = dtm)
   }
 
   names(out) <- rownames(dtm)
@@ -934,11 +934,11 @@ fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1,
 
   ### calculate additional things ----
   if (calc_coherence) {
-    result$coherence <- calc_prob_coherence(result$phi, dtm, M = 5)
+    result$coherence <- textmineR::calc_prob_coherence(result$phi, dtm, M = 5)
   }
 
   if (calc_r2) {
-    result$r2 <- calc_topic_model_r2(dtm, result$phi, result$theta, ...)
+    result$r2 <-  textmineR::calc_topic_model_r2(dtm, result$phi, result$theta, ...)
   }
 
   if (!calc_likelihood) {
@@ -1395,11 +1395,13 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
 
   ### calculate additional things ----
   if (calc_coherence) {
-    result$coherence <- calc_prob_coherence(result$phi, dtm, M = 5)
+    result$coherence <- textmineR::calc_prob_coherence(result$phi, dtm, M = 5)
   }
 
   if (calc_r2) {
-    result$r2 <- calc_topic_model_r2(dtm, result$phi, result$theta, ...)
+    result$r2 <- textmineR::calc_topic_model_r2(
+      dtm, result$phi, result$theta, ...
+    )
   }
 
   if (!calc_likelihood) {
