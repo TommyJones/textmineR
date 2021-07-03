@@ -26,7 +26,7 @@
 #' data(nih_sample_topic_model)
 #'
 #' # Get the likelihood of the data given the fitted model parameters
-#' ll <- CalcLikelihood(
+#' ll <- calc_likelihood(
 #'   dtm = nih_sample_dtm,
 #'   phi = nih_sample_topic_model$phi,
 #'   theta = nih_sample_topic_model$theta
@@ -166,6 +166,7 @@ calc_likelihood <- function(dtm, phi, theta, ...) {
 }
 
 #' @rdname calc_likelihood
+#' @param ... parameters to pass to \code{calc_likelihood}
 #' @export
 
 CalcLikelihood <- function(...) {
@@ -195,8 +196,8 @@ CalcLikelihood <- function(...) {
 #' data(nih_sample_topic_model)
 #' data(nih_sample_dtm)
 #'
-#' CalcProbCoherence(phi = nih_sample_topic_model$phi,
-#'                   dtm = nih_sample_dtm, M = 5)
+#' calc_prob_coherence(phi = nih_sample_topic_model$phi,
+#'                     dtm = nih_sample_dtm, M = 5)
 #' @export
 calc_prob_coherence <- function(phi, dtm, M = 5) {
 
@@ -281,6 +282,7 @@ calc_prob_coherence <- function(phi, dtm, M = 5) {
 }
 
 #' @rdname calc_prob_coherence
+#' @param ... arguments to pass to \code{calc_prob_coherence}
 #' @export
 
 CalcProbCoherence <- function(...) {
@@ -320,7 +322,7 @@ CalcProbCoherence <- function(...) {
 #' data(nih_sample_topic_model)
 #'
 #' # Get the R-squared of the model
-#' r2 <- CalcTopicModelR2(
+#' r2 <- calc_topic_model_r2(
 #'   dtm = nih_sample_dtm,
 #'   phi = nih_sample_topic_model$phi,
 #'   theta = nih_sample_topic_model$theta
@@ -463,6 +465,7 @@ calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
 }
 
 #' @rdname calc_topic_model_r2
+#' @param ... arguments to pass to \code{calc_topic_model_r2}
 #' @export
 
 CalcTopicModelR2 <- function(...) {

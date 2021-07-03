@@ -49,14 +49,14 @@
 #' data(nih_sample)
 #'
 #' # DTM of unigrams and bigrams
-#' dtm <- CreateDtm(
+#' dtm <- create_dtm(
 #'   doc_vec = nih_sample$ABSTRACT_TEXT,
 #'   doc_names = nih_sample$APPLICATION_ID,
 #'   ngram_window = c(1, 2)
 #' )
 #'
 #' # DTM of unigrams with Porter's stemmer applied
-#' dtm <- CreateDtm(
+#' dtm <- create_dtm(
 #'   doc_vec = nih_sample$ABSTRACT_TEXT,
 #'   doc_names = nih_sample$APPLICATION_ID,
 #'   stem_lemma_function = function(x) SnowballC::wordStem(x, "porter")
@@ -195,7 +195,7 @@ CreateDtm <- function(...) {
 #' in R and then
 #' run this function to get a term co-occurrence matrix that is compatible with
 #' the rest of \code{textmineR}'s functionality and many other libraries.
-#' \code{CreateTcm} is built on top of the excellent
+#' \code{create_tcm} is built on top of the excellent
 #' \code{\link[text2vec]{text2vec}} library.
 #'
 #' @param doc_vec A character vector of documents.
@@ -250,14 +250,14 @@ CreateDtm <- function(...) {
 #' data(nih_sample)
 #'
 #' # TCM of unigrams and bigrams
-#' tcm <- CreateTcm(
+#' tcm <- create_tcm(
 #'   doc_vec = nih_sample$ABSTRACT_TEXT,
 #'   skipgram_window = Inf,
 #'   ngram_window = c(1, 2)
 #' )
 #'
 #' # TCM of unigrams and a skip=gram window of 3, applying Porter's word stemmer
-#' tcm <- CreateTcm(
+#' tcm <- create_tcm(
 #'   doc_vec = nih_sample$ABSTRACT_TEXT,
 #'   skipgram_window = 3,
 #'   stem_lemma_function = function(x) SnowballC::wordStem(x, "porter")
@@ -450,7 +450,7 @@ CreateTcm <- function(...) {
 #' nih_sample$ABSTRACT_TEXT[1:3]
 #'
 #' # see the new documents re-structured from the DTM
-#' new_docs <- Dtm2Docs(dtm = nih_sample_dtm)
+#' new_docs <- dtm_2_docs(dtm = nih_sample_dtm)
 #'
 #' new_docs[1:3]
 dtm_2_docs <- function(dtm, ...) {
@@ -500,7 +500,7 @@ Dtm2Docs <- function(...) {
 #' @examples
 #' data(nih_sample_dtm)
 #'
-#' tcm <- Dtm2Tcm(nih_sample_dtm)
+#' tcm <- dtm_2_tcm(nih_sample_dtm)
 #' @export
 dtm_2_tcm <- function(dtm) {
 
@@ -543,7 +543,7 @@ Dtm2Tcm <- function(...) {
 #' data(nih_sample_topic_model)
 #'
 #' # Get the term frequencies
-#' term_freq_mat <- TermDocFreq(nih_sample_dtm)
+#' term_freq_mat <- term_doc_freq(nih_sample_dtm)
 #'
 #' str(term_freq_mat)
 term_doc_freq <- function(dtm) {

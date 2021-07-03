@@ -32,7 +32,7 @@
 #'          ensures that each document has at least one topic assigned to it.
 #' @examples
 #' \dontrun{
-#' SummarizeTopics(nih_sample_topic_model)
+#' summarize_topics(nih_sample_topic_model)
 #' }
 #' @export
 summarize_topics <- function(model) {
@@ -143,7 +143,7 @@ SummarizeTopics <- function(...) {
 #'
 #' term_probs <- Matrix::colSums(nih_sample_dtm) / sum(Matrix::colSums(nih_sample_dtm))
 #'
-#' GetProbableTerms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
+#' get_probable_terms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
 get_probable_terms <- function(docnames, dtm, p_terms = NULL) {
 
 
@@ -207,8 +207,8 @@ GetProbableTerms <- function(...) {
 #'
 #' assignments[is.na(assignments)] <- 0
 #'
-#' labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
-label_topics <- function(assignments, dtm, m = 2, M = 2) {
+#' labels <- label_topics(assignments = assignments, dtm = m$data, M = 2)
+label_topics <- function(assignments, dtm, M = 2) {
   # figure out a threshold
   threshold <- apply(assignments, 2, function(x) max(x, na.rm = T))
   threshold <- min(threshold[threshold > 0 & !is.na(threshold)])
@@ -275,7 +275,7 @@ LabelTopics <- function(...) {
 #' # Load a pre-formatted dtm and topic model
 #' data(nih_sample_topic_model)
 #'
-#' top_terms <- GetTopTerms(phi = nih_sample_topic_model$phi, M = 5)
+#' top_terms <- get_top_terms(phi = nih_sample_topic_model$phi, M = 5)
 #'
 #' str(top_terms)
 get_top_terms <- function(phi, M, return_matrix = TRUE) {
