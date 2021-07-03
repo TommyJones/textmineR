@@ -368,7 +368,7 @@ create_tcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
       type = "dgCMatrix"
     )
 
-    tcm <- textmineR::Dtm2Tcm(dtm = dtm)
+    tcm <- textmineR::dtm_2_tcm(dtm = dtm)
   } else if (skipgram_window == 0) {
     vectorizer <- text2vec::vocab_vectorizer(vocabulary = vocabulary)
 
