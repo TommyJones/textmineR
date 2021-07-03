@@ -465,7 +465,7 @@ dtm_2_docs <- function(dtm, ...) {
       Dtm2DocsC(dtm = x, vocab = colnames(x))
     }, ...)
   } else {
-    out <- Dtm2DocsC(dtm = dtm, vocab = colnames(dtm))
+    out <- dtm_2_docs_c(dtm = dtm, vocab = colnames(dtm))
   }
 
   out <- unlist(out)
