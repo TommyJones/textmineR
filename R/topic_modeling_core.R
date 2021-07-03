@@ -149,7 +149,7 @@ posterior.lda_topic_model <- function(object, which = "theta",
 #'   phi = nih_sample_topic_model$phi,
 #'   theta = nih_sample_topic_model$theta
 #' )
-CalcGamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
+calc_gamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
 
   # set up constants
   D <- nrow(theta)
@@ -194,6 +194,16 @@ CalcGamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
   return(gamma)
 }
 
+#' @rdname calc_gamma
+#' @param ... arguments to be passed to \code{calc_gamma}
+#' @export
+CalcGamma <- function(...) {
+    .Deprecated(
+        new = "calc_gamma",
+        package = "textmineR"
+    )
+    calc_gamma(...)
+}
 
 #' Represent a document clustering as a topic model
 #' @description Represents a document clustering as a topic model of two matrices.
@@ -214,13 +224,13 @@ CalcGamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
 #' data(nih_sample_dtm)
 #' data(nih_sample)
 #'
-#' result <- Cluster2TopicModel(
+#' result <- cluster_2_topic_model(
 #'   dtm = nih_sample_dtm,
 #'   clustering = nih_sample$IC_NAME
 #' )
 #' }
 #' @export
-Cluster2TopicModel <- function(dtm, clustering, ...) {
+cluster_2_topic_model <- function(dtm, clustering, ...) {
 
   # Check inputs
   # TO DO
@@ -279,9 +289,20 @@ Cluster2TopicModel <- function(dtm, clustering, ...) {
   colnames(phi) <- colnames(dtm)
 
   # Get gamma
-  gamma <- CalcGamma(phi, theta, p_docs = Matrix::rowSums(dtm))
+  gamma <- calc_gamma(phi, theta, p_docs = Matrix::rowSums(dtm))
 
   return(list(theta = theta, phi = phi, gamma = gamma, data = dtm))
+}
+
+#' @rdname cluster_2_topic_model
+#' @param ... arguments to pass to \code{cluster_2_topic_model}
+#' @export
+Cluster2TopicModel <- function(...) {
+    .Deprecated(
+        new = "cluster_2_topic_model",
+        package = "textmineR"
+    )
+    cluster_2_topic_model(...)
 }
 
 
@@ -338,7 +359,7 @@ Cluster2TopicModel <- function(dtm, clustering, ...) {
 #' )
 #' }
 #' @export
-FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
+fit_ctm_model <- function(dtm, k, calc_coherence = TRUE,
                         calc_r2 = FALSE, return_all = TRUE, ...) {
 
   ## TODO - Add checks for inputs
@@ -365,7 +386,7 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 
   result <- list(theta = theta, phi = phi)
 
-  result$gamma <- CalcGamma(result$phi, result$theta,
+  result$gamma <- calc_gamma(result$phi, result$theta,
     p_docs = Matrix::rowSums(dtm)
   )
 
@@ -390,6 +411,17 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
   class(result) <- "ctm_topic_model"
 
   return(result)
+}
+
+#' @rdname fit_ctm_model
+#' @param ... arguments to be passed to \code{fit_ctm_model}
+#' @export
+FitCtmModel <- function(...) {
+    .Deprecated(
+        new = "fit_ctm_model",
+        package = "textmineR"
+    )
+    fit_ctm_model(...)
 }
 
 #' Predict method for Correlated topic models (CTM)
@@ -505,11 +537,12 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
 #' dtm_tfidf <- Matrix::t(dtm_tfidf)
 #'
 #' # Fit an LSA model
-#' model <- FitLsaModel(dtm = dtm_tfidf, k = 5)
+#' model <- fit_lsa_model(dtm = dtm_tfidf, k = 5)
 #'
 #' str(model)
 #' @export
-FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...) {
+fit_lsa_model <- function(dtm, k, calc_coherence = TRUE,
+                        return_all = FALSE, ...) {
   opts <- list(...)
 
   # Fit LSA using single value decomposition on sparse matrices
@@ -554,8 +587,20 @@ FitLsaModel <- function(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...) 
   return(lsa)
 }
 
+#' @rdname fit_lsa_model
+#' @param ... arguments to pass to \code{fit_lsa_model}
+#' @export
+FitLsaModel <- function(...) {
+  .Deprecated(
+    new = "fit_lsa_model",
+    package = "textmineR"
+  )
+  fit_lsa_model(...)
+}
+
 #' Predict method for LSA topic models
-#' @description Obtains predictions of topics for new documents from a fitted LSA model
+#' @description Obtains predictions of topics for new documents from a fitted
+#' LSA model
 #' @param object a fitted object of class "lsa_topic_model"
 #' @param newdata a DTM or TCM of class dgCMatrix or a numeric vector
 #' @param ... further arguments passed to or from other methods.
@@ -646,7 +691,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
 #' )
 #' }
 #' @export
-Dtm2Lexicon <- function(dtm, ...) {
+dtm_2_lexicon <- function(dtm, ...) {
 
   # check inputs
   if (class(dtm) != "dgCMatrix" & class(dtm) != "numeric") {
@@ -686,6 +731,17 @@ Dtm2Lexicon <- function(dtm, ...) {
   names(out) <- rownames(dtm)
 
   out
+}
+
+#' @rdname dtm_2_lexicon
+#' @param ... arguments to pass to \code{dtm_2_lexicon}
+#' @export
+Dtm2Lexicon <- function(...) {
+  .Deprecated(
+    new = "dtm_2_lexicon",
+    package = "textmineR"
+  )
+  dtm_2_lexicon(...)
 }
 
 #' Fit a Latent Dirichlet Allocation topic model
@@ -737,9 +793,10 @@ Dtm2Lexicon <- function(dtm, ...) {
 #' # compare the methods
 #' barplot(rbind(p1[1, ], p2[1, ]), beside = TRUE, col = c("red", "blue"))
 #' @export
-FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, beta = 0.05,
-                        optimize_alpha = FALSE, calc_likelihood = FALSE,
-                        calc_coherence = TRUE, calc_r2 = FALSE, ...) {
+fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1,
+                          alpha = 0.1, beta = 0.05,
+                          optimize_alpha = FALSE, calc_likelihood = FALSE,
+                          calc_coherence = TRUE, calc_r2 = FALSE, ...) {
 
   ### Check inputs are of correct dimensionality ----
 
@@ -809,7 +866,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   beta <- t(beta + matrix(0, nrow = length(beta), ncol = k))
 
   # other formatting
-  docs <- Dtm2Lexicon(dtm, ...)
+  docs <- dtm_2_lexicon(dtm, ...)
 
   Nd <- nrow(dtm)
 
@@ -855,7 +912,7 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   rownames(theta) <- rownames(dtm)
 
   ### collect the result ----
-  gamma <- CalcGamma(
+  gamma <- calc_gamma(
     phi = phi, theta = theta,
     p_docs = Matrix::rowSums(dtm)
   )
@@ -1029,7 +1086,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     result[is.na(result)] <- 0
   } else { # gibbs method
     # format inputs
-    docs <- Dtm2Lexicon(dtm_newdata)
+    docs <- dtm_2_lexicon(dtm_newdata)
 
     Nd <- nrow(dtm_newdata)
 
@@ -1267,7 +1324,7 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   alpha <- c(object$alpha, rep(mean(object$alpha), additional_k)) # rep(0.1, Nk)
 
   # additional constants for fitting
-  docs <- Dtm2Lexicon(dtm, ...)
+  docs <- dtm_2_lexicon(dtm, ...)
 
   Nd <- nrow(dtm)
 
@@ -1312,7 +1369,7 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   rownames(theta) <- rownames(dtm)
 
   ### collect the result ----
-  gamma <- CalcGamma(
+  gamma <- calc_gamma(
     phi = phi, theta = theta,
     p_docs = Matrix::rowSums(dtm)
   )
