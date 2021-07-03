@@ -46,7 +46,7 @@ summarize_topics <- function(model) {
   if ("coherence" %in% names(model)) {
     coherence <- model$coherence
   } else {
-    coherence <- calc_prob_coherence(model$phi, model$data)
+    coherence <- textmineR::calc_prob_coherence(model$phi, model$data)
   }
 
   # get prevalence - this gets fancy to account for negatives in LSA models
