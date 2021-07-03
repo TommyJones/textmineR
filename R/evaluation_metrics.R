@@ -258,11 +258,6 @@ calc_prob_coherence <- function(phi, dtm, M = 5) {
     count_mat <- Matrix::t(dtm_t) %*% dtm_t
     num_docs <- nrow(dtm)
     p_mat <- count_mat / num_docs
-    # result <- sapply(1:(ncol(count.mat) - 1), function(x) {
-    #   mean(p.mat[x, (x + 1):ncol(p.mat)]/p.mat[x, x] - Matrix::diag(p.mat)[(x +
-    #                                                                           1):ncol(p.mat)], na.rm = TRUE)
-    # })
-    # mean(result, na.rm = TRUE)
     result <- sapply(1:(ncol(count_mat) - 1), function(x) {
       p_mat[x, (x + 1):ncol(p_mat)] / p_mat[x, x] -
         Matrix::diag(p_mat)[(x + 1):ncol(p_mat)]
