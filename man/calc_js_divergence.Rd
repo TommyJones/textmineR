@@ -32,10 +32,10 @@ rows or columns of a numeric matrix or for two numeric vectors.
 \examples{
 x <- rchisq(n = 100, df = 8)
 y <- x^2
-CalcJSDivergence(x = x, y = y)
+calc_js_divergence(x = x, y = y)
 
 mymat <- rbind(x, y)
-CalcJSDivergence(x = mymat)
+calc_js_divergence(x = mymat)
 }
 \keyword{distance}
 \keyword{functions}

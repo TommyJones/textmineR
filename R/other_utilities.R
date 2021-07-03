@@ -18,7 +18,7 @@
 #' systems use \code{\link[parallel]{parLapply}}.
 #' @return This function returns a \code{list} of length \code{length(X)}.
 #' @export
-#' @example examples/tm_parallel_apply.R
+#' @example R/examples/tm_parallel_apply.R
 tm_parallel_apply <- function(X, FUN, cpus = parallel::detectCores(),
                               export = NULL, libraries = NULL,
                               envir = parent.frame()) {

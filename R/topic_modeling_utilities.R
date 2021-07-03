@@ -30,7 +30,7 @@
 #' minimum
 #'          of the largest value for each row of theta (each document). This
 #'          ensures that each document has at least one topic assigned to it.
-#' @example examples/summarize_topics.R
+#' @example R/examples/summarize_topics.R
 #' @export
 summarize_topics <- function(model) {
 
@@ -123,7 +123,7 @@ SummarizeTopics <- summarize_topics
 #' from the corpus overall (p_terms).
 #'
 #' @export
-#' @example examples/get_probable_terms.R
+#' @example R/examples/get_probable_terms.R
 get_probable_terms <- function(docnames, dtm, p_terms = NULL) {
 
   # if p_terms is NULL, then create p_terms
@@ -174,7 +174,7 @@ GetProbableTerms <- function(...) {
 #' @return Returns a \code{matrix} whose rows correspond to topics and whose
 #' j-th column corresponds to the j-th "best" label assignment.
 #' @export
-#' @example examples/label_topics.R
+#' @example R/examples/label_topics.R
 label_topics <- function(assignments, dtm, M = 2) {
   # figure out a threshold
   threshold <- apply(assignments, 2, function(x) max(x, na.rm = T))
@@ -231,7 +231,7 @@ LabelTopics <- label_topics
 #' topic and whose m-th row correspond to the m-th top term from the input
 #' \code{phi}.
 #' @export
-#' @example examples/get_top_terms.R
+#' @example R/examples/get_top_terms.R
 get_top_terms <- function(phi, M, return_matrix = TRUE) {
   result <- apply(phi, 1, function(x) {
     names(x)[order(x, decreasing = TRUE)][1:M]

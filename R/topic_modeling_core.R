@@ -34,7 +34,7 @@ posterior <- function(object, ...) UseMethod("posterior")
 #' variable \code{var} is a facet for subsetting by document (for theta) or
 #' topic (for phi).
 #' @export
-#' @example examples/posterior.lda_topic_model.R
+#' @example R/examples/posterior.lda_topic_model.R
 posterior.lda_topic_model <- function(object, which = "theta",
                                       num_samples = 100, ...) {
 
@@ -125,7 +125,7 @@ posterior.lda_topic_model <- function(object, which = "theta",
 #' Returns a \code{matrix} whose rows correspond to topics and whose columns
 #' correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 #' @export
-#' @example examples/calc_gamma.R
+#' @example R/examples/calc_gamma.R
 calc_gamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
 
   # set up constants
@@ -187,7 +187,7 @@ CalcGamma <- calc_gamma
 #' whose j-th row represents P(terms | cluster_j). 'theta' is a matrix whose
 #' j-th row represents P(clusters | document_j). Each row of theta should only
 #' have one non-zero element.
-#' @example examples/cluster_2_topic_model.R
+#' @example R/examples/cluster_2_topic_model.R
 #' @export
 cluster_2_topic_model <- function(dtm, clustering, ...) {
 
@@ -278,7 +278,7 @@ Cluster2TopicModel <- cluster_2_topic_model
 #' When passing additional arguments to \link[topicmodels]{CTM}, you must unlist
 #' the elements in the \code{control} argument and pass them one by one.
 #' See examples for how to do this correctly.
-#' @example examples/fit_ctm_model.R
+#' @example R/examples/fit_ctm_model.R
 #' @export
 fit_ctm_model <- function(dtm, k, calc_coherence = TRUE,
                         calc_r2 = FALSE, return_all = TRUE, ...) {
@@ -348,7 +348,7 @@ FitCtmModel <- fit_ctm_model
 #' @note
 #' Predictions for this method are performed using the "dot" method as described
 #' in the textmineR vignette "c_topic_modeling".
-#' @example examples/predict.ctm_topic_model.R
+#' @example R/examples/predict.ctm_topic_model.R
 #' @export
 predict.ctm_topic_model <- function(object, newdata, ...) {
   ### Check inputs ----
@@ -427,7 +427,7 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
 #' factor the document term matrix. In many LSA applications, TF-IDF weights are
 #' applied to the DTM before model fitting. However, this is not strictly
 #' necessary.
-#' @example examples/fit_lsa_model.R
+#' @example R/examples/fit_lsa_model.R
 #' @export
 fit_lsa_model <- function(dtm, k, calc_coherence = TRUE,
                         return_all = FALSE, ...) {
@@ -486,7 +486,7 @@ FitLsaModel <- fit_lsa_model
 #' @param newdata a DTM or TCM of class dgCMatrix or a numeric vector
 #' @param ... further arguments passed to or from other methods.
 #' @return a "theta" matrix with one row per document and one column per topic
-#' @example examples/predict.lsa_topic_model.R
+#' @example R/examples/predict.lsa_topic_model.R
 #' @export
 predict.lsa_topic_model <- function(object, newdata, ...) {
 
@@ -546,7 +546,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
 #' input matrix. Each list element contains a numeric vector with as many
 #' entries as tokens in the original document. The entries are the column index
 #' for that token, minus 1.
-#' @example examples/dtm_2_lexicon.R
+#' @example R/examples/dtm_2_lexicon.R
 #' @export
 dtm_2_lexicon <- function(dtm, ...) {
 
@@ -621,7 +621,7 @@ Dtm2Lexicon <- dtm_2_lexicon
 #' \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
-#' @example examples/fit_lda_model.R
+#' @example R/examples/fit_lda_model.R
 #' @export
 fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1,
                           alpha = 0.1, beta = 0.05,
@@ -807,7 +807,7 @@ FitLdaModel <- fit_lda_model
 #' @param ... Other arguments to be passed to
 #' \code{\link[textmineR]{TmParallelApply}}
 #' @return a "theta" matrix with one row per document and one column per topic
-#' @example examples/predict.lda_topic_model.R
+#' @example R/examples/predict.lda_topic_model.R
 #' @export
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
                                     iterations = NULL, burnin = -1, ...) {
@@ -963,7 +963,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #' \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel").
 #' @export
-#' @example examples/update.lda_topic_model.R
+#' @example R/examples/update.lda_topic_model.R
 update.lda_topic_model <- function(object, dtm, additional_k = 0,
                                    iterations = NULL, burnin = -1,
                                    new_alpha = NULL, new_beta = NULL,

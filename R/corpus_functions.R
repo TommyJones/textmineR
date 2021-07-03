@@ -44,7 +44,7 @@
 #'
 #'       See \code{\link[tm]{stopwords}} for details on the default to the
 #'       \code{stopword_vec} argument.
-#' @example examples/create_dtm.R
+#' @example R/examples/create_dtm.R
 #' @export
 create_dtm <- function(doc_vec, doc_names = names(doc_vec),
                       ngram_window = c(1, 1),
@@ -220,7 +220,7 @@ CreateDtm <- create_dtm
 #'
 #'       See \code{\link[tm]{stopwords}} for details on the default to the
 #'       \code{stopword_vec} argument.
-#' @example examples/create_tcm.R
+#' @example R/examples/create_tcm.R
 #' @export
 create_tcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                       stopword_vec = c(stopwords::stopwords("en"),
@@ -393,7 +393,7 @@ CreateTcm <- create_tcm
 #' However, this can be modified by passing the \code{cpus} argument when
 #' calling this function.
 #' @export
-#' @example examples/dtm_2_docs.R
+#' @example R/examples/dtm_2_docs.R
 dtm_2_docs <- function(dtm, ...) {
 
   # do in parallel in batches of about 3000 if we have more than 3000 docs
@@ -431,7 +431,7 @@ Dtm2Docs <- dtm_2_docs
 #' terms. The i, j entries of this matrix represent the count of term j across
 #' documents containing term i. Note that, while square, this matrix is not
 #' symmetric.
-#' @example examples/dtm_2_tcm.R
+#' @example R/examples/dtm_2_tcm.R
 #' @export
 dtm_2_tcm <- function(dtm) {
 
@@ -463,7 +463,7 @@ Dtm2Tcm <- dtm_2_tcm
 #' The fourth column, \code{idf} is the log-weighted
 #' inverse document frequency of \code{term}.
 #' @export
-#' @example examples/term_doc_freq.R
+#' @example R/examples/term_doc_freq.R
 term_doc_freq <- function(dtm) {
   freq_mat <- data.frame(
     term = colnames(dtm),

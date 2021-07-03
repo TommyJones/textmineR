@@ -12,7 +12,7 @@
 #' and \code{y} are vectors, this returns a numeric scalar whose value is the
 #' Hellinger Distance between \code{x} and \code{y}.
 #' @export
-#' @example examples/calc_hellinger_dist.R
+#' @example R/examples/calc_hellinger_dist.R
 calc_hellinger_dist <- function(x, y = NULL, by_rows = TRUE) {
 
   #############################################################################
@@ -81,7 +81,7 @@ CalcHellingerDist <- calc_hellinger_dist
 #' Hellinger Distance between \code{x} and \code{y}.
 #' @keywords distance functions
 #' @export
-#' @example examples/calc_js_divergence.R
+#' @example R/examples/calc_js_divergence.R
 calc_js_divergence <- function(x, y = NULL, by_rows = TRUE) {
 
   #############################################################################

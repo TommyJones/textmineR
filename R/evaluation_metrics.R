@@ -20,7 +20,7 @@
 #' \code{\link[parallel]{detectCores}}.
 #' However, this can be modified by passing the \code{cpus} argument when
 #' calling this function.
-#' @example examples/calc_likelihood.R
+#' @example R/examples/calc_likelihood.R
 #' @export
 calc_likelihood <- function(dtm, phi, theta, ...) {
 
@@ -170,7 +170,7 @@ CalcLikelihood <- calc_likelihood
 #' Defaults to 5
 #' @return Returns an object of class \code{numeric} corresponding to the
 #' probabilistic coherence of the input topic(s).
-#' @example examples/calc_prob_coherence.R
+#' @example R/examples/calc_prob_coherence.R
 #' @export
 calc_prob_coherence <- function(phi, dtm, M = 5) {
 
@@ -276,7 +276,7 @@ CalcProbCoherence <- calc_prob_coherence
 #' However, this can be modified by passing the \code{cpus} argument when
 #' calling this function.
 #' @export
-#' @example examples/calc_topic_model_r2.R
+#' @example R/examples/calc_topic_model_r2.R
 calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
 
   # check that inputs have necessary formats
