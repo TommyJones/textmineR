@@ -56,7 +56,7 @@ calc_hellinger_dist <- function(x, y = NULL, by_rows = TRUE) {
       stop("x and y must be of the same length")
     }
 
-    result <- textmineR::hellinger_cpp(p = x, q = y)
+    result <- textmineR::Hellinger_cpp(p = x, q = y)
   }
 
   result
