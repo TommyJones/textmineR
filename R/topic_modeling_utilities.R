@@ -80,7 +80,7 @@ summarize_topics <- function(model) {
 
   m <- min(m, na.rm = TRUE)
 
-  a <- model$theta >= m 
+  a <- model$theta >= m
 
   labels <- label_topics(a, model$data, M = 1)
 
