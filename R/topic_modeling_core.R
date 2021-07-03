@@ -106,13 +106,7 @@ posterior.lda_topic_model <- function(object, which = "theta",
   SIMPLIFY = FALSE
   )
 
-  # names(samples) <- rows
-  #
-  # class(samples) <- "lda_posterior"
-
   samples <- do.call(rbind, samples)
-
-  # samples <- cbind(var = samples$var, samples[ -ncol(samples), ])
 
   samples
 }
@@ -172,8 +166,6 @@ calc_gamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
 
   # get the probability of each word from the model
   p_w <- p_t %*% phi
-
-
 
   # get our result
   gamma <- matrix(0, ncol = ncol(p_t), nrow = ncol(p_t))
