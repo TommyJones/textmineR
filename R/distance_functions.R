@@ -69,15 +69,8 @@ calc_hellinger_dist <- function(x, y = NULL, by_rows = TRUE) {
 }
 
 #' @rdname calc_hellinger_dist
-#' @param ... arguments to be passed to \code{calc_hellinger_dist}
 #' @export
-CalcHellingerDist <- function(...) {
-  .Deprecated(
-    new = "calc_hellinger_dist",
-    package = "textmineR"
-  )
-  calc_hellinger_dist(...)
-}
+CalcHellingerDist <- calc_hellinger_dist
 
 #' Calculate Jensen-Shannon Divergence
 #' @description This function calculates the Jensen Shannon Divergence for the
@@ -151,12 +144,6 @@ calc_js_divergence <- function(x, y = NULL, by_rows = TRUE) {
 }
 
 #' @rdname calc_js_divergence
-#' @param ... arguments to be passed to \code{calc_js_divergence}
 #' @export
-CalcJSDivergence <- function(...) {
-  .Deprecated(
-    new = "calc_js_divergence",
-    package = "textmineR"
-  )
-  calc_js_divergence(...)
-}
+CalcJSDivergence <- calc_js_divergence
+

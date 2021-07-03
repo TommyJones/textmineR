@@ -166,17 +166,8 @@ calc_likelihood <- function(dtm, phi, theta, ...) {
 }
 
 #' @rdname calc_likelihood
-#' @param ... parameters to pass to \code{calc_likelihood}
 #' @export
-
-CalcLikelihood <- function(...) {
-    .Deprecated(
-        new = "calc_likelihood",
-        package = "textmineR"
-    )
-    calc_likelihood(...)
-}
-
+CalcLikelihood <- calc_likelihood
 
 #' Probabilistic coherence of topics
 #' @description Calculates the probabilistic coherence of a topic or topics.
@@ -277,16 +268,8 @@ calc_prob_coherence <- function(phi, dtm, M = 5) {
 }
 
 #' @rdname calc_prob_coherence
-#' @param ... arguments to pass to \code{calc_prob_coherence}
 #' @export
-
-CalcProbCoherence <- function(...) {
-    .Deprecated(
-        new = "calc_prob_coherence",
-        package = "textmineR"
-    )
-    calc_prob_coherence(...)
-}
+CalcProbCoherence <- calc_prob_coherence
 
 #' Calculate the R-squared of a topic model.
 #' @description Function to calculate R-squared for a topic model.
@@ -460,13 +443,5 @@ calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
 }
 
 #' @rdname calc_topic_model_r2
-#' @param ... arguments to pass to \code{calc_topic_model_r2}
 #' @export
-
-CalcTopicModelR2 <- function(...) {
-    .Deprecated(
-        new = "calc_topic_model_r2",
-        package = "textmineR"
-    )
-    calc_topic_model_r2(...)
-}
+CalcTopicModelR2 <- calc_topic_model_r2

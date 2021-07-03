@@ -187,15 +187,8 @@ calc_gamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
 }
 
 #' @rdname calc_gamma
-#' @param ... arguments to be passed to \code{calc_gamma}
 #' @export
-CalcGamma <- function(...) {
-    .Deprecated(
-        new = "calc_gamma",
-        package = "textmineR"
-    )
-    calc_gamma(...)
-}
+CalcGamma <- calc_gamma
 
 #' Represent a document clustering as a topic model
 #' @description Represents a document clustering as a topic model of two
@@ -288,15 +281,8 @@ cluster_2_topic_model <- function(dtm, clustering, ...) {
 }
 
 #' @rdname cluster_2_topic_model
-#' @param ... arguments to pass to \code{cluster_2_topic_model}
 #' @export
-Cluster2TopicModel <- function(...) {
-    .Deprecated(
-        new = "cluster_2_topic_model",
-        package = "textmineR"
-    )
-    cluster_2_topic_model(...)
-}
+Cluster2TopicModel <- cluster_2_topic_model
 
 
 #' @title Fit a Correlated Topic Model
@@ -407,15 +393,8 @@ fit_ctm_model <- function(dtm, k, calc_coherence = TRUE,
 }
 
 #' @rdname fit_ctm_model
-#' @param ... arguments to be passed to \code{fit_ctm_model}
 #' @export
-FitCtmModel <- function(...) {
-    .Deprecated(
-        new = "fit_ctm_model",
-        package = "textmineR"
-    )
-    fit_ctm_model(...)
-}
+FitCtmModel <- fit_ctm_model
 
 #' Predict method for Correlated topic models (CTM)
 #' @description Obtains predictions of topics for new documents from a fitted
@@ -581,15 +560,8 @@ fit_lsa_model <- function(dtm, k, calc_coherence = TRUE,
 }
 
 #' @rdname fit_lsa_model
-#' @param ... arguments to pass to \code{fit_lsa_model}
 #' @export
-FitLsaModel <- function(...) {
-  .Deprecated(
-    new = "fit_lsa_model",
-    package = "textmineR"
-  )
-  fit_lsa_model(...)
-}
+FitLsaModel <- fit_lsa_model
 
 #' Predict method for LSA topic models
 #' @description Obtains predictions of topics for new documents from a fitted
@@ -727,15 +699,8 @@ dtm_2_lexicon <- function(dtm, ...) {
 }
 
 #' @rdname dtm_2_lexicon
-#' @param ... arguments to pass to \code{dtm_2_lexicon}
 #' @export
-Dtm2Lexicon <- function(...) {
-  .Deprecated(
-    new = "dtm_2_lexicon",
-    package = "textmineR"
-  )
-  dtm_2_lexicon(...)
-}
+Dtm2Lexicon <- dtm_2_lexicon
 
 #' Fit a Latent Dirichlet Allocation topic model
 #' @description Fit a Latent Dirichlet Allocation topic model using collapsed
@@ -948,6 +913,10 @@ fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1,
   ### return result ----
   result
 }
+
+#' @rdname fit_lda_model
+#' @export
+FitLdaModel <- fit_lda_model
 
 ### Predict method for LDA objects
 #' Get predictions from a Latent Dirichlet Allocation model

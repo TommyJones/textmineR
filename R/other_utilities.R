@@ -88,11 +88,5 @@ tm_parallel_apply <- function(X, FUN, cpus = parallel::detectCores(),
 }
 
 #' @rdname tm_parallel_apply
-#' @param ... arguments to be passed through to \code{TmParallelApply}
 #' @export
-TmParallelApply <- function(...) {
-    .Deprecated(
-        new = "tm_parallel_apply",
-        package = "textmineR"
-    )
-}
+TmParallelApply <- tm_parallel_apply

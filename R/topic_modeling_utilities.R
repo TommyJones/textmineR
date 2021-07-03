@@ -107,16 +107,8 @@ summarize_topics <- function(model) {
 summarise_topics <- summarize_topics # for the brits out there
 
 #' @rdname summarize_topics
-#' @param ... arguments to be passed to \code{summarize_topics}
 #' @export
-SummarizeTopics <- function(...) {
-    .Deprecated(
-        new = "summarize_topics",
-        package = "textmineR"
-    )
-    summarize_topics(...)
-}
-
+SummarizeTopics <- summarize_topics
 
 #' Get cluster labels using a "more probable" method of terms
 #'
@@ -249,16 +241,8 @@ label_topics <- function(assignments, dtm, M = 2) {
 }
 
 #' @rdname label_topics
-#' @param ... arguments to be passed to \code{label_topics}
 #' @export
-LabelTopics <- function(...) {
-    .Deprecated(
-        new = "label_topics",
-        package = "textmineR"
-    )
-    label_topics(...)
-}
-
+LabelTopics <- label_topics
 
 #' Get Top Terms for each topic from a topic model
 #'
@@ -298,12 +282,5 @@ get_top_terms <- function(phi, M, return_matrix = TRUE) {
 }
 
 #' @rdname get_top_terms
-#' @param ... arguments to be passed to \code{get_top_terms}
 #' @export
-GetTopTerms <- function(...) {
-    .Deprecated(
-        new = "get_top_terms",
-        package = "textmineR"
-    )
-    get_top_terms(...)
-}
+GetTopTerms <- get_top_terms
