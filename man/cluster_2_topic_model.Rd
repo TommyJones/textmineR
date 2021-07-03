@@ -7,7 +7,7 @@
 \usage{
 cluster_2_topic_model(dtm, clustering, ...)
 
-Cluster2TopicModel(...)
+Cluster2TopicModel(dtm, clustering, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix} or whose class
@@ -17,7 +17,8 @@ index documents.}
 \item{clustering}{A vector of length \code{nrow(dtm)} whose entries form a
 partitional clustering of the documents.}
 
-\item{...}{arguments to pass to \code{cluster_2_topic_model}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}.}
 }
 \value{
 Returns a list with two elements, phi and theta. 'phi' is a matrix

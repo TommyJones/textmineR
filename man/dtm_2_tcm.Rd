@@ -7,13 +7,11 @@
 \usage{
 dtm_2_tcm(dtm)
 
-Dtm2Tcm(...)
+Dtm2Tcm(dtm)
 }
 \arguments{
 \item{dtm}{A document term matrix, generally of class \code{dgCMatrix},
 though other classes, such as \code{dgTMatrix}, may also work without issue.}
-
-\item{...}{arguments to be passed to \code{dtm_2_tcm}}
 }
 \value{
 Returns a square \code{dgCMatrix} whose rows and columns both index

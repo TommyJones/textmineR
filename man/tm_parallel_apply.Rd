@@ -14,7 +14,14 @@ tm_parallel_apply(
   envir = parent.frame()
 )
 
-TmParallelApply(...)
+TmParallelApply(
+  X,
+  FUN,
+  cpus = parallel::detectCores(),
+  export = NULL,
+  libraries = NULL,
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{X}{A vector or list over which to apply \code{FUN}}
@@ -31,8 +38,6 @@ using a Windows machine. Defaults to \code{NULL}}
 each cluster if using a Windows machine. Defaults to \code{NULL}}
 
 \item{envir}{Environment from which to export variables in varlist}
-
-\item{...}{arguments to be passed through to \code{TmParallelApply}}
 }
 \value{
 This function returns a \code{list} of length \code{length(X)}.

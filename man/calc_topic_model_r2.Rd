@@ -7,7 +7,7 @@
 \usage{
 calc_topic_model_r2(dtm, phi, theta, ...)
 
-CalcTopicModelR2(...)
+CalcTopicModelR2(dtm, phi, theta, ...)
 }
 \arguments{
 \item{dtm}{A documents by terms dimensional document term matrix of class
@@ -19,7 +19,8 @@ p(term_i |topic_j)}
 \item{theta}{A documents by topics dimensional matrix where each entry is
 p(topic_j|document_d)}
 
-\item{...}{arguments to pass to \code{calc_topic_model_r2}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}. See note, below.}
 }
 \value{
 Returns an object of class \code{numeric} representing the proportion of

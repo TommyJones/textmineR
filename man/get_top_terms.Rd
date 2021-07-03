@@ -7,7 +7,7 @@
 \usage{
 get_top_terms(phi, M, return_matrix = TRUE)
 
-GetTopTerms(...)
+GetTopTerms(phi, M, return_matrix = TRUE)
 }
 \arguments{
 \item{phi}{A matrix whose rows index topics and columns index words}
@@ -16,8 +16,6 @@ GetTopTerms(...)
 
 \item{return_matrix}{Do you want a \code{matrix} or \code{data.frame}/
 \code{tibble} returned? Defaults to \code{TRUE}.}
-
-\item{...}{arguments to be passed to \code{get_top_terms}}
 }
 \value{
 If \code{return_matrix = TRUE} (the default) then a matrix. Otherwise,

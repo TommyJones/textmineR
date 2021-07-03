@@ -10,7 +10,7 @@ summarize_topics(model)
 
 summarise_topics(model)
 
-SummarizeTopics(...)
+SummarizeTopics(model)
 }
 \arguments{
 \item{model}{A list (or S3 object) with three named matrices: phi, theta,
@@ -18,8 +18,6 @@ and gamma.
        These conform to outputs of many of \link[textmineR]{textmineR}'s
 native
        topic modeling functions such as \link[textmineR]{FitLdaModel}.}
-
-\item{...}{arguments to be passed to \code{summarize_topics}}
 }
 \value{
 An object of class \code{data.frame} or \code{tibble} with 6 columns:

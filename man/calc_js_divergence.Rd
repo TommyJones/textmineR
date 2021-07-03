@@ -7,7 +7,7 @@
 \usage{
 calc_js_divergence(x, y = NULL, by_rows = TRUE)
 
-CalcJSDivergence(...)
+CalcJSDivergence(x, y = NULL, by_rows = TRUE)
 }
 \arguments{
 \item{x}{A numeric matrix or numeric vector}
@@ -17,8 +17,6 @@ numeric vector.}
 
 \item{by_rows}{Logical. If \code{x} is a matrix, should distances be
 calculated by rows?}
-
-\item{...}{arguments to be passed to \code{calc_js_divergence}}
 }
 \value{
 If \code{x} is a matrix, this returns an square and symmetric matrix.

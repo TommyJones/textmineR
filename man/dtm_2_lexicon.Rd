@@ -7,13 +7,14 @@
 \usage{
 dtm_2_lexicon(dtm, ...)
 
-Dtm2Lexicon(...)
+Dtm2Lexicon(dtm, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix (or term co-occurrence matrix) of class
 \code{dgCMatrix}.}
 
-\item{...}{arguments to pass to \code{dtm_2_lexicon}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}.}
 }
 \value{
 Returns a list. Each element of the list represents a row of the

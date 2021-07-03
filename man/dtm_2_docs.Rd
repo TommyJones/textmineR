@@ -7,7 +7,7 @@
 \usage{
 dtm_2_docs(dtm, ...)
 
-Dtm2Docs(...)
+Dtm2Docs(dtm, ...)
 }
 \arguments{
 \item{dtm}{A sparse Matrix from the matrix package whose rownames correspond

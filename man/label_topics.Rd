@@ -7,7 +7,7 @@
 \usage{
 label_topics(assignments, dtm, M = 2)
 
-LabelTopics(...)
+LabelTopics(assignments, dtm, M = 2)
 }
 \arguments{
 \item{assignments}{A documents by topics matrix similar to \code{theta}.
@@ -19,8 +19,6 @@ The columns of \code{dtm} should be n-grams whose colnames have a "_" where
 spaces would be between the words.}
 
 \item{M}{The number of n-gram labels you want to return. Defaults to 2}
-
-\item{...}{arguments to be passed to \code{label_topics}}
 }
 \value{
 Returns a \code{matrix} whose rows correspond to topics and whose

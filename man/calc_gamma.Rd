@@ -7,7 +7,7 @@
 \usage{
 calc_gamma(phi, theta, p_docs = NULL, correct = TRUE)
 
-CalcGamma(...)
+CalcGamma(phi, theta, p_docs = NULL, correct = TRUE)
 }
 \arguments{
 \item{phi}{The phi matrix whose rows index topics and columns index words.
@@ -24,8 +24,6 @@ an optional argument. It defaults to NULL}
                zero? Useful when hitting computational underflow. Defaults to
                \code{TRUE}. Set to \code{FALSE} for troubleshooting or
 diagnostics.}
-
-\item{...}{arguments to be passed to \code{calc_gamma}}
 }
 \value{
 Returns a \code{matrix} whose rows correspond to topics and whose columns

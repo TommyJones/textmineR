@@ -14,7 +14,14 @@ fit_ctm_model(
   ...
 )
 
-FitCtmModel(...)
+FitCtmModel(
+  dtm,
+  k,
+  calc_coherence = TRUE,
+  calc_r2 = FALSE,
+  return_all = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix}}
@@ -30,7 +37,8 @@ Defaults to \code{FALSE}.}
 \item{return_all}{Logical. Do you want the raw results of the underlying
 function returned along with the formatted results? Defaults to \code{TRUE}.}
 
-\item{...}{arguments to be passed to \code{fit_ctm_model}}
+\item{...}{Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.
+See note below.}
 }
 \value{
 Returns a list with a minimum of two objects, \code{phi} and

@@ -7,7 +7,7 @@
 \usage{
 calc_prob_coherence(phi, dtm, M = 5)
 
-CalcProbCoherence(...)
+CalcProbCoherence(phi, dtm, M = 5)
 }
 \arguments{
 \item{phi}{A numeric matrix or a numeric vector. The vector, or rows of the
@@ -20,8 +20,6 @@ must index terms.}
 
 \item{M}{An integer for the number of words to be used in the calculation.
 Defaults to 5}
-
-\item{...}{arguments to pass to \code{calc_prob_coherence}}
 }
 \value{
 Returns an object of class \code{numeric} corresponding to the

@@ -8,12 +8,10 @@ matrix.}
 \usage{
 term_doc_freq(dtm)
 
-TermDocFreq(...)
+TermDocFreq(dtm)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix}.}
-
-\item{...}{arguments to be passed to \code{term_doc_freq}}
 }
 \value{
 Returns a \code{data.frame} or \code{tibble} with 4 columns.

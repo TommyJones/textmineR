@@ -8,7 +8,7 @@ model}
 \usage{
 calc_likelihood(dtm, phi, theta, ...)
 
-CalcLikelihood(...)
+CalcLikelihood(dtm, phi, theta, ...)
 }
 \arguments{
 \item{dtm}{The document term matrix of class \code{dgCMatrix}.}
@@ -19,7 +19,8 @@ The i, j entries are P(word_i | topic_j)}
 \item{theta}{The theta matrix whose rows index documents and columns index
 topics. The i, j entries are P(topic_i | document_j).}
 
-\item{...}{parameters to pass to \code{calc_likelihood}}
+\item{...}{Other arguments to pass to
+\code{\link[textmineR]{TmParallelApply}}. See note, below.}
 }
 \value{
 Returns an object of class \code{numeric} corresponding to the log

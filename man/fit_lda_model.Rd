@@ -19,7 +19,19 @@ fit_lda_model(
   ...
 )
 
-FitLdaModel(...)
+FitLdaModel(
+  dtm,
+  k,
+  iterations = NULL,
+  burnin = -1,
+  alpha = 0.1,
+  beta = 0.05,
+  optimize_alpha = FALSE,
+  calc_likelihood = FALSE,
+  calc_coherence = TRUE,
+  calc_r2 = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dtm}{A document term matrix or term co-occurrence matrix of class
@@ -52,7 +64,8 @@ topics after the model is trained? Defaults to \code{TRUE}.}
 \item{calc_r2}{Do you want to calculate R-squared after the model is trained?
 Defaults to \code{FALSE}.}
 
-\item{...}{arguments to pass on to \code{fit_lda_model}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
 Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE

@@ -7,7 +7,7 @@
 \usage{
 fit_lsa_model(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...)
 
-FitLsaModel(...)
+FitLsaModel(dtm, k, calc_coherence = TRUE, return_all = FALSE, ...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{Matrix::dgCMatrix}}
@@ -20,7 +20,8 @@ topics after the model is trained? Defaults to \code{TRUE}.}
 \item{return_all}{Should all objects returned from \code{RSpectra::svds} be
 returned here? Defaults to \code{FALSE}}
 
-\item{...}{arguments to pass to \code{fit_lsa_model}}
+\item{...}{Other arguments to pass to \code{\link[RSpectra]{svds}} through
+its \code{opts} parameter.}
 }
 \value{
 Returns a list with a minimum of three objects: \code{phi},
