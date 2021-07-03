@@ -3,4 +3,4 @@ y <- x^2
 calc_hellinger_dist(x = x, y = y)
 
 mymat <- rbind(x, y)
-CalcHellingerDist(x = mymat)
+calc_hellinger_dist(x = mymat)
