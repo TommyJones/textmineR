@@ -206,14 +206,15 @@ CalcGamma <- function(...) {
 }
 
 #' Represent a document clustering as a topic model
-#' @description Represents a document clustering as a topic model of two matrices.
-#' phi: P(term | cluster) theta: P(cluster | document)
+#' @description Represents a document clustering as a topic model of two
+#' matrices. phi: P(term | cluster) theta: P(cluster | document)
 #' @param dtm A document term matrix of class \code{dgCMatrix} or whose class
 #' inherits from the \code{Matrix} package. Columns must index terms, rows must
 #' index documents.
 #' @param clustering A vector of length \code{nrow(dtm)} whose entries form a
 #' partitional clustering of the documents.
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}.
 #' @return Returns a list with two elements, phi and theta. 'phi' is a matrix
 #' whose j-th row represents P(terms | cluster_j). 'theta' is a matrix whose
 #' j-th row represents P(clusters | document_j). Each row of theta should only
@@ -745,27 +746,30 @@ Dtm2Lexicon <- function(...) {
 }
 
 #' Fit a Latent Dirichlet Allocation topic model
-#' @description Fit a Latent Dirichlet Allocation topic model using collapsed Gibbs sampling.
-#' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix
+#' @description Fit a Latent Dirichlet Allocation topic model using collapsed
+#' Gibbs sampling.
+#' @param dtm A document term matrix or term co-occurrence matrix of class
+#' dgCMatrix
 #' @param k Integer number of topics
-#' @param iterations Integer number of iterations for the Gibbs sampler to run. A
-#'        future version may include automatic stopping criteria.
-#' @param burnin Integer number of burnin iterations. If \code{burnin} is greater than -1,
-#'        the resulting "phi" and "theta" matrices are an average over all iterations
-#'        greater than \code{burnin}.
-#' @param alpha Vector of length \code{k} for asymmetric or a number for symmetric.
-#'        This is the prior for topics over documents
-#' @param beta Vector of length \code{ncol(dtm)} for asymmetric or a number for symmetric.
-#'        This is the prior for words over topics.
-#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-#'        Defaults to \code{FALSE}.
-#' @param calc_likelihood Do you want to calculate the likelihood every 10 Gibbs iterations?
-#'        Useful for assessing convergence. Defaults to \code{FALSE}.
-#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
-#'        after the model is trained? Defaults to \code{TRUE}.
+#' @param iterations Integer number of iterations for the Gibbs sampler to run.
+#' A future version may include automatic stopping criteria.
+#' @param burnin Integer number of burnin iterations. If \code{burnin} is
+#' greater than -1, the resulting "phi" and "theta" matrices are an average
+#' over all iterations greater than \code{burnin}.
+#' @param alpha Vector of length \code{k} for asymmetric or a number for
+#' symmetric. This is the prior for topics over documents
+#' @param beta Vector of length \code{ncol(dtm)} for asymmetric or a number for
+#' symmetric. This is the prior for words over topics.
+#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs
+#' iterations? Defaults to \code{FALSE}.
+#' @param calc_likelihood Do you want to calculate the likelihood every 10
+#' Gibbs iterations? Useful for assessing convergence. Defaults to \code{FALSE}.
+#' @param calc_coherence Do you want to calculate probabilistic coherence of
+#' topics after the model is trained? Defaults to \code{TRUE}.
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
 #' @examples
@@ -1022,7 +1026,8 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
 
-  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+  if (class(newdata) == "numeric") {
+    # if newdata is a numeric vector, assumed to be 1 document
     if (is.null(names(newdata))) {
       stop("it looks like newdata is a numeric vector without names.
            Did you mean to pass a single document?
@@ -1202,8 +1207,10 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 update.lda_topic_model <- function(object, dtm, additional_k = 0,
                                    iterations = NULL, burnin = -1,
                                    new_alpha = NULL, new_beta = NULL,
-                                   optimize_alpha = FALSE, calc_likelihood = FALSE,
-                                   calc_coherence = TRUE, calc_r2 = FALSE, ...) {
+                                   optimize_alpha = FALSE,
+                                   calc_likelihood = FALSE,
+                                   calc_coherence = TRUE,
+                                   calc_r2 = FALSE, ...) {
 
   ### Check inputs are of correct dimensionality ----
 
