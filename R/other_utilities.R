@@ -18,12 +18,7 @@
 #' systems use \code{\link[parallel]{parLapply}}.
 #' @return This function returns a \code{list} of length \code{length(X)}.
 #' @export
-#' @examples
-#' \dontrun{
-#' x <- 1:10000
-#' f <- function(y) y * y + 12
-#' result <- TmParallelApply(x, f)
-#' }
+#' @example examples/tm_parallel_apply.R
 tm_parallel_apply <- function(X, FUN, cpus = parallel::detectCores(),
                               export = NULL, libraries = NULL,
                               envir = parent.frame()) {

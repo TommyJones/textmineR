@@ -12,13 +12,7 @@
 #' and \code{y} are vectors, this returns a numeric scalar whose value is the
 #' Hellinger Distance between \code{x} and \code{y}.
 #' @export
-#' @examples
-#' x <- rchisq(n = 100, df = 8)
-#' y <- x^2
-#' calc_hellinger_dist(x = x, y = y)
-#'
-#' mymat <- rbind(x, y)
-#' CalcHellingerDist(x = mymat)
+#' @example examples/calc_hellinger_dist.R
 calc_hellinger_dist <- function(x, y = NULL, by_rows = TRUE) {
 
   #############################################################################
@@ -87,13 +81,7 @@ CalcHellingerDist <- calc_hellinger_dist
 #' Hellinger Distance between \code{x} and \code{y}.
 #' @keywords distance functions
 #' @export
-#' @examples
-#' x <- rchisq(n = 100, df = 8)
-#' y <- x^2
-#' CalcJSDivergence(x = x, y = y)
-#'
-#' mymat <- rbind(x, y)
-#' CalcJSDivergence(x = mymat)
+#' @example examples/calc_js_divergence.R
 calc_js_divergence <- function(x, y = NULL, by_rows = TRUE) {
 
   #############################################################################

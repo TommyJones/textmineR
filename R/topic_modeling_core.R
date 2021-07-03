@@ -34,16 +34,7 @@ posterior <- function(object, ...) UseMethod("posterior")
 #' variable \code{var} is a facet for subsetting by document (for theta) or
 #' topic (for phi).
 #' @export
-#' @examples
-#' \dontrun{
-#' a <- posterior(object = nih_sample_topic_model, which = "theta", num_samples = 20)
-#'
-#' plot(density(a$t1[a$var == "8693991"]))
-#'
-#' b <- posterior(object = nih_sample_topic_model, which = "phi", num_samples = 20)
-#'
-#' plot(denisty(b$research[b$var == "t_5"]))
-#' }
+#' @example examples/posterior.lda_topic_model.R
 posterior.lda_topic_model <- function(object, which = "theta",
                                       num_samples = 100, ...) {
 
@@ -134,15 +125,7 @@ posterior.lda_topic_model <- function(object, which = "theta",
 #' Returns a \code{matrix} whose rows correspond to topics and whose columns
 #' correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
 #' @export
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_topic_model)
-#'
-#' # Make a gamma matrix, P(topic|words)
-#' gamma <- CalcGamma(
-#'   phi = nih_sample_topic_model$phi,
-#'   theta = nih_sample_topic_model$theta
-#' )
+#' @example examples/calc_gamma.R
 calc_gamma <- function(phi, theta, p_docs = NULL, correct = TRUE) {
 
   # set up constants
@@ -204,17 +187,7 @@ CalcGamma <- calc_gamma
 #' whose j-th row represents P(terms | cluster_j). 'theta' is a matrix whose
 #' j-th row represents P(clusters | document_j). Each row of theta should only
 #' have one non-zero element.
-#' @examples
-#' \dontrun{
-#' # Load pre-formatted data for use
-#' data(nih_sample_dtm)
-#' data(nih_sample)
-#'
-#' result <- cluster_2_topic_model(
-#'   dtm = nih_sample_dtm,
-#'   clustering = nih_sample$IC_NAME
-#' )
-#' }
+#' @example examples/cluster_2_topic_model.R
 #' @export
 cluster_2_topic_model <- function(dtm, clustering, ...) {
 
@@ -305,38 +278,7 @@ Cluster2TopicModel <- cluster_2_topic_model
 #' When passing additional arguments to \link[topicmodels]{CTM}, you must unlist
 #' the elements in the \code{control} argument and pass them one by one.
 #' See examples for how to do this correctly.
-#' @examples
-#' # Load a pre-formatted dtm
-#' data(nih_sample_dtm)
-#'
-#' # Fit a CTM model on a sample of documents
-#' model <- FitCtmModel(
-#'   dtm = nih_sample_dtm[sample(1:nrow(nih_sample_dtm), 10), ],
-#'   k = 3, return_all = FALSE
-#' )
-#'
-#' # the correct way to pass control arguments to CTM
-#' \dontrun{
-#' topics_CTM <- FitCtmModel(
-#'   dtm = nih_sample_dtm[sample(1:nrow(nih_sample_dtm), 10), ],
-#'   k = 10,
-#'   calc_coherence = TRUE,
-#'   calc_r2 = TRUE,
-#'   return_all = TRUE,
-#'   estimate.beta = TRUE,
-#'   verbose = 0,
-#'   prefix = tempfile(),
-#'   save = 0,
-#'   keep = 0,
-#'   seed = as.integer(Sys.time()),
-#'   nstart = 1L,
-#'   best = TRUE,
-#'   var = list(iter.max = 500, tol = 10^-6),
-#'   em = list(iter.max = 1000, tol = 10^-4),
-#'   initialize = "random",
-#'   cg = list(iter.max = 500, tol = 10^-5)
-#' )
-#' }
+#' @example examples/fit_ctm_model.R
 #' @export
 fit_ctm_model <- function(dtm, k, calc_coherence = TRUE,
                         calc_r2 = FALSE, return_all = TRUE, ...) {
@@ -406,19 +348,7 @@ FitCtmModel <- fit_ctm_model
 #' @note
 #' Predictions for this method are performed using the "dot" method as described
 #' in the textmineR vignette "c_topic_modeling".
-#' @examples
-#' # Load a pre-formatted dtm
-#' \dontrun{
-#' data(nih_sample_dtm)
-#'
-#' model <- FitCtmModel(
-#'   dtm = nih_sample_dtm[1:20, ], k = 3,
-#'   calc_coherence = FALSE, calc_r2 = FALSE
-#' )
-#'
-#' # Get predictions on the next 50 documents
-#' pred <- predict(model, nih_sample_dtm[21:100, ])
-#' }
+#' @example examples/predict.ctm_topic_model.R
 #' @export
 predict.ctm_topic_model <- function(object, newdata, ...) {
   ### Check inputs ----
@@ -497,21 +427,7 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
 #' factor the document term matrix. In many LSA applications, TF-IDF weights are
 #' applied to the DTM before model fitting. However, this is not strictly
 #' necessary.
-#' @examples
-#' # Load a pre-formatted dtm
-#' data(nih_sample_dtm)
-#'
-#' # Convert raw word counts to TF-IDF frequency weights
-#' idf <- log(nrow(nih_sample_dtm) / Matrix::colSums(nih_sample_dtm > 0))
-#'
-#' dtm_tfidf <- Matrix::t(nih_sample_dtm) * idf
-#'
-#' dtm_tfidf <- Matrix::t(dtm_tfidf)
-#'
-#' # Fit an LSA model
-#' model <- fit_lsa_model(dtm = dtm_tfidf, k = 5)
-#'
-#' str(model)
+#' @example examples/fit_lsa_model.R
 #' @export
 fit_lsa_model <- function(dtm, k, calc_coherence = TRUE,
                         return_all = FALSE, ...) {
@@ -570,22 +486,7 @@ FitLsaModel <- fit_lsa_model
 #' @param newdata a DTM or TCM of class dgCMatrix or a numeric vector
 #' @param ... further arguments passed to or from other methods.
 #' @return a "theta" matrix with one row per document and one column per topic
-#' @examples
-#' # Load a pre-formatted dtm
-#' data(nih_sample_dtm)
-#'
-#' # Convert raw word counts to TF-IDF frequency weights
-#' idf <- log(nrow(nih_sample_dtm) / Matrix::colSums(nih_sample_dtm > 0))
-#'
-#' dtm_tfidf <- Matrix::t(nih_sample_dtm) * idf
-#'
-#' dtm_tfidf <- Matrix::t(dtm_tfidf)
-#'
-#' # Fit an LSA model on the first 50 documents
-#' model <- FitLsaModel(dtm = dtm_tfidf[1:50, ], k = 5)
-#'
-#' # Get predictions on the next 50 documents
-#' pred <- predict(model, dtm_tfidf[51:100, ])
+#' @example examples/predict.lsa_topic_model.R
 #' @export
 predict.lsa_topic_model <- function(object, newdata, ...) {
 
@@ -645,16 +546,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
 #' input matrix. Each list element contains a numeric vector with as many
 #' entries as tokens in the original document. The entries are the column index
 #' for that token, minus 1.
-#' @examples
-#' \dontrun{
-#' # Load pre-formatted data for use
-#' data(nih_sample_dtm)
-#'
-#' result <- Dtm2Lexicon(
-#'   dtm = nih_sample_dtm,
-#'   cpus = 2
-#' )
-#' }
+#' @example examples/dtm_2_lexicon.R
 #' @export
 dtm_2_lexicon <- function(dtm, ...) {
 
@@ -729,30 +621,7 @@ Dtm2Lexicon <- dtm_2_lexicon
 #' \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
 #' @details EXPLAIN IMPLEMENTATION DETAILS
-#' @examples
-#' # load some data
-#' data(nih_sample_dtm)
-#'
-#' # fit a model
-#' set.seed(12345)
-#' m <- FitLdaModel(
-#'   dtm = nih_sample_dtm[1:20, ], k = 5,
-#'   iterations = 200, burnin = 175
-#' )
-#'
-#' str(m)
-#'
-#' # predict on held-out documents using gibbs sampling "fold in"
-#' p1 <- predict(m, nih_sample_dtm[21:100, ],
-#'   method = "gibbs",
-#'   iterations = 200, burnin = 175
-#' )
-#'
-#' # predict on held-out documents using the dot product method
-#' p2 <- predict(m, nih_sample_dtm[21:100, ], method = "dot")
-#'
-#' # compare the methods
-#' barplot(rbind(p1[1, ], p2[1, ]), beside = TRUE, col = c("red", "blue"))
+#' @example examples/fit_lda_model.R
 #' @export
 fit_lda_model <- function(dtm, k, iterations = NULL, burnin = -1,
                           alpha = 0.1, beta = 0.05,
@@ -936,33 +805,7 @@ FitLdaModel <- fit_lda_model
 #' @param ... Other arguments to be passed to
 #' \code{\link[textmineR]{TmParallelApply}}
 #' @return a "theta" matrix with one row per document and one column per topic
-#' @examples
-#' \dontrun{
-#' # load some data
-#' data(nih_sample_dtm)
-#'
-#' # fit a model
-#' set.seed(12345)
-#'
-#' m <- FitLdaModel(
-#'   dtm = nih_sample_dtm[1:20, ], k = 5,
-#'   iterations = 200, burnin = 175
-#' )
-#'
-#' str(m)
-#'
-#' # predict on held-out documents using gibbs sampling "fold in"
-#' p1 <- predict(m, nih_sample_dtm[21:100, ],
-#'   method = "gibbs",
-#'   iterations = 200, burnin = 175
-#' )
-#'
-#' # predict on held-out documents using the dot product method
-#' p2 <- predict(m, nih_sample_dtm[21:100, ], method = "dot")
-#'
-#' # compare the methods
-#' barplot(rbind(p1[1, ], p2[1, ]), beside = TRUE, col = c("red", "blue"))
-#' }
+#' @example examples/predict.lda_topic_model.R
 #' @export
 predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
                                     iterations = NULL, burnin = -1, ...) {
@@ -1118,57 +961,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #' \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel").
 #' @export
-#' @examples
-#' \dontrun{
-#' # load a document term matrix
-#' d1 <- nih_sample_dtm[1:50, ]
-#'
-#' d2 <- nih_sample_dtm[51:100, ]
-#'
-#' # fit a model
-#' m <- FitLdaModel(d1,
-#'   k = 10,
-#'   iterations = 200, burnin = 175,
-#'   optimize_alpha = TRUE,
-#'   calc_likelihood = FALSE,
-#'   calc_coherence = TRUE,
-#'   calc_r2 = FALSE
-#' )
-#'
-#' # update an existing model by adding documents
-#' m2 <- update(
-#'   object = m,
-#'   dtm = rbind(d1, d2),
-#'   iterations = 200,
-#'   burnin = 175
-#' )
-#'
-#' # use an old model as a prior for a new model
-#' m3 <- update(
-#'   object = m,
-#'   dtm = d2, # new documents only
-#'   iterations = 200,
-#'   burnin = 175
-#' )
-#'
-#' # add topics while updating a model by adding documents
-#' m4 <- update(
-#'   object = m,
-#'   dtm = rbind(d1, d2),
-#'   additional_k = 3,
-#'   iterations = 200,
-#'   burnin = 175
-#' )
-#'
-#' # add topics to an existing model
-#' m5 <- update(
-#'   object = m,
-#'   dtm = d1, # this is the old data
-#'   additional_k = 3,
-#'   iterations = 200,
-#'   burnin = 175
-#' )
-#' }
+#' @example examples/update.lda_topic_model.R
 update.lda_topic_model <- function(object, dtm, additional_k = 0,
                                    iterations = NULL, burnin = -1,
                                    new_alpha = NULL, new_beta = NULL,

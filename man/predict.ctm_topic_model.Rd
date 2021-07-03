@@ -25,8 +25,8 @@ Predictions for this method are performed using the "dot" method as described
 in the textmineR vignette "c_topic_modeling".
 }
 \examples{
-# Load a pre-formatted dtm
 \dontrun{
+# Load a pre-formatted dtm
 data(nih_sample_dtm)
 
 model <- FitCtmModel(

@@ -30,10 +30,7 @@
 #' minimum
 #'          of the largest value for each row of theta (each document). This
 #'          ensures that each document has at least one topic assigned to it.
-#' @examples
-#' \dontrun{
-#' summarize_topics(nih_sample_topic_model)
-#' }
+#' @example examples/summarize_topics.R
 #' @export
 summarize_topics <- function(model) {
 
@@ -126,19 +123,8 @@ SummarizeTopics <- summarize_topics
 #' from the corpus overall (p_terms).
 #'
 #' @export
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_topic_model)
-#' data(nih_sample_dtm)
-#'
-#' # documents with a topic proportion of .25 or higher for topic 2
-#' mydocs <- rownames(nih_sample_topic_model$theta)[nih_sample_topic_model$theta[, 2] >= 0.25]
-#'
-#' term_probs <- Matrix::colSums(nih_sample_dtm) / sum(Matrix::colSums(nih_sample_dtm))
-#'
-#' get_probable_terms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
+#' @example examples/get_probable_terms.R
 get_probable_terms <- function(docnames, dtm, p_terms = NULL) {
-
 
   # if p_terms is NULL, then create p_terms
   if (is.null(p_terms)) {
@@ -188,20 +174,7 @@ GetProbableTerms <- function(...) {
 #' @return Returns a \code{matrix} whose rows correspond to topics and whose
 #' j-th column corresponds to the j-th "best" label assignment.
 #' @export
-#' @examples
-#' # make a dtm with unigrams and bigrams
-#' data(nih_sample_topic_model)
-#'
-#' m <- nih_sample_topic_model
-#'
-#' assignments <- t(apply(m$theta, 1, function(x) {
-#'   x[x < 0.05] <- 0
-#'   x / sum(x)
-#' }))
-#'
-#' assignments[is.na(assignments)] <- 0
-#'
-#' labels <- label_topics(assignments = assignments, dtm = m$data, M = 2)
+#' @example examples/label_topics.R
 label_topics <- function(assignments, dtm, M = 2) {
   # figure out a threshold
   threshold <- apply(assignments, 2, function(x) max(x, na.rm = T))
@@ -258,13 +231,7 @@ LabelTopics <- label_topics
 #' topic and whose m-th row correspond to the m-th top term from the input
 #' \code{phi}.
 #' @export
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_topic_model)
-#'
-#' top_terms <- get_top_terms(phi = nih_sample_topic_model$phi, M = 5)
-#'
-#' str(top_terms)
+#' @example examples/get_top_terms.R
 get_top_terms <- function(phi, M, return_matrix = TRUE) {
   result <- apply(phi, 1, function(x) {
     names(x)[order(x, decreasing = TRUE)][1:M]

@@ -44,24 +44,7 @@
 #'
 #'       See \code{\link[tm]{stopwords}} for details on the default to the
 #'       \code{stopword_vec} argument.
-#' @examples
-#' \dontrun{
-#' data(nih_sample)
-#'
-#' # DTM of unigrams and bigrams
-#' dtm <- create_dtm(
-#'   doc_vec = nih_sample$ABSTRACT_TEXT,
-#'   doc_names = nih_sample$APPLICATION_ID,
-#'   ngram_window = c(1, 2)
-#' )
-#'
-#' # DTM of unigrams with Porter's stemmer applied
-#' dtm <- create_dtm(
-#'   doc_vec = nih_sample$ABSTRACT_TEXT,
-#'   doc_names = nih_sample$APPLICATION_ID,
-#'   stem_lemma_function = function(x) SnowballC::wordStem(x, "porter")
-#' )
-#' }
+#' @example examples/create_dtm.R
 #' @export
 create_dtm <- function(doc_vec, doc_names = names(doc_vec),
                       ngram_window = c(1, 1),
@@ -237,24 +220,7 @@ CreateDtm <- create_dtm
 #'
 #'       See \code{\link[tm]{stopwords}} for details on the default to the
 #'       \code{stopword_vec} argument.
-#' @examples
-#' \dontrun{
-#' data(nih_sample)
-#'
-#' # TCM of unigrams and bigrams
-#' tcm <- create_tcm(
-#'   doc_vec = nih_sample$ABSTRACT_TEXT,
-#'   skipgram_window = Inf,
-#'   ngram_window = c(1, 2)
-#' )
-#'
-#' # TCM of unigrams and a skip=gram window of 3, applying Porter's word stemmer
-#' tcm <- create_tcm(
-#'   doc_vec = nih_sample$ABSTRACT_TEXT,
-#'   skipgram_window = 3,
-#'   stem_lemma_function = function(x) SnowballC::wordStem(x, "porter")
-#' )
-#' }
+#' @example examples/create_tcm.R
 #' @export
 create_tcm <- function(doc_vec, skipgram_window = Inf, ngram_window = c(1, 1),
                       stopword_vec = c(stopwords::stopwords("en"),
@@ -427,18 +393,7 @@ CreateTcm <- create_tcm
 #' However, this can be modified by passing the \code{cpus} argument when
 #' calling this function.
 #' @export
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample)
-#' data(nih_sample_dtm)
-#'
-#' # see the original documents
-#' nih_sample$ABSTRACT_TEXT[1:3]
-#'
-#' # see the new documents re-structured from the DTM
-#' new_docs <- dtm_2_docs(dtm = nih_sample_dtm)
-#'
-#' new_docs[1:3]
+#' @example examples/dtm_2_docs.R
 dtm_2_docs <- function(dtm, ...) {
 
   # do in parallel in batches of about 3000 if we have more than 3000 docs
@@ -476,10 +431,7 @@ Dtm2Docs <- dtm_2_docs
 #' terms. The i, j entries of this matrix represent the count of term j across
 #' documents containing term i. Note that, while square, this matrix is not
 #' symmetric.
-#' @examples
-#' data(nih_sample_dtm)
-#'
-#' tcm <- dtm_2_tcm(nih_sample_dtm)
+#' @example examples/dtm_2_tcm.R
 #' @export
 dtm_2_tcm <- function(dtm) {
 
@@ -511,15 +463,7 @@ Dtm2Tcm <- dtm_2_tcm
 #' The fourth column, \code{idf} is the log-weighted
 #' inverse document frequency of \code{term}.
 #' @export
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_dtm)
-#' data(nih_sample_topic_model)
-#'
-#' # Get the term frequencies
-#' term_freq_mat <- term_doc_freq(nih_sample_dtm)
-#'
-#' str(term_freq_mat)
+#' @example examples/term_doc_freq.R
 term_doc_freq <- function(dtm) {
   freq_mat <- data.frame(
     term = colnames(dtm),

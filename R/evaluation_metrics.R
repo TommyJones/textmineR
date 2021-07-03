@@ -20,19 +20,7 @@
 #' \code{\link[parallel]{detectCores}}.
 #' However, this can be modified by passing the \code{cpus} argument when
 #' calling this function.
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_dtm)
-#' data(nih_sample_topic_model)
-#'
-#' # Get the likelihood of the data given the fitted model parameters
-#' ll <- calc_likelihood(
-#'   dtm = nih_sample_dtm,
-#'   phi = nih_sample_topic_model$phi,
-#'   theta = nih_sample_topic_model$theta
-#' )
-#'
-#' ll
+#' @example examples/calc_likelihood.R
 #' @export
 calc_likelihood <- function(dtm, phi, theta, ...) {
 
@@ -182,13 +170,7 @@ CalcLikelihood <- calc_likelihood
 #' Defaults to 5
 #' @return Returns an object of class \code{numeric} corresponding to the
 #' probabilistic coherence of the input topic(s).
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_topic_model)
-#' data(nih_sample_dtm)
-#'
-#' calc_prob_coherence(phi = nih_sample_topic_model$phi,
-#'                     dtm = nih_sample_dtm, M = 5)
+#' @example examples/calc_prob_coherence.R
 #' @export
 calc_prob_coherence <- function(phi, dtm, M = 5) {
 
@@ -294,20 +276,7 @@ CalcProbCoherence <- calc_prob_coherence
 #' However, this can be modified by passing the \code{cpus} argument when
 #' calling this function.
 #' @export
-#' @examples
-#' # Load a pre-formatted dtm and topic model
-#' data(nih_sample_dtm)
-#' data(nih_sample_topic_model)
-#'
-#' # Get the R-squared of the model
-#' r2 <- calc_topic_model_r2(
-#'   dtm = nih_sample_dtm,
-#'   phi = nih_sample_topic_model$phi,
-#'   theta = nih_sample_topic_model$theta
-#' )
-#'
-#'
-#' r2
+#' @example examples/calc_topic_model_r2.R
 calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
 
   # check that inputs have necessary formats
