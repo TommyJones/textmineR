@@ -2,22 +2,24 @@
 #' @description Calculates the Hellinger distances or the rows or columns of a
 #' numeric matrix or for two numeric vectors.
 #' @param x A numeric matrix or numeric vector
-#' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
-#' @param by_rows Logical. If \code{x} is a matrix, should distances be calculated by rows?
+#' @param y A numeric vector. \code{y} must be specified if \code{x} is a
+#' numeric vector.
+#' @param by_rows Logical. If \code{x} is a matrix, should distances be
+#' calculated by rows?
 #' @return If \code{x} is a matrix, this returns an square and symmetric matrix.
-#' The i,j entries correspond to the Hellinger Distance between the rows of \code{x}
-#' (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x} and \code{y}
-#' are vectors, this returns a numeric scalar whose value is the Hellinger Distance
-#' between \code{x} and \code{y}.
+#' The i,j entries correspond to the Hellinger Distance between the rows of
+#' \code{x} (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x}
+#' and \code{y} are vectors, this returns a numeric scalar whose value is the
+#' Hellinger Distance between \code{x} and \code{y}.
 #' @export
 #' @examples
 #' x <- rchisq(n = 100, df = 8)
 #' y <- x^2
-#' CalcHellingerDist(x = x, y = y)
+#' calc_hellinger_dist(x = x, y = y)
 #'
 #' mymat <- rbind(x, y)
 #' CalcHellingerDist(x = mymat)
-CalcHellingerDist <- function(x, y = NULL, by_rows = TRUE) {
+calc_hellinger_dist <- function(x, y = NULL, by_rows = TRUE) {
 
   #############################################################################
   # case 1: x is not specified correctly
@@ -39,7 +41,8 @@ CalcHellingerDist <- function(x, y = NULL, by_rows = TRUE) {
       x <- t(x)
     }
 
-    result <- textmineR::HellingerMat(A = x) # this function only calculates the upper triangle
+    # this function only calculates the upper triangle
+    result <- textmineR::hellinger_mat(A = x)
 
     result <- result + t(result)
 
@@ -59,23 +62,36 @@ CalcHellingerDist <- function(x, y = NULL, by_rows = TRUE) {
       stop("x and y must be of the same length")
     }
 
-    result <- textmineR::Hellinger_cpp(p = x, q = y)
+    result <- textmineR::hellinger_cpp(p = x, q = y)
   }
 
   result
+}
+
+#' @rdname calc_hellinger_dist
+#' @param ... arguments to be passed to \code{calc_hellinger_dist}
+#' @export
+CalcHellingerDist <- function(...) {
+  .Deprecated(
+    new = "calc_hellinger_dist",
+    package = "textmineR"
+  )
+  calc_hellinger_dist(...)
 }
 
 #' Calculate Jensen-Shannon Divergence
 #' @description This function calculates the Jensen Shannon Divergence for the
 #' rows or columns of a numeric matrix or for two numeric vectors.
 #' @param x A numeric matrix or numeric vector
-#' @param y A numeric vector. \code{y} must be specified if \code{x} is a numeric vector.
-#' @param by_rows Logical. If \code{x} is a matrix, should distances be calculated by rows?
+#' @param y A numeric vector. \code{y} must be specified if \code{x} is a
+#' numeric vector.
+#' @param by_rows Logical. If \code{x} is a matrix, should distances be
+#' calculated by rows?
 #' @return If \code{x} is a matrix, this returns an square and symmetric matrix.
-#' The i,j entries correspond to the Hellinger Distance between the rows of \code{x}
-#' (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x} and \code{y}
-#' are vectors, this returns a numeric scalar whose value is the Hellinger Distance
-#' between \code{x} and \code{y}.
+#' The i,j entries correspond to the Hellinger Distance between the rows of
+#' \code{x} (or the columns of \code{x} if \code{by_rows = FALSE}). If \code{x}
+#' and \code{y} are vectors, this returns a numeric scalar whose value is the
+#' Hellinger Distance between \code{x} and \code{y}.
 #' @keywords distance functions
 #' @export
 #' @examples
@@ -85,7 +101,7 @@ CalcHellingerDist <- function(x, y = NULL, by_rows = TRUE) {
 #'
 #' mymat <- rbind(x, y)
 #' CalcJSDivergence(x = mymat)
-CalcJSDivergence <- function(x, y = NULL, by_rows = TRUE) {
+calc_js_divergence <- function(x, y = NULL, by_rows = TRUE) {
 
   #############################################################################
   # case 1: x is not specified correctly
@@ -107,7 +123,8 @@ CalcJSDivergence <- function(x, y = NULL, by_rows = TRUE) {
       x <- t(x)
     }
 
-    result <- textmineR::JSDmat(A = x) # this function only calculates the upper triangle
+    # this function only calculates the upper triangle
+    result <- textmineR::jsd_mat(A = x) 
 
     result <- result + t(result)
 
@@ -131,4 +148,15 @@ CalcJSDivergence <- function(x, y = NULL, by_rows = TRUE) {
   }
 
   result
+}
+
+#' @rdname calc_js_divergence
+#' @param ... arguments to be passed to \code{calc_js_divergence}
+#' @export
+CalcJSDivergence <- function(...) {
+  .Deprecated(
+    new = "calc_js_divergence",
+    package = "textmineR"
+  )
+  calc_js_divergence(...)
 }
