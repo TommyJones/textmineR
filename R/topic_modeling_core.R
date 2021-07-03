@@ -16,20 +16,23 @@ posterior <- function(object, ...) UseMethod("posterior")
 
 
 #' Draw from the posterior of an LDA topic model
-#' @description This function takes an object of class \code{lda_topic_model} and
-#' draws samples from the posterior of either \code{phi} or \code{theta}. This is
-#' useful for quantifying uncertainty around parametersof the final model.
+#' @description This function takes an object of class \code{lda_topic_model}
+#' and draws samples from the posterior of either \code{phi} or \code{theta}.
+#' This is useful for quantifying uncertainty around parameters of the final
+#' model.
 #' @param object An object of class \code{lda_topic_model}
 #' @param which A character of either 'theta' or 'phi', indicating from which
 #' matrix to draw posterior samples
 #' @param num_samples Integer number of samples to draw
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}.
 #' @references
 #' Heinrich, G. (2005) Parameter estimation for text analysis. Technical report.
 #' \href{http://www.arbylon.net/publications/text-est.pdf}{http://www.arbylon.net/publications/text-est.pdf}
-#' @return Returns a data frame where each row is a single sample from the posterior.
-#' Each column is the distribution over a single parameter. The variable \code{var}
-#' is a facet for subsetting by document (for theta) or topic (for phi).
+#' @return Returns a data frame where each row is a single sample from the
+#' posterior. Each column is the distribution over a single parameter. The
+#' variable \code{var} is a facet for subsetting by document (for theta) or
+#' topic (for phi).
 #' @export
 #' @examples
 #' \dontrun{
@@ -41,7 +44,8 @@ posterior <- function(object, ...) UseMethod("posterior")
 #'
 #' plot(denisty(b$research[b$var == "t_5"]))
 #' }
-posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100, ...) {
+posterior.lda_topic_model <- function(object, which = "theta",
+                                      num_samples = 100, ...) {
 
   ### check inputs ----
   if (!class(object) == "lda_topic_model") {
@@ -130,7 +134,8 @@ posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100
 #'               an optional argument. It defaults to NULL
 #' @param correct Logical. Do you want to set NAs or NaNs in the final result to
 #'                zero? Useful when hitting computational underflow. Defaults to
-#'                \code{TRUE}. Set to \code{FALSE} for troubleshooting or diagnostics.
+#'                \code{TRUE}. Set to \code{FALSE} for troubleshooting or
+#' diagnostics.
 #' @return
 #' Returns a \code{matrix} whose rows correspond to topics and whose columns
 #' correspond to tokens. The i,j entry corresponds to P(topic_i|token_j)
@@ -297,9 +302,9 @@ Cluster2TopicModel <- function(dtm, clustering, ...) {
 #' \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
 #' The rows of \code{theta} index documents and the columns index topics.
 #' @note
-#' When passing additional arguments to \link[topicmodels]{CTM}, you must unlist the
-#' elements in the \code{control} argument and pass them one by one. See examples for
-#' how to dot this correctly.
+#' When passing additional arguments to \link[topicmodels]{CTM}, you must unlist
+#' the elements in the \code{control} argument and pass them one by one.
+#' See examples for how to do this correctly.
 #' @examples
 #' # Load a pre-formatted dtm
 #' data(nih_sample_dtm)
@@ -388,7 +393,8 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 }
 
 #' Predict method for Correlated topic models (CTM)
-#' @description Obtains predictions of topics for new documents from a fitted CTM model
+#' @description Obtains predictions of topics for new documents from a fitted
+#' CTM model
 #' @param object a fitted object of class "ctm_topic_model"
 #' @param newdata a DTM or TCM of class dgCMatrix or a numeric vector
 #' @param ... further arguments passed to or from other methods.
@@ -421,7 +427,8 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
     stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
 
-  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+  # if newdata is a numeric vector, assumed to be 1 document
+  if (class(newdata) == "numeric") {
     if (is.null(names(newdata))) {
       stop("it looks like newdata is a numeric vector without names.
            Did you mean to pass a single document?
@@ -472,8 +479,8 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
 #' a nicely-formatted latent semantic analysis topic model.
 #' @param dtm A document term matrix of class \code{Matrix::dgCMatrix}
 #' @param k Number of topics
-#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
-#'        after the model is trained? Defaults to \code{TRUE}.
+#' @param calc_coherence Do you want to calculate probabilistic coherence of
+#' topics after the model is trained? Defaults to \code{TRUE}.
 #' @param return_all Should all objects returned from \code{RSpectra::svds} be
 #'        returned here? Defaults to \code{FALSE}
 #' @param ... Other arguments to pass to \code{\link[RSpectra]{svds}} through
@@ -622,10 +629,12 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
 #' @description Represents a document term matrix as a list.
 #' @param dtm A document term matrix (or term co-occurrence matrix) of class
 #' \code{dgCMatrix}.
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
-#' @return Returns a list. Each element of the list represents a row of the input
-#' matrix. Each list element contains a numeric vector with as many entries as
-#' tokens in the original document. The entries are the column index for that token, minus 1.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}.
+#' @return Returns a list. Each element of the list represents a row of the
+#' input matrix. Each list element contains a numeric vector with as many
+#' entries as tokens in the original document. The entries are the column index
+#' for that token, minus 1.
 #' @examples
 #' \dontrun{
 #' # Load pre-formatted data for use
@@ -641,7 +650,8 @@ Dtm2Lexicon <- function(dtm, ...) {
 
   # check inputs
   if (class(dtm) != "dgCMatrix" & class(dtm) != "numeric") {
-    stop("dtm must be of class dgCMatrix or, if a single document, a numeric vector")
+    stop("dtm must be of class dgCMatrix or, if a single document,",
+         "a numeric vector")
   }
 
   if (class(dtm) == "numeric") {
@@ -745,7 +755,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
     dtm <- try(methods::as(dtm, "dgCMatrix", strict = TRUE)) # requires Matrix in namespace
 
     if (!"dgCMatrix" %in% class(dtm)) {
-      stop("conversion failed. Please pass an object of class dgCMatrix for dtm")
+      stop("conversion failed.",
+           "Please pass an object of class dgCMatrix for dtm")
     }
   }
 
@@ -860,7 +871,8 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
     data = dtm,
     alpha = result$alpha,
     beta = result$beta[1, ], # make beta a vector again
-    log_likelihood = data.frame(result$log_likelihood)[, 1:2] # drop 3rd col for now
+    log_likelihood = data.frame(
+      result$log_likelihood)[, 1:2] # drop 3rd col for now
   ) # add other things here
 
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
@@ -886,17 +898,21 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
 
 ### Predict method for LDA objects
 #' Get predictions from a Latent Dirichlet Allocation model
-#' @description Obtains predictions of topics for new documents from a fitted LDA model
+#' @description Obtains predictions of topics for new documents from a fitted
+#' LDA model
 #' @param object a fitted object of class \code{lda_topic_model}
 #' @param newdata a DTM or TCM of class \code{dgCMatrix} or a numeric vector
-#' @param method one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
-#'        and \code{iterations} must be specified.
-#' @param iterations If \code{method = "gibbs"}, an integer number of iterations
-#'        for the Gibbs sampler to run. A future version may include automatic stopping criteria.
-#' @param burnin If \code{method = "gibbs"}, an integer number of burnin iterations.
-#'        If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix
-#'        are an average over all iterations greater than \code{burnin}.
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
+#' @param method one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is
+#' used and \code{iterations} must be specified.
+#' @param iterations If \code{method = "gibbs"}, an integer number of
+#' iterations for the Gibbs sampler to run. A future version may include
+#' automatic stopping criteria.
+#' @param burnin If \code{method = "gibbs"}, an integer number of burnin
+#' iterations. If \code{burnin} is greater than -1, the entries of the
+#' resulting "theta" matrix are an average over all iterations greater than
+#' \code{burnin}.
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}
 #' @return a "theta" matrix with one row per document and one column per topic
 #' @examples
 #' \dontrun{
@@ -1048,28 +1064,31 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 
 
 #' Update a Latent Dirichlet Allocation topic model with new data
-#' @description Update an LDA model with new data using collapsed Gibbs sampling.
+#' @description Update an LDA model with new data using collapsed Gibbs
+#' sampling.
 #' @param object a fitted object of class \code{lda_topic_model}
-#' @param dtm A document term matrix or term co-occurrence matrix of class dgCMatrix.
+#' @param dtm A document term matrix or term co-occurrence matrix of class
+#' dgCMatrix.
 #' @param additional_k Integer number of topics to add, defaults to 0.
-#' @param iterations Integer number of iterations for the Gibbs sampler to run. A
-#'        future version may include automatic stopping criteria.
-#' @param burnin Integer number of burnin iterations. If \code{burnin} is greater than -1,
-#'        the resulting "phi" and "theta" matrices are an average over all iterations
-#'        greater than \code{burnin}.
-#' @param new_alpha For now not used. This is the prior for topics over documents
-#'        used when updating the model
+#' @param iterations Integer number of iterations for the Gibbs sampler to run.
+#' A future version may include automatic stopping criteria.
+#' @param burnin Integer number of burnin iterations. If \code{burnin} is
+#' greater than -1, the resulting "phi" and "theta" matrices are an average
+#' over all iterations greater than \code{burnin}.
+#' @param new_alpha For now not used. This is the prior for topics over
+#' documents used when updating the model
 #' @param new_beta For now not used. This is the prior for words over topics
 #'        used when updating the model.
-#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-#'        Defaults to \code{FALSE}.
-#' @param calc_likelihood Do you want to calculate the likelihood every 10 Gibbs iterations?
-#'        Useful for assessing convergence. Defaults to \code{FALSE}.
-#' @param calc_coherence Do you want to calculate probabilistic coherence of topics
-#'        after the model is trained? Defaults to \code{TRUE}.
+#' @param optimize_alpha Logical. Do you want to optimize alpha every 10 Gibbs
+#' iterations? Defaults to \code{FALSE}.
+#' @param calc_likelihood Do you want to calculate the likelihood every 10
+#' Gibbs iterations? Useful for assessing convergence. Defaults to \code{FALSE}.
+#' @param calc_coherence Do you want to calculate probabilistic coherence of
+#' topics after the model is trained? Defaults to \code{TRUE}.
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
+#' @param ... Other arguments to be passed to
+#' \code{\link[textmineR]{TmParallelApply}}
 #' @return Returns an S3 object of class c("LDA", "TopicModel").
 #' @export
 #' @examples
@@ -1145,10 +1164,13 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   if (!"dgCMatrix" %in% class(dtm)) {
     message("dtm is not of class dgCMatrix, attempting to convert...")
 
-    dtm <- try(methods::as(dtm, "dgCMatrix", strict = TRUE)) # requires Matrix in namespace
+    dtm <- try(methods::as(
+      dtm, "dgCMatrix", strict = TRUE)
+      ) # requires Matrix in namespace
 
     if (!"dgCMatrix" %in% class(dtm)) {
-      stop("conversion failed. Please pass an object of class dgCMatrix for dtm")
+      stop("conversion failed. ",
+           "Please pass an object of class dgCMatrix for dtm")
     }
   }
 
@@ -1159,7 +1181,8 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
     stop("additional_k must be an integer >= 0")
   }
 
-  additional_k <- floor(additional_k) # in case somebody is cheeky and passes a decimal
+# in case somebody is cheeky and passes a decimal
+  additional_k <- floor(additional_k) 
 
   # iterations?
   if (is.null(iterations)) {
@@ -1174,7 +1197,8 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
 
   if (!is.null(new_alpha) | !is.null(new_beta)) {
     warning("methods for new_alpha and new_beta are not yet implemented.
-            See 'details' under help(update.lda_topic_model) for more information.")
+            See 'details' under help(update.lda_topic_model) for more
+            information.")
   }
 
   # alpha and beta?
@@ -1300,7 +1324,9 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   result <- list(
     phi = phi, theta = theta, gamma = gamma,
     data = dtm, alpha = result$alpha, beta = result$beta,
-    log_likelihood = data.frame(result$log_likelihood)[, 1:2] # drop 3rd col for now
+    log_likelihood = data.frame(
+      result$log_likelihood
+    )[, 1:2] # drop 3rd col for now
   ) # add other things here
 
   names(result$log_likelihood) <- c("iteration", "log_likelihood")
