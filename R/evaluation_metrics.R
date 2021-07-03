@@ -147,7 +147,7 @@ calc_likelihood <- function(dtm, phi, theta, ...) {
       list(dtm_divided = dtm_divided, theta_divided = theta_divided)
     })
 
-    result <- TmParallelApply(X = data_divided, FUN = function(x) {
+    result <- tm_parallel_apply(X = data_divided, FUN = function(x) {
       calc_likelihood_c(
         dtm = x$dtm_divided,
         phi = phi,
@@ -435,7 +435,7 @@ calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
       list(dtm_divided = dtm_divided, theta_divided = theta_divided)
     })
 
-    result <- TmParallelApply(X = data_divided, FUN = function(x) {
+    result <- tm_parallel_apply(X = data_divided, FUN = function(x) {
       calc_sum_squares(
         dtm = x$dtm_divided,
         phi = phi,

@@ -244,7 +244,7 @@ cluster_2_topic_model <- function(dtm, clustering, ...) {
   cnames <- unique(clustering)
 
   # Get theta
-  theta <- TmParallelApply(X = iterator, FUN = function(x) {
+  theta <- tm_parallel_apply(X = iterator, FUN = function(x) {
     m <- matrix(0, nrow = length(x$docs), ncol = length(cnames))
     rownames(m) <- x$docs
     colnames(m) <- cnames
@@ -266,7 +266,7 @@ cluster_2_topic_model <- function(dtm, clustering, ...) {
 
   # Get phi
 
-  phi <- TmParallelApply(X = iterator, FUN = function(x) {
+  phi <- tm_parallel_apply(X = iterator, FUN = function(x) {
     sub <- dtm[x$docs, ]
 
     if (!is.null(dim(sub))) {
@@ -712,7 +712,7 @@ dtm_2_lexicon <- function(dtm, ...) {
 
     dtm_list <- lapply(batches, function(x) dtm[x:min(x + 2999, nrow(dtm)), ])
 
-    out <- TmParallelApply(X = dtm_list, FUN = function(y) {
+    out <- tm_parallel_apply(X = dtm_list, FUN = function(y) {
       textmineR::dtm_to_lexicon_c(x = y)
     }, ...)
 

@@ -461,7 +461,7 @@ dtm_2_docs <- function(dtm, ...) {
 
     dtm_list <- lapply(batches, function(x) dtm[x:min(x + 2999, nrow(dtm)), ])
 
-    out <- TmParallelApply(X = dtm_list, FUN = function(x) {
+    out <- tm_parallel_apply(X = dtm_list, FUN = function(x) {
       Dtm2DocsC(dtm = x, vocab = colnames(x))
     }, ...)
   } else {
