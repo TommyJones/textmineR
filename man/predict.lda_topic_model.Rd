@@ -18,23 +18,27 @@
 
 \item{newdata}{a DTM or TCM of class \code{dgCMatrix} or a numeric vector}
 
-\item{method}{one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
-and \code{iterations} must be specified.}
+\item{method}{one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is
+used and \code{iterations} must be specified.}
 
-\item{iterations}{If \code{method = "gibbs"}, an integer number of iterations
-for the Gibbs sampler to run. A future version may include automatic stopping criteria.}
+\item{iterations}{If \code{method = "gibbs"}, an integer number of
+iterations for the Gibbs sampler to run. A future version may include
+automatic stopping criteria.}
 
-\item{burnin}{If \code{method = "gibbs"}, an integer number of burnin iterations.
-If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix
-are an average over all iterations greater than \code{burnin}.}
+\item{burnin}{If \code{method = "gibbs"}, an integer number of burnin
+iterations. If \code{burnin} is greater than -1, the entries of the
+resulting "theta" matrix are an average over all iterations greater than
+\code{burnin}.}
 
-\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
 a "theta" matrix with one row per document and one column per topic
 }
 \description{
-Obtains predictions of topics for new documents from a fitted LDA model
+Obtains predictions of topics for new documents from a fitted
+LDA model
 }
 \examples{
 \dontrun{

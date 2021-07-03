@@ -17,7 +17,8 @@
 a "theta" matrix with one row per document and one column per topic
 }
 \description{
-Obtains predictions of topics for new documents from a fitted CTM model
+Obtains predictions of topics for new documents from a fitted
+CTM model
 }
 \note{
 Predictions for this method are performed using the "dot" method as described

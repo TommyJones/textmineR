@@ -22,42 +22,45 @@
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}
 
-\item{dtm}{A document term matrix or term co-occurrence matrix of class dgCMatrix.}
+\item{dtm}{A document term matrix or term co-occurrence matrix of class
+dgCMatrix.}
 
 \item{additional_k}{Integer number of topics to add, defaults to 0.}
 
-\item{iterations}{Integer number of iterations for the Gibbs sampler to run. A
-future version may include automatic stopping criteria.}
+\item{iterations}{Integer number of iterations for the Gibbs sampler to run.
+A future version may include automatic stopping criteria.}
 
-\item{burnin}{Integer number of burnin iterations. If \code{burnin} is greater than -1,
-the resulting "phi" and "theta" matrices are an average over all iterations
-greater than \code{burnin}.}
+\item{burnin}{Integer number of burnin iterations. If \code{burnin} is
+greater than -1, the resulting "phi" and "theta" matrices are an average
+over all iterations greater than \code{burnin}.}
 
-\item{new_alpha}{For now not used. This is the prior for topics over documents
-used when updating the model}
+\item{new_alpha}{For now not used. This is the prior for topics over
+documents used when updating the model}
 
 \item{new_beta}{For now not used. This is the prior for words over topics
 used when updating the model.}
 
-\item{optimize_alpha}{Logical. Do you want to optimize alpha every 10 Gibbs iterations?
-Defaults to \code{FALSE}.}
+\item{optimize_alpha}{Logical. Do you want to optimize alpha every 10 Gibbs
+iterations? Defaults to \code{FALSE}.}
 
-\item{calc_likelihood}{Do you want to calculate the likelihood every 10 Gibbs iterations?
-Useful for assessing convergence. Defaults to \code{FALSE}.}
+\item{calc_likelihood}{Do you want to calculate the likelihood every 10
+Gibbs iterations? Useful for assessing convergence. Defaults to \code{FALSE}.}
 
-\item{calc_coherence}{Do you want to calculate probabilistic coherence of topics
-after the model is trained? Defaults to \code{TRUE}.}
+\item{calc_coherence}{Do you want to calculate probabilistic coherence of
+topics after the model is trained? Defaults to \code{TRUE}.}
 
 \item{calc_r2}{Do you want to calculate R-squared after the model is trained?
 Defaults to \code{FALSE}.}
 
-\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
 Returns an S3 object of class c("LDA", "TopicModel").
 }
 \description{
-Update an LDA model with new data using collapsed Gibbs sampling.
+Update an LDA model with new data using collapsed Gibbs
+sampling.
 }
 \examples{
 \dontrun{

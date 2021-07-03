@@ -14,17 +14,20 @@ matrix to draw posterior samples}
 
 \item{num_samples}{Integer number of samples to draw}
 
-\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}.}
 }
 \value{
-Returns a data frame where each row is a single sample from the posterior.
-Each column is the distribution over a single parameter. The variable \code{var}
-is a facet for subsetting by document (for theta) or topic (for phi).
+Returns a data frame where each row is a single sample from the
+posterior. Each column is the distribution over a single parameter. The
+variable \code{var} is a facet for subsetting by document (for theta) or
+topic (for phi).
 }
 \description{
-This function takes an object of class \code{lda_topic_model} and
-draws samples from the posterior of either \code{phi} or \code{theta}. This is
-useful for quantifying uncertainty around parametersof the final model.
+This function takes an object of class \code{lda_topic_model}
+and draws samples from the posterior of either \code{phi} or \code{theta}.
+This is useful for quantifying uncertainty around parameters of the final
+model.
 }
 \examples{
 \dontrun{

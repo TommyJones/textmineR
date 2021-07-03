@@ -17,7 +17,8 @@
 a "theta" matrix with one row per document and one column per topic
 }
 \description{
-Obtains predictions of topics for new documents from a fitted LSA model
+Obtains predictions of topics for new documents from a fitted
+LSA model
 }
 \examples{
 # Load a pre-formatted dtm
