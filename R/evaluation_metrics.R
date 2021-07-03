@@ -147,8 +147,8 @@ calc_likelihood <- function(dtm, phi, theta, ...) {
       list(dtm_divided = dtm_divided, theta_divided = theta_divided)
     })
 
-    result <- tm_parallel_apply(X = data_divided, FUN = function(x) {
-      calc_likelihood_c(
+    result <- TmParallelApply(X = data_divided, FUN = function(x) {
+      CalcLikelihoodC(
         dtm = x$dtm_divided,
         phi = phi,
         theta = x$theta_divided
@@ -159,7 +159,7 @@ calc_likelihood <- function(dtm, phi, theta, ...) {
 
     # do sequentially otherwise
   } else {
-    result <- calc_likelihood_c(dtm = dtm, phi = phi, theta = theta)
+    result <- CalcLikelihoodC(dtm = dtm, phi = phi, theta = theta)
   }
 
   result
@@ -435,8 +435,8 @@ calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
       list(dtm_divided = dtm_divided, theta_divided = theta_divided)
     })
 
-    result <- tm_parallel_apply(X = data_divided, FUN = function(x) {
-      calc_sum_squares(
+    result <- TmParallelApply(X = data_divided, FUN = function(x) {
+      CalcSumSquares(
         dtm = x$dtm_divided,
         phi = phi,
         theta = x$theta_divided,
@@ -450,7 +450,7 @@ calc_topic_model_r2 <- function(dtm, phi, theta, ...) {
 
     # do sequentially otherwise
   } else {
-      sum_squares <- calc_sum_squares(dtm = dtm, phi = phi,
+      sum_squares <- CalcSumSquares(dtm = dtm, phi = phi,
                                     theta = theta, ybar = ybar)
 
     result <- 1 - sum_squares[1] / sum_squares[2]
