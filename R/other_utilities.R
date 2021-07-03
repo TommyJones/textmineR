@@ -1,6 +1,7 @@
 #' An OS-independent parallel version of \code{\link[base]{lapply}}
 #'
-#' @description This function takes a vector or list and a function and applies in parallel.
+#' @description This function takes a vector or list and a function and applies
+#' in parallel.
 #' @param X A vector or list over which to apply \code{FUN}
 #' @param FUN A function to apply over \code{X}
 #' @param cpus Number of CPU cores to use, defaults to the value returned by
@@ -10,8 +11,9 @@
 #' @param libraries A character vector of library/package names to load on to
 #' each cluster if using a Windows machine. Defaults to \code{NULL}
 #' @param envir Environment from which to export variables in varlist
-#' @details This function is used to parallelize executions in \code{textmineR}. It is
-#' necessary because of differing capabilities between Windows and Unix.
+#' @details This function is used to parallelize executions in
+#' \code{textmineR}. It is necessary because of differing capabilities between
+#' Windows and Unix.
 #' Unix systems use \code{\link[parallel]{mclapply}}. Windows
 #' systems use \code{\link[parallel]{parLapply}}.
 #' @return This function returns a \code{list} of length \code{length(X)}.
@@ -22,8 +24,9 @@
 #' f <- function(y) y * y + 12
 #' result <- TmParallelApply(x, f)
 #' }
-TmParallelApply <- function(X, FUN, cpus = parallel::detectCores(),
-                            export = NULL, libraries = NULL, envir = parent.frame()) {
+tm_parallel_apply <- function(X, FUN, cpus = parallel::detectCores(),
+                              export = NULL, libraries = NULL,
+                              envir = parent.frame()) {
   os <- .Platform$OS.type
   if (length(cpus) == 0 || is.na(cpus)) cpus <- 1L
 
@@ -82,4 +85,14 @@ TmParallelApply <- function(X, FUN, cpus = parallel::detectCores(),
   }
 
   out
+}
+
+#' @rdname tm_parallel_apply
+#' @param ... arguments to be passed through to \code{TmParallelApply}
+#' @export
+TmParallelApply <- function(...) {
+    .Deprecated(
+        new = "tm_parallel_apply",
+        package = "textmineR"
+    )
 }
