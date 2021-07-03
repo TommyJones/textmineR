@@ -12,6 +12,8 @@ Dtm2Tcm(...)
 \arguments{
 \item{dtm}{A document term matrix, generally of class \code{dgCMatrix},
 though other classes, such as \code{dgTMatrix}, may also work without issue.}
+
+\item{...}{arguments to be passed to \code{dtm_2_tcm}}
 }
 \value{
 Returns a square \code{dgCMatrix} whose rows and columns both index
@@ -28,5 +30,5 @@ See \code{details}, below.
 \examples{
 data(nih_sample_dtm)
 
-tcm <- Dtm2Tcm(nih_sample_dtm)
+tcm <- dtm_2_tcm(nih_sample_dtm)
 }

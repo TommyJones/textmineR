@@ -12,6 +12,8 @@ TermDocFreq(...)
 }
 \arguments{
 \item{dtm}{A document term matrix of class \code{dgCMatrix}.}
+
+\item{...}{arguments to be passed to \code{term_doc_freq}}
 }
 \value{
 Returns a \code{data.frame} or \code{tibble} with 4 columns.
@@ -33,7 +35,7 @@ data(nih_sample_dtm)
 data(nih_sample_topic_model)
 
 # Get the term frequencies
-term_freq_mat <- TermDocFreq(nih_sample_dtm)
+term_freq_mat <- term_doc_freq(nih_sample_dtm)
 
 str(term_freq_mat)
 }

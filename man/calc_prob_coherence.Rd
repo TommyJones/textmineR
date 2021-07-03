@@ -20,6 +20,8 @@ must index terms.}
 
 \item{M}{An integer for the number of words to be used in the calculation.
 Defaults to 5}
+
+\item{...}{arguments to pass to \code{calc_prob_coherence}}
 }
 \value{
 Returns an object of class \code{numeric} corresponding to the
@@ -34,6 +36,6 @@ This approximates semantic coherence or human understandability of a topic.
 data(nih_sample_topic_model)
 data(nih_sample_dtm)
 
-CalcProbCoherence(phi = nih_sample_topic_model$phi,
-                  dtm = nih_sample_dtm, M = 5)
+calc_prob_coherence(phi = nih_sample_topic_model$phi,
+                    dtm = nih_sample_dtm, M = 5)
 }

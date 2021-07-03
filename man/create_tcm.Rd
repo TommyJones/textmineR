@@ -69,7 +69,7 @@ In most cases, all you need to do is import documents as a character vector
 in R and then
 run this function to get a term co-occurrence matrix that is compatible with
 the rest of \code{textmineR}'s functionality and many other libraries.
-\code{CreateTcm} is built on top of the excellent
+\code{create_tcm} is built on top of the excellent
 \code{\link[text2vec]{text2vec}} library.
 }
 \details{
@@ -99,14 +99,14 @@ The following transformations are applied to \code{stopword_vec} as
 data(nih_sample)
 
 # TCM of unigrams and bigrams
-tcm <- CreateTcm(
+tcm <- create_tcm(
   doc_vec = nih_sample$ABSTRACT_TEXT,
   skipgram_window = Inf,
   ngram_window = c(1, 2)
 )
 
 # TCM of unigrams and a skip=gram window of 3, applying Porter's word stemmer
-tcm <- CreateTcm(
+tcm <- create_tcm(
   doc_vec = nih_sample$ABSTRACT_TEXT,
   skipgram_window = 3,
   stem_lemma_function = function(x) SnowballC::wordStem(x, "porter")

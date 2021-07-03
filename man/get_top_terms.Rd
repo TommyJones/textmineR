@@ -16,6 +16,8 @@ GetTopTerms(...)
 
 \item{return_matrix}{Do you want a \code{matrix} or \code{data.frame}/
 \code{tibble} returned? Defaults to \code{TRUE}.}
+
+\item{...}{arguments to be passed to \code{get_top_terms}}
 }
 \value{
 If \code{return_matrix = TRUE} (the default) then a matrix. Otherwise,
@@ -31,7 +33,7 @@ topic
 # Load a pre-formatted dtm and topic model
 data(nih_sample_topic_model)
 
-top_terms <- GetTopTerms(phi = nih_sample_topic_model$phi, M = 5)
+top_terms <- get_top_terms(phi = nih_sample_topic_model$phi, M = 5)
 
 str(top_terms)
 }

@@ -19,8 +19,7 @@ p(term_i |topic_j)}
 \item{theta}{A documents by topics dimensional matrix where each entry is
 p(topic_j|document_d)}
 
-\item{...}{Other arguments to be passed to
-\code{\link[textmineR]{TmParallelApply}}. See note, below.}
+\item{...}{arguments to pass to \code{calc_topic_model_r2}}
 }
 \value{
 Returns an object of class \code{numeric} representing the proportion of
@@ -45,7 +44,7 @@ data(nih_sample_dtm)
 data(nih_sample_topic_model)
 
 # Get the R-squared of the model
-r2 <- CalcTopicModelR2(
+r2 <- calc_topic_model_r2(
   dtm = nih_sample_dtm,
   phi = nih_sample_topic_model$phi,
   theta = nih_sample_topic_model$theta

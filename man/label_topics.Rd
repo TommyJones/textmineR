@@ -5,7 +5,7 @@
 \alias{LabelTopics}
 \title{Get some topic labels using a "more probable" method of terms}
 \usage{
-label_topics(assignments, dtm, m = 2, M = 2)
+label_topics(assignments, dtm, M = 2)
 
 LabelTopics(...)
 }
@@ -19,6 +19,8 @@ The columns of \code{dtm} should be n-grams whose colnames have a "_" where
 spaces would be between the words.}
 
 \item{M}{The number of n-gram labels you want to return. Defaults to 2}
+
+\item{...}{arguments to be passed to \code{label_topics}}
 }
 \value{
 Returns a \code{matrix} whose rows correspond to topics and whose
@@ -42,5 +44,5 @@ assignments <- t(apply(m$theta, 1, function(x) {
 
 assignments[is.na(assignments)] <- 0
 
-labels <- LabelTopics(assignments = assignments, dtm = m$data, M = 2)
+labels <- label_topics(assignments = assignments, dtm = m$data, M = 2)
 }

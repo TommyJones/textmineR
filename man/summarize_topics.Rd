@@ -18,6 +18,8 @@ and gamma.
        These conform to outputs of many of \link[textmineR]{textmineR}'s
 native
        topic modeling functions such as \link[textmineR]{FitLdaModel}.}
+
+\item{...}{arguments to be passed to \code{summarize_topics}}
 }
 \value{
 An object of class \code{data.frame} or \code{tibble} with 6 columns:
@@ -53,6 +55,6 @@ minimum
 }
 \examples{
 \dontrun{
-SummarizeTopics(nih_sample_topic_model)
+summarize_topics(nih_sample_topic_model)
 }
 }

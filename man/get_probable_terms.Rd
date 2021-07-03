@@ -17,6 +17,8 @@ GetProbableTerms(...)
 \item{p_terms}{If not NULL (the default), a numeric vector representing the
 probability of each term in the corpus whose names correspond to
 colnames(dtm).}
+
+\item{...}{arguments to be passed to \code{get_probable_terms}}
 }
 \value{
 Returns a numeric vector of the format p_terms. The entries of the vectors
@@ -38,5 +40,5 @@ mydocs <- rownames(nih_sample_topic_model$theta)[nih_sample_topic_model$theta[, 
 
 term_probs <- Matrix::colSums(nih_sample_dtm) / sum(Matrix::colSums(nih_sample_dtm))
 
-GetProbableTerms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
+get_probable_terms(docnames = mydocs, dtm = nih_sample_dtm, p_terms = term_probs)
 }

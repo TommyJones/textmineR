@@ -19,8 +19,7 @@ The i, j entries are P(word_i | topic_j)}
 \item{theta}{The theta matrix whose rows index documents and columns index
 topics. The i, j entries are P(topic_i | document_j).}
 
-\item{...}{Other arguments to pass to
-\code{\link[textmineR]{TmParallelApply}}. See note, below.}
+\item{...}{parameters to pass to \code{calc_likelihood}}
 }
 \value{
 Returns an object of class \code{numeric} corresponding to the log
@@ -44,7 +43,7 @@ data(nih_sample_dtm)
 data(nih_sample_topic_model)
 
 # Get the likelihood of the data given the fitted model parameters
-ll <- CalcLikelihood(
+ll <- calc_likelihood(
   dtm = nih_sample_dtm,
   phi = nih_sample_topic_model$phi,
   theta = nih_sample_topic_model$theta

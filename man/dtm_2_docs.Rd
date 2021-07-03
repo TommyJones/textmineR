@@ -41,7 +41,7 @@ data(nih_sample_dtm)
 nih_sample$ABSTRACT_TEXT[1:3]
 
 # see the new documents re-structured from the DTM
-new_docs <- Dtm2Docs(dtm = nih_sample_dtm)
+new_docs <- dtm_2_docs(dtm = nih_sample_dtm)
 
 new_docs[1:3]
 }
