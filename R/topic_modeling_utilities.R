@@ -107,6 +107,7 @@ summarize_topics <- function(model) {
 summarise_topics <- summarize_topics # for the brits out there
 
 #' @rdname summarize_topics
+#' @param ... arguments to be passed to \code{summarize_topics}
 #' @export
 SummarizeTopics <- function(...) {
     .Deprecated(
@@ -170,6 +171,7 @@ get_probable_terms <- function(docnames, dtm, p_terms = NULL) {
 }
 
 #' @rdname get_probable_terms
+#' @param ... arguments to be passed to \code{get_probable_terms}
 #' @export
 GetProbableTerms <- function(...) {
     .Deprecated(
@@ -247,6 +249,7 @@ label_topics <- function(assignments, dtm, M = 2) {
 }
 
 #' @rdname label_topics
+#' @param ... arguments to be passed to \code{label_topics}
 #' @export
 LabelTopics <- function(...) {
     .Deprecated(
@@ -295,6 +298,7 @@ get_top_terms <- function(phi, M, return_matrix = TRUE) {
 }
 
 #' @rdname get_top_terms
+#' @param ... arguments to be passed to \code{get_top_terms}
 #' @export
 GetTopTerms <- function(...) {
     .Deprecated(

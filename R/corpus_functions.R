@@ -514,6 +514,7 @@ dtm_2_tcm <- function(dtm) {
 }
 
 #' @rdname dtm_2_tcm
+#' @param ... arguments to be passed to \code{dtm_2_tcm}
 #' @export
 Dtm2Tcm <- function(...) {
     .Deprecated(
@@ -563,6 +564,7 @@ term_doc_freq <- function(dtm) {
 }
 
 #' @rdname term_doc_freq
+#' @param ... arguments to be passed to \code{term_doc_freq}
 #' @export
 
 TermDocFreq <- function(...) {
