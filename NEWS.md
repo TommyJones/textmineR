@@ -1,3 +1,8 @@
+# textmineR 3.0.6
+This version is a patch. In this version I have
+
+* Updated the URL to a working paper cited in the topic modeling vignette.
+
 # textmineR 3.0.5
 This version is a patch. In this version I have
 
