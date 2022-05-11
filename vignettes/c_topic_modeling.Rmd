@@ -23,7 +23,7 @@ textmineR has extensive functionality for topic modeling. You can fit Latent Dir
 
 textmineR's consistent representation of topic models boils down to two matrices. The first, "theta" ($\Theta$), has rows representing a distribution of topics over documents. The second, phi ($\Phi$), has rows representing a distribution of words over topics. In the case of probabilistic models, these are categorical probability distributions. For non-probabilistic models (e.g. LSA) these distributions are, obviously, not probabilities. With LSA, for example, there is a third object representing the singular values in the decomposition.
 
-In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view)), probabilistic coherence (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
+In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models ([working paper here](https://arxiv.org/abs/1911.11061)), probabilistic coherence (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below
 
 ```{r}
 library(textmineR)
