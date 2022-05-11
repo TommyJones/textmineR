@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
       </span>
     </div>
 
@@ -109,13 +109,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="a_start_here_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1. Start here</h1>
                         <h4 class="author">Thomas W. Jones</h4>
             
-            <h4 class="date">2021-06-27</h4>
+            <h4 class="date">2022-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/a_start_here.Rmd"><code>vignettes/a_start_here.Rmd</code></a></small>
       <div class="hidden name"><code>a_start_here.Rmd</code></div>
@@ -162,7 +162,6 @@
 <span class="co">#&gt; The following object is masked from 'package:stats':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     update</span>
-
 <span class="co"># load movie_review dataset from text2vec</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">movie_review</span>, package <span class="op">=</span> <span class="st">"text2vec"</span><span class="op">)</span>
 
@@ -171,7 +170,6 @@
 <span class="co">#&gt;  $ id       : chr  "5814_8" "2381_9" "7759_3" "3630_4" ...</span>
 <span class="co">#&gt;  $ sentiment: int  1 1 0 0 1 1 0 0 0 1 ...</span>
 <span class="co">#&gt;  $ review   : chr  "With all this stuff going down at the moment with MJ i've started listening to his music, watching the odd docu"| __truncated__ "\\\"The Classic War of the Worlds\\\" by Timothy Hines is a very entertaining film that obviously goes to great"| __truncated__ "The film starts with a manager (Nicholas Bell) giving welcome investors (Robert Carradine) to Primal Park . A s"| __truncated__ "It must be assumed that those who praised this film (\\\"the greatest filmed opera ever,\\\" didn't I read some"| __truncated__ ...</span>
-
 <span class="co"># let's take a sample so the demo will run quickly</span>
 <span class="co"># note: textmineR is generally quite scaleable, depending on your system</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
@@ -194,10 +192,8 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> 
 <span class="co">#&gt; [1]   500 56023</span>
-
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> 
 <span class="co">#&gt; [1] 500</span>
-
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> 
 <span class="co">#&gt; [1] 56023</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -263,8 +259,7 @@
 <a href="#basic-corpus-statistics" class="anchor"></a>Basic corpus statistics</h1>
 <p>The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function <code>TermDocFreq</code> gives term frequencies (equivalent to <code><a href="https://rdrr.io/r/base/colSums.html">colSums(dtm)</a></code>), the number of documents in which each term appears (equivalent to <code><a href="https://rdrr.io/r/base/colSums.html">colSums(dtm &gt; 0)</a></code>), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># get counts of tokens across the corpus</span>
+<code class="sourceCode R"><span class="co"># get counts of tokens across the corpus</span>
 <span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">)</span> 
@@ -436,7 +431,7 @@
 <span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 10 x 4</span>
+<span class="co">#&gt; # A tibble: 10 × 4</span>
 <span class="co">#&gt;    term      term_freq doc_freq   idf</span>
 <span class="co">#&gt;    &lt;chr&gt;         &lt;dbl&gt;    &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 film            909      294 0.531</span>
@@ -771,8 +766,7 @@
 <p>For those paying close attention, this difference should give a similar ordering as pointwise-mutual information (PMI), defined as <span class="math inline">\(PMI = \frac{P(word|sentiment_j)}{P(word)}\)</span>. However, I prefer the difference as it is bound between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>.</p>
 <p>The difference method is applied to both words overall and bi-grams in the code below.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># let's reweight by probability by class</span>
+<code class="sourceCode R"><span class="co"># let's reweight by probability by class</span>
 <span class="va">p_words</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="co"># alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)</span>
 
 <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">&lt;-</span> 

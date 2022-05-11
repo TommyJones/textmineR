@@ -85,7 +85,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
       </span>
     </div>
 
@@ -161,9 +161,9 @@
       <small>Source: <a href='https://github.com/TommyJones/textmineR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="textminer-3-0-5" class="section level1">
+    <div id="textminer-305" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.5">
-<a href="#textminer-3-0-5" class="anchor"></a>textmineR 3.0.5<small> Unreleased </small>
+<a href="#textminer-305" class="anchor"></a>textmineR 3.0.5<small> 2021-06-28 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
 <ul>
@@ -173,9 +173,9 @@
 <li>Enabled return of a <code>tibble</code> or <code>data.frame</code> (instead of only <code>data.frame</code>) in the following functions: <code>SummarizeTopics</code>, <code>GetTopTerms</code>, <code>TermDocFreq</code> (Thanks to Mattias for the PR)</li>
 </ul>
 </div>
-    <div id="textminer-3-0-4" class="section level1">
+    <div id="textminer-304" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.4">
-<a href="#textminer-3-0-4" class="anchor"></a>textmineR 3.0.4<small> 2019-04-18 </small>
+<a href="#textminer-304" class="anchor"></a>textmineR 3.0.4<small> 2019-04-18 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
 <ul>
@@ -184,9 +184,9 @@
 </li>
 </ul>
 </div>
-    <div id="textminer-3-0-3" class="section level1">
+    <div id="textminer-303" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.3">
-<a href="#textminer-3-0-3" class="anchor"></a>textmineR 3.0.3<small> 2019-03-22 </small>
+<a href="#textminer-303" class="anchor"></a>textmineR 3.0.3<small> 2019-03-22 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
 <ul>
@@ -194,9 +194,9 @@
 <li>added a method <code>posterior.lda_topic_model</code> to sample from the posterior of an LDA topic model.</li>
 </ul>
 </div>
-    <div id="textminer-3-0-2" class="section level1">
+    <div id="textminer-302" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.2">
-<a href="#textminer-3-0-2" class="anchor"></a>textmineR 3.0.2<small> 2019-01-09 </small>
+<a href="#textminer-302" class="anchor"></a>textmineR 3.0.2<small> 2019-01-09 </small>
 </h1>
 <p>This version is a patch. In this version I have</p>
 <ul>
@@ -206,9 +206,9 @@
 </li>
 </ul>
 </div>
-    <div id="textminer-3-0-1" class="section level1">
+    <div id="textminer-301" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.1">
-<a href="#textminer-3-0-1" class="anchor"></a>textmineR 3.0.1<small> 2018-10-31 </small>
+<a href="#textminer-301" class="anchor"></a>textmineR 3.0.1<small> 2018-10-31 </small>
 </h1>
 <p>This version is a patch in response to issues revealed by automatic checks upon submission to CRAN plus an additional issue I encountered along the way.</p>
 <p>I have</p>
@@ -220,13 +220,14 @@
 </ul>
 <p>Please read below for major updates between v2.x.x and v3.x.x</p>
 </div>
-    <div id="textminer-3-0-0" class="section level1">
+    <div id="textminer-300" class="section level1">
 <h1 class="page-header" data-toc-text="3.0.0">
-<a href="#textminer-3-0-0" class="anchor"></a>textmineR 3.0.0<small> Unreleased </small>
+<a href="#textminer-300" class="anchor"></a>textmineR 3.0.0<small> Unreleased </small>
 </h1>
 <p>This version significantly changes textmineR.</p>
 <ul>
-<li>Several functions that were slated for deletion in version 2.1.3 are now gone.
+<li>
+<p>Several functions that were slated for deletion in version 2.1.3 are now gone.</p>
 <ul>
 <li>RecursiveRbind</li>
 <li>Vec2Dtm</li>
@@ -240,7 +241,8 @@
 <li>CalcPhiPrime</li>
 </ul>
 </li>
-<li>FitLdaModel has changed significantly.
+<li>
+<p>FitLdaModel has changed significantly.</p>
 <ul>
 <li>Now only Gibbs sampling is a supported training method. The Gibbs sampler is no longer wrapping lda::lda_collapsed_gibbs_sampler. It is now native to textmineR. It’s a little slower, but has additional features.</li>
 <li>Asymmetric priors are supported for both alpha and beta.</li>
@@ -257,9 +259,9 @@
 <li><p>Finally, I have changed the textmineR license to the MIT license. Note, however, that some dependencies may have more restrictive licenses. So if you’re looking to use textmineR in a commercial project, you may want to dig deeper into what is/isn’t permissable.</p></li>
 </ul>
 </div>
-    <div id="textminer-2-1-3" class="section level1">
+    <div id="textminer-213" class="section level1">
 <h1 class="page-header" data-toc-text="2.1.3">
-<a href="#textminer-2-1-3" class="anchor"></a>textmineR 2.1.3<small> 2018-09-11 </small>
+<a href="#textminer-213" class="anchor"></a>textmineR 2.1.3<small> 2018-09-11 </small>
 </h1>
 <ul>
 <li>Deprecating functions that will be removed, renamed, or have significant changes to syntax or functionality in the forthcoming textmineR v3.0.</li>
@@ -280,25 +282,25 @@
 <li>In addition: FitLdaModel is going to change significantly in its functionality and argument calls.</li>
 </ul>
 </div>
-    <div id="textminer-2-1-2" class="section level1">
+    <div id="textminer-212" class="section level1">
 <h1 class="page-header" data-toc-text="2.1.2">
-<a href="#textminer-2-1-2" class="anchor"></a>textmineR 2.1.2<small> 2018-04-29 </small>
+<a href="#textminer-212" class="anchor"></a>textmineR 2.1.2<small> 2018-04-29 </small>
 </h1>
 <ul>
 <li>Deprecated RecursiveRbind - it depended on a deprecated function from the Matrix package. And the replacement offered by Matrix operates recursively, making this function truly superfluous.</li>
 </ul>
 </div>
-    <div id="textminer-2-1-1" class="section level1">
+    <div id="textminer-211" class="section level1">
 <h1 class="page-header" data-toc-text="2.1.1">
-<a href="#textminer-2-1-1" class="anchor"></a>textmineR 2.1.1<small> 2018-03-06 </small>
+<a href="#textminer-211" class="anchor"></a>textmineR 2.1.1<small> 2018-03-06 </small>
 </h1>
 <ul>
 <li>Corrected some code in the vignettes that caused errors on Linux machines.</li>
 </ul>
 </div>
-    <div id="textminer-2-1-0" class="section level1">
+    <div id="textminer-210" class="section level1">
 <h1 class="page-header" data-toc-text="2.1.0">
-<a href="#textminer-2-1-0" class="anchor"></a>textmineR 2.1.0<small> Unreleased </small>
+<a href="#textminer-210" class="anchor"></a>textmineR 2.1.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>Added vignettes for common use cases of textmineR</li>
@@ -308,44 +310,44 @@
 </li>
 </ul>
 </div>
-    <div id="textminer-2-0-6" class="section level1">
+    <div id="textminer-206" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.6">
-<a href="#textminer-2-0-6" class="anchor"></a>textmineR 2.0.6<small> 2017-08-17 </small>
+<a href="#textminer-206" class="anchor"></a>textmineR 2.0.6<small> 2017-08-17 </small>
 </h1>
 <ul>
 <li>Back-end changes to CreateTcm in response to new <code>text2vec</code> API. Functionality is unchanged.</li>
 <li>Changes to how the package interfaces with Rcpp</li>
 </ul>
 </div>
-    <div id="textminer-2-0-5" class="section level1">
+    <div id="textminer-205" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.5">
-<a href="#textminer-2-0-5" class="anchor"></a>textmineR 2.0.5<small> 2017-04-07 </small>
+<a href="#textminer-205" class="anchor"></a>textmineR 2.0.5<small> 2017-04-07 </small>
 </h1>
 <ul>
 <li>Add <code>verbose</code> option to <code>CreateDtm</code> and <code>CreateTcm</code> to supress status messages.</li>
 <li>Add function <code>GetVocabFromDtm</code> to get <code>text2vec</code> vocabulary object from a <code>dgCMatrix</code> document term matrix.</li>
 </ul>
 </div>
-    <div id="textminer-2-0-4" class="section level1">
+    <div id="textminer-204" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.4">
-<a href="#textminer-2-0-4" class="anchor"></a>textmineR 2.0.4<small> 2016-11-03 </small>
+<a href="#textminer-204" class="anchor"></a>textmineR 2.0.4<small> 2016-11-03 </small>
 </h1>
 <ul>
 <li>Patching errors introduced in version 2.0.3</li>
 </ul>
 </div>
-    <div id="textminer-2-0-3" class="section level1">
+    <div id="textminer-203" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.3">
-<a href="#textminer-2-0-3" class="anchor"></a>textmineR 2.0.3<small> 2016-10-06 </small>
+<a href="#textminer-203" class="anchor"></a>textmineR 2.0.3<small> 2016-10-06 </small>
 </h1>
 <ul>
 <li>Patches to <code>CreateDtm</code> and <code>CreateTcm</code> in response to updates to <code>text2vec</code>.</li>
 <li>More formal update to take advantage of <code>text2vec</code>’s latest optimizations to follow.</li>
 </ul>
 </div>
-    <div id="textminer-2-0-2" class="section level1">
+    <div id="textminer-202" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.2">
-<a href="#textminer-2-0-2" class="anchor"></a>textmineR 2.0.2<small> 2016-06-06 </small>
+<a href="#textminer-202" class="anchor"></a>textmineR 2.0.2<small> 2016-06-06 </small>
 </h1>
 <ul>
 <li>Patched <code>CreateDtm</code> and <code>CreateTcm</code>. remove_punctuation now supports non-English characters.</li>
@@ -356,17 +358,17 @@
 <li>Switched from irlba to RSpectra for LSA models because RSpectra’s implementation is much faster.</li>
 </ul>
 </div>
-    <div id="textminer-2-0-1" class="section level1">
+    <div id="textminer-201" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.1">
-<a href="#textminer-2-0-1" class="anchor"></a>textmineR 2.0.1<small> 2016-04-24 </small>
+<a href="#textminer-201" class="anchor"></a>textmineR 2.0.1<small> 2016-04-24 </small>
 </h1>
 <ul>
 <li>Patched CreateDtm and CreateTcm. An error caused stopwords to not be removed</li>
 </ul>
 </div>
-    <div id="textminer-2-0-0" class="section level1">
+    <div id="textminer-200" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.0">
-<a href="#textminer-2-0-0" class="anchor"></a>textmineR 2.0.0<small> 2016-04-19 </small>
+<a href="#textminer-200" class="anchor"></a>textmineR 2.0.0<small> 2016-04-19 </small>
 </h1>
 <ul>
 <li>Vec2Dtm is now deprecated in favor of CreateDtm</li>
@@ -397,9 +399,9 @@
 <li>Similarly, CalcHellingerDist and CalcJSDivergence replace HellDist and JSD. This is to conform to a naming convention where functions are “verbs”.</li>
 </ul>
 </div>
-    <div id="textminer-1-7-0" class="section level1">
+    <div id="textminer-170" class="section level1">
 <h1 class="page-header" data-toc-text="1.7.0">
-<a href="#textminer-1-7-0" class="anchor"></a>textmineR 1.7.0<small> 2016-03-31 </small>
+<a href="#textminer-170" class="anchor"></a>textmineR 1.7.0<small> 2016-03-31 </small>
 </h1>
 <ul>
 <li>Added modeling capability for latent semantic analysis in FitLsaModel()</li>
@@ -410,9 +412,9 @@
 <li>Added function to represent document clustering as a topic model Cluster2TopicModel()</li>
 </ul>
 </div>
-    <div id="textminer-1-6-0" class="section level1">
+    <div id="textminer-160" class="section level1">
 <h1 class="page-header" data-toc-text="1.6.0">
-<a href="#textminer-1-6-0" class="anchor"></a>textmineR 1.6.0<small> 2016-03-06 </small>
+<a href="#textminer-160" class="anchor"></a>textmineR 1.6.0<small> 2016-03-06 </small>
 </h1>
 <ul>
 <li>Add deprecation warning to ProbCoherence</li>

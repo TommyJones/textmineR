@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
       </span>
     </div>
 
@@ -109,13 +109,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="e_doc_summarization_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>5. Document summarization</h1>
                         <h4 class="author">Thomas W. Jones</h4>
             
-            <h4 class="date">2021-06-27</h4>
+            <h4 class="date">2022-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/e_doc_summarization.Rmd"><code>vignettes/e_doc_summarization.Rmd</code></a></small>
       <div class="hidden name"><code>e_doc_summarization.Rmd</code></div>
@@ -143,7 +143,6 @@
 <span class="co">#&gt; The following object is masked from 'package:stats':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     update</span>
-
 <span class="co"># load the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">movie_review</span>, package <span class="op">=</span> <span class="st">"text2vec"</span><span class="op">)</span>
 
@@ -245,8 +244,7 @@
 <a href="#pulling-it-all-together" class="anchor"></a>Pulling it all together</h1>
 <p>The code below puts it all together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a single function call.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org">igraph</a></span><span class="op">)</span> 
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org">igraph</a></span><span class="op">)</span> 
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'igraph'</span>
 <span class="co">#&gt; The following objects are masked from 'package:stats':</span>
@@ -255,7 +253,6 @@
 <span class="co">#&gt; The following object is masked from 'package:base':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     union</span>
-
 <span class="co"># let's do this in a function</span>
 
 <span class="va">summarizer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">doc</span>, <span class="va">gamma</span><span class="op">)</span> <span class="op">{</span>
