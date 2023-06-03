@@ -29,3 +29,4 @@ Please see the vignettes for more information on how to get started.
 Note: there's a lot going on with textmineR at the moment, including adding 
 functionality based on original research. 
 
+
