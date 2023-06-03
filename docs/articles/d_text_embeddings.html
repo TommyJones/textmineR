@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,23 +42,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.5.999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,7 +84,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TommyJones/textmineR/">
+  <a href="https://github.com/TommyJones/textmineR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -109,115 +105,170 @@
 
       
 
-      </header><script src="d_text_embeddings_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>4. Text embeddings</h1>
-                        <h4 class="author">Thomas W. Jones</h4>
+                        <h4 data-toc-skip class="author">Thomas W.
+Jones</h4>
             
-            <h4 class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2023-06-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/d_text_embeddings.Rmd"><code>vignettes/d_text_embeddings.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/HEAD/vignettes/d_text_embeddings.Rmd" class="external-link"><code>vignettes/d_text_embeddings.Rmd</code></a></small>
       <div class="hidden name"><code>d_text_embeddings.Rmd</code></div>
 
     </div>
 
     
     
-<div id="text-embeddings" class="section level1">
-<h1 class="hasAnchor">
-<a href="#text-embeddings" class="anchor"></a>Text embeddings</h1>
-<p><a href="https://en.wikipedia.org/wiki/Word_embedding">Text embeddings</a> are particularly hot right now. While textmineR doesn’t (yet) explicitly implement any embedding models like GloVe or word2vec, you can still get embeddings. Text embedding algorithms aren’t conceptually different from topic models. They are, however, operating on a different matrix. Instead of reducing the dimensions of a document term matrix, text embeddings are obtained by reducing the dimensions of a term co-occurrence matrix. In principle, one can use LDA or LSA in the same way. In this case, rows of theta are embedded words. A phi_prime may be obtained to project documents or new text into the embedding space.</p>
-<div id="create-a-term-co-occurrence-matrix" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-a-term-co-occurrence-matrix" class="anchor"></a>Create a term co-occurrence matrix</h2>
-<p>The first step in fitting a text embedding model is to <a href="https://stackoverflow.com/questions/24073030/what-are-co-occurance-matrixes-and-how-are-they-used-in-nlp">create a term co-occurrence matrix</a> or TCM. In a TCM, both columns and rows index tokens. The <span class="math inline">\((i,j)\)</span> entries of the matrix are a count of the number of times word <span class="math inline">\(i\)</span> co-occurs with <span class="math inline">\(j\)</span>. However, there are several ways to count co-occurrence. textmineR gives you three.</p>
-<p>The most useful way of counting co-occurrence for text embeddings is called the skip-gram model. Under the skip-gram model, the count would be the number of times word <span class="math inline">\(j\)</span> appears within a certain window of <span class="math inline">\(i\)</span>. A skip-gram window of two, for example, would count the number of times word <span class="math inline">\(j\)</span> occurred in the two words immediately before word <span class="math inline">\(i\)</span> or the two words immediately after word <span class="math inline">\(i\)</span>. This helps capture the local context of words. In fact, you can think of a text embedding as being a topic model based on the local context of words. Whereas a traditional topic model is modeling words in their global context.</p>
-<p>To read more about the skip-gram model, which was popularized in the embedding model word2vec, look <a href="https://becominghuman.ai/how-does-word2vecs-skip-gram-work-f92e0525def4">here</a>.</p>
-<p>The other types of co-occurrence matrix textmineR provides are both global. One is a count of the number of documents in which words <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> co-occur. The other is the number of terms that co-occur between <em>documents</em> <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. See <code><a href="../reference/CreateTcm.html">help(CreateTcm)</a></code> for info on these.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># load the NIH data set</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/">textmineR</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'textmineR'</span>
-<span class="co">#&gt; The following object is masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co">#&gt; The following object is masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co"># load nih_sample data set from textmineR</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nih_sample</span><span class="op">)</span>
-
-<span class="co"># First create a TCM using skip grams, we'll use a 5-word window</span>
-<span class="co"># most options available on CreateDtm are also available for CreateTcm</span>
-<span class="va">tcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateTcm.html">CreateTcm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">ABSTRACT_TEXT</span>,
-                 skipgram_window <span class="op">=</span> <span class="fl">10</span>,
-                 verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-<span class="co"># a TCM is generally larger than a DTM</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">tcm</span><span class="op">)</span>
-<span class="co">#&gt; [1] 5210 5210</span></code></pre></div>
-</div>
-<div id="fitting-a-model" class="section level2">
-<h2 class="hasAnchor">
-<a href="#fitting-a-model" class="anchor"></a>Fitting a model</h2>
-<p>Once we have a TCM, we can use the same procedure to make an embedding model as we used to make a topic model. Note that it may take considerably longer (because of dimensionality of the matrix) or shorter (because of sparsity) to fit an embedding on the same corpus.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># use LDA to get embeddings into probability space</span>
-<span class="co"># This will take considerably longer as the TCM matrix has many more rows </span>
-<span class="co"># than your average DTM</span>
-<span class="va">embeddings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">tcm</span>,
-                          k <span class="op">=</span> <span class="fl">50</span>,
-                          iterations <span class="op">=</span> <span class="fl">200</span>,
-                          burnin <span class="op">=</span> <span class="fl">180</span>,
-                          alpha <span class="op">=</span> <span class="fl">0.1</span>,
-                          beta <span class="op">=</span> <span class="fl">0.05</span>,
-                          optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,
-                          calc_likelihood <span class="op">=</span> <span class="cn">FALSE</span>,
-                          calc_coherence <span class="op">=</span> <span class="cn">TRUE</span>,
-                          calc_r2 <span class="op">=</span> <span class="cn">TRUE</span>,
-                          cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="interpretation-of-phi-and-theta" class="section level2">
-<h2 class="hasAnchor">
-<a href="#interpretation-of-phi-and-theta" class="anchor"></a>Interpretation of <span class="math inline">\(\Phi\)</span> and <span class="math inline">\(\Theta\)</span>
+<div class="section level2">
+<h2 id="text-embeddings">Text embeddings<a class="anchor" aria-label="anchor" href="#text-embeddings"></a>
 </h2>
-<p>In the language of text embeddings, <span class="math inline">\(\Theta\)</span> gives us our tokens embedded in a probability space (because we used LDA, Euclidean space if we used LSA). <span class="math inline">\(\Phi\)</span> defines the dimensions of our embedding space. The rows of <span class="math inline">\(\Phi\)</span> can still be interpreted as topics. But they are topics of local contexts, rather than within whole documents.</p>
+<p><a href="https://en.wikipedia.org/wiki/Word_embedding" class="external-link">Text
+embeddings</a> are particularly hot right now. While textmineR doesn’t
+(yet) explicitly implement any embedding models like GloVe or word2vec,
+you can still get embeddings. Text embedding algorithms aren’t
+conceptually different from topic models. They are, however, operating
+on a different matrix. Instead of reducing the dimensions of a document
+term matrix, text embeddings are obtained by reducing the dimensions of
+a term co-occurrence matrix. In principle, one can use LDA or LSA in the
+same way. In this case, rows of theta are embedded words. A phi_prime
+may be obtained to project documents or new text into the embedding
+space.</p>
+<div class="section level3">
+<h3 id="create-a-term-co-occurrence-matrix">Create a term co-occurrence matrix<a class="anchor" aria-label="anchor" href="#create-a-term-co-occurrence-matrix"></a>
+</h3>
+<p>The first step in fitting a text embedding model is to <a href="https://stackoverflow.com/questions/24073030/what-are-co-occurance-matrixes-and-how-are-they-used-in-nlp" class="external-link">create
+a term co-occurrence matrix</a> or TCM. In a TCM, both columns and rows
+index tokens. The <span class="math inline">\((i,j)\)</span> entries of
+the matrix are a count of the number of times word <span class="math inline">\(i\)</span> co-occurs with <span class="math inline">\(j\)</span>. However, there are several ways to
+count co-occurrence. textmineR gives you three.</p>
+<p>The most useful way of counting co-occurrence for text embeddings is
+called the skip-gram model. Under the skip-gram model, the count would
+be the number of times word <span class="math inline">\(j\)</span>
+appears within a certain window of <span class="math inline">\(i\)</span>. A skip-gram window of two, for
+example, would count the number of times word <span class="math inline">\(j\)</span> occurred in the two words immediately
+before word <span class="math inline">\(i\)</span> or the two words
+immediately after word <span class="math inline">\(i\)</span>. This
+helps capture the local context of words. In fact, you can think of a
+text embedding as being a topic model based on the local context of
+words. Whereas a traditional topic model is modeling words in their
+global context.</p>
+<p>To read more about the skip-gram model, which was popularized in the
+embedding model word2vec, look <a href="https://becominghuman.ai/how-does-word2vecs-skip-gram-work-f92e0525def4" class="external-link">here</a>.</p>
+<p>The other types of co-occurrence matrix textmineR provides are both
+global. One is a count of the number of documents in which words <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> co-occur. The other is the number of
+terms that co-occur between <em>documents</em> <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. See <code><a href="../reference/CreateTcm.html">help(CreateTcm)</a></code> for
+info on these.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># load the NIH data set</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/" class="external-link">textmineR</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: Matrix</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'textmineR'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:Matrix':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span></span>
+<span><span class="co"># load nih_sample data set from textmineR</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nih_sample</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># First create a TCM using skip grams, we'll use a 5-word window</span></span>
+<span><span class="co"># most options available on CreateDtm are also available for CreateTcm</span></span>
+<span><span class="va">tcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateTcm.html">CreateTcm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">ABSTRACT_TEXT</span>,</span>
+<span>                 skipgram_window <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>                 verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'as(&lt;dgTMatrix&gt;, "dgCMatrix")' is deprecated.</span></span>
+<span><span class="co">#&gt; Use 'as(., "CsparseMatrix")' instead.</span></span>
+<span><span class="co">#&gt; See help("Deprecated") and help("Matrix-deprecated").</span></span>
+<span></span>
+<span><span class="co"># a TCM is generally larger than a DTM</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">tcm</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5210 5210</span></span></code></pre></div>
 </div>
-<div id="evaluating-the-model" class="section level2">
-<h2 class="hasAnchor">
-<a href="#evaluating-the-model" class="anchor"></a>Evaluating the model</h2>
-<p>As it happens, the same evaluation metrics developed for topic modeling also apply here. There are subtle differences in interpretation because we are using a TCM not a DTM. i.e. occurrences relate words to each other, not to documents.</p>
+<div class="section level3">
+<h3 id="fitting-a-model">Fitting a model<a class="anchor" aria-label="anchor" href="#fitting-a-model"></a>
+</h3>
+<p>Once we have a TCM, we can use the same procedure to make an
+embedding model as we used to make a topic model. Note that it may take
+considerably longer (because of dimensionality of the matrix) or shorter
+(because of sparsity) to fit an embedding on the same corpus.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># use LDA to get embeddings into probability space</span></span>
+<span><span class="co"># This will take considerably longer as the TCM matrix has many more rows </span></span>
+<span><span class="co"># than your average DTM</span></span>
+<span><span class="va">embeddings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">tcm</span>,</span>
+<span>                          k <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>                          iterations <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>                          burnin <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                          alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>                          beta <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>                          optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          calc_likelihood <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          calc_coherence <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          calc_r2 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="interpretation-of-phi-and-theta">Interpretation of <span class="math inline">\(\Phi\)</span> and
+<span class="math inline">\(\Theta\)</span><a class="anchor" aria-label="anchor" href="#interpretation-of-phi-and-theta"></a>
+</h3>
+<p>In the language of text embeddings, <span class="math inline">\(\Theta\)</span> gives us our tokens embedded in a
+probability space (because we used LDA, Euclidean space if we used LSA).
+<span class="math inline">\(\Phi\)</span> defines the dimensions of our
+embedding space. The rows of <span class="math inline">\(\Phi\)</span>
+can still be interpreted as topics. But they are topics of local
+contexts, rather than within whole documents.</p>
+</div>
+<div class="section level3">
+<h3 id="evaluating-the-model">Evaluating the model<a class="anchor" aria-label="anchor" href="#evaluating-the-model"></a>
+</h3>
+<p>As it happens, the same evaluation metrics developed for topic
+modeling also apply here. There are subtle differences in interpretation
+because we are using a TCM not a DTM. i.e. occurrences relate words to
+each other, not to documents.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get an R-squared for general goodness of fit</span>
-<span class="va">embeddings</span><span class="op">$</span><span class="va">r2</span>
-<span class="co">#&gt; [1] 0.1785594</span>
-<span class="co"># Get coherence (relative to the TCM) for goodness of fit</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt; 0.02758 0.07406 0.11779 0.12522 0.17409 0.25412</span></code></pre></div>
-<p>We will create a summary table as we did with a topic model before.</p>
+<code class="sourceCode R"><span><span class="co"># Get an R-squared for general goodness of fit</span></span>
+<span><span class="va">embeddings</span><span class="op">$</span><span class="va">r2</span></span>
+<span><span class="co">#&gt; [1] 0.1731397</span></span>
+<span></span>
+<span><span class="co"># Get coherence (relative to the TCM) for goodness of fit</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">#&gt; 0.01488 0.06864 0.11737 0.12914 0.17406 0.33663</span></span></code></pre></div>
+<p>We will create a summary table as we did with a topic model
+before.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get top terms, no labels because we don't have bigrams</span>
-<span class="va">embeddings</span><span class="op">$</span><span class="va">top_terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetTopTerms.html">GetTopTerms</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span>,
-                                    M <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Get top terms, no labels because we don't have bigrams</span></span>
+<span><span class="va">embeddings</span><span class="op">$</span><span class="va">top_terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetTopTerms.html">GetTopTerms</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span>,</span>
+<span>                                    M <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create a summary table, similar to the above</span>
-<span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>,
-                                 coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence</span>, <span class="fl">3</span><span class="op">)</span>,
-                                 prevalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,
-                                 top_terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">top_terms</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-                                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">x</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span>
-                                 <span class="op">}</span><span class="op">)</span>,
-                                 stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>Here it is ordered by prevalence. (Here, we might say density of tokens along each embedding dimension.)</p>
+<code class="sourceCode R"><span><span class="co"># Create a summary table, similar to the above</span></span>
+<span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>,</span>
+<span>                                 coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                                 prevalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                                 top_terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">top_terms</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>                                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span></span>
+<span>                                 <span class="op">}</span><span class="op">)</span>,</span>
+<span>                                 stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>Here it is ordered by prevalence. (Here, we might say density of
+tokens along each embedding dimension.)</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">prevalence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">prevalence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></span></code></pre></div>
 <table class="table">
 <caption>Summary of top 10 embedding dimensions</caption>
+<colgroup>
+<col width="6%">
+<col width="7%">
+<col width="12%">
+<col width="13%">
+<col width="60%">
+</colgroup>
 <thead><tr class="header">
 <th align="left"></th>
 <th align="left">topic</th>
@@ -227,82 +278,89 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">t_25</td>
-<td align="left">t_25</td>
-<td align="right">0.213</td>
-<td align="right">219.85</td>
-<td align="left">study, aim, specific, studies, determine</td>
+<td align="left">t_2</td>
+<td align="left">t_2</td>
+<td align="right">0.211</td>
+<td align="right">202.21</td>
+<td align="left">aim, specific, study, studies, determine</td>
 </tr>
 <tr class="even">
-<td align="left">t_19</td>
-<td align="left">t_19</td>
-<td align="right">0.159</td>
-<td align="right">178.29</td>
-<td align="left">research, core, program, studies, support</td>
+<td align="left">t_33</td>
+<td align="left">t_33</td>
+<td align="right">0.166</td>
+<td align="right">158.86</td>
+<td align="left">research, program, health, cancer, core</td>
 </tr>
 <tr class="odd">
-<td align="left">t_45</td>
-<td align="left">t_45</td>
-<td align="right">0.165</td>
-<td align="right">136.86</td>
-<td align="left">cells, cell, human, aim, lung</td>
-</tr>
-<tr class="even">
-<td align="left">t_29</td>
-<td align="left">t_29</td>
-<td align="right">0.090</td>
-<td align="right">114.76</td>
-<td align="left">expression, cdk, role, interactions, structure</td>
-</tr>
-<tr class="odd">
-<td align="left">t_31</td>
-<td align="left">t_31</td>
-<td align="right">0.130</td>
-<td align="right">111.71</td>
-<td align="left">brain, function, activity, tissue, tumor</td>
-</tr>
-<tr class="even">
 <td align="left">t_26</td>
 <td align="left">t_26</td>
-<td align="right">0.121</td>
-<td align="right">109.39</td>
-<td align="left">hiv, based, inflammation, strategies, therapy</td>
-</tr>
-<tr class="odd">
-<td align="left">t_10</td>
-<td align="left">t_10</td>
-<td align="right">0.105</td>
-<td align="right">107.66</td>
-<td align="left">disease, drug, cardiovascular, related, diseases</td>
+<td align="right">0.178</td>
+<td align="right">156.40</td>
+<td align="left">cells, cell, human, response, brain</td>
 </tr>
 <tr class="even">
-<td align="left">t_13</td>
-<td align="left">t_13</td>
-<td align="right">0.106</td>
-<td align="right">107.14</td>
-<td align="left">health, clinical, interventions, significant, related</td>
+<td align="left">t_24</td>
+<td align="left">t_24</td>
+<td align="right">0.150</td>
+<td align="right">125.45</td>
+<td align="left">disease, factors, risk, related, cardiovascular</td>
 </tr>
 <tr class="odd">
-<td align="left">t_17</td>
-<td align="left">t_17</td>
-<td align="right">0.187</td>
-<td align="right">107.04</td>
-<td align="left">cancer, dr, disease, level, research</td>
+<td align="left">t_11</td>
+<td align="left">t_11</td>
+<td align="right">0.117</td>
+<td align="right">119.53</td>
+<td align="left">year, core, center, national, grant</td>
 </tr>
 <tr class="even">
-<td align="left">t_4</td>
-<td align="left">t_4</td>
-<td align="right">0.059</td>
-<td align="right">104.61</td>
-<td align="left">data, methods, cost, capacity, analysis</td>
+<td align="left">t_38</td>
+<td align="left">t_38</td>
+<td align="right">0.138</td>
+<td align="right">118.20</td>
+<td align="left">hiv, based, treatment, inflammation, therapy</td>
+</tr>
+<tr class="odd">
+<td align="left">t_18</td>
+<td align="left">t_18</td>
+<td align="right">0.060</td>
+<td align="right">107.79</td>
+<td align="left">health, community, wide, women, populations</td>
+</tr>
+<tr class="even">
+<td align="left">t_1</td>
+<td align="left">t_1</td>
+<td align="right">0.102</td>
+<td align="right">105.89</td>
+<td align="left">function, muscle, activity, strength, structure</td>
+</tr>
+<tr class="odd">
+<td align="left">t_14</td>
+<td align="left">t_14</td>
+<td align="right">0.112</td>
+<td align="right">105.80</td>
+<td align="left">data, studies, results, methods, design</td>
+</tr>
+<tr class="even">
+<td align="left">t_22</td>
+<td align="left">t_22</td>
+<td align="right">0.176</td>
+<td align="right">104.83</td>
+<td align="left">cdk, histone, protein, dna, transcription</td>
 </tr>
 </tbody>
 </table>
 <p>And here is the table ordered by coherence.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">coherence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">coherence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></span></code></pre></div>
 <table class="table">
 <caption>Summary of 10 most coherent embedding dimensions</caption>
+<colgroup>
+<col width="6%">
+<col width="7%">
+<col width="12%">
+<col width="13%">
+<col width="60%">
+</colgroup>
 <thead><tr class="header">
 <th align="left"></th>
 <th align="left">topic</th>
@@ -312,118 +370,130 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">t_12</td>
-<td align="left">t_12</td>
-<td align="right">0.254</td>
+<td align="left">t_41</td>
+<td align="left">t_41</td>
+<td align="right">0.337</td>
+<td align="right">97.61</td>
+<td align="left">gut, crc, microbiome, composition, bas</td>
+</tr>
+<tr class="even">
+<td align="left">t_47</td>
+<td align="left">t_47</td>
+<td align="right">0.337</td>
+<td align="right">98.03</td>
+<td align="left">ptc, secondary, brafv, drug, vegfr</td>
+</tr>
+<tr class="odd">
+<td align="left">t_31</td>
+<td align="left">t_31</td>
+<td align="right">0.310</td>
+<td align="right">101.09</td>
+<td align="left">cmybp, release, blood, injury, fragment</td>
+</tr>
+<tr class="even">
+<td align="left">t_27</td>
+<td align="left">t_27</td>
+<td align="right">0.252</td>
 <td align="right">94.55</td>
-<td align="left">provided, applicant, project, cancer, health</td>
-</tr>
-<tr class="even">
-<td align="left">t_33</td>
-<td align="left">t_33</td>
-<td align="right">0.247</td>
-<td align="right">101.69</td>
-<td align="left">microbiome, gut, anti, crc, composition</td>
+<td align="left">provided, applicant, project, health, cancer</td>
 </tr>
 <tr class="odd">
-<td align="left">t_7</td>
-<td align="left">t_7</td>
-<td align="right">0.242</td>
-<td align="right">97.24</td>
-<td align="left">fertility, race, scaffold, ethnic, unintended</td>
+<td align="left">t_43</td>
+<td align="left">t_43</td>
+<td align="right">0.245</td>
+<td align="right">99.72</td>
+<td align="left">fertility, race, metastases, ethnic, unintended</td>
 </tr>
 <tr class="even">
-<td align="left">t_24</td>
-<td align="left">t_24</td>
-<td align="right">0.238</td>
-<td align="right">91.01</td>
-<td align="left">type, mutant, goals, hlrrk, pd</td>
+<td align="left">t_44</td>
+<td align="left">t_44</td>
+<td align="right">0.227</td>
+<td align="right">101.53</td>
+<td align="left">sleep, dependent, memory, cognitive, central</td>
 </tr>
 <tr class="odd">
-<td align="left">t_37</td>
-<td align="left">t_37</td>
-<td align="right">0.236</td>
-<td align="right">99.45</td>
-<td align="left">injury, cmybp, blood, release, fragment</td>
+<td align="left">t_4</td>
+<td align="left">t_4</td>
+<td align="right">0.223</td>
+<td align="right">101.03</td>
+<td align="left">influenza, vaccine, strain, cross, antigen</td>
 </tr>
 <tr class="even">
-<td align="left">t_36</td>
-<td align="left">t_36</td>
-<td align="right">0.218</td>
-<td align="right">103.75</td>
-<td align="left">dependent, sleep, memory, plasticity, cognitive</td>
+<td align="left">t_2</td>
+<td align="left">t_2</td>
+<td align="right">0.211</td>
+<td align="right">202.21</td>
+<td align="left">aim, specific, study, studies, determine</td>
 </tr>
 <tr class="odd">
-<td align="left">t_25</td>
-<td align="left">t_25</td>
-<td align="right">0.213</td>
-<td align="right">219.85</td>
-<td align="left">study, aim, specific, studies, determine</td>
+<td align="left">t_10</td>
+<td align="left">t_10</td>
+<td align="right">0.208</td>
+<td align="right">104.14</td>
+<td align="left">proteins, infection, cutaneous, sand, response</td>
 </tr>
 <tr class="even">
-<td align="left">t_38</td>
-<td align="left">t_38</td>
-<td align="right">0.194</td>
-<td align="right">103.56</td>
-<td align="left">response, immune, infection, responses, host</td>
-</tr>
-<tr class="odd">
-<td align="left">t_41</td>
-<td align="left">t_41</td>
-<td align="right">0.190</td>
-<td align="right">99.79</td>
-<td align="left">metabolic, state, mitochondrial, secretion, redox</td>
-</tr>
-<tr class="even">
-<td align="left">t_17</td>
-<td align="left">t_17</td>
-<td align="right">0.187</td>
-<td align="right">107.04</td>
-<td align="left">cancer, dr, disease, level, research</td>
+<td align="left">t_6</td>
+<td align="left">t_6</td>
+<td align="right">0.197</td>
+<td align="right">100.59</td>
+<td align="left">imaging, radiation, ms, vivo, tissue</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="embedding-documents-under-the-model" class="section level2">
-<h2 class="hasAnchor">
-<a href="#embedding-documents-under-the-model" class="anchor"></a>Embedding documents under the model</h2>
-<p>You can embed whole documents under your model. Doing so, effectively makes your embeddings a topic model that have topics of local contexts, instead of global ones. Why might you want to do this? The short answer is that you may have reason to believe that an embedding model may give you better topics, especially if you are trying to pick up on more subtle topics. In a later example, we’ll be doing that to build a document summarizer.</p>
-<p>A note on the below: TCMs may be very sparse and cause us to run into computational underflow issues when using the “gibbs” prediction method. As a result, I’m choosing to use the “dot” method.</p>
+<div class="section level3">
+<h3 id="embedding-documents-under-the-model">Embedding documents under the model<a class="anchor" aria-label="anchor" href="#embedding-documents-under-the-model"></a>
+</h3>
+<p>You can embed whole documents under your model. Doing so, effectively
+makes your embeddings a topic model that have topics of local contexts,
+instead of global ones. Why might you want to do this? The short answer
+is that you may have reason to believe that an embedding model may give
+you better topics, especially if you are trying to pick up on more
+subtle topics. In a later example, we’ll be doing that to build a
+document summarizer.</p>
+<p>A note on the below: TCMs may be very sparse and cause us to run into
+computational underflow issues when using the “gibbs” prediction method.
+As a result, I’m choosing to use the “dot” method.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Make a DTM from our documents</span>
-<span class="va">dtm_embed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">ABSTRACT_TEXT</span>,
-                       doc_names <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">APPLICATION_ID</span>,
-                       ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,
-                       verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-                       cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-<span class="va">dtm_embed</span> <span class="op">&lt;-</span> <span class="va">dtm_embed</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">dtm_embed</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span><span class="op">]</span>
-
-<span class="co"># Project the documents into the embedding space</span>
-<span class="va">embedding_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">embeddings</span>, <span class="va">dtm_embed</span>, method <span class="op">=</span> <span class="st">"gibbs"</span>,
-                                 iterations <span class="op">=</span> <span class="fl">200</span>, burnin <span class="op">=</span> <span class="fl">180</span><span class="op">)</span></code></pre></div>
-<p>Once you’ve embedded your documents, you effectively have a new <span class="math inline">\(\Theta\)</span>. We can use that to evaluate how well the embedding topics fit the documents as a whole by re-calculating R-squared and coherence.</p>
+<code class="sourceCode R"><span><span class="co"># Make a DTM from our documents</span></span>
+<span><span class="va">dtm_embed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">ABSTRACT_TEXT</span>,</span>
+<span>                       doc_names <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">APPLICATION_ID</span>,</span>
+<span>                       ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,</span>
+<span>                       verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                       cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dtm_embed</span> <span class="op">&lt;-</span> <span class="va">dtm_embed</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dtm_embed</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Project the documents into the embedding space</span></span>
+<span><span class="va">embedding_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">embeddings</span>, <span class="va">dtm_embed</span>, method <span class="op">=</span> <span class="st">"gibbs"</span>,</span>
+<span>                                 iterations <span class="op">=</span> <span class="fl">200</span>, burnin <span class="op">=</span> <span class="fl">180</span><span class="op">)</span></span></code></pre></div>
+<p>Once you’ve embedded your documents, you effectively have a new <span class="math inline">\(\Theta\)</span>. We can use that to evaluate how
+well the embedding topics fit the documents as a whole by re-calculating
+R-squared and coherence.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># get a goodness of fit relative to the DTM</span>
-<span class="va">embeddings</span><span class="op">$</span><span class="va">r2_dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcTopicModelR2.html">CalcTopicModelR2</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm_embed</span>, 
-                                      phi <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">dtm_embed</span><span class="op">)</span><span class="op">]</span>, <span class="co"># line up vocabulary</span>
-                                      theta <span class="op">=</span> <span class="va">embedding_assignments</span>,
-                                      cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-<span class="va">embeddings</span><span class="op">$</span><span class="va">r2_dtm</span>
-<span class="co">#&gt; [1] 0.2260132</span>
-<span class="co"># get coherence relative to DTM</span>
-<span class="va">embeddings</span><span class="op">$</span><span class="va">coherence_dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcProbCoherence.html">CalcProbCoherence</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">dtm_embed</span><span class="op">)</span><span class="op">]</span>, <span class="co"># line up vocabulary</span>
-                                              dtm <span class="op">=</span> <span class="va">dtm_embed</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence_dtm</span><span class="op">)</span>
-<span class="co">#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. </span>
-<span class="co">#&gt; -0.02039  0.05294  0.09930  0.14709  0.22487  0.55418</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># get a goodness of fit relative to the DTM</span></span>
+<span><span class="va">embeddings</span><span class="op">$</span><span class="va">r2_dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcTopicModelR2.html">CalcTopicModelR2</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm_embed</span>, </span>
+<span>                                      phi <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm_embed</span><span class="op">)</span><span class="op">]</span>, <span class="co"># line up vocabulary</span></span>
+<span>                                      theta <span class="op">=</span> <span class="va">embedding_assignments</span>,</span>
+<span>                                      cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">embeddings</span><span class="op">$</span><span class="va">r2_dtm</span></span>
+<span><span class="co">#&gt; [1] 0.2257806</span></span>
+<span></span>
+<span><span class="co"># get coherence relative to DTM</span></span>
+<span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence_dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcProbCoherence.html">CalcProbCoherence</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">phi</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm_embed</span><span class="op">)</span><span class="op">]</span>, <span class="co"># line up vocabulary</span></span>
+<span>                                              dtm <span class="op">=</span> <span class="va">dtm_embed</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">embeddings</span><span class="op">$</span><span class="va">coherence_dtm</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. </span></span>
+<span><span class="co">#&gt; -0.01919  0.05537  0.10475  0.15475  0.20236  0.59833</span></span></code></pre></div>
 </div>
-<div id="where-to-next" class="section level2">
-<h2 class="hasAnchor">
-<a href="#where-to-next" class="anchor"></a>Where to next?</h2>
-<p>Embedding research is only just beginning. I would encourage you to play with them and develop your own methods.</p>
+<div class="section level3">
+<h3 id="where-to-next">Where to next?<a class="anchor" aria-label="anchor" href="#where-to-next"></a>
+</h3>
+<p>Embedding research is only just beginning. I would encourage you to
+play with them and develop your own methods.</p>
 </div>
 </div>
   </div>
@@ -439,11 +509,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Tommy Jones.</p>
+  <p></p>
+<p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

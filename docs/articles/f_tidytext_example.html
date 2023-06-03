@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,23 +42,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.5.999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,7 +84,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TommyJones/textmineR/">
+  <a href="https://github.com/TommyJones/textmineR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -109,102 +105,117 @@
 
       
 
-      </header><script src="f_tidytext_example_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>6. Using tidytext with textmineR</h1>
-                        <h4 class="author">Thomas W. Jones</h4>
+                        <h4 data-toc-skip class="author">Thomas W.
+Jones</h4>
             
-            <h4 class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2023-06-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/f_tidytext_example.Rmd"><code>vignettes/f_tidytext_example.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/HEAD/vignettes/f_tidytext_example.Rmd" class="external-link"><code>vignettes/f_tidytext_example.Rmd</code></a></small>
       <div class="hidden name"><code>f_tidytext_example.Rmd</code></div>
 
     </div>
 
     
     
-<div id="using-tidytext-with-textminer" class="section level1">
-<h1 class="hasAnchor">
-<a href="#using-tidytext-with-textminer" class="anchor"></a>Using tidytext with textmineR</h1>
-<p>The <a href="https://CRAN.R-project.org/package=tidytext"><code>tidytext</code></a> package is one of the more popular natural language processing packages in R’s ecosystem. It follows conventions and syntax of the “tidyverse.”</p>
-<p>You may prefer to use <code>tidytext</code> for a couple of reasons. First, <code>tidytext</code> has its own philosophy and syntax for handling text, particularly at early stages. You may be more familiar or comfortable with this approach. Second, <code>tidytext</code> does, theoretically, offer some more flexibility in options creating DTMs or TCMs. This early stage is critical to successful topic modeling.</p>
-<p>See <em><a href="https://www.tidytextmining.com/">Text Mining with R: A Tidy Approach</a></em> for more details about tidytext.</p>
-<p>What follows is a short script combining <code>tidytext</code> with <code>textmineR</code>. Initial data curation and DTM creation is done with <code>tidytext</code>. Topic modeling is done with <code>textmineR</code> and the outputs are re-formatted in the flavor of <code>tidytext</code>’s “tidiers” for other topic models.</p>
+<div class="section level2">
+<h2 id="using-tidytext-with-textminer">Using tidytext with textmineR<a class="anchor" aria-label="anchor" href="#using-tidytext-with-textminer"></a>
+</h2>
+<p>The <a href="https://CRAN.R-project.org/package=tidytext" class="external-link"><code>tidytext</code></a>
+package is one of the more popular natural language processing packages
+in R’s ecosystem. It follows conventions and syntax of the
+“tidyverse.”</p>
+<p>You may prefer to use <code>tidytext</code> for a couple of reasons.
+First, <code>tidytext</code> has its own philosophy and syntax for
+handling text, particularly at early stages. You may be more familiar or
+comfortable with this approach. Second, <code>tidytext</code> does,
+theoretically, offer some more flexibility in options creating DTMs or
+TCMs. This early stage is critical to successful topic modeling.</p>
+<p>See <em><a href="https://www.tidytextmining.com/" class="external-link">Text Mining with R:
+A Tidy Approach</a></em> for more details about tidytext.</p>
+<p>What follows is a short script combining <code>tidytext</code> with
+<code>textmineR</code>. Initial data curation and DTM creation is done
+with <code>tidytext</code>. Topic modeling is done with
+<code>textmineR</code> and the outputs are re-formatted in the flavor of
+<code>tidytext</code>’s “tidiers” for other topic models.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">################################################################################</span>
-<span class="co"># Example: Using tidytext with textmineR</span>
-<span class="co">################################################################################</span>
-
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/juliasilge/tidytext">tidytext</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/">textmineR</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'textmineR'</span>
-<span class="co">#&gt; The following object is masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co">#&gt; The following object is masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'tidyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand, pack, unpack</span>
-<span class="co"># load documents in a data frame</span>
-<span class="va">docs</span> <span class="op">&lt;-</span> <span class="fu">textmineR</span><span class="fu">::</span><span class="va"><a href="../reference/nih.html">nih_sample</a></span> 
-
-<span class="co"># tokenize using tidytext's unnest_tokens</span>
-<span class="va">tidy_docs</span> <span class="op">&lt;-</span> <span class="va">docs</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">APPLICATION_ID</span>, <span class="va">ABSTRACT_TEXT</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/unnest_tokens.html">unnest_tokens</a></span><span class="op">(</span>output <span class="op">=</span> <span class="va">word</span>, 
-                input <span class="op">=</span> <span class="va">ABSTRACT_TEXT</span>,
-                stopwords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, 
-                              <span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span>source <span class="op">=</span> <span class="st">"smart"</span><span class="op">)</span><span class="op">)</span>,
-                token <span class="op">=</span> <span class="st">"ngrams"</span>,
-                n_min <span class="op">=</span> <span class="fl">1</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">APPLICATION_ID</span>, <span class="va">word</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">n</span><span class="op">&gt;</span><span class="fl">1</span><span class="op">)</span> <span class="co">#Filtering for words/bigrams per document, rather than per corpus</span>
-
-<span class="va">tidy_docs</span> <span class="op">&lt;-</span> <span class="va">tidy_docs</span> <span class="op">%&gt;%</span> <span class="co"># filter words that are just numbers</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">tidy_docs</span><span class="op">$</span><span class="va">word</span>, <span class="st">"^[0-9]+$"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># turn a tidy tbl into a sparse dgCMatrix for use in textmineR</span>
-<span class="va">d</span> <span class="op">&lt;-</span> <span class="va">tidy_docs</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/cast_sparse.html">cast_sparse</a></span><span class="op">(</span><span class="va">APPLICATION_ID</span>, <span class="va">word</span>, <span class="va">n</span><span class="op">)</span>
-
-
-<span class="co"># create a topic model</span>
-<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">d</span>, 
-                 k <span class="op">=</span> <span class="fl">20</span>,
-                 iterations <span class="op">=</span> <span class="fl">200</span>,
-                 burnin <span class="op">=</span> <span class="fl">175</span><span class="op">)</span>
-
-
-<span class="co"># below is equivalent to tidy_beta &lt;- tidy(x = m, matrix = "beta")</span>
-<span class="va">tidy_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace_all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>, <span class="st">"t_"</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span>, 
-                        <span class="va">m</span><span class="op">$</span><span class="va">phi</span>, 
-                        stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">beta</span>, <span class="op">-</span><span class="va">topic</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># below is equivalent to tidy_gamma &lt;- tidy(x = m, matrix = "gamma")</span>
-<span class="va">tidy_gamma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>document <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span>,
-                         <span class="va">m</span><span class="op">$</span><span class="va">theta</span>,
-                         stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span><span class="op">(</span><span class="va">topic</span>, <span class="va">gamma</span>, <span class="op">-</span><span class="va">document</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">################################################################################</span></span>
+<span><span class="co"># Example: Using tidytext with textmineR</span></span>
+<span><span class="co">################################################################################</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/juliasilge/tidytext" class="external-link">tidytext</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/" class="external-link">textmineR</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: Matrix</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'textmineR'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:Matrix':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'tidyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:Matrix':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     expand, pack, unpack</span></span>
+<span></span>
+<span><span class="co"># load documents in a data frame</span></span>
+<span><span class="va">docs</span> <span class="op">&lt;-</span> <span class="fu">textmineR</span><span class="fu">::</span><span class="va"><a href="../reference/nih.html">nih_sample</a></span> </span>
+<span></span>
+<span><span class="co"># tokenize using tidytext's unnest_tokens</span></span>
+<span><span class="va">tidy_docs</span> <span class="op">&lt;-</span> <span class="va">docs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">APPLICATION_ID</span>, <span class="va">ABSTRACT_TEXT</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/unnest_tokens.html" class="external-link">unnest_tokens</a></span><span class="op">(</span>output <span class="op">=</span> <span class="va">word</span>, </span>
+<span>                input <span class="op">=</span> <span class="va">ABSTRACT_TEXT</span>,</span>
+<span>                stopwords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, </span>
+<span>                              <span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span>source <span class="op">=</span> <span class="st">"smart"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                token <span class="op">=</span> <span class="st">"ngrams"</span>,</span>
+<span>                n_min <span class="op">=</span> <span class="fl">1</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">APPLICATION_ID</span>, <span class="va">word</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">n</span><span class="op">&gt;</span><span class="fl">1</span><span class="op">)</span> <span class="co">#Filtering for words/bigrams per document, rather than per corpus</span></span>
+<span></span>
+<span><span class="va">tidy_docs</span> <span class="op">&lt;-</span> <span class="va">tidy_docs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># filter words that are just numbers</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">tidy_docs</span><span class="op">$</span><span class="va">word</span>, <span class="st">"^[0-9]+$"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># turn a tidy tbl into a sparse dgCMatrix for use in textmineR</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">tidy_docs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/cast_sparse.html" class="external-link">cast_sparse</a></span><span class="op">(</span><span class="va">APPLICATION_ID</span>, <span class="va">word</span>, <span class="va">n</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># create a topic model</span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">d</span>, </span>
+<span>                 k <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>                 iterations <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>                 burnin <span class="op">=</span> <span class="fl">175</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># below is equivalent to tidy_beta &lt;- tidy(x = m, matrix = "beta")</span></span>
+<span><span class="va">tidy_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>, <span class="st">"t_"</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                        <span class="va">m</span><span class="op">$</span><span class="va">phi</span>, </span>
+<span>                        stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html" class="external-link">gather</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">beta</span>, <span class="op">-</span><span class="va">topic</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># below is equivalent to tidy_gamma &lt;- tidy(x = m, matrix = "gamma")</span></span>
+<span><span class="va">tidy_gamma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>document <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span>,</span>
+<span>                         <span class="va">m</span><span class="op">$</span><span class="va">theta</span>,</span>
+<span>                         stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html" class="external-link">gather</a></span><span class="op">(</span><span class="va">topic</span>, <span class="va">gamma</span>, <span class="op">-</span><span class="va">document</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
 
@@ -219,11 +230,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Tommy Jones.</p>
+  <p></p>
+<p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

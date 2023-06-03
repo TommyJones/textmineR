@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,23 +42,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.5.999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,7 +84,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TommyJones/textmineR/">
+  <a href="https://github.com/TommyJones/textmineR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -109,223 +105,267 @@
 
       
 
-      </header><script src="e_doc_summarization_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>5. Document summarization</h1>
-                        <h4 class="author">Thomas W. Jones</h4>
+                        <h4 data-toc-skip class="author">Thomas W.
+Jones</h4>
             
-            <h4 class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2023-06-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/e_doc_summarization.Rmd"><code>vignettes/e_doc_summarization.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/HEAD/vignettes/e_doc_summarization.Rmd" class="external-link"><code>vignettes/e_doc_summarization.Rmd</code></a></small>
       <div class="hidden name"><code>e_doc_summarization.Rmd</code></div>
 
     </div>
 
     
     
-<p>In this example we’ll use text embeddings and a bit of network analysis to build a basic document summarizer.</p>
-<p>Many document summarizers, as the one we’ll build here, do not generate language. Instead, they break a document down into sentences and then use some mechanism to score each sentence for relevance. Sentences with the top scores are returned as the “summary.” For more information on summarization, a good place to start is <a href="https://en.wikipedia.org/wiki/Automatic_summarization">here</a>.</p>
-<p>The summarizer we’ll build is a version of the <a href="https://en.wikipedia.org/wiki/Automatic_summarization#Unsupervised_approach:_TextRank">TextRank algorithm</a>. We will split a document into sentences, create a nearest-neighbor network where sentences are connected to other similar sentences, and rank the sentences according to <a href="https://en.wikipedia.org/wiki/Eigenvector_centrality">eigenvector centrality</a>.</p>
-<p>We will use a word embedding model, created on a whole corpus, to project the sentences into the embedding space. Once in the embedding space, we will measure similarity between documents using <a href="https://en.wikipedia.org/wiki/Hellinger_distance">Hellinger distance</a>. Hellinger distance is a metric specifically for probability distributions. Since we’ll use LDA to create embeddings to a probability space, it’s a useful measure.</p>
-<div id="getting-started" class="section level1">
-<h1 class="hasAnchor">
-<a href="#getting-started" class="anchor"></a>Getting started</h1>
-<p>We’ll use the movie review data set from <code>text2vec</code> again. The first thing we need to do is create a TCM and embedding model. We will skip evaluation such as R-squared, coherence, inspecting top terms, etc. However, in any real application, I’d strongly suggest evaluating your models at every step of the way.</p>
+<p>In this example we’ll use text embeddings and a bit of network
+analysis to build a basic document summarizer.</p>
+<p>Many document summarizers, as the one we’ll build here, do not
+generate language. Instead, they break a document down into sentences
+and then use some mechanism to score each sentence for relevance.
+Sentences with the top scores are returned as the “summary.” For more
+information on summarization, a good place to start is <a href="https://en.wikipedia.org/wiki/Automatic_summarization" class="external-link">here</a>.</p>
+<p>The summarizer we’ll build is a version of the <a href="https://en.wikipedia.org/wiki/Automatic_summarization#Unsupervised_approach:_TextRank" class="external-link">TextRank
+algorithm</a>. We will split a document into sentences, create a
+nearest-neighbor network where sentences are connected to other similar
+sentences, and rank the sentences according to <a href="https://en.wikipedia.org/wiki/Eigenvector_centrality" class="external-link">eigenvector
+centrality</a>.</p>
+<p>We will use a word embedding model, created on a whole corpus, to
+project the sentences into the embedding space. Once in the embedding
+space, we will measure similarity between documents using <a href="https://en.wikipedia.org/wiki/Hellinger_distance" class="external-link">Hellinger
+distance</a>. Hellinger distance is a metric specifically for
+probability distributions. Since we’ll use LDA to create embeddings to a
+probability space, it’s a useful measure.</p>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>We’ll use the movie review data set from <code>text2vec</code> again.
+The first thing we need to do is create a TCM and embedding model. We
+will skip evaluation such as R-squared, coherence, inspecting top terms,
+etc. However, in any real application, I’d strongly suggest evaluating
+your models at every step of the way.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/">textmineR</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'textmineR'</span>
-<span class="co">#&gt; The following object is masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co">#&gt; The following object is masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co"># load the data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">movie_review</span>, package <span class="op">=</span> <span class="st">"text2vec"</span><span class="op">)</span>
-
-<span class="co"># let's take a sample so the demo will run quickly</span>
-<span class="co"># note: textmineR is generally quite scaleable, depending on your system</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
-<span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">)</span>, <span class="fl">200</span><span class="op">)</span>
-
-<span class="va">movie_review</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">[</span> <span class="va">s</span> , <span class="op">]</span>
-
-<span class="co"># let's get those nasty "&lt;br /&gt;" symbols out of the way</span>
-<span class="va">movie_review</span><span class="op">$</span><span class="va">review</span> <span class="op">&lt;-</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace_all</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">$</span><span class="va">review</span>, <span class="st">"&lt;br */&gt;"</span>, <span class="st">""</span><span class="op">)</span>
-
-<span class="co"># First create a TCM using skip grams, we'll use a 5-word window</span>
-<span class="co"># most options available on CreateDtm are also available for CreateTcm</span>
-<span class="va">tcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateTcm.html">CreateTcm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">review</span>,
-                 skipgram_window <span class="op">=</span> <span class="fl">10</span>,
-                 verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-<span class="co"># use LDA to get embeddings into probability space</span>
-<span class="co"># This will take considerably longer as the TCM matrix has many more rows </span>
-<span class="co"># than a DTM</span>
-<span class="va">embeddings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">tcm</span>,
-                          k <span class="op">=</span> <span class="fl">50</span>,
-                          iterations <span class="op">=</span> <span class="fl">200</span>,
-                          burnin <span class="op">=</span> <span class="fl">180</span>,
-                          alpha <span class="op">=</span> <span class="fl">0.1</span>,
-                          beta <span class="op">=</span> <span class="fl">0.05</span>,
-                          optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,
-                          calc_likelihood <span class="op">=</span> <span class="cn">FALSE</span>,
-                          calc_coherence <span class="op">=</span> <span class="cn">FALSE</span>,
-                          calc_r2 <span class="op">=</span> <span class="cn">FALSE</span>,
-                          cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/" class="external-link">textmineR</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: Matrix</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'textmineR'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:Matrix':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span></span>
+<span><span class="co"># load the data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">movie_review</span>, package <span class="op">=</span> <span class="st">"text2vec"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># let's take a sample so the demo will run quickly</span></span>
+<span><span class="co"># note: textmineR is generally quite scaleable, depending on your system</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">)</span>, <span class="fl">200</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">movie_review</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">[</span> <span class="va">s</span> , <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># let's get those nasty "&lt;br /&gt;" symbols out of the way</span></span>
+<span><span class="va">movie_review</span><span class="op">$</span><span class="va">review</span> <span class="op">&lt;-</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">$</span><span class="va">review</span>, <span class="st">"&lt;br */&gt;"</span>, <span class="st">""</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># First create a TCM using skip grams, we'll use a 5-word window</span></span>
+<span><span class="co"># most options available on CreateDtm are also available for CreateTcm</span></span>
+<span><span class="va">tcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateTcm.html">CreateTcm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">review</span>,</span>
+<span>                 skipgram_window <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>                 verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'as(&lt;dgTMatrix&gt;, "dgCMatrix")' is deprecated.</span></span>
+<span><span class="co">#&gt; Use 'as(., "CsparseMatrix")' instead.</span></span>
+<span><span class="co">#&gt; See help("Deprecated") and help("Matrix-deprecated").</span></span>
+<span></span>
+<span><span class="co"># use LDA to get embeddings into probability space</span></span>
+<span><span class="co"># This will take considerably longer as the TCM matrix has many more rows </span></span>
+<span><span class="co"># than a DTM</span></span>
+<span><span class="va">embeddings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">tcm</span>,</span>
+<span>                          k <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>                          iterations <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>                          burnin <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                          alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>                          beta <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>                          optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          calc_likelihood <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          calc_coherence <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          calc_r2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="building-a-basic-document-summarizer" class="section level1">
-<h1 class="hasAnchor">
-<a href="#building-a-basic-document-summarizer" class="anchor"></a>Building a basic document summarizer</h1>
-<p>Let’s use the above embeddings model to create a document summarizer. This will return the three most relevant sentences in each review.</p>
-<p>The summarizer works best as a function, as we have many documents to summarize. The function <code>summarizer</code> is defined in the next section. However, let’s look at some key bits of code in detail.</p>
-<p>The variable <code>doc</code> represents a single document, or a single element of a character vector.</p>
-<p>In the code chunk below, we split the document into sentences using the <code>stringi</code> package. Then we embed each sentence under the model built on our whole corpus, above.</p>
+<div class="section level2">
+<h2 id="building-a-basic-document-summarizer">Building a basic document summarizer<a class="anchor" aria-label="anchor" href="#building-a-basic-document-summarizer"></a>
+</h2>
+<p>Let’s use the above embeddings model to create a document summarizer.
+This will return the three most relevant sentences in each review.</p>
+<p>The summarizer works best as a function, as we have many documents to
+summarize. The function <code>summarizer</code> is defined in the next
+section. However, let’s look at some key bits of code in detail.</p>
+<p>The variable <code>doc</code> represents a single document, or a
+single element of a character vector.</p>
+<p>In the code chunk below, we split the document into sentences using
+the <code>stringi</code> package. Then we embed each sentence under the
+model built on our whole corpus, above.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="co"># parse it into sentences</span>
-  <span class="va">sent</span> <span class="op">&lt;-</span> <span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_split_boundaries.html">stri_split_boundaries</a></span><span class="op">(</span><span class="va">doc</span>, type <span class="op">=</span> <span class="st">"sentence"</span><span class="op">)</span><span class="op">[[</span> <span class="fl">1</span> <span class="op">]</span><span class="op">]</span>
-  
-  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="co"># so we know index and order</span>
-  
-  <span class="co"># embed the sentences in the model</span>
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span><span class="va">sent</span>, ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-  
-  <span class="co"># remove any documents with 2 or fewer words</span>
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span> , <span class="op">]</span>
-  
-  <span class="va">vocab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span><span class="op">)</span>
-  
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>
-  
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span><span class="op">)</span>
-  
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></code></pre></div>
-<p>Next, we measure the distance between each of the sentences within the embedding space.</p>
+<code class="sourceCode R"><span>  <span class="co"># parse it into sentences</span></span>
+<span>  <span class="va">sent</span> <span class="op">&lt;-</span> <span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_split_boundaries.html" class="external-link">stri_split_boundaries</a></span><span class="op">(</span><span class="va">doc</span>, type <span class="op">=</span> <span class="st">"sentence"</span><span class="op">)</span><span class="op">[[</span> <span class="fl">1</span> <span class="op">]</span><span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="co"># so we know index and order</span></span>
+<span>  </span>
+<span>  <span class="co"># embed the sentences in the model</span></span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span><span class="va">sent</span>, ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># remove any documents with 2 or fewer words</span></span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span> , <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">vocab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span></code></pre></div>
+<p>Next, we measure the distance between each of the sentences within
+the embedding space.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="co"># get the pairwise distances between each embedded sentence</span>
-  <span class="va">e_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcHellingerDist.html">CalcHellingerDist</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></code></pre></div>
-<p>Since we are using a distance measure whose values fall between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, we can take <span class="math inline">\(1 - distance\)</span> to get a similarity. We’ll also re-scale it to be between 0 and 100. (The rescaling is just a cautionary measure so that we don’t run into numerical precision issues when performing calculations downstream.)</p>
+<code class="sourceCode R"><span>  <span class="co"># get the pairwise distances between each embedded sentence</span></span>
+<span>  <span class="va">e_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcHellingerDist.html">CalcHellingerDist</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span></code></pre></div>
+<p>Since we are using a distance measure whose values fall between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, we can take <span class="math inline">\(1 - distance\)</span> to get a similarity. We’ll
+also re-scale it to be between 0 and 100. (The rescaling is just a
+cautionary measure so that we don’t run into numerical precision issues
+when performing calculations downstream.)</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="co"># turn into a similarity matrix</span>
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">e_dist</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></code></pre></div>
-<p>If you consider a similarity matrix to be an adjacency matrix, then you have a fully-connected graph. For the sake of potentially faster computation and with the hope of eliminating some noise, we will delete some edges. Going row-by-row, we will keep connections only to the top 3 most similar sentences.</p>
+<code class="sourceCode R"><span>  <span class="co"># turn into a similarity matrix</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">e_dist</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span></code></pre></div>
+<p>If you consider a similarity matrix to be an adjacency matrix, then
+you have a fully-connected graph. For the sake of potentially faster
+computation and with the hope of eliminating some noise, we will delete
+some edges. Going row-by-row, we will keep connections only to the top 3
+most similar sentences.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="co"># we don't need sentences connected to themselves</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span>
-  
-  <span class="co"># turn into a nearest-neighbor graph</span>
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">g</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">x</span><span class="op">[</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">x</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
-    <span class="va">x</span>
-  <span class="op">}</span><span class="op">)</span>
-
-  <span class="co"># by taking pointwise max, we'll make the matrix symmetric again</span>
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="va">g</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Using the <code>igraph</code> package (with its own objects) to calculate eigenvector centrality. From there, we’ll take the top three sentences.</p>
+<code class="sourceCode R"><span>  <span class="co"># we don't need sentences connected to themselves</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>  </span>
+<span>  <span class="co"># turn into a nearest-neighbor graph</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">g</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="va">x</span><span class="op">[</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">x</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>    <span class="va">x</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># by taking pointwise max, we'll make the matrix symmetric again</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">g</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Using the <code>igraph</code> package (with its own objects) to
+calculate eigenvector centrality. From there, we’ll take the top three
+sentences.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">graph.adjacency</span><span class="op">(</span><span class="va">g</span>, mode <span class="op">=</span> <span class="st">"undirected"</span>, weighted <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-  
-  <span class="co"># calculate eigenvector centrality</span>
-  <span class="va">ev</span> <span class="op">&lt;-</span> <span class="fu">evcent</span><span class="op">(</span><span class="va">g</span><span class="op">)</span>
-  
-  <span class="co"># format the result</span>
-  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">sent</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span><span class="op">)</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">]</span>
-  
-  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">]</span>
-  
-  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">result</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">graph.adjacency</span><span class="op">(</span><span class="va">g</span>, mode <span class="op">=</span> <span class="st">"undirected"</span>, weighted <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># calculate eigenvector centrality</span></span>
+<span>  <span class="va">ev</span> <span class="op">&lt;-</span> <span class="fu">evcent</span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># format the result</span></span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">sent</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span><span class="op">)</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">result</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="pulling-it-all-together" class="section level1">
-<h1 class="hasAnchor">
-<a href="#pulling-it-all-together" class="anchor"></a>Pulling it all together</h1>
-<p>The code below puts it all together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a single function call.</p>
+<div class="section level2">
+<h2 id="pulling-it-all-together">Pulling it all together<a class="anchor" aria-label="anchor" href="#pulling-it-all-together"></a>
+</h2>
+<p>The code below puts it all together in a single function. The first
+few lines vectorize the code, so that we can summarize multiple
+documents from a single function call.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org">igraph</a></span><span class="op">)</span> 
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'igraph'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     decompose, spectrum</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     union</span>
-<span class="co"># let's do this in a function</span>
-
-<span class="va">summarizer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">doc</span>, <span class="va">gamma</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="co"># recursive fanciness to handle multiple docs at once</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">doc</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">)</span>
-    <span class="co"># use a try statement to catch any weirdness that may arise</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">doc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">summarizer</span><span class="op">(</span><span class="va">d</span>, <span class="va">gamma</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-  
-  <span class="co"># parse it into sentences</span>
-  <span class="va">sent</span> <span class="op">&lt;-</span> <span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_split_boundaries.html">stri_split_boundaries</a></span><span class="op">(</span><span class="va">doc</span>, type <span class="op">=</span> <span class="st">"sentence"</span><span class="op">)</span><span class="op">[[</span> <span class="fl">1</span> <span class="op">]</span><span class="op">]</span>
-  
-  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="co"># so we know index and order</span>
-  
-  <span class="co"># embed the sentences in the model</span>
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span><span class="va">sent</span>, ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-  
-  <span class="co"># remove any documents with 2 or fewer words</span>
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span> , <span class="op">]</span>
-  
-  <span class="va">vocab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span><span class="op">)</span>
-  
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>
-  
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span><span class="op">)</span>
-  
-  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>
-  
-  <span class="co"># get the pairwise distances between each embedded sentence</span>
-  <span class="va">e_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcHellingerDist.html">CalcHellingerDist</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>
-  
-  <span class="co"># turn into a similarity matrix</span>
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">e_dist</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>
-  
-  <span class="co"># we don't need sentences connected to themselves</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span>
-  
-  <span class="co"># turn into a nearest-neighbor graph</span>
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">g</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">x</span><span class="op">[</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">x</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
-    <span class="va">x</span>
-  <span class="op">}</span><span class="op">)</span>
-
-  <span class="co"># by taking pointwise max, we'll make the matrix symmetric again</span>
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="va">g</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span>
-  
-  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/graph_from_adjacency_matrix.html">graph.adjacency</a></span><span class="op">(</span><span class="va">g</span>, mode <span class="op">=</span> <span class="st">"undirected"</span>, weighted <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-  
-  <span class="co"># calculate eigenvector centrality</span>
-  <span class="va">ev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/eigen_centrality.html">evcent</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>
-  
-  <span class="co"># format the result</span>
-  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">sent</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span><span class="op">)</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">]</span>
-  
-  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">]</span>
-  
-  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">result</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
-<p>How well did we do? Let’s look at summaries from the first three reviews.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span> </span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'igraph'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     decompose, spectrum</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     union</span></span>
+<span></span>
+<span><span class="co"># let's do this in a function</span></span>
+<span></span>
+<span><span class="va">summarizer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">doc</span>, <span class="va">gamma</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># recursive fanciness to handle multiple docs at once</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">doc</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">)</span></span>
+<span>    <span class="co"># use a try statement to catch any weirdness that may arise</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">doc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">summarizer</span><span class="op">(</span><span class="va">d</span>, <span class="va">gamma</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># parse it into sentences</span></span>
+<span>  <span class="va">sent</span> <span class="op">&lt;-</span> <span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_split_boundaries.html" class="external-link">stri_split_boundaries</a></span><span class="op">(</span><span class="va">doc</span>, type <span class="op">=</span> <span class="st">"sentence"</span><span class="op">)</span><span class="op">[[</span> <span class="fl">1</span> <span class="op">]</span><span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">sent</span><span class="op">)</span> <span class="co"># so we know index and order</span></span>
+<span>  </span>
+<span>  <span class="co"># embed the sentences in the model</span></span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span><span class="va">sent</span>, ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># remove any documents with 2 or fewer words</span></span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span> , <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">vocab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">gamma</span><span class="op">[</span> , <span class="va">vocab</span> <span class="op">]</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># get the pairwise distances between each embedded sentence</span></span>
+<span>  <span class="va">e_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CalcHellingerDist.html">CalcHellingerDist</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># turn into a similarity matrix</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">e_dist</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span>  </span>
+<span>  <span class="co"># we don't need sentences connected to themselves</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>  </span>
+<span>  <span class="co"># turn into a nearest-neighbor graph</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">g</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="va">x</span><span class="op">[</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">x</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>    <span class="va">x</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># by taking pointwise max, we'll make the matrix symmetric again</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">g</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/graph_from_adjacency_matrix.html" class="external-link">graph.adjacency</a></span><span class="op">(</span><span class="va">g</span>, mode <span class="op">=</span> <span class="st">"undirected"</span>, weighted <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># calculate eigenvector centrality</span></span>
+<span>  <span class="va">ev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/eigen_centrality.html" class="external-link">evcent</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># format the result</span></span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">sent</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span><span class="op">)</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">ev</span><span class="op">$</span><span class="va">vector</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span> <span class="op">]</span> <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">result</span>, collapse <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>How well did we do? Let’s look at summaries from the first three
+reviews.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Let's see the summary of the first couple of reviews</span>
-<span class="va">docs</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">review</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">docs</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">id</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span>
-
-<span class="va">sums</span> <span class="op">&lt;-</span> <span class="fu">summarizer</span><span class="op">(</span><span class="va">docs</span>, gamma <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">gamma</span><span class="op">)</span>
-
-<span class="va">sums</span>
-<span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 4273_1 </span>
-<span class="co">#&gt; "And being introduced to some of the most mind numbing shady immoral character of the Twin Peaks.To the Mind numbing almost pedophilia disgusting way the movie seems to romantically tell of the destruction of a Human Life through some random psychedelic phenomena in the Movie Twin Peak:Fire Come Walk with me.  Save your self the agony the suspense and watch anything else that at least has the ability to tell a story, rather then seduce you into some kind mental porn movie.I have heard a lot of reviews, rants and raves about how great David Lynch.  Because of his ability to define misery and and tragedy and making it into some kind of a wonderful thing. " </span>
-<span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 7112_4 </span>
-<span class="co">#&gt;                                                                                                                                                                                                                                                                                                         "Now there isn't much to recommend it, other than the inherent camp value of actors being \\\"terrified\\\" by replicas of human skulls.  It definitely inspires more laughs than screams, however.  Just try not to get the giggles when the wife (who does more than her share of screaming) goes into the greenhouse and is confronted with the ghost of her husband's ex." </span>
-<span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 1891_3 </span>
-<span class="co">#&gt;                                                                                                                                                                                                                                                                                              "Documentary about nomadic Persians making a treacherous traverse of massive mountains to get their herds to grass.  The spectacular scenery is lost on a small black and white screen, and there is an utter failure to establish any kind of plot line.  I loved Nanook of the North and March of the Penguins, but despised this movie, notwithstanding the similarity of the theme. "</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Let's see the summary of the first couple of reviews</span></span>
+<span><span class="va">docs</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">review</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">docs</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">id</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">]</span></span>
+<span></span>
+<span><span class="va">sums</span> <span class="op">&lt;-</span> <span class="fu">summarizer</span><span class="op">(</span><span class="va">docs</span>, gamma <span class="op">=</span> <span class="va">embeddings</span><span class="op">$</span><span class="va">gamma</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sums</span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 4273_1 </span></span>
+<span><span class="co">#&gt; "And being introduced to some of the most mind numbing shady immoral character of the Twin Peaks.To the Mind numbing almost pedophilia disgusting way the movie seems to romantically tell of the destruction of a Human Life through some random psychedelic phenomena in the Movie Twin Peak:Fire Come Walk with me.  Save your self the agony the suspense and watch anything else that at least has the ability to tell a story, rather then seduce you into some kind mental porn movie.I have heard a lot of reviews, rants and raves about how great David Lynch.  Because of his ability to define misery and and tragedy and making it into some kind of a wonderful thing. " </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 7112_4 </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                                                                                                         "Now there isn't much to recommend it, other than the inherent camp value of actors being \\\"terrified\\\" by replicas of human skulls.  It definitely inspires more laughs than screams, however.  Just try not to get the giggles when the wife (who does more than her share of screaming) goes into the greenhouse and is confronted with the ghost of her husband's ex." </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 1891_3 </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                                                                                              "Documentary about nomadic Persians making a treacherous traverse of massive mountains to get their herds to grass.  The spectacular scenery is lost on a small black and white screen, and there is an utter failure to establish any kind of plot line.  I loved Nanook of the North and March of the Penguins, but despised this movie, notwithstanding the similarity of the theme. "</span></span></code></pre></div>
 <p>Compare that to the whole reviews yourself.</p>
 </div>
   </div>
@@ -341,11 +381,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Tommy Jones.</p>
+  <p></p>
+<p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

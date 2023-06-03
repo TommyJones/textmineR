@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,23 +42,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.5.999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,7 +84,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TommyJones/textmineR/">
+  <a href="https://github.com/TommyJones/textmineR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -109,172 +105,244 @@
 
       
 
-      </header><script src="c_topic_modeling_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3. Topic modeling</h1>
-                        <h4 class="author">Thomas W. Jones</h4>
+                        <h4 data-toc-skip class="author">Thomas W.
+Jones</h4>
             
-            <h4 class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2023-06-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/c_topic_modeling.Rmd"><code>vignettes/c_topic_modeling.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/HEAD/vignettes/c_topic_modeling.Rmd" class="external-link"><code>vignettes/c_topic_modeling.Rmd</code></a></small>
       <div class="hidden name"><code>c_topic_modeling.Rmd</code></div>
 
     </div>
 
     
     
-<div id="topic-modeling" class="section level1">
-<h1 class="hasAnchor">
-<a href="#topic-modeling" class="anchor"></a>Topic modeling</h1>
-<p>textmineR has extensive functionality for topic modeling. You can fit Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA and LSA follow below.) As of this writing, textmineR’s LDA and CTM functions are wrappers for other packages to facilitate a consistent workflow. (And textmineR takes advantage of the <code>RSpectra</code> package for LSA’s single-value decomposition.) Plans exist to implement LDA natively with <code>Rcpp</code> sometime in 2018.</p>
-<p>textmineR’s consistent representation of topic models boils down to two matrices. The first, “theta” (<span class="math inline">\(\Theta\)</span>), has rows representing a distribution of topics over documents. The second, phi (<span class="math inline">\(\Phi\)</span>), has rows representing a distribution of words over topics. In the case of probabilistic models, these are categorical probability distributions. For non-probabilistic models (e.g. LSA) these distributions are, obviously, not probabilities. With LSA, for example, there is a third object representing the singular values in the decomposition.</p>
-<p>In addition, textmineR has utility functions for topic models. This includes some original research. Examples include an R-squared for probabilistic topic models (<a href="https://arxiv.org/abs/1911.11061">working paper here</a>), probabilistic coherence (a measure of topic quality), and a topic labeling function based on most-probable bigrams. Other utilities are demonstrated below</p>
+<div class="section level2">
+<h2 id="topic-modeling">Topic modeling<a class="anchor" aria-label="anchor" href="#topic-modeling"></a>
+</h2>
+<p>textmineR has extensive functionality for topic modeling. You can fit
+Latent Dirichlet Allocation (LDA), Correlated Topic Models (CTM), and
+Latent Semantic Analysis (LSA) from within textmineR. (Examples with LDA
+and LSA follow below.) As of this writing, textmineR’s LDA and CTM
+functions are wrappers for other packages to facilitate a consistent
+workflow. (And textmineR takes advantage of the <code>RSpectra</code>
+package for LSA’s single-value decomposition.) Plans exist to implement
+LDA natively with <code>Rcpp</code> sometime in 2018.</p>
+<p>textmineR’s consistent representation of topic models boils down to
+two matrices. The first, “theta” (<span class="math inline">\(\Theta\)</span>), has rows representing a
+distribution of topics over documents. The second, phi (<span class="math inline">\(\Phi\)</span>), has rows representing a
+distribution of words over topics. In the case of probabilistic models,
+these are categorical probability distributions. For non-probabilistic
+models (e.g. LSA) these distributions are, obviously, not probabilities.
+With LSA, for example, there is a third object representing the singular
+values in the decomposition.</p>
+<p>In addition, textmineR has utility functions for topic models. This
+includes some original research. Examples include an R-squared for
+probabilistic topic models (<a href="https://arxiv.org/abs/1911.11061" class="external-link">working paper here</a>),
+probabilistic coherence (a measure of topic quality), and a topic
+labeling function based on most-probable bigrams. Other utilities are
+demonstrated below</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/">textmineR</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'textmineR'</span>
-<span class="co">#&gt; The following object is masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co">#&gt; The following object is masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co"># load nih_sample data set from textmineR</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nih_sample</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">nih_sample</span><span class="op">)</span>
-<span class="co">#&gt; 'data.frame':    100 obs. of  44 variables:</span>
-<span class="co">#&gt;  $ APPLICATION_ID        : chr  "8693991" "8693362" "8607498" "8697008" ...</span>
-<span class="co">#&gt;  $ ABSTRACT_TEXT         : chr  "Methamphetamine (MA) is remarkably addictive and relapse to excessive use is highly probable and poses serious "| __truncated__ " Project Summary Risk bimarkers have become increasingly important in clinical decision making, guiding patient"| __truncated__ "    DESCRIPTION (provided by applicant): Despite enormous efforts, no effective vaccine is currently available "| __truncated__ "    DESCRIPTION (provided by applicant): This four-year K01 award application is to provide intensive multi-dis"| __truncated__ ...</span>
-<span class="co">#&gt;  $ ACTIVITY              : chr  "P50" "R01" "R21" "K01" ...</span>
-<span class="co">#&gt;  $ ADMINISTERING_IC      : chr  "DA" "GM" "AI" "AI" ...</span>
-<span class="co">#&gt;  $ APPLICATION_TYPE      : chr  "5" "2" "5" "5" ...</span>
-<span class="co">#&gt;  $ ARRA_FUNDED           : chr  "N" "N" "N" "N" ...</span>
-<span class="co">#&gt;  $ AWARD_NOTICE_DATE     : chr  "06/30/2014" "05/27/2014" "01/03/2014" "07/11/2014" ...</span>
-<span class="co">#&gt;  $ BUDGET_START          : chr  "07/01/2014" "06/01/2014" "02/01/2014" "08/01/2014" ...</span>
-<span class="co">#&gt;  $ BUDGET_END            : chr  "06/30/2015" "04/30/2015" "01/31/2015" "07/31/2015" ...</span>
-<span class="co">#&gt;  $ CFDA_CODE             : chr  "" "859" "855" "855" ...</span>
-<span class="co">#&gt;  $ CORE_PROJECT_NUM      : chr  "P50DA018165" "R01GM085047" "R21AI100696" "K01AI100681" ...</span>
-<span class="co">#&gt;  $ ED_INST_TYPE          : chr  "" "" "SCHOOLS OF MEDICINE" "SCHOOLS OF MEDICINE" ...</span>
-<span class="co">#&gt;  $ FOA_NUMBER            : chr  "PAR-10-189" "PA-11-260" "PA-11-261" "PA-11-190" ...</span>
-<span class="co">#&gt;  $ FULL_PROJECT_NUM      : chr  "5P50DA018165-08" "2R01GM085047-05" "5R21AI100696-02" "5K01AI100681-03" ...</span>
-<span class="co">#&gt;  $ FUNDING_ICs           : chr  "NIDA:212488\\" "NIGMS:326324\\" "NIAID:209613\\" "NIAID:132182\\" ...</span>
-<span class="co">#&gt;  $ FUNDING_MECHANISM     : chr  "Research Centers" "Research Projects" "Research Projects" "Other Research Related" ...</span>
-<span class="co">#&gt;  $ FY                    : chr  "2014" "2014" "2014" "2014" ...</span>
-<span class="co">#&gt;  $ IC_NAME               : chr  "NATIONAL INSTITUTE ON DRUG ABUSE" "NATIONAL INSTITUTE OF GENERAL MEDICAL SCIENCES" "NATIONAL INSTITUTE OF ALLERGY AND INFECTIOUS DISEASES" "NATIONAL INSTITUTE OF ALLERGY AND INFECTIOUS DISEASES" ...</span>
-<span class="co">#&gt;  $ NIH_SPENDING_CATS     : chr  "" "" "" "" ...</span>
-<span class="co">#&gt;  $ ORG_CITY              : chr  "PORTLAND" "SEATTLE" "NEW HAVEN" "BALTIMORE" ...</span>
-<span class="co">#&gt;  $ ORG_COUNTRY           : chr  "UNITED STATES" "UNITED STATES" "UNITED STATES" "UNITED STATES" ...</span>
-<span class="co">#&gt;  $ ORG_DEPT              : chr  "" "" "MICROBIOLOGY/IMMUN/VIROLOGY" "EMERGENCY MEDICINE" ...</span>
-<span class="co">#&gt;  $ ORG_DISTRICT          : chr  "03" "" "03" "07" ...</span>
-<span class="co">#&gt;  $ ORG_DUNS              : chr  "" "" "" "" ...</span>
-<span class="co">#&gt;  $ ORG_FIPS              : chr  "" "US" "US" "US" ...</span>
-<span class="co">#&gt;  $ ORG_NAME              : chr  "OREGON HEALTH &amp;SCIENCE UNIVERSITY" "FRED HUTCHINSON CANCER RESEARCH CENTER" "YALE UNIVERSITY" "JOHNS HOPKINS UNIVERSITY" ...</span>
-<span class="co">#&gt;  $ ORG_STATE             : chr  "OR" "WA" "CT" "MD" ...</span>
-<span class="co">#&gt;  $ ORG_ZIPCODE           : chr  "" "981091024" "065103209" "212182608" ...</span>
-<span class="co">#&gt;  $ PHR                   : chr  "Many individuals try MA, but only some become addicted and continue to use MA even though it has profoundly adv"| __truncated__ "PUBLIC HEALTH RELEVANCE: The research proposal addresses the pressing need for strong statistical input in the "| __truncated__ "PUBLIC HEALTH RELEVANCE: This application proposes the development of single-molecule Fluorescence Resonance En"| __truncated__ " Project Narrative Emergency department-based HIV testing programs in the United States have identified thousan"| __truncated__ ...</span>
-<span class="co">#&gt;  $ PI_IDS                : chr  "1910136;" "8572341;" "7051811;" "8633321;" ...</span>
-<span class="co">#&gt;  $ PI_NAMEs              : chr  "PHILLIPS, TAMARA J;" "ZHENG, YINGYE;" "MOTHES, WALTHER H;" "HSIEH, YU-HSIANG;" ...</span>
-<span class="co">#&gt;  $ PROGRAM_OFFICER_NAME  : chr  "" "LYSTER, PETER " "SHARMA, OPENDRA K." "MCKAIG, ROSEMARY G." ...</span>
-<span class="co">#&gt;  $ PROJECT_START         : chr  "" "09/04/2009" "02/01/2013" "08/15/2012" ...</span>
-<span class="co">#&gt;  $ PROJECT_END           : chr  "" "04/30/2018" "01/31/2015" "07/31/2016" ...</span>
-<span class="co">#&gt;  $ PROJECT_TERMS         : chr  "Acute;Adverse effects;Animal Model;Animals;Anxiety;Behavior;Behavioral;Behavioral Genetics;Biometry;Blood speci"| __truncated__ "Address;Aftercare;Algorithms;base;Biological;Biological Markers;Breast Cancer Detection;cancer therapy;case con"| __truncated__ "Affect;AIDS/HIV problem;Antibodies;Antibody Binding Sites;Binding (Molecular Function);Communities;Coupled;Deve"| __truncated__ "Accident and Emergency department;Acute;Address;Affect;AIDS prevention;AIDS/HIV problem;Area;Baltimore;base;Beh"| __truncated__ ...</span>
-<span class="co">#&gt;  $ PROJECT_TITLE         : chr  "Genetic and Neuroimmunological Factors in Methamphetamine Addicition" "Statistical Methods for Prospective Evaluation of Biomarkers" "Single molecule imaging of HIV Env" "Cost-Effectiveness of ED HIV Testing Program Agent-Based Modeling Approach" ...</span>
-<span class="co">#&gt;  $ SERIAL_NUMBER         : chr  "18165" "85047" "100696" "100681" ...</span>
-<span class="co">#&gt;  $ STUDY_SECTION         : chr  "ZDA1" "CBSS" "VACC" "AIDS" ...</span>
-<span class="co">#&gt;  $ STUDY_SECTION_NAME    : chr  "Special Emphasis Panel" "Cancer Biomarkers Study Section" "HIV/AIDS Vaccines Study Study Section" "Acquired Immunodeficiency Syndrome Research Review Committee" ...</span>
-<span class="co">#&gt;  $ SUBPROJECT_ID         : chr  "6488" "" "" "" ...</span>
-<span class="co">#&gt;  $ SUFFIX                : chr  "" "" "" "" ...</span>
-<span class="co">#&gt;  $ SUPPORT_YEAR          : chr  "8" "5" "2" "3" ...</span>
-<span class="co">#&gt;  $ TOTAL_COST            : chr  "" "326324" "209613" "132182" ...</span>
-<span class="co">#&gt;  $ TOTAL_COST_SUB_PROJECT: chr  "212488" "" "" "" ...</span>
-<span class="co"># create a document term matrix </span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">ABSTRACT_TEXT</span>, <span class="co"># character vector of documents</span>
-                 doc_names <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">APPLICATION_ID</span>, <span class="co"># document names</span>
-                 ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="co"># minimum and maximum n-gram length</span>
-                 stopword_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, <span class="co"># stopwords from tm</span>
-                                  <span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span>source <span class="op">=</span> <span class="st">"smart"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># this is the default value</span>
-                 lower <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># lowercase - this is the default value</span>
-                 remove_punctuation <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># punctuation - this is the default</span>
-                 remove_numbers <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># numbers - this is the default</span>
-                 verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Turn off status bar for this demo</span>
-                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># default is all available cpus on the system</span>
-
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="va">dtm</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span><span class="op">]</span></code></pre></div>
-<div id="lda-example" class="section level3">
-<h3 class="hasAnchor">
-<a href="#lda-example" class="anchor"></a>LDA Example</h3>
-<p>To fit an LDA model in textmineR, use the <code>FitLdaModel</code> function. Input is a document term matrix. textmineR implements 2 methods for LDA, Gibbs sampling, and variational expectation maximization (also known as variational Bayes). The default is Gibbs sampling.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/" class="external-link">textmineR</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: Matrix</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'textmineR'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:Matrix':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span></span>
+<span><span class="co"># load nih_sample data set from textmineR</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nih_sample</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">nih_sample</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    100 obs. of  44 variables:</span></span>
+<span><span class="co">#&gt;  $ APPLICATION_ID        : chr  "8693991" "8693362" "8607498" "8697008" ...</span></span>
+<span><span class="co">#&gt;  $ ABSTRACT_TEXT         : chr  "Methamphetamine (MA) is remarkably addictive and relapse to excessive use is highly probable and poses serious "| __truncated__ " Project Summary Risk bimarkers have become increasingly important in clinical decision making, guiding patient"| __truncated__ "    DESCRIPTION (provided by applicant): Despite enormous efforts, no effective vaccine is currently available "| __truncated__ "    DESCRIPTION (provided by applicant): This four-year K01 award application is to provide intensive multi-dis"| __truncated__ ...</span></span>
+<span><span class="co">#&gt;  $ ACTIVITY              : chr  "P50" "R01" "R21" "K01" ...</span></span>
+<span><span class="co">#&gt;  $ ADMINISTERING_IC      : chr  "DA" "GM" "AI" "AI" ...</span></span>
+<span><span class="co">#&gt;  $ APPLICATION_TYPE      : chr  "5" "2" "5" "5" ...</span></span>
+<span><span class="co">#&gt;  $ ARRA_FUNDED           : chr  "N" "N" "N" "N" ...</span></span>
+<span><span class="co">#&gt;  $ AWARD_NOTICE_DATE     : chr  "06/30/2014" "05/27/2014" "01/03/2014" "07/11/2014" ...</span></span>
+<span><span class="co">#&gt;  $ BUDGET_START          : chr  "07/01/2014" "06/01/2014" "02/01/2014" "08/01/2014" ...</span></span>
+<span><span class="co">#&gt;  $ BUDGET_END            : chr  "06/30/2015" "04/30/2015" "01/31/2015" "07/31/2015" ...</span></span>
+<span><span class="co">#&gt;  $ CFDA_CODE             : chr  "" "859" "855" "855" ...</span></span>
+<span><span class="co">#&gt;  $ CORE_PROJECT_NUM      : chr  "P50DA018165" "R01GM085047" "R21AI100696" "K01AI100681" ...</span></span>
+<span><span class="co">#&gt;  $ ED_INST_TYPE          : chr  "" "" "SCHOOLS OF MEDICINE" "SCHOOLS OF MEDICINE" ...</span></span>
+<span><span class="co">#&gt;  $ FOA_NUMBER            : chr  "PAR-10-189" "PA-11-260" "PA-11-261" "PA-11-190" ...</span></span>
+<span><span class="co">#&gt;  $ FULL_PROJECT_NUM      : chr  "5P50DA018165-08" "2R01GM085047-05" "5R21AI100696-02" "5K01AI100681-03" ...</span></span>
+<span><span class="co">#&gt;  $ FUNDING_ICs           : chr  "NIDA:212488\\" "NIGMS:326324\\" "NIAID:209613\\" "NIAID:132182\\" ...</span></span>
+<span><span class="co">#&gt;  $ FUNDING_MECHANISM     : chr  "Research Centers" "Research Projects" "Research Projects" "Other Research Related" ...</span></span>
+<span><span class="co">#&gt;  $ FY                    : chr  "2014" "2014" "2014" "2014" ...</span></span>
+<span><span class="co">#&gt;  $ IC_NAME               : chr  "NATIONAL INSTITUTE ON DRUG ABUSE" "NATIONAL INSTITUTE OF GENERAL MEDICAL SCIENCES" "NATIONAL INSTITUTE OF ALLERGY AND INFECTIOUS DISEASES" "NATIONAL INSTITUTE OF ALLERGY AND INFECTIOUS DISEASES" ...</span></span>
+<span><span class="co">#&gt;  $ NIH_SPENDING_CATS     : chr  "" "" "" "" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_CITY              : chr  "PORTLAND" "SEATTLE" "NEW HAVEN" "BALTIMORE" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_COUNTRY           : chr  "UNITED STATES" "UNITED STATES" "UNITED STATES" "UNITED STATES" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_DEPT              : chr  "" "" "MICROBIOLOGY/IMMUN/VIROLOGY" "EMERGENCY MEDICINE" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_DISTRICT          : chr  "03" "" "03" "07" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_DUNS              : chr  "" "" "" "" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_FIPS              : chr  "" "US" "US" "US" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_NAME              : chr  "OREGON HEALTH &amp;SCIENCE UNIVERSITY" "FRED HUTCHINSON CANCER RESEARCH CENTER" "YALE UNIVERSITY" "JOHNS HOPKINS UNIVERSITY" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_STATE             : chr  "OR" "WA" "CT" "MD" ...</span></span>
+<span><span class="co">#&gt;  $ ORG_ZIPCODE           : chr  "" "981091024" "065103209" "212182608" ...</span></span>
+<span><span class="co">#&gt;  $ PHR                   : chr  "Many individuals try MA, but only some become addicted and continue to use MA even though it has profoundly adv"| __truncated__ "PUBLIC HEALTH RELEVANCE: The research proposal addresses the pressing need for strong statistical input in the "| __truncated__ "PUBLIC HEALTH RELEVANCE: This application proposes the development of single-molecule Fluorescence Resonance En"| __truncated__ " Project Narrative Emergency department-based HIV testing programs in the United States have identified thousan"| __truncated__ ...</span></span>
+<span><span class="co">#&gt;  $ PI_IDS                : chr  "1910136;" "8572341;" "7051811;" "8633321;" ...</span></span>
+<span><span class="co">#&gt;  $ PI_NAMEs              : chr  "PHILLIPS, TAMARA J;" "ZHENG, YINGYE;" "MOTHES, WALTHER H;" "HSIEH, YU-HSIANG;" ...</span></span>
+<span><span class="co">#&gt;  $ PROGRAM_OFFICER_NAME  : chr  "" "LYSTER, PETER " "SHARMA, OPENDRA K." "MCKAIG, ROSEMARY G." ...</span></span>
+<span><span class="co">#&gt;  $ PROJECT_START         : chr  "" "09/04/2009" "02/01/2013" "08/15/2012" ...</span></span>
+<span><span class="co">#&gt;  $ PROJECT_END           : chr  "" "04/30/2018" "01/31/2015" "07/31/2016" ...</span></span>
+<span><span class="co">#&gt;  $ PROJECT_TERMS         : chr  "Acute;Adverse effects;Animal Model;Animals;Anxiety;Behavior;Behavioral;Behavioral Genetics;Biometry;Blood speci"| __truncated__ "Address;Aftercare;Algorithms;base;Biological;Biological Markers;Breast Cancer Detection;cancer therapy;case con"| __truncated__ "Affect;AIDS/HIV problem;Antibodies;Antibody Binding Sites;Binding (Molecular Function);Communities;Coupled;Deve"| __truncated__ "Accident and Emergency department;Acute;Address;Affect;AIDS prevention;AIDS/HIV problem;Area;Baltimore;base;Beh"| __truncated__ ...</span></span>
+<span><span class="co">#&gt;  $ PROJECT_TITLE         : chr  "Genetic and Neuroimmunological Factors in Methamphetamine Addicition" "Statistical Methods for Prospective Evaluation of Biomarkers" "Single molecule imaging of HIV Env" "Cost-Effectiveness of ED HIV Testing Program Agent-Based Modeling Approach" ...</span></span>
+<span><span class="co">#&gt;  $ SERIAL_NUMBER         : chr  "18165" "85047" "100696" "100681" ...</span></span>
+<span><span class="co">#&gt;  $ STUDY_SECTION         : chr  "ZDA1" "CBSS" "VACC" "AIDS" ...</span></span>
+<span><span class="co">#&gt;  $ STUDY_SECTION_NAME    : chr  "Special Emphasis Panel" "Cancer Biomarkers Study Section" "HIV/AIDS Vaccines Study Study Section" "Acquired Immunodeficiency Syndrome Research Review Committee" ...</span></span>
+<span><span class="co">#&gt;  $ SUBPROJECT_ID         : chr  "6488" "" "" "" ...</span></span>
+<span><span class="co">#&gt;  $ SUFFIX                : chr  "" "" "" "" ...</span></span>
+<span><span class="co">#&gt;  $ SUPPORT_YEAR          : chr  "8" "5" "2" "3" ...</span></span>
+<span><span class="co">#&gt;  $ TOTAL_COST            : chr  "" "326324" "209613" "132182" ...</span></span>
+<span><span class="co">#&gt;  $ TOTAL_COST_SUB_PROJECT: chr  "212488" "" "" "" ...</span></span>
+<span></span>
+<span><span class="co"># create a document term matrix </span></span>
+<span><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">ABSTRACT_TEXT</span>, <span class="co"># character vector of documents</span></span>
+<span>                 doc_names <span class="op">=</span> <span class="va">nih_sample</span><span class="op">$</span><span class="va">APPLICATION_ID</span>, <span class="co"># document names</span></span>
+<span>                 ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="co"># minimum and maximum n-gram length</span></span>
+<span>                 stopword_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, <span class="co"># stopwords from tm</span></span>
+<span>                                  <span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span>source <span class="op">=</span> <span class="st">"smart"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># this is the default value</span></span>
+<span>                 lower <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># lowercase - this is the default value</span></span>
+<span>                 remove_punctuation <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># punctuation - this is the default</span></span>
+<span>                 remove_numbers <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># numbers - this is the default</span></span>
+<span>                 verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Turn off status bar for this demo</span></span>
+<span>                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># default is all available cpus on the system</span></span>
+<span><span class="co">#&gt; 'as(&lt;dgTMatrix&gt;, "dgCMatrix")' is deprecated.</span></span>
+<span><span class="co">#&gt; Use 'as(., "CsparseMatrix")' instead.</span></span>
+<span><span class="co">#&gt; See help("Deprecated") and help("Matrix-deprecated").</span></span>
+<span></span>
+<span><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="va">dtm</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2</span><span class="op">]</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="lda-example">LDA Example<a class="anchor" aria-label="anchor" href="#lda-example"></a>
+</h4>
+<p>To fit an LDA model in textmineR, use the <code>FitLdaModel</code>
+function. Input is a document term matrix. textmineR implements 2
+methods for LDA, Gibbs sampling, and variational expectation
+maximization (also known as variational Bayes). The default is Gibbs
+sampling.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Fit a Latent Dirichlet Allocation model</span>
-<span class="co"># note the number of topics is arbitrary here</span>
-<span class="co"># see extensions for more info</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span>
-
-<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm</span>, 
-                     k <span class="op">=</span> <span class="fl">20</span>,
-                     iterations <span class="op">=</span> <span class="fl">200</span>, <span class="co"># I usually recommend at least 500 iterations or more</span>
-                     burnin <span class="op">=</span> <span class="fl">180</span>,
-                     alpha <span class="op">=</span> <span class="fl">0.1</span>,
-                     beta <span class="op">=</span> <span class="fl">0.05</span>,
-                     optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,
-                     calc_likelihood <span class="op">=</span> <span class="cn">TRUE</span>,
-                     calc_coherence <span class="op">=</span> <span class="cn">TRUE</span>,
-                     calc_r2 <span class="op">=</span> <span class="cn">TRUE</span>,
-                     cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> </code></pre></div>
-<p>The output from the model is an S3 object of class <code>lda_topic_model</code>. It contains several objects. The most important are three matrices: <code>theta</code> gives <span class="math inline">\(P(topic_k|document_d)\)</span>, <code>phi</code> gives <span class="math inline">\(P(token_v|topic_k)\)</span>, and <code>gamma</code> gives <span class="math inline">\(P(topic_k|token_v)\)</span>. (For more on <code>gamma</code>, see below.) Then <code>data</code> is the DTM or TCM used to train the model. <code>alpha</code> and <code>beta</code> are the Dirichlet priors for topics over documents and tokens over topics, respectively. The <code>log_likelihood</code> is <span class="math inline">\(P(tokens|topics)\)</span> at each iteration. <code>coherence</code> gives the probabilistic coherence of each topic. And <code>r2</code> is the R-squared of the model given the data.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Fit a Latent Dirichlet Allocation model</span></span>
+<span><span class="co"># note the number of topics is arbitrary here</span></span>
+<span><span class="co"># see extensions for more info</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm</span>, </span>
+<span>                     k <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>                     iterations <span class="op">=</span> <span class="fl">200</span>, <span class="co"># I usually recommend at least 500 iterations or more</span></span>
+<span>                     burnin <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                     alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>                     beta <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>                     optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     calc_likelihood <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     calc_coherence <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     calc_r2 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> </span></code></pre></div>
+<p>The output from the model is an S3 object of class
+<code>lda_topic_model</code>. It contains several objects. The most
+important are three matrices: <code>theta</code> gives <span class="math inline">\(P(topic_k|document_d)\)</span>, <code>phi</code>
+gives <span class="math inline">\(P(token_v|topic_k)\)</span>, and
+<code>gamma</code> gives <span class="math inline">\(P(topic_k|token_v)\)</span>. (For more on
+<code>gamma</code>, see below.) Then <code>data</code> is the DTM or TCM
+used to train the model. <code>alpha</code> and <code>beta</code> are
+the Dirichlet priors for topics over documents and tokens over topics,
+respectively. The <code>log_likelihood</code> is <span class="math inline">\(P(tokens|topics)\)</span> at each iteration.
+<code>coherence</code> gives the probabilistic coherence of each topic.
+And <code>r2</code> is the R-squared of the model given the data.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>
-<span class="co">#&gt; List of 9</span>
-<span class="co">#&gt;  $ phi           : num [1:20, 1:2379] 7.33e-05 9.21e-05 6.08e-05 5.35e-05 8.62e-05 ...</span>
-<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. ..$ : chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;  $ theta         : num [1:100, 1:20] 0.000481 0.000488 0.000935 0.000256 0.000676 ...</span>
-<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span>
-<span class="co">#&gt;   .. ..$ : chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;  $ gamma         : num [1:20, 1:2379] 0.012 0.0119 0.0127 0.0126 0.0124 ...</span>
-<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. ..$ : chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;  $ data          :Formal class 'dgCMatrix' [package "Matrix"] with 6 slots</span>
-<span class="co">#&gt;   .. ..@ i       : int [1:11419] 46 46 39 61 65 40 44 32 20 83 ...</span>
-<span class="co">#&gt;   .. ..@ p       : int [1:2380] 0 1 2 5 6 7 8 11 14 16 ...</span>
-<span class="co">#&gt;   .. ..@ Dim     : int [1:2] 100 2379</span>
-<span class="co">#&gt;   .. ..@ Dimnames:List of 2</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;   .. ..@ x       : num [1:11419] 3 3 1 1 1 3 3 3 1 1 ...</span>
-<span class="co">#&gt;   .. ..@ factors : list()</span>
-<span class="co">#&gt;  $ alpha         : Named num [1:20] 0.0736 0.0595 0.0897 0.1092 0.0697 ...</span>
-<span class="co">#&gt;   ..- attr(*, "names")= chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;  $ beta          : Named num [1:2379] 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 ...</span>
-<span class="co">#&gt;   ..- attr(*, "names")= chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;  $ log_likelihood:'data.frame':  20 obs. of  2 variables:</span>
-<span class="co">#&gt;   ..$ iteration     : num [1:20] 0 10 20 30 40 50 60 70 80 90 ...</span>
-<span class="co">#&gt;   ..$ log_likelihood: num [1:20] -178274 -167845 -164520 -163120 -162542 ...</span>
-<span class="co">#&gt;  $ coherence     : Named num [1:20] 0.426 0.202 0.084 0.209 0.577 ...</span>
-<span class="co">#&gt;   ..- attr(*, "names")= chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;  $ r2            : num 0.274</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "lda_topic_model"</span></code></pre></div>
-<p>Once we have created a model, we need to evaluate it. For overall goodness of fit, textmineR has R-squared and log likelihood. R-squared is interpretable as the proportion of variability in the data explained by the model, as with linear regression. For a full derivation and explanation of properties. See the working paper, <a href="https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view">here</a>.</p>
-<p>The log likelihood has a more difficult interpretation. Though, as shown in the R-squared working paper, R-squared and log likelihood are highly correlated.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 9</span></span>
+<span><span class="co">#&gt;  $ phi           : num [1:20, 1:2379] 7.33e-05 9.21e-05 6.08e-05 5.35e-05 8.62e-05 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;  $ theta         : num [1:100, 1:20] 0.000481 0.000488 0.000935 0.000256 0.000676 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;  $ gamma         : num [1:20, 1:2379] 0.012 0.0119 0.0127 0.0126 0.0124 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;  $ data          :Formal class 'dgCMatrix' [package "Matrix"] with 6 slots</span></span>
+<span><span class="co">#&gt;   .. ..@ i       : int [1:11419] 46 46 39 61 65 40 44 32 20 83 ...</span></span>
+<span><span class="co">#&gt;   .. ..@ p       : int [1:2380] 0 1 2 5 6 7 8 11 14 16 ...</span></span>
+<span><span class="co">#&gt;   .. ..@ Dim     : int [1:2] 100 2379</span></span>
+<span><span class="co">#&gt;   .. ..@ Dimnames:List of 2</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;   .. ..@ x       : num [1:11419] 3 3 1 1 1 3 3 3 1 1 ...</span></span>
+<span><span class="co">#&gt;   .. ..@ factors : list()</span></span>
+<span><span class="co">#&gt;  $ alpha         : Named num [1:20] 0.0736 0.0595 0.0897 0.1092 0.0697 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "names")= chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;  $ beta          : Named num [1:2379] 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "names")= chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;  $ log_likelihood:'data.frame':  20 obs. of  2 variables:</span></span>
+<span><span class="co">#&gt;   ..$ iteration     : num [1:20] 0 10 20 30 40 50 60 70 80 90 ...</span></span>
+<span><span class="co">#&gt;   ..$ log_likelihood: num [1:20] -178274 -167845 -164520 -163120 -162542 ...</span></span>
+<span><span class="co">#&gt;  $ coherence     : Named num [1:20] 0.426 0.202 0.084 0.209 0.577 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "names")= chr [1:20] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;  $ r2            : num 0.274</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "lda_topic_model"</span></span></code></pre></div>
+<p>Once we have created a model, we need to evaluate it. For overall
+goodness of fit, textmineR has R-squared and log likelihood. R-squared
+is interpretable as the proportion of variability in the data explained
+by the model, as with linear regression. For a full derivation and
+explanation of properties. See the working paper, <a href="https://drive.google.com/file/d/0Bz2enPyUvnKIQmtDTEswbzdUMU0/view" class="external-link">here</a>.</p>
+<p>The log likelihood has a more difficult interpretation. Though, as
+shown in the R-squared working paper, R-squared and log likelihood are
+highly correlated.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># R-squared </span>
-<span class="co"># - only works for probabilistic models like LDA and CTM</span>
-<span class="va">model</span><span class="op">$</span><span class="va">r2</span>
-<span class="co">#&gt; [1] 0.2737488</span>
-<span class="co"># log Likelihood (does not consider the prior) </span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">log_likelihood</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># R-squared </span></span>
+<span><span class="co"># - only works for probabilistic models like LDA and CTM</span></span>
+<span><span class="va">model</span><span class="op">$</span><span class="va">r2</span></span>
+<span><span class="co">#&gt; [1] 0.2737488</span></span>
+<span></span>
+<span><span class="co"># log Likelihood (does not consider the prior) </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">log_likelihood</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>Next, we turn our attention to topic quality. There are many “topic coherence” metrics available in the literature. For example, see <a href="https://svn.aksw.org/papers/2015/WSDM_Topic_Evaluation/public.pdf">this paper</a> or <a href="https://mimno.infosci.cornell.edu/nips2013ws/nips2013tm_submission_7.pdf">this paper</a>. textmineR implements a new topic coherence measure based on probability theory. (A formal write up of this metric will be included in my PhD dissertation, expected 2020.)</p>
-<p>Probabilistic coherence measures how associated words are in a topic, controlling for statistical independence. For example, suppose you have a corpus of articles from the sports section of a newspaper. A topic with the words {sport, sports, ball, fan, athlete} would look great if you look at correlation, without correcting for independence. But we actually know that it’s a terrible topic because the words are so frequent in this corpus as to be meaningless. In other words, they are highly correlated with each other but they are statistically-independent of each other.</p>
-<p>For each pair of words <span class="math inline">\(\{a, b\}\)</span> in the top M words in a topic, probabilistic coherence calculates <span class="math inline">\(P(b|a) - P(b)\)</span>, where <span class="math inline">\(\{a\}\)</span> is more probable than <span class="math inline">\(\{b\}\)</span> in the topic.</p>
-<p>Here’s the logic: if we restrict our search to only documents that contain the word <span class="math inline">\(\{a\}\)</span>, then the word <span class="math inline">\(\{b\}\)</span> should be more more probable in those documents than if chosen at random from the corpus. <span class="math inline">\(P(b|a)\)</span> measures how probable <span class="math inline">\(\{b\}\)</span> is only in documents containing <span class="math inline">\(\{a\}\)</span>. <span class="math inline">\(P(b)\)</span> measures how probable <span class="math inline">\(\{b\}\)</span> is in the corpus as a whole. If <span class="math inline">\(\{b\}\)</span> is not more probable in documents containing <span class="math inline">\(\{a\}\)</span>, then the difference <span class="math inline">\(P(b|a) - P(b)\)</span> should be close to zero.</p>
+<p>Next, we turn our attention to topic quality. There are many “topic
+coherence” metrics available in the literature. For example, see <a href="https://svn.aksw.org/papers/2015/WSDM_Topic_Evaluation/public.pdf" class="external-link">this
+paper</a> or <a href="https://mimno.infosci.cornell.edu/nips2013ws/nips2013tm_submission_7.pdf" class="external-link">this
+paper</a>. textmineR implements a new topic coherence measure based on
+probability theory. (A formal write up of this metric will be included
+in my PhD dissertation, expected 2020.)</p>
+<p>Probabilistic coherence measures how associated words are in a topic,
+controlling for statistical independence. For example, suppose you have
+a corpus of articles from the sports section of a newspaper. A topic
+with the words {sport, sports, ball, fan, athlete} would look great if
+you look at correlation, without correcting for independence. But we
+actually know that it’s a terrible topic because the words are so
+frequent in this corpus as to be meaningless. In other words, they are
+highly correlated with each other but they are statistically-independent
+of each other.</p>
+<p>For each pair of words <span class="math inline">\(\{a, b\}\)</span>
+in the top M words in a topic, probabilistic coherence calculates <span class="math inline">\(P(b|a) - P(b)\)</span>, where <span class="math inline">\(\{a\}\)</span> is more probable than <span class="math inline">\(\{b\}\)</span> in the topic.</p>
+<p>Here’s the logic: if we restrict our search to only documents that
+contain the word <span class="math inline">\(\{a\}\)</span>, then the
+word <span class="math inline">\(\{b\}\)</span> should be more more
+probable in those documents than if chosen at random from the corpus.
+<span class="math inline">\(P(b|a)\)</span> measures how probable <span class="math inline">\(\{b\}\)</span> is only in documents containing
+<span class="math inline">\(\{a\}\)</span>. <span class="math inline">\(P(b)\)</span> measures how probable <span class="math inline">\(\{b\}\)</span> is in the corpus as a whole. If
+<span class="math inline">\(\{b\}\)</span> is not more probable in
+documents containing <span class="math inline">\(\{a\}\)</span>, then
+the difference <span class="math inline">\(P(b|a) - P(b)\)</span> should
+be close to zero.</p>
 <p>For example, suppose the top 4 words in a topic are <span class="math inline">\(\{a, b, c, d\}\)</span>. Then, we calculate</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -285,27 +353,33 @@
 </li>
 <li><span class="math inline">\(P(c|d) - P(d)\)</span></li>
 </ol>
-<p>And all 6 differences are averaged together, giving the probabilistic coherence measure.</p>
+<p>And all 6 differences are averaged together, giving the probabilistic
+coherence measure.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># probabilistic coherence, a measure of topic quality</span>
-<span class="co"># this measure can be used with any topic model, not just probabilistic ones</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt; 0.04014 0.13035 0.19317 0.21366 0.24673 0.57733</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coherence</span>, 
-     col<span class="op">=</span> <span class="st">"blue"</span>, 
-     main <span class="op">=</span> <span class="st">"Histogram of probabilistic coherence"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># probabilistic coherence, a measure of topic quality</span></span>
+<span><span class="co"># this measure can be used with any topic model, not just probabilistic ones</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">#&gt; 0.04014 0.13035 0.19317 0.21366 0.24673 0.57733</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coherence</span>, </span>
+<span>     col<span class="op">=</span> <span class="st">"blue"</span>, </span>
+<span>     main <span class="op">=</span> <span class="st">"Histogram of probabilistic coherence"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-5-1.png" width="720"></p>
-<p>We’ll see the real value of coherence after calculating a few more objects. In the chunk below, we will</p>
+<p>We’ll see the real value of coherence after calculating a few more
+objects. In the chunk below, we will</p>
 <ol style="list-style-type: decimal">
 <li>Pull out the top 5 terms for each topic</li>
 <li>Calculate the most frequent (prevalent) topics in the corpus</li>
-<li>Get some bi-gram topic labels from a naive labeling algorithm (These naive labels are based on <span class="math inline">\(P(\text{bi-gram}|\text{topic}) - P(\text{bi-gram})\)</span>. Noticing a theme?)</li>
+<li>Get some bi-gram topic labels from a naive labeling algorithm (These
+naive labels are based on <span class="math inline">\(P(\text{bi-gram}|\text{topic}) -
+P(\text{bi-gram})\)</span>. Noticing a theme?)</li>
 </ol>
-<p>We’ll then pull these together, along with coherence, into a table that summarizes the topic model.</p>
+<p>We’ll then pull these together, along with coherence, into a table
+that summarizes the topic model.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get the top terms of each topic</span>
-<span class="va">model</span><span class="op">$</span><span class="va">top_terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetTopTerms.html">GetTopTerms</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">phi</span>, M <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Get the top terms of each topic</span></span>
+<span><span class="va">model</span><span class="op">$</span><span class="va">top_terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetTopTerms.html">GetTopTerms</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">phi</span>, M <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">t</span>(model<span class="sc">$</span>top_terms)</span></code></pre></div>
 <table class="table"><tbody>
 <tr class="odd">
@@ -358,39 +432,41 @@
 </tr>
 </tbody></table>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get the prevalence of each topic</span>
-<span class="co"># You can make this discrete by applying a threshold, say 0.05, for</span>
-<span class="co"># topics in/out of docuemnts. </span>
-<span class="va">model</span><span class="op">$</span><span class="va">prevalence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>
-
-<span class="co"># prevalence should be proportional to alpha</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">prevalence</span>, <span class="va">model</span><span class="op">$</span><span class="va">alpha</span>, xlab <span class="op">=</span> <span class="st">"prevalence"</span>, ylab <span class="op">=</span> <span class="st">"alpha"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Get the prevalence of each topic</span></span>
+<span><span class="co"># You can make this discrete by applying a threshold, say 0.05, for</span></span>
+<span><span class="co"># topics in/out of docuemnts. </span></span>
+<span><span class="va">model</span><span class="op">$</span><span class="va">prevalence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span></span>
+<span><span class="co"># prevalence should be proportional to alpha</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">prevalence</span>, <span class="va">model</span><span class="op">$</span><span class="va">alpha</span>, xlab <span class="op">=</span> <span class="st">"prevalence"</span>, ylab <span class="op">=</span> <span class="st">"alpha"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># textmineR has a naive topic labeling tool based on probable bigrams</span>
-<span class="va">model</span><span class="op">$</span><span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LabelTopics.html">LabelTopics</a></span><span class="op">(</span>assignments <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0.05</span>, 
-                            dtm <span class="op">=</span> <span class="va">dtm</span>,
-                            M <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">labels</span><span class="op">)</span>
-<span class="co">#&gt;     label_1                  </span>
-<span class="co">#&gt; t_1 "mast_cell"              </span>
-<span class="co">#&gt; t_2 "biomechanical_stressors"</span>
-<span class="co">#&gt; t_3 "radiation_necrosis"     </span>
-<span class="co">#&gt; t_4 "risk_factors"           </span>
-<span class="co">#&gt; t_5 "ptc_cells"              </span>
-<span class="co">#&gt; t_6 "mast_cell"</span>
-<span class="co"># put them together, with coherence into a summary table</span>
-<span class="va">model</span><span class="op">$</span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>,
-                            label <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">labels</span>,
-                            coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coherence</span>, <span class="fl">3</span><span class="op">)</span>,
-                            prevalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">prevalence</span>,<span class="fl">3</span><span class="op">)</span>,
-                            top_terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">top_terms</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">x</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span>
-                            <span class="op">}</span><span class="op">)</span>,
-                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># textmineR has a naive topic labeling tool based on probable bigrams</span></span>
+<span><span class="va">model</span><span class="op">$</span><span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LabelTopics.html">LabelTopics</a></span><span class="op">(</span>assignments <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0.05</span>, </span>
+<span>                            dtm <span class="op">=</span> <span class="va">dtm</span>,</span>
+<span>                            M <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">labels</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     label_1                  </span></span>
+<span><span class="co">#&gt; t_1 "mast_cell"              </span></span>
+<span><span class="co">#&gt; t_2 "biomechanical_stressors"</span></span>
+<span><span class="co">#&gt; t_3 "radiation_necrosis"     </span></span>
+<span><span class="co">#&gt; t_4 "risk_factors"           </span></span>
+<span><span class="co">#&gt; t_5 "ptc_cells"              </span></span>
+<span><span class="co">#&gt; t_6 "mast_cell"</span></span>
+<span></span>
+<span><span class="co"># put them together, with coherence into a summary table</span></span>
+<span><span class="va">model</span><span class="op">$</span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>,</span>
+<span>                            label <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">labels</span>,</span>
+<span>                            coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">coherence</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                            prevalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">prevalence</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>                            top_terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">top_terms</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span></span>
+<span>                            <span class="op">}</span><span class="op">)</span>,</span>
+<span>                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">prevalence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">model</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">prevalence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></span></code></pre></div>
 <table class="table">
 <caption>Summary of 10 most prevalent topics</caption>
 <colgroup>
@@ -416,7 +492,8 @@
 <td align="left">description_provided</td>
 <td align="right">0.328</td>
 <td align="right">10.479</td>
-<td align="left">provided, applicant, description_provided, description, provided_applicant</td>
+<td align="left">provided, applicant, description_provided, description,
+provided_applicant</td>
 </tr>
 <tr class="even">
 <td align="left">t_11</td>
@@ -492,122 +569,165 @@
 </tr>
 </tbody>
 </table>
-<p>Ok, you’ve built a topic model. You’ve decided how well it fits your data. You’ve examined coherence, top words, and so on. Now you want to get topic distributions for new documents. <code>textmineR</code> provides a couple of ways to do this. The full Bayesian approach is to use Gibbs sampling, holding the topic distributions in <code>phi</code> fixed. The more frequentist way is using the <code>gamma</code> object returned when we ran <code>FitLdaModel</code>. (You can also calculate it separately with the <code>CalcGamma</code> function.)</p>
-<p><code>gamma</code> or <span class="math inline">\(\Gamma\)</span> is a matrix whose entries represent $P(|). To calculate this, we need Bayes’ Rule.</p>
-<p>The rows of <code>phi</code> or <span class="math inline">\(\Phi\)</span> are <span class="math inline">\(P(\text{token}|\text{topic})\)</span>. However, to get predictions for new documents, we need <span class="math inline">\(P(\text{topic}|\text{token})\)</span>. Remembering Bayes’ Rule, we get</p>
+<p>Ok, you’ve built a topic model. You’ve decided how well it fits your
+data. You’ve examined coherence, top words, and so on. Now you want to
+get topic distributions for new documents. <code>textmineR</code>
+provides a couple of ways to do this. The full Bayesian approach is to
+use Gibbs sampling, holding the topic distributions in <code>phi</code>
+fixed. The more frequentist way is using the <code>gamma</code> object
+returned when we ran <code>FitLdaModel</code>. (You can also calculate
+it separately with the <code>CalcGamma</code> function.)</p>
+<p><code>gamma</code> or <span class="math inline">\(\Gamma\)</span> is
+a matrix whose entries represent $P(|). To calculate this, we need
+Bayes’ Rule.</p>
+<p>The rows of <code>phi</code> or <span class="math inline">\(\Phi\)</span> are <span class="math inline">\(P(\text{token}|\text{topic})\)</span>. However, to
+get predictions for new documents, we need <span class="math inline">\(P(\text{topic}|\text{token})\)</span>. Remembering
+Bayes’ Rule, we get</p>
 <p><span class="math display">\[\begin{align}
-  P(\text{topic}|\text{token}) 
-    &amp;= \frac{P(\text{token}|\text{topic})P(\text{topic})}{P(\text{token})}
+  P(\text{topic}|\text{token})
+    &amp;=
+\frac{P(\text{token}|\text{topic})P(\text{topic})}{P(\text{token})}
 \end{align}\]</span></p>
-<p>Detail-oriented readers may wonder how you can get <span class="math inline">\(P(\text{topic})\)</span>. We can get this through <span class="math inline">\(\sum_j P(\text{topic}|\text{document}_j)P(\text{document}_j)\)</span>.</p>
-<p>For now, textmineR refers to the resulting matrix as <span class="math inline">\(\Gamma\)</span> or “phi prime”. (Note: this will be called <span class="math inline">\(\Gamma\)</span> or “gamma” in textmineR version 3.0+.)</p>
-<p>textmineR’s <code>CalcPhiPrime</code> function does the above calculations for you.</p>
-<p>Once you have <span class="math inline">\(\Gamma\)</span>, a simple dot product with the DTM of your new documents (<span class="math inline">\(A\)</span>) will get new topic predictions.</p>
+<p>Detail-oriented readers may wonder how you can get <span class="math inline">\(P(\text{topic})\)</span>. We can get this through
+<span class="math inline">\(\sum_j
+P(\text{topic}|\text{document}_j)P(\text{document}_j)\)</span>.</p>
+<p>For now, textmineR refers to the resulting matrix as <span class="math inline">\(\Gamma\)</span> or “phi prime”. (Note: this will
+be called <span class="math inline">\(\Gamma\)</span> or “gamma” in
+textmineR version 3.0+.)</p>
+<p>textmineR’s <code>CalcPhiPrime</code> function does the above
+calculations for you.</p>
+<p>Once you have <span class="math inline">\(\Gamma\)</span>, a simple
+dot product with the DTM of your new documents (<span class="math inline">\(A\)</span>) will get new topic predictions.</p>
 <p><span class="math display">\[\begin{align}
-  \Theta_{new} 
+  \Theta_{new}
     &amp;= A \cdot \Gamma^T
 \end{align}\]</span></p>
-<p>Both methods are available through <code>predict.lda_topic_model</code> with the <code>method</code> argument (“dot” or “gibbs”). Which method should you use? In most cases, I’d recommend “gibbs”. However, “dot” is useful for speed if that’s necessary. Also, <code>gamma</code> can be examined along with <code>phi</code> for corpus analysis.</p>
+<p>Both methods are available through
+<code>predict.lda_topic_model</code> with the <code>method</code>
+argument (“dot” or “gibbs”). Which method should you use? In most cases,
+I’d recommend “gibbs”. However, “dot” is useful for speed if that’s
+necessary. Also, <code>gamma</code> can be examined along with
+<code>phi</code> for corpus analysis.</p>
 <p>Do note how much faster “dot” is when running the two below.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># predictions with gibbs</span>
-<span class="va">assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">dtm</span>,
-                       method <span class="op">=</span> <span class="st">"gibbs"</span>, 
-                       iterations <span class="op">=</span> <span class="fl">200</span>,
-                       burnin <span class="op">=</span> <span class="fl">180</span>,
-                       cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-<span class="co"># predictions with dot</span>
-<span class="va">assignments_dot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">dtm</span>,
-                           method <span class="op">=</span> <span class="st">"dot"</span><span class="op">)</span>
-
-
-<span class="co"># compare</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">assignments</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span>, <span class="va">assignments_dot</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span><span class="op">)</span>,
-        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, beside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"gibbs"</span>, <span class="st">"dot"</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, 
-       fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># predictions with gibbs</span></span>
+<span><span class="va">assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">dtm</span>,</span>
+<span>                       method <span class="op">=</span> <span class="st">"gibbs"</span>, </span>
+<span>                       iterations <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>                       burnin <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                       cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># predictions with dot</span></span>
+<span><span class="va">assignments_dot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">dtm</span>,</span>
+<span>                           method <span class="op">=</span> <span class="st">"dot"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># compare</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">assignments</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span>, <span class="va">assignments_dot</span><span class="op">[</span><span class="fl">10</span>,<span class="op">]</span><span class="op">)</span>,</span>
+<span>        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, beside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gibbs"</span>, <span class="st">"dot"</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, </span>
+<span>       fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-12-1.png" width="720"></p>
-<p>If you compare the two methods in the image above, you can see that Gibbs sampling is slower, but has a much less noisy result.</p>
+<p>If you compare the two methods in the image above, you can see that
+Gibbs sampling is slower, but has a much less noisy result.</p>
 </div>
-<div id="lsa-example" class="section level3">
-<h3 class="hasAnchor">
-<a href="#lsa-example" class="anchor"></a>LSA Example</h3>
-<p>Latent semantic analysis was arguably the first topic model. <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">LSA was patented in 1988</a>. It uses a <a href="https://en.wikipedia.org/wiki/Singular-value_decomposition">single value decomposition</a> on a document term matrix, TF-IDF matrix, or similar.</p>
+<div class="section level4">
+<h4 id="lsa-example">LSA Example<a class="anchor" aria-label="anchor" href="#lsa-example"></a>
+</h4>
+<p>Latent semantic analysis was arguably the first topic model. <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis" class="external-link">LSA was
+patented in 1988</a>. It uses a <a href="https://en.wikipedia.org/wiki/Singular-value_decomposition" class="external-link">single
+value decomposition</a> on a document term matrix, TF-IDF matrix, or
+similar.</p>
 <p>In textmineR’s notation:</p>
 <p><span class="math display">\[\begin{align}
   A &amp;= \Theta \cdot S \cdot \Phi
 \end{align}\]</span></p>
-<p><span class="math inline">\(\Theta\)</span> and <span class="math inline">\(\Phi\)</span> have the same (though non-probabilistic) interpretation as in LDA. <span class="math inline">\(S\)</span> is the matrix of single values.</p>
-<p>The workflow for LSA is largely the same for LDA. Two key differences: we will use the IDF vector mentioned above to create a TF-IDF matrix and we cannot get an R-squared for LSA as it is non-probabilistic.</p>
+<p><span class="math inline">\(\Theta\)</span> and <span class="math inline">\(\Phi\)</span> have the same (though
+non-probabilistic) interpretation as in LDA. <span class="math inline">\(S\)</span> is the matrix of single values.</p>
+<p>The workflow for LSA is largely the same for LDA. Two key
+differences: we will use the IDF vector mentioned above to create a
+TF-IDF matrix and we cannot get an R-squared for LSA as it is
+non-probabilistic.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># get a tf-idf matrix</span>
-<span class="va">tf_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>
-
-<span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span><span class="op">)</span> <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># fix idf for missing words</span>
-
-<span class="va">tf_idf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dtm</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span>
-
-<span class="va">tf_idf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">tf_idf</span><span class="op">)</span>
-
-<span class="co"># Fit a Latent Semantic Analysis model</span>
-<span class="co"># note the number of topics is arbitrary here</span>
-<span class="co"># see extensions for more info</span>
-<span class="va">lsa_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLsaModel.html">FitLsaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">tf_idf</span>, 
-                     k <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
-<span class="co">#&gt; Warning in fun(A, k, nu, nv, opts, mattype = "dgCMatrix"): all singular values</span>
-<span class="co">#&gt; are requested, svd() is used instead</span>
-<span class="co"># objects: </span>
-<span class="co"># sv = a vector of singular values created with SVD</span>
-<span class="co"># theta = distribution of topics over documents</span>
-<span class="co"># phi = distribution of words over topics</span>
-<span class="co"># gamma = predition matrix, distribution of topics over words</span>
-<span class="co"># coherence = coherence of each topic</span>
-<span class="co"># data = data used to train model</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">)</span>
-<span class="co">#&gt; List of 7</span>
-<span class="co">#&gt;  $ sv       : num [1:100] 1.572 1.42 0.676 0.589 0.568 ...</span>
-<span class="co">#&gt;  $ theta    : num [1:100, 1:100] -0.000196 -0.000082 -0.000198 -0.000111 -0.007455 ...</span>
-<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span>
-<span class="co">#&gt;   .. ..$ : chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;  $ phi      : num [1:100, 1:2379] -8.02e-06 7.02e-06 1.52e-02 -1.40e-02 -2.73e-02 ...</span>
-<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. ..$ : chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;  $ nconv    : int 100</span>
-<span class="co">#&gt;  $ gamma    : num [1:100, 1:2379] -5.10e-06 4.95e-06 2.26e-02 -2.38e-02 -4.81e-02 ...</span>
-<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. ..$ : chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;  $ coherence: Named num [1:100] 0.986 0.3274 -0.0511 0.35 0.688 ...</span>
-<span class="co">#&gt;   ..- attr(*, "names")= chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span>
-<span class="co">#&gt;  $ data     :Formal class 'dgCMatrix' [package "Matrix"] with 6 slots</span>
-<span class="co">#&gt;   .. ..@ i       : int [1:11419] 46 46 39 61 65 40 44 32 20 83 ...</span>
-<span class="co">#&gt;   .. ..@ p       : int [1:2380] 0 1 2 5 6 7 8 11 14 16 ...</span>
-<span class="co">#&gt;   .. ..@ Dim     : int [1:2] 100 2379</span>
-<span class="co">#&gt;   .. ..@ Dimnames:List of 2</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span>
-<span class="co">#&gt;   .. ..@ x       : num [1:11419] 0.0743 0.0743 0.0516 0.0139 0.0331 ...</span>
-<span class="co">#&gt;   .. ..@ factors : list()</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "lsa_topic_model"</span></code></pre></div>
-<p>We cannot get a proper R-squared for an LSA model. (Actually, multiplying <span class="math inline">\(\Phi \cdot S \cdot \Theta\)</span> would give us exactly our document term matrix and an R-squared of <span class="math inline">\(1\)</span>. There isn’t really a proper interpretation of <span class="math inline">\(\Phi \cdot \Theta\)</span> with LSA.)</p>
-<p>However, we can still use probabilistic coherence to evaluate individual topics. We’ll also get our top terms and make a summary table as we did with LDA, above.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># get a tf-idf matrix</span></span>
+<span><span class="va">tf_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.infinite</a></span><span class="op">(</span><span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span><span class="op">)</span> <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># fix idf for missing words</span></span>
+<span></span>
+<span><span class="va">tf_idf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">dtm</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span></span>
+<span></span>
+<span><span class="va">tf_idf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">tf_idf</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fit a Latent Semantic Analysis model</span></span>
+<span><span class="co"># note the number of topics is arbitrary here</span></span>
+<span><span class="co"># see extensions for more info</span></span>
+<span><span class="va">lsa_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLsaModel.html">FitLsaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">tf_idf</span>, </span>
+<span>                     k <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in fun(A, k, nu, nv, opts, mattype = "dgCMatrix"): all singular values</span></span>
+<span><span class="co">#&gt; are requested, svd() is used instead</span></span>
+<span></span>
+<span><span class="co"># objects: </span></span>
+<span><span class="co"># sv = a vector of singular values created with SVD</span></span>
+<span><span class="co"># theta = distribution of topics over documents</span></span>
+<span><span class="co"># phi = distribution of words over topics</span></span>
+<span><span class="co"># gamma = predition matrix, distribution of topics over words</span></span>
+<span><span class="co"># coherence = coherence of each topic</span></span>
+<span><span class="co"># data = data used to train model</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 7</span></span>
+<span><span class="co">#&gt;  $ sv       : num [1:100] 1.572 1.42 0.676 0.589 0.568 ...</span></span>
+<span><span class="co">#&gt;  $ theta    : num [1:100, 1:100] -0.000196 -0.000082 -0.000198 -0.000111 -0.007455 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;  $ phi      : num [1:100, 1:2379] -8.02e-06 7.02e-06 1.52e-02 -1.40e-02 -2.73e-02 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;  $ nconv    : int 100</span></span>
+<span><span class="co">#&gt;  $ gamma    : num [1:100, 1:2379] -5.10e-06 4.95e-06 2.26e-02 -2.38e-02 -4.81e-02 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;  $ coherence: Named num [1:100] 0.986 0.3274 -0.0511 0.35 0.688 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "names")= chr [1:100] "t_1" "t_2" "t_3" "t_4" ...</span></span>
+<span><span class="co">#&gt;  $ data     :Formal class 'dgCMatrix' [package "Matrix"] with 6 slots</span></span>
+<span><span class="co">#&gt;   .. ..@ i       : int [1:11419] 46 46 39 61 65 40 44 32 20 83 ...</span></span>
+<span><span class="co">#&gt;   .. ..@ p       : int [1:2380] 0 1 2 5 6 7 8 11 14 16 ...</span></span>
+<span><span class="co">#&gt;   .. ..@ Dim     : int [1:2] 100 2379</span></span>
+<span><span class="co">#&gt;   .. ..@ Dimnames:List of 2</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:100] "8693991" "8693362" "8607498" "8697008" ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:2379] "ab" "ab_response" "abilities" "abnormal_ger" ...</span></span>
+<span><span class="co">#&gt;   .. ..@ x       : num [1:11419] 0.0743 0.0743 0.0516 0.0139 0.0331 ...</span></span>
+<span><span class="co">#&gt;   .. ..@ factors : list()</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "lsa_topic_model"</span></span></code></pre></div>
+<p>We cannot get a proper R-squared for an LSA model. (Actually,
+multiplying <span class="math inline">\(\Phi \cdot S \cdot
+\Theta\)</span> would give us exactly our document term matrix and an
+R-squared of <span class="math inline">\(1\)</span>. There isn’t really
+a proper interpretation of <span class="math inline">\(\Phi \cdot
+\Theta\)</span> with LSA.)</p>
+<p>However, we can still use probabilistic coherence to evaluate
+individual topics. We’ll also get our top terms and make a summary table
+as we did with LDA, above.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># probabilistic coherence, a measure of topic quality</span>
-<span class="co"># - can be used with any topic lsa_model, e.g. LSA</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span>
-<span class="co">#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. </span>
-<span class="co">#&gt; -0.05107  0.18792  0.29267  0.34172  0.38925  0.99000</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">coherence</span>, col<span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># probabilistic coherence, a measure of topic quality</span></span>
+<span><span class="co"># - can be used with any topic lsa_model, e.g. LSA</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. </span></span>
+<span><span class="co">#&gt; -0.05107  0.18792  0.29267  0.34172  0.38925  0.99000</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">coherence</span>, col<span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-14-1.png" width="720"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get the top terms of each topic</span>
-<span class="va">lsa_model</span><span class="op">$</span><span class="va">top_terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetTopTerms.html">GetTopTerms</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">lsa_model</span><span class="op">$</span><span class="va">phi</span>, M <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Get the top terms of each topic</span></span>
+<span><span class="va">lsa_model</span><span class="op">$</span><span class="va">top_terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetTopTerms.html">GetTopTerms</a></span><span class="op">(</span>phi <span class="op">=</span> <span class="va">lsa_model</span><span class="op">$</span><span class="va">phi</span>, M <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">top_terms</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">top_terms</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="4%">
@@ -669,17 +789,18 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get the prevalence of each topic</span>
-<span class="co"># You can make this discrete by applying a threshold, say 0.05, for</span>
-<span class="co"># topics in/out of docuemnts. </span>
-<span class="va">lsa_model</span><span class="op">$</span><span class="va">prevalence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>
-
-<span class="co"># textmineR has a naive topic labeling tool based on probable bigrams</span>
-<span class="va">lsa_model</span><span class="op">$</span><span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LabelTopics.html">LabelTopics</a></span><span class="op">(</span>assignments <span class="op">=</span> <span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0.05</span>, 
-                            dtm <span class="op">=</span> <span class="va">dtm</span>,
-                            M <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Get the prevalence of each topic</span></span>
+<span><span class="co"># You can make this discrete by applying a threshold, say 0.05, for</span></span>
+<span><span class="co"># topics in/out of docuemnts. </span></span>
+<span><span class="va">lsa_model</span><span class="op">$</span><span class="va">prevalence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span></span>
+<span><span class="co"># textmineR has a naive topic labeling tool based on probable bigrams</span></span>
+<span><span class="va">lsa_model</span><span class="op">$</span><span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LabelTopics.html">LabelTopics</a></span><span class="op">(</span>assignments <span class="op">=</span> <span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span> <span class="op">&gt;</span> <span class="fl">0.05</span>, </span>
+<span>                            dtm <span class="op">=</span> <span class="va">dtm</span>,</span>
+<span>                            M <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">labels</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">labels</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -713,17 +834,18 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># put them together, with coherence into a summary table</span>
-<span class="va">lsa_model</span><span class="op">$</span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>,
-                            label <span class="op">=</span> <span class="va">lsa_model</span><span class="op">$</span><span class="va">labels</span>,
-                            coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">coherence</span>, <span class="fl">3</span><span class="op">)</span>,
-                            prevalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">prevalence</span>,<span class="fl">3</span><span class="op">)</span>,
-                            top_terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">top_terms</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">x</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span>
-                            <span class="op">}</span><span class="op">)</span>,
-                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># put them together, with coherence into a summary table</span></span>
+<span><span class="va">lsa_model</span><span class="op">$</span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>topic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span>,</span>
+<span>                            label <span class="op">=</span> <span class="va">lsa_model</span><span class="op">$</span><span class="va">labels</span>,</span>
+<span>                            coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">coherence</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                            prevalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">prevalence</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>                            top_terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">top_terms</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span></span>
+<span>                            <span class="op">}</span><span class="op">)</span>,</span>
+<span>                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lsa_model</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">prevalence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">lsa_model</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">prevalence</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span><span class="op">[</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> , <span class="op">]</span></span></code></pre></div>
 <table class="table">
 <caption>Summary of 10 most prevalent LSA topics</caption>
 <colgroup>
@@ -757,7 +879,8 @@
 <td align="left">ab_response</td>
 <td align="right">0.327</td>
 <td align="right">10.058</td>
-<td align="left">abstract, provided, excision, excision_repair, dna_damage</td>
+<td align="left">abstract, provided, excision, excision_repair,
+dna_damage</td>
 </tr>
 <tr class="odd">
 <td align="left">t_7</td>
@@ -765,7 +888,8 @@
 <td align="left">excision_repair</td>
 <td align="right">0.612</td>
 <td align="right">8.547</td>
-<td align="left">ipf, lung, fundoplication, laparoscopic, laparoscopic_fundoplication</td>
+<td align="left">ipf, lung, fundoplication, laparoscopic,
+laparoscopic_fundoplication</td>
 </tr>
 <tr class="even">
 <td align="left">t_15</td>
@@ -789,7 +913,8 @@
 <td align="left">mast_cell</td>
 <td align="right">0.221</td>
 <td align="right">4.602</td>
-<td align="left">psoriasis, microbiome, mast, fertility, cutaneous_microbiome</td>
+<td align="left">psoriasis, microbiome, mast, fertility,
+cutaneous_microbiome</td>
 </tr>
 <tr class="odd">
 <td align="left">t_20</td>
@@ -797,7 +922,8 @@
 <td align="left">cancer_prevention</td>
 <td align="right">0.695</td>
 <td align="right">3.913</td>
-<td align="left">force, length, length_dependence, sarcomere_length, power</td>
+<td align="left">force, length, length_dependence, sarcomere_length,
+power</td>
 </tr>
 <tr class="even">
 <td align="left">t_26</td>
@@ -821,7 +947,8 @@
 <td align="left">mast_cell</td>
 <td align="right">0.590</td>
 <td align="right">3.360</td>
-<td align="left">diabetes, excision, excision_repair, dna_damage, uv</td>
+<td align="left">diabetes, excision, excision_repair, dna_damage,
+uv</td>
 </tr>
 </tbody>
 </table>
@@ -831,112 +958,139 @@
     (S\cdot\Phi)^{-1}
 \end{align}\]</span></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get topic predictions for all 5,000 documents</span>
-
-<span class="co"># set up the assignments matrix and a simple dot product gives us predictions</span>
-<span class="va">lsa_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dtm</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span>
-
-<span class="va">lsa_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">lsa_assignments</span><span class="op">)</span>
-
-<span class="va">lsa_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lsa_model</span>, <span class="va">lsa_assignments</span><span class="op">)</span></code></pre></div>
-<p>In this case, there is no Bayesian/frequentist difference. So there’s only one way to predict. Note that in the case above, we had to do the IDF reweighting before passing to <code>predict.lsa_topic_model</code>.</p>
+<code class="sourceCode R"><span><span class="co"># Get topic predictions for all 5,000 documents</span></span>
+<span></span>
+<span><span class="co"># set up the assignments matrix and a simple dot product gives us predictions</span></span>
+<span><span class="va">lsa_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">dtm</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">tf_sample</span><span class="op">$</span><span class="va">idf</span></span>
+<span></span>
+<span><span class="va">lsa_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">lsa_assignments</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lsa_assignments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">lsa_model</span>, <span class="va">lsa_assignments</span><span class="op">)</span></span></code></pre></div>
+<p>In this case, there is no Bayesian/frequentist difference. So there’s
+only one way to predict. Note that in the case above, we had to do the
+IDF reweighting before passing to
+<code>predict.lsa_topic_model</code>.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># compare the "fit" assignments to the predicted ones</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span> <span class="op">]</span> , <span class="op">]</span>,
-              <span class="va">lsa_assignments</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span> <span class="op">]</span> , <span class="op">]</span><span class="op">)</span>, 
-        las <span class="op">=</span> <span class="fl">2</span>,
-        main <span class="op">=</span> <span class="st">"Comparing topic assignments in LSA"</span>,
-        beside <span class="op">=</span> <span class="cn">TRUE</span>,
-        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, 
-       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"During fitting"</span>, <span class="st">"Predicted"</span><span class="op">)</span>,
-       fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># compare the "fit" assignments to the predicted ones</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">lsa_model</span><span class="op">$</span><span class="va">theta</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span> <span class="op">]</span> , <span class="op">]</span>,</span>
+<span>              <span class="va">lsa_assignments</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">[</span> <span class="fl">1</span> <span class="op">]</span> , <span class="op">]</span><span class="op">)</span>, </span>
+<span>        las <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>        main <span class="op">=</span> <span class="st">"Comparing topic assignments in LSA"</span>,</span>
+<span>        beside <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, </span>
+<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"During fitting"</span>, <span class="st">"Predicted"</span><span class="op">)</span>,</span>
+<span>       fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-24-1.png" width="720"></p>
 </div>
-<div id="other-topic-models" class="section level3">
-<h3 class="hasAnchor">
-<a href="#other-topic-models" class="anchor"></a>Other topic models</h3>
+<div class="section level4">
+<h4 id="other-topic-models">Other topic models<a class="anchor" aria-label="anchor" href="#other-topic-models"></a>
+</h4>
 <p>As of this writing, textmineR has implementations of</p>
 <ul>
 <li>LDA using Gibbs sampling implemented natively in textmineR</li>
-<li>LSA using a single value decomposition from the <a href="https://CRAN.R-project.org/package=RSpectra"><code>RSpectra</code></a> package</li>
-<li>Correlated topic models (CTM) from the <a href="https://CRAN.R-project.org/package=topicmodels"><code>topicmodels</code></a> package</li>
+<li>LSA using a single value decomposition from the <a href="https://CRAN.R-project.org/package=RSpectra" class="external-link"><code>RSpectra</code></a>
+package</li>
+<li>Correlated topic models (CTM) from the <a href="https://CRAN.R-project.org/package=topicmodels" class="external-link"><code>topicmodels</code></a>
+package</li>
 </ul>
-<p>A future version of textmineR will have an implementation of a structural topic model from the <a href="https://CRAN.R-project.org/package=stm"><code>stm</code></a> package.</p>
-<p>All of the above have nearly identical syntax and workflows as detailed above.</p>
+<p>A future version of textmineR will have an implementation of a
+structural topic model from the <a href="https://CRAN.R-project.org/package=stm" class="external-link"><code>stm</code></a>
+package.</p>
+<p>All of the above have nearly identical syntax and workflows as
+detailed above.</p>
 </div>
-<div id="extensions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#extensions" class="anchor"></a>Extensions</h3>
-<div id="document-clustering-is-just-a-special-topic-model" class="section level4">
-<h4 class="hasAnchor">
-<a href="#document-clustering-is-just-a-special-topic-model" class="anchor"></a>Document clustering is just a special topic model</h4>
-<p>Document clustering can be thought of as a topic model where each document contains exactly one topic. textmineR’s <code>Cluster2TopicModel</code> function allows you to take a clustering solution and a document term matrix and turn it into a probabilistic topic model representation. You can use many of textmineR’s topic model utilities to evaluate your clusters (e.g. R-squared, coherence, labels, etc.)</p>
+<div class="section level4">
+<h4 id="extensions">Extensions<a class="anchor" aria-label="anchor" href="#extensions"></a>
+</h4>
+<div class="section level5">
+<h5 id="document-clustering-is-just-a-special-topic-model">Document clustering is just a special topic model<a class="anchor" aria-label="anchor" href="#document-clustering-is-just-a-special-topic-model"></a>
+</h5>
+<p>Document clustering can be thought of as a topic model where each
+document contains exactly one topic. textmineR’s
+<code>Cluster2TopicModel</code> function allows you to take a clustering
+solution and a document term matrix and turn it into a probabilistic
+topic model representation. You can use many of textmineR’s topic model
+utilities to evaluate your clusters (e.g. R-squared, coherence, labels,
+etc.)</p>
 </div>
-<div id="choosing-the-number-of-topics" class="section level4">
-<h4 class="hasAnchor">
-<a href="#choosing-the-number-of-topics" class="anchor"></a>Choosing the number of topics</h4>
-<p>There is no commonly accepted way to choose the number of topics in a topic model. Fear not! Probabilistic coherence can help you. In forthcoming research, I show that probabilistic coherence can find the correct number of topics on a simulated corpus where the number of topics is known beforehand. (This will be part of a PhD dissertation, sometime around 2021. Stand by!)</p>
-<p>Users can implement this procedure. Simply fit several topic models across a range of topics. Then calculate the probabilistic coherence for each topic in each model. Finally, average the probabilistic coherence across all topics in a model. This is similar to using the <a href="https://en.wikipedia.org/wiki/Silhouette_(clustering)">silhouette coefficient</a> to select the number of clusters when clustering.</p>
-<p>Some example code (on a trivially small dataset packaged with textmineR) is below.</p>
+<div class="section level5">
+<h5 id="choosing-the-number-of-topics">Choosing the number of topics<a class="anchor" aria-label="anchor" href="#choosing-the-number-of-topics"></a>
+</h5>
+<p>There is no commonly accepted way to choose the number of topics in a
+topic model. Fear not! Probabilistic coherence can help you. In
+forthcoming research, I show that probabilistic coherence can find the
+correct number of topics on a simulated corpus where the number of
+topics is known beforehand. (This will be part of a PhD dissertation,
+sometime around 2021. Stand by!)</p>
+<p>Users can implement this procedure. Simply fit several topic models
+across a range of topics. Then calculate the probabilistic coherence for
+each topic in each model. Finally, average the probabilistic coherence
+across all topics in a model. This is similar to using the <a href="https://en.wikipedia.org/wiki/Silhouette_(clustering)" class="external-link">silhouette
+coefficient</a> to select the number of clusters when clustering.</p>
+<p>Some example code (on a trivially small dataset packaged with
+textmineR) is below.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># load a sample DTM</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span>
-
-<span class="co"># choose a range of k </span>
-<span class="co"># - here, the range runs into the corpus size. Not recommended for large corpora!</span>
-<span class="va">k_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">85</span>, by<span class="op">=</span><span class="fl">15</span><span class="op">)</span>
-
-<span class="co"># you may want toset up a temporary directory to store fit models so you get </span>
-<span class="co"># partial results if the process fails or times out. This is a trivial example, </span>
-<span class="co"># but with a decent sized corpus, the procedure can take hours or days, </span>
-<span class="co"># depending on the size of the data and complexity of the model.</span>
-<span class="co"># I suggest using the digest package to create a hash so that it's obvious this </span>
-<span class="co"># is a temporary directory</span>
-<span class="va">model_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"models_"</span>, <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html">digest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span>, algo <span class="op">=</span> <span class="st">"sha1"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Fit a bunch of LDA models</span>
-<span class="co"># even on this trivial corpus, it will take a bit of time to fit all of these models</span>
-<span class="va">model_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TmParallelApply.html">TmParallelApply</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">k_list</span>, FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span>
-
-  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">nih_sample_dtm</span>, 
-                   k <span class="op">=</span> <span class="va">k</span>, 
-                   iterations <span class="op">=</span> <span class="fl">200</span>, 
-                   burnin <span class="op">=</span> <span class="fl">180</span>,
-                   alpha <span class="op">=</span> <span class="fl">0.1</span>,
-                   beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,
-                   optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,
-                   calc_likelihood <span class="op">=</span> <span class="cn">FALSE</span>,
-                   calc_coherence <span class="op">=</span> <span class="cn">TRUE</span>,
-                   calc_r2 <span class="op">=</span> <span class="cn">FALSE</span>,
-                   cpus <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-  <span class="va">m</span><span class="op">$</span><span class="va">k</span> <span class="op">&lt;-</span> <span class="va">k</span>
-  
-  <span class="va">m</span>
-<span class="op">}</span>, export<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span>, <span class="co"># c("nih_sample_dtm"), # export only needed for Windows machines</span>
-cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> 
-
-<span class="co"># Get average coherence for each model</span>
-<span class="va">coherence_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">model_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span><span class="op">)</span>, 
-                            coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">model_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span><span class="op">)</span>, 
-                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-
-<span class="co"># Plot the result</span>
-<span class="co"># On larger (~1,000 or greater documents) corpora, you will usually get a clear peak</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">coherence_mat</span>, type <span class="op">=</span> <span class="st">"o"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># load a sample DTM</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># choose a range of k </span></span>
+<span><span class="co"># - here, the range runs into the corpus size. Not recommended for large corpora!</span></span>
+<span><span class="va">k_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">85</span>, by<span class="op">=</span><span class="fl">15</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># you may want toset up a temporary directory to store fit models so you get </span></span>
+<span><span class="co"># partial results if the process fails or times out. This is a trivial example, </span></span>
+<span><span class="co"># but with a decent sized corpus, the procedure can take hours or days, </span></span>
+<span><span class="co"># depending on the size of the data and complexity of the model.</span></span>
+<span><span class="co"># I suggest using the digest package to create a hash so that it's obvious this </span></span>
+<span><span class="co"># is a temporary directory</span></span>
+<span><span class="va">model_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"models_"</span>, <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span>, algo <span class="op">=</span> <span class="st">"sha1"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fit a bunch of LDA models</span></span>
+<span><span class="co"># even on this trivial corpus, it will take a bit of time to fit all of these models</span></span>
+<span><span class="va">model_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TmParallelApply.html">TmParallelApply</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">k_list</span>, FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span></span>
+<span></span>
+<span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FitLdaModel.html">FitLdaModel</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">nih_sample_dtm</span>, </span>
+<span>                   k <span class="op">=</span> <span class="va">k</span>, </span>
+<span>                   iterations <span class="op">=</span> <span class="fl">200</span>, </span>
+<span>                   burnin <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                   alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>                   beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">nih_sample_dtm</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,</span>
+<span>                   optimize_alpha <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                   calc_likelihood <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                   calc_coherence <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                   calc_r2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                   cpus <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="va">m</span><span class="op">$</span><span class="va">k</span> <span class="op">&lt;-</span> <span class="va">k</span></span>
+<span>  </span>
+<span>  <span class="va">m</span></span>
+<span><span class="op">}</span>, export<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span>, <span class="co"># c("nih_sample_dtm"), # export only needed for Windows machines</span></span>
+<span>cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Get average coherence for each model</span></span>
+<span><span class="va">coherence_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">model_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">phi</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                            coherence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">model_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">coherence</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Plot the result</span></span>
+<span><span class="co"># On larger (~1,000 or greater documents) corpora, you will usually get a clear peak</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">coherence_mat</span>, type <span class="op">=</span> <span class="st">"o"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="c_topic_modeling_files/figure-html/unnamed-chunk-25-1.png" width="720"></p>
 </div>
-<div id="using-topic-models-from-other-packages" class="section level4">
-<h4 class="hasAnchor">
-<a href="#using-topic-models-from-other-packages" class="anchor"></a>Using topic models from other packages</h4>
-<p>Topic models from other packages can be used with textmineR. The workflow would look something like this:</p>
+<div class="section level5">
+<h5 id="using-topic-models-from-other-packages">Using topic models from other packages<a class="anchor" aria-label="anchor" href="#using-topic-models-from-other-packages"></a>
+</h5>
+<p>Topic models from other packages can be used with textmineR. The
+workflow would look something like this:</p>
 <ol style="list-style-type: decimal">
 <li>Use <code>CreateDtm</code> to create a curated DTM</li>
-<li>Use <code>Dtm2Docs</code> to re-create a text vector of curated tokens from your DTM</li>
-<li>Fit a topic model using your desired package (for example, <a href="https://CRAN.R-project.org/package=mallet">mallet</a>)</li>
-<li>Format the raw output to have two matrices, phi and theta as above</li>
+<li>Use <code>Dtm2Docs</code> to re-create a text vector of curated
+tokens from your DTM</li>
+<li>Fit a topic model using your desired package (for example, <a href="https://CRAN.R-project.org/package=mallet" class="external-link">mallet</a>)</li>
+<li>Format the raw output to have two matrices, phi and theta as
+above</li>
 <li>Use textmineR’s suite of utility functions with your model</li>
 </ol>
 </div>
@@ -955,11 +1109,13 @@ cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span
 
 
       <footer><div class="copyright">
-  <p>Developed by Tommy Jones.</p>
+  <p></p>
+<p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

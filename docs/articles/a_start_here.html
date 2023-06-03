@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,23 +42,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">textmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.5.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.5.999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -88,7 +84,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TommyJones/textmineR/">
+  <a href="https://github.com/TommyJones/textmineR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -109,97 +105,167 @@
 
       
 
-      </header><script src="a_start_here_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1. Start here</h1>
-                        <h4 class="author">Thomas W. Jones</h4>
+                        <h4 data-toc-skip class="author">Thomas W.
+Jones</h4>
             
-            <h4 class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2023-06-03</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/master/vignettes/a_start_here.Rmd"><code>vignettes/a_start_here.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TommyJones/textmineR/blob/HEAD/vignettes/a_start_here.Rmd" class="external-link"><code>vignettes/a_start_here.Rmd</code></a></small>
       <div class="hidden name"><code>a_start_here.Rmd</code></div>
 
     </div>
 
     
     
-<div id="why-textminer" class="section level1">
-<h1 class="hasAnchor">
-<a href="#why-textminer" class="anchor"></a>Why textmineR?</h1>
+<div class="section level2">
+<h2 id="why-textminer">Why textmineR?<a class="anchor" aria-label="anchor" href="#why-textminer"></a>
+</h2>
 <p>textmineR was created with three principles in mind:</p>
 <ol style="list-style-type: decimal">
 <li>Maximize interoperability within R’s ecosystem</li>
 <li>Scaleable in terms of object storage and computation time</li>
 <li>Syntax that is idiomatic to R</li>
 </ol>
-<p>R has many packages for text mining and natural language processing (NLP). The <a href="https://CRAN.R-project.org/view=NaturalLanguageProcessing">CRAN task view on natural language processing</a> lists 53 unique packages. Some of these packages are interoperable. Some are not.</p>
-<p>textmineR strives for maximum interoperability in three ways. First, it uses the <code>dgCMatrix</code> class from the popular <a href="https://CRAN.R-project.org/package=Matrix"><code>Matrix</code> package</a> for document term matrices (DTMs) and term co-occurrence matrices (TCMs). The <code>Matrix</code> package is an R “recommended” package with nearly 500 packages that depend, import, or suggest it. Compare that to the <a href="https://CRAN.R-project.org/package=slam"><code>slam</code> package</a> used by <a href="https://CRAN.R-project.org/package=tm"><code>tm</code></a> and its derivatives. <code>slam</code> has an order of magnitude fewer dependents. It is simply not as well integrated. <code>Matrix</code> also has methods that make the syntax for manipulating its matrices nearly identical to base R. This greatly reduces the cognitive burden of the programmers.</p>
-<p>Second, textmineR relies on base R objects for corpus and metadata storage. Actually, it relies on the user to do so. textmineR’s core functions <code>CreateDtm</code> and <code>CreateTcm</code> take a simple character vector as input. Users may store their corpora as character vectors, lists, or data frames. <em>There is no need to learn a new <a href="https://CRAN.R-project.org/package=tm">‘Corpus’</a> class.</em></p>
-<p>Third and last, textmineR represents the output of topic models in a consistent way, a list containing two matrices. This is described in more detail in the next section. Several topic models are supported and the simple representation means that textmineR’s utility functions are usable with outputs from other packages, so long as they are represented as matrices of probabilities. (Again, see the next section for more detail.)</p>
-<p>textmineR achieves scaleability through three means. First, sparse matrices (like the <code>dgCMatrix</code>) offer significant memory savings. Second, textmineR utilizes <code>Rcpp</code> throughout for speedup. Finally, textmineR uses parallel processing by default where possible. textmineR offers a function <code>TmParallelApply</code> which implements a framework for parallel processing that is syntactically agnostic between Windows and Unix-like operating systems. <code>TmParallelApply</code> is used liberally within textmineR and is exposed for users.</p>
-<p>textmineR does make some tradeoffs of performance for syntactic simplicity. textmineR is designed to run on a single node in a cluster computing environment. It can (and will by default) use all available cores of that node. If performance is your number one concern, see <a href="https://CRAN.R-project.org/package=text2vec"><code>text2vec</code></a>. textmineR uses some <code>text2vec</code> under the hood.</p>
-<p>textmineR strives for syntax that is idiomatic to R. This is, admittedly, a nebulous concept. textmineR does not create new classes where existing R classes exist. It strives for a functional programming paradigm. And it attempts to group closely-related sequential steps into single functions. This means that users will not have to make several temporary objects along the way. As an example, compare making a document term matrix in textmineR (example below) with <code>tm</code> or <code>text2vec</code>.</p>
-<p>As a side note: textmineR’s framework for NLP does not need to be exclusive to textmineR. Text mining packages in R can be interoperable with a few concepts. First, use <code>dgCMatrix</code> for DTMs and TCMs. Second, write most text mining models in a way that they can take a <code>dgCMatrix</code> as the input. Finally, keep non-base R classes to a minimum, especially for corpus and metadata management.</p>
+<p>R has many packages for text mining and natural language processing
+(NLP). The <a href="https://CRAN.R-project.org/view=NaturalLanguageProcessing" class="external-link">CRAN
+task view on natural language processing</a> lists 53 unique packages.
+Some of these packages are interoperable. Some are not.</p>
+<p>textmineR strives for maximum interoperability in three ways. First,
+it uses the <code>dgCMatrix</code> class from the popular <a href="https://CRAN.R-project.org/package=Matrix" class="external-link"><code>Matrix</code>
+package</a> for document term matrices (DTMs) and term co-occurrence
+matrices (TCMs). The <code>Matrix</code> package is an R “recommended”
+package with nearly 500 packages that depend, import, or suggest it.
+Compare that to the <a href="https://CRAN.R-project.org/package=slam" class="external-link"><code>slam</code>
+package</a> used by <a href="https://CRAN.R-project.org/package=tm" class="external-link"><code>tm</code></a> and its
+derivatives. <code>slam</code> has an order of magnitude fewer
+dependents. It is simply not as well integrated. <code>Matrix</code>
+also has methods that make the syntax for manipulating its matrices
+nearly identical to base R. This greatly reduces the cognitive burden of
+the programmers.</p>
+<p>Second, textmineR relies on base R objects for corpus and metadata
+storage. Actually, it relies on the user to do so. textmineR’s core
+functions <code>CreateDtm</code> and <code>CreateTcm</code> take a
+simple character vector as input. Users may store their corpora as
+character vectors, lists, or data frames. <em>There is no need to learn
+a new <a href="https://CRAN.R-project.org/package=tm" class="external-link">‘Corpus’</a>
+class.</em></p>
+<p>Third and last, textmineR represents the output of topic models in a
+consistent way, a list containing two matrices. This is described in
+more detail in the next section. Several topic models are supported and
+the simple representation means that textmineR’s utility functions are
+usable with outputs from other packages, so long as they are represented
+as matrices of probabilities. (Again, see the next section for more
+detail.)</p>
+<p>textmineR achieves scaleability through three means. First, sparse
+matrices (like the <code>dgCMatrix</code>) offer significant memory
+savings. Second, textmineR utilizes <code>Rcpp</code> throughout for
+speedup. Finally, textmineR uses parallel processing by default where
+possible. textmineR offers a function <code>TmParallelApply</code> which
+implements a framework for parallel processing that is syntactically
+agnostic between Windows and Unix-like operating systems.
+<code>TmParallelApply</code> is used liberally within textmineR and is
+exposed for users.</p>
+<p>textmineR does make some tradeoffs of performance for syntactic
+simplicity. textmineR is designed to run on a single node in a cluster
+computing environment. It can (and will by default) use all available
+cores of that node. If performance is your number one concern, see <a href="https://CRAN.R-project.org/package=text2vec" class="external-link"><code>text2vec</code></a>.
+textmineR uses some <code>text2vec</code> under the hood.</p>
+<p>textmineR strives for syntax that is idiomatic to R. This is,
+admittedly, a nebulous concept. textmineR does not create new classes
+where existing R classes exist. It strives for a functional programming
+paradigm. And it attempts to group closely-related sequential steps into
+single functions. This means that users will not have to make several
+temporary objects along the way. As an example, compare making a
+document term matrix in textmineR (example below) with <code>tm</code>
+or <code>text2vec</code>.</p>
+<p>As a side note: textmineR’s framework for NLP does not need to be
+exclusive to textmineR. Text mining packages in R can be interoperable
+with a few concepts. First, use <code>dgCMatrix</code> for DTMs and
+TCMs. Second, write most text mining models in a way that they can take
+a <code>dgCMatrix</code> as the input. Finally, keep non-base R classes
+to a minimum, especially for corpus and metadata management.</p>
 </div>
-<div id="corpus-management" class="section level1">
-<h1 class="hasAnchor">
-<a href="#corpus-management" class="anchor"></a>Corpus management</h1>
-<div id="creating-a-dtm" class="section level3">
-<h3 class="hasAnchor">
-<a href="#creating-a-dtm" class="anchor"></a>Creating a DTM</h3>
-<p>The basic object of analysis for most text mining applications is a document term matrix, or DTM. This is a matrix where every row represents a document and every column represents a token (word, bi-gram, stem, etc.)</p>
-<p>You can create a DTM with textmineR by passing a character vector. There are options for stopword removal, creation of n-grams, and other standard data cleaning. There is an option for passing a stemming or lemmatization function if you desire. (See <code><a href="../reference/CreateDtm.html">help(CreateDtm)</a></code> for an example using Porter’s word stemmer.)</p>
-<p>The code below uses a dataset of movie reviews included with the <code>text2vec</code> package. This dataset is used for sentiment analysis. In addition to the text of the reviews. There is a binary variable indicating positive or negative sentiment. More on this later…</p>
+<div class="section level2">
+<h2 id="corpus-management">Corpus management<a class="anchor" aria-label="anchor" href="#corpus-management"></a>
+</h2>
+<div class="section level4">
+<h4 id="creating-a-dtm">Creating a DTM<a class="anchor" aria-label="anchor" href="#creating-a-dtm"></a>
+</h4>
+<p>The basic object of analysis for most text mining applications is a
+document term matrix, or DTM. This is a matrix where every row
+represents a document and every column represents a token (word,
+bi-gram, stem, etc.)</p>
+<p>You can create a DTM with textmineR by passing a character vector.
+There are options for stopword removal, creation of n-grams, and other
+standard data cleaning. There is an option for passing a stemming or
+lemmatization function if you desire. (See <code><a href="../reference/CreateDtm.html">help(CreateDtm)</a></code>
+for an example using Porter’s word stemmer.)</p>
+<p>The code below uses a dataset of movie reviews included with the
+<code>text2vec</code> package. This dataset is used for sentiment
+analysis. In addition to the text of the reviews. There is a binary
+variable indicating positive or negative sentiment. More on this
+later…</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/">textmineR</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'textmineR'</span>
-<span class="co">#&gt; The following object is masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co">#&gt; The following object is masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     update</span>
-<span class="co"># load movie_review dataset from text2vec</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">movie_review</span>, package <span class="op">=</span> <span class="st">"text2vec"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">)</span>
-<span class="co">#&gt; 'data.frame':    5000 obs. of  3 variables:</span>
-<span class="co">#&gt;  $ id       : chr  "5814_8" "2381_9" "7759_3" "3630_4" ...</span>
-<span class="co">#&gt;  $ sentiment: int  1 1 0 0 1 1 0 0 0 1 ...</span>
-<span class="co">#&gt;  $ review   : chr  "With all this stuff going down at the moment with MJ i've started listening to his music, watching the odd docu"| __truncated__ "\\\"The Classic War of the Worlds\\\" by Timothy Hines is a very entertaining film that obviously goes to great"| __truncated__ "The film starts with a manager (Nicholas Bell) giving welcome investors (Robert Carradine) to Primal Park . A s"| __truncated__ "It must be assumed that those who praised this film (\\\"the greatest filmed opera ever,\\\" didn't I read some"| __truncated__ ...</span>
-<span class="co"># let's take a sample so the demo will run quickly</span>
-<span class="co"># note: textmineR is generally quite scaleable, depending on your system</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
-<span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">)</span>, <span class="fl">500</span><span class="op">)</span>
-
-<span class="va">movie_review</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">[</span> <span class="va">s</span> , <span class="op">]</span>
-
-<span class="co"># create a document term matrix </span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">review</span>, <span class="co"># character vector of documents</span>
-                 doc_names <span class="op">=</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">id</span>, <span class="co"># document names, optional</span>
-                 ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="co"># minimum and maximum n-gram length</span>
-                 stopword_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, <span class="co"># stopwords from tm</span>
-                                  <span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html">stopwords</a></span><span class="op">(</span>source <span class="op">=</span> <span class="st">"smart"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># this is the default value</span>
-                 lower <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># lowercase - this is the default value</span>
-                 remove_punctuation <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># punctuation - this is the default</span>
-                 remove_numbers <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># numbers - this is the default</span>
-                 verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Turn off status bar for this demo</span>
-                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># by default, this will be the max number of cpus available</span></code></pre></div>
-<p>Even though a <code>dgCMatrix</code> isn’t a traditional matrix, it has methods that make it similar to standard R matrices.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rtextminer.com/" class="external-link">textmineR</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: Matrix</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'textmineR'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:Matrix':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     update</span></span>
+<span></span>
+<span><span class="co"># load movie_review dataset from text2vec</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">movie_review</span>, package <span class="op">=</span> <span class="st">"text2vec"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    5000 obs. of  3 variables:</span></span>
+<span><span class="co">#&gt;  $ id       : chr  "5814_8" "2381_9" "7759_3" "3630_4" ...</span></span>
+<span><span class="co">#&gt;  $ sentiment: int  1 1 0 0 1 1 0 0 0 1 ...</span></span>
+<span><span class="co">#&gt;  $ review   : chr  "With all this stuff going down at the moment with MJ i've started listening to his music, watching the odd docu"| __truncated__ "\\\"The Classic War of the Worlds\\\" by Timothy Hines is a very entertaining film that obviously goes to great"| __truncated__ "The film starts with a manager (Nicholas Bell) giving welcome investors (Robert Carradine) to Primal Park . A s"| __truncated__ "It must be assumed that those who praised this film (\\\"the greatest filmed opera ever,\\\" didn't I read some"| __truncated__ ...</span></span>
+<span></span>
+<span><span class="co"># let's take a sample so the demo will run quickly</span></span>
+<span><span class="co"># note: textmineR is generally quite scaleable, depending on your system</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">movie_review</span><span class="op">)</span>, <span class="fl">500</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">movie_review</span> <span class="op">&lt;-</span> <span class="va">movie_review</span><span class="op">[</span> <span class="va">s</span> , <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># create a document term matrix </span></span>
+<span><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateDtm.html">CreateDtm</a></span><span class="op">(</span>doc_vec <span class="op">=</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">review</span>, <span class="co"># character vector of documents</span></span>
+<span>                 doc_names <span class="op">=</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">id</span>, <span class="co"># document names, optional</span></span>
+<span>                 ngram_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="co"># minimum and maximum n-gram length</span></span>
+<span>                 stopword_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span><span class="st">"en"</span><span class="op">)</span>, <span class="co"># stopwords from tm</span></span>
+<span>                                  <span class="fu">stopwords</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stopwords/man/stopwords.html" class="external-link">stopwords</a></span><span class="op">(</span>source <span class="op">=</span> <span class="st">"smart"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># this is the default value</span></span>
+<span>                 lower <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># lowercase - this is the default value</span></span>
+<span>                 remove_punctuation <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># punctuation - this is the default</span></span>
+<span>                 remove_numbers <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># numbers - this is the default</span></span>
+<span>                 verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Turn off status bar for this demo</span></span>
+<span>                 cpus <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># by default, this will be the max number of cpus available</span></span>
+<span><span class="co">#&gt; 'as(&lt;dgTMatrix&gt;, "dgCMatrix")' is deprecated.</span></span>
+<span><span class="co">#&gt; Use 'as(., "CsparseMatrix")' instead.</span></span>
+<span><span class="co">#&gt; See help("Deprecated") and help("Matrix-deprecated").</span></span></code></pre></div>
+<p>Even though a <code>dgCMatrix</code> isn’t a traditional matrix, it
+has methods that make it similar to standard R matrices.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> 
-<span class="co">#&gt; [1]   500 56023</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> 
-<span class="co">#&gt; [1] 500</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> 
-<span class="co">#&gt; [1] 56023</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; [1]   500 56023</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; [1] 500</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; [1] 56023</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] "aaa"           "aaa_ball"      "aaaaatch"      "aaaaatch_kah" </span>
-<span class="co">#&gt; [5] "aage"          "aage_haugland"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "aaa"           "aaa_ball"      "aaaaatch"      "aaaaatch_kah" </span></span>
+<span><span class="co">#&gt; [5] "aage"          "aage_haugland"</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">colnames(dtm)</th>
@@ -226,7 +292,7 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">rownames(dtm)</th>
@@ -254,23 +320,30 @@
 </table>
 </div>
 </div>
-<div id="basic-corpus-statistics" class="section level1">
-<h1 class="hasAnchor">
-<a href="#basic-corpus-statistics" class="anchor"></a>Basic corpus statistics</h1>
-<p>The code below performs some basic corpus statistics. textmineR has a built in function for getting term frequencies across the corpus. This function <code>TermDocFreq</code> gives term frequencies (equivalent to <code><a href="https://rdrr.io/r/base/colSums.html">colSums(dtm)</a></code>), the number of documents in which each term appears (equivalent to <code><a href="https://rdrr.io/r/base/colSums.html">colSums(dtm &gt; 0)</a></code>), and an inverse-document frequency (IDF) vector. The IDF vector can be used to create a TF-IDF matrix.</p>
+<div class="section level2">
+<h2 id="basic-corpus-statistics">Basic corpus statistics<a class="anchor" aria-label="anchor" href="#basic-corpus-statistics"></a>
+</h2>
+<p>The code below performs some basic corpus statistics. textmineR has a
+built in function for getting term frequencies across the corpus. This
+function <code>TermDocFreq</code> gives term frequencies (equivalent to
+<code>colSums(dtm)</code>), the number of documents in which each term
+appears (equivalent to <code>colSums(dtm &gt; 0)</code>), and an
+inverse-document frequency (IDF) vector. The IDF vector can be used to
+create a TF-IDF matrix.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># get counts of tokens across the corpus</span>
-<span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">)</span> 
-<span class="co">#&gt; tibble [56,023 × 4] (S3: tbl_df/tbl/data.frame)</span>
-<span class="co">#&gt;  $ term     : chr [1:56023] "aaa" "aaa_ball" "aaaaatch" "aaaaatch_kah" ...</span>
-<span class="co">#&gt;  $ term_freq: num [1:56023] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ doc_freq : int [1:56023] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ idf      : num [1:56023] 6.21 6.21 6.21 6.21 6.21 ...</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># get counts of tokens across the corpus</span></span>
+<span><span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span>dtm <span class="op">=</span> <span class="va">dtm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; tibble [56,023 × 4] (S3: tbl_df/tbl/data.frame)</span></span>
+<span><span class="co">#&gt;  $ term     : chr [1:56023] "aaa" "aaa_ball" "aaaaatch" "aaaaatch_kah" ...</span></span>
+<span><span class="co">#&gt;  $ term_freq: num [1:56023] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;  $ doc_freq : int [1:56023] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;  $ idf      : num [1:56023] 6.21 6.21 6.21 6.21 6.21 ...</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># look at the most frequent tokens</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># look at the most frequent tokens</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Ten most frequent tokens</caption>
 <thead><tr class="header">
@@ -343,10 +416,10 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># look at the most frequent bigrams</span>
-<span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># look at the most frequent bigrams</span></span>
+<span><span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Ten most frequent bi-grams</caption>
 <thead><tr class="header">
@@ -418,32 +491,40 @@
 </tr>
 </tbody>
 </table>
-<p>It looks like we have stray html tags (“&lt;br&gt;”) in the documents. These aren’t giving us any relevant information about content. (Except, perhaps, that these documents were originally part of web pages.)</p>
-<p>The most intuitive approach, perhaps, is to strip these tags from our documents, re-construct a document term matrix, and re-calculate the objects as above. However, a simpler approach would be to simply remove the tokens containing “br” from the DTM we already calculated. This is much more computationally efficient and gives us the same result anyway.</p>
+<p>It looks like we have stray html tags (“&lt;br&gt;”) in the
+documents. These aren’t giving us any relevant information about
+content. (Except, perhaps, that these documents were originally part of
+web pages.)</p>
+<p>The most intuitive approach, perhaps, is to strip these tags from our
+documents, re-construct a document term matrix, and re-calculate the
+objects as above. However, a simpler approach would be to simply remove
+the tokens containing “br” from the DTM we already calculated. This is
+much more computationally efficient and gives us the same result
+anyway.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># remove offending tokens from the DTM</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="va">dtm</span><span class="op">[</span> , <span class="op">!</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>,
-                                    <span class="st">"(^br$)|(_br$)|(^br_)"</span><span class="op">)</span> <span class="op">]</span>
-
-<span class="co"># re-construct tf_mat and tf_bigrams</span>
-<span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>
-
-<span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># remove offending tokens from the DTM</span></span>
+<span><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="va">dtm</span><span class="op">[</span> , <span class="op">!</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>,</span>
+<span>                                    <span class="st">"(^br$)|(_br$)|(^br_)"</span><span class="op">)</span> <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># re-construct tf_mat and tf_bigrams</span></span>
+<span><span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 10 × 4</span>
-<span class="co">#&gt;    term      term_freq doc_freq   idf</span>
-<span class="co">#&gt;    &lt;chr&gt;         &lt;dbl&gt;    &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 film            909      294 0.531</span>
-<span class="co">#&gt;  2 movie           774      290 0.545</span>
-<span class="co">#&gt;  3 good            337      209 0.872</span>
-<span class="co">#&gt;  4 time            252      167 1.10 </span>
-<span class="co">#&gt;  5 people          238      143 1.25 </span>
-<span class="co">#&gt;  6 story           230      143 1.25 </span>
-<span class="co">#&gt;  7 great           181      125 1.39 </span>
-<span class="co">#&gt;  8 bad             176      121 1.42 </span>
-<span class="co">#&gt;  9 made            170      140 1.27 </span>
-<span class="co">#&gt; 10 character       169      108 1.53</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_mat</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 4</span></span></span>
+<span><span class="co">#&gt;    term      term_freq doc_freq   idf</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> film            909      294 0.531</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> movie           774      290 0.545</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> good            337      209 0.872</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> time            252      167 1.10 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> people          238      143 1.25 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> story           230      143 1.25 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> great           181      125 1.39 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> bad             176      121 1.42 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> made            170      140 1.27 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> character       169      108 1.53</span></span></code></pre></div>
 <table class="table">
 <caption>Ten most frequent terms, ‘&lt;br&gt;’ removed</caption>
 <thead><tr class="header">
@@ -516,7 +597,7 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_bigrams</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Ten most frequent bi-grams, ‘&lt;br&gt;’ removed</caption>
 <thead><tr class="header">
@@ -588,31 +669,44 @@
 </tr>
 </tbody>
 </table>
-<p>We can also calculate how many tokens each document contains from the DTM. Note that this reflects the modifications we made in constructing the DTM (removing stop words, punctuation, numbers, etc.).</p>
+<p>We can also calculate how many tokens each document contains from the
+DTM. Note that this reflects the modifications we made in constructing
+the DTM (removing stop words, punctuation, numbers, etc.).</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># summary of document lengths</span>
-<span class="va">doc_lengths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">doc_lengths</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;      20      97     139     188     222     928</span></code></pre></div>
-<p>Often,it’s useful to prune your vocabulary and remove any tokens that appear in a small number of documents. This will greatly reduce the vocabulary size (see <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf’s law</a>) and improve computation time.</p>
+<code class="sourceCode R"><span><span class="co"># summary of document lengths</span></span>
+<span><span class="va">doc_lengths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">doc_lengths</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">#&gt;      20      97     139     188     222     928</span></span></code></pre></div>
+<p>Often,it’s useful to prune your vocabulary and remove any tokens that
+appear in a small number of documents. This will greatly reduce the
+vocabulary size (see <a href="https://en.wikipedia.org/wiki/Zipf%27s_law" class="external-link">Zipf’s law</a>) and
+improve computation time.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># remove any tokens that were in 3 or fewer documents</span>
-<span class="va">dtm</span> <span class="op">&lt;-</span> <span class="va">dtm</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">dtm</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span> <span class="op">]</span> <span class="co"># alternatively: dtm[ , tf_mat$term_freq &gt; 3 ]</span>
-
-<span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> , <span class="op">]</span>
-
-<span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_bigrams</span><span class="op">[</span> <span class="va">tf_bigrams</span><span class="op">$</span><span class="va">term</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> , <span class="op">]</span></code></pre></div>
-<p>The movie review data set contains more than just text of reviews. It also contains a variable tagging the review as positive (<code>movie_review$sentiment</code> <span class="math inline">\(=1\)</span>) or negative (<code>movie_review$sentiment</code> <span class="math inline">\(=0\)</span>). We can examine terms associated with positive and negative reviews. If we wanted, we could use them to build a simple classifier.</p>
-<p>However, as we will see immediately below, looking at only the most frequent terms in each category is not helpful. Because of Zipf’s law, the most frequent terms in just about <em>any</em> category will be the same.</p>
+<code class="sourceCode R"><span><span class="co"># remove any tokens that were in 3 or fewer documents</span></span>
+<span><span class="va">dtm</span> <span class="op">&lt;-</span> <span class="va">dtm</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dtm</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span> <span class="op">]</span> <span class="co"># alternatively: dtm[ , tf_mat$term_freq &gt; 3 ]</span></span>
+<span></span>
+<span><span class="va">tf_mat</span> <span class="op">&lt;-</span> <span class="va">tf_mat</span><span class="op">[</span> <span class="va">tf_mat</span><span class="op">$</span><span class="va">term</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> , <span class="op">]</span></span>
+<span></span>
+<span><span class="va">tf_bigrams</span> <span class="op">&lt;-</span> <span class="va">tf_bigrams</span><span class="op">[</span> <span class="va">tf_bigrams</span><span class="op">$</span><span class="va">term</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> , <span class="op">]</span></span></code></pre></div>
+<p>The movie review data set contains more than just text of reviews. It
+also contains a variable tagging the review as positive
+(<code>movie_review$sentiment</code> <span class="math inline">\(=1\)</span>) or negative
+(<code>movie_review$sentiment</code> <span class="math inline">\(=0\)</span>). We can examine terms associated with
+positive and negative reviews. If we wanted, we could use them to build
+a simple classifier.</p>
+<p>However, as we will see immediately below, looking at only the most
+frequent terms in each category is not helpful. Because of Zipf’s law,
+the most frequent terms in just about <em>any</em> category will be the
+same.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># what words are most associated with sentiment?</span>
-<span class="va">tf_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>positive <span class="op">=</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">[</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">sentiment</span> <span class="op">==</span> <span class="fl">1</span> , <span class="op">]</span><span class="op">)</span>,
-                     negative <span class="op">=</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">[</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">sentiment</span> <span class="op">==</span> <span class="fl">0</span> , <span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># what words are most associated with sentiment?</span></span>
+<span><span class="va">tf_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>positive <span class="op">=</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">[</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">sentiment</span> <span class="op">==</span> <span class="fl">1</span> , <span class="op">]</span><span class="op">)</span>,</span>
+<span>                     negative <span class="op">=</span> <span class="fu"><a href="../reference/TermDocFreq.html">TermDocFreq</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">[</span> <span class="va">movie_review</span><span class="op">$</span><span class="va">sentiment</span> <span class="op">==</span> <span class="fl">0</span> , <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>These are basically the same. Not helpful at all.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Ten most-frequent positive tokens</caption>
 <thead><tr class="header">
@@ -685,7 +779,7 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">term_freq</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Ten most-frequent negative tokens</caption>
 <thead><tr class="header">
@@ -757,32 +851,56 @@
 </tr>
 </tbody>
 </table>
-<p>That was unhelpful. Instead, we need to re-weight the terms in each class. We’ll use a probabilistic reweighting, described below.</p>
-<p>The most frequent words in each class are proportional to <span class="math inline">\(P(word|sentiment_j)\)</span>. As we saw above, that would puts the words in the same order as <span class="math inline">\(P(word)\)</span>, overall. However, we can use the difference in those probabilities to get a new order. That difference is</p>
+<p>That was unhelpful. Instead, we need to re-weight the terms in each
+class. We’ll use a probabilistic reweighting, described below.</p>
+<p>The most frequent words in each class are proportional to <span class="math inline">\(P(word|sentiment_j)\)</span>. As we saw above,
+that would puts the words in the same order as <span class="math inline">\(P(word)\)</span>, overall. However, we can use the
+difference in those probabilities to get a new order. That difference
+is</p>
 <p><span class="math display">\[\begin{align}
   P(word|sentiment_j) - P(word)
 \end{align}\]</span></p>
-<p>You can interpret the difference in (1) as follows: Positive values are more probable in the sentiment class than in the corpus overall. Negative values are less probable. Values close to zero are statistically-independent of sentiment. Since most of the top words are the same when we sort by <span class="math inline">\(P(word|sentiment_j)\)</span>, these words are statistically-independent of sentiment. They get forced towards zero.</p>
-<p>For those paying close attention, this difference should give a similar ordering as pointwise-mutual information (PMI), defined as <span class="math inline">\(PMI = \frac{P(word|sentiment_j)}{P(word)}\)</span>. However, I prefer the difference as it is bound between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>.</p>
-<p>The difference method is applied to both words overall and bi-grams in the code below.</p>
+<p>You can interpret the difference in (1) as follows: Positive values
+are more probable in the sentiment class than in the corpus overall.
+Negative values are less probable. Values close to zero are
+statistically-independent of sentiment. Since most of the top words are
+the same when we sort by <span class="math inline">\(P(word|sentiment_j)\)</span>, these words are
+statistically-independent of sentiment. They get forced towards
+zero.</p>
+<p>For those paying close attention, this difference should give a
+similar ordering as pointwise-mutual information (PMI), defined as <span class="math inline">\(PMI =
+\frac{P(word|sentiment_j)}{P(word)}\)</span>. However, I prefer the
+difference as it is bound between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>.</p>
+<p>The difference method is applied to both words overall and bi-grams
+in the code below.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># let's reweight by probability by class</span>
-<span class="va">p_words</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="co"># alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)</span>
-
-<span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">&lt;-</span> 
-  <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">term_freq</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">term_freq</span><span class="op">)</span>
-
-<span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">prob_lift</span> <span class="op">&lt;-</span> <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">-</span> <span class="va">p_words</span>
-
-<span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">&lt;-</span> 
-  <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">term_freq</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">term_freq</span><span class="op">)</span>
-
-<span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">prob_lift</span> <span class="op">&lt;-</span> <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">-</span> <span class="va">p_words</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># let's reweight by probability by class</span></span>
+<span><span class="va">p_words</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span> <span class="co"># alternatively: tf_mat$term_freq / sum(tf_mat$term_freq)</span></span>
+<span></span>
+<span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">term_freq</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">term_freq</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">prob_lift</span> <span class="op">&lt;-</span> <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">-</span> <span class="va">p_words</span></span>
+<span></span>
+<span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">term_freq</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">term_freq</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">prob_lift</span> <span class="op">&lt;-</span> <span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">conditional_prob</span> <span class="op">-</span> <span class="va">p_words</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># let's look again with new weights</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">prob_lift</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># let's look again with new weights</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">positive</span><span class="op">$</span><span class="va">prob_lift</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Reweighted: ten most relevant terms for positive sentiment</caption>
+<caption>Reweighted: ten most relevant terms for positive
+sentiment</caption>
+<colgroup>
+<col width="18%">
+<col width="14%">
+<col width="13%">
+<col width="14%">
+<col width="24%">
+<col width="14%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">term</th>
 <th align="right">term_freq</th>
@@ -875,9 +993,10 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">prob_lift</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">tf_sentiment</span><span class="op">$</span><span class="va">negative</span><span class="op">$</span><span class="va">prob_lift</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Reweighted: ten most relevant terms for negative sentiment</caption>
+<caption>Reweighted: ten most relevant terms for negative
+sentiment</caption>
 <thead><tr class="header">
 <th align="left">term</th>
 <th align="right">term_freq</th>
@@ -970,15 +1089,24 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># what about bi-grams?</span>
-<span class="va">tf_sentiment_bigram</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">tf_sentiment</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span>
-  <span class="va">x</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">prob_lift</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># what about bi-grams?</span></span>
+<span><span class="va">tf_sentiment_bigram</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tf_sentiment</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">[</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">term</span>, <span class="st">"_"</span><span class="op">)</span> , <span class="op">]</span></span>
+<span>  <span class="va">x</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">prob_lift</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> , <span class="op">]</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_sentiment_bigram</span><span class="op">$</span><span class="va">positive</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_sentiment_bigram</span><span class="op">$</span><span class="va">positive</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Reweighted: ten most relevant bigrams for positive sentiment</caption>
+<caption>Reweighted: ten most relevant bigrams for positive
+sentiment</caption>
+<colgroup>
+<col width="25%">
+<col width="13%">
+<col width="12%">
+<col width="12%">
+<col width="22%">
+<col width="13%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">term</th>
 <th align="right">term_freq</th>
@@ -1071,9 +1199,18 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tf_sentiment_bigram</span><span class="op">$</span><span class="va">negative</span>, <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_sentiment_bigram</span><span class="op">$</span><span class="va">negative</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Reweighted: ten most relevant bigrams for negative sentiment</caption>
+<caption>Reweighted: ten most relevant bigrams for negative
+sentiment</caption>
+<colgroup>
+<col width="22%">
+<col width="14%">
+<col width="12%">
+<col width="12%">
+<col width="23%">
+<col width="14%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">term</th>
 <th align="right">term_freq</th>
@@ -1179,11 +1316,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Tommy Jones.</p>
+  <p></p>
+<p>Developed by Tommy Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
