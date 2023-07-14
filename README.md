@@ -5,6 +5,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/textmineR)](https://cran.r-project.org/package=textmineR)
 [![Downloads](https://cranlogs.r-pkg.org/badges/textmineR)](https://CRAN.R-project.org/package=textmineR)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/textmineR?color=orange)](https://CRAN.R-project.org/package=textmineR)
+[![R-CMD-check](https://github.com/TommyJones/textmineR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/TommyJones/textmineR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 
