@@ -1,22 +1,43 @@
-### Patch release version 3.0.2
+## Resubmition
+I have addressed CRAN issues relating to two URLs.
+
+*  In man/nih.Rd: 
+    http://exporter.nih.gov/ExPORTER_Catalog.aspx --> https://exporter.nih.gov/ExPORTER_Catalog.aspx
+* In inst/doc/b_document_clustering.html
+    http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/ --> https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/
+    
+I've updated both. 
+
+In addition, I've merged a PR that came between submission and re-submission
+that gives the option for a tibble or data.frame output from some functions (
+described in the last bullet point, below.)
+
+## Patch release version 3.0.5
 This version is a patch where I have:
 
-* addressed some issues from CRAN's automatic checks. I added a new vignette and
-  (a) spawned too many processes during execution and (b) copied another vignette's
-  title. Both issues have been fixed.
-* modified the NAMESPACE to explicitly say "importFrom(stopwords,stopwords)" to 
-  address an issue that came up during checks for some systems after going to CRAN.
-* added an update method for the lda_topic_model class.
-* added a vignette for using `tidytext` alongside `textmineR`
+* Fixed a bug in `CalcHellignerDist()` and `CalcJSDivergence()` that sometimes
+  caused inputs to be overwritten.
+* Fixed some typos in the vignette for topic modeling
+* Updated the documentation on `FitCtmModel()` to better explain how to pass
+  control arguments to CTM's underlying function.
+* Enabled return of a `tibble` or `data.frame` (instead of only `data.frame`) in
+  the following functions: `SummarizeTopics`, `GetTopTerms`, `TermDocFreq`
 
-### Test environments
-* local MacOS install, R 3.5.2
-* Ubuntu 14.04 LTS (on travis ci), R 3.5.1
-* win-builder (devel, release, and oldrel)
 
-### R CMD check results
-There are no WARNINGs, ERRORs, or NOTEs.
+## Test environments
+* local macOS install: release
+* macOS (on GitHub actions): release
+* ubuntu 20.04 (on GitHub actions): release
+* win-builder: release, devel, and oldrel
 
-### Downstream dependencies
-There are no downstream dependencies. 
+## R CMD check results
+There are no NOTEs, WARNINGs, or ERRORs.
+
+## revdepcheck results
+
+We checked 2 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
+
 

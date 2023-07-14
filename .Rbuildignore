@@ -11,5 +11,7 @@
 ^\.gitignore$
 ^models_*
 ^data/nih.rda
-^\.travis\.yml$
 ^docs$
+^pkgdown
+^\.github$
+^revdep$

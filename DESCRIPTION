@@ -1,11 +1,11 @@
 Package: textmineR
 Type: Package
 Title: Functions for Text Mining and Topic Modeling
-Version: 3.0.2.999
-Date: 2019-01-09
+Version: 3.0.5.999
 Authors@R: c(
-    person("Thomas", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
-    person("William", "Doane", email = "wil@drdoane.com", role = "ctb")
+    person("Tommy", "Jones", role = c("aut", "cre"), email = "jones.thos.w@gmail.com"),
+    person("William", "Doane", email = "wil@drdoane.com", role = "ctb"),
+    person("Mattias", "Attbom", email = "mattias1126@protonmail.com", role = "ctb")
     )
 Description: An aid for text mining in R, with a syntax that
     should be familiar to experienced R users. Provides a wrapper for several 
@@ -17,6 +17,8 @@ Depends:
     R (>= 3.0.2),
     Matrix
 Imports:
+    gtools,
+    magrittr,
     methods,
     parallel,
     text2vec (>= 0.5),
@@ -24,8 +26,10 @@ Imports:
     stringr,
     Rcpp,
     RcppProgress,
-    RSpectra
+    RSpectra,
+    utils
 Suggests:
+    spelling,
     digest,
     dplyr,
     igraph,
@@ -42,11 +46,12 @@ Suggests:
     topicmodels,
     wordcloud
 License: MIT + file LICENSE
-URL: https://github.com/TommyJones/textmineR
+URL: https://www.rtextminer.com/
 BugReports: https://github.com/TommyJones/textmineR/issues
 LazyData: true
 LinkingTo: Rcpp,
     RcppArmadillo,
     RcppProgress
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
+Language: en-US

@@ -12,7 +12,7 @@ These conform to outputs of many of \link[textmineR]{textmineR}'s native
 topic modeling functions such as \link[textmineR]{FitLdaModel}.}
 }
 \value{
-An object of class \code{data.frame} with 6 columns: 'topic' is the 
+An object of class \code{data.frame} or \code{tibble} with 6 columns: 'topic' is the 
         name of the topic, 'prevalence' is the rough prevalence of the topic 
         in all documents across the corpus, 'coherence' is the probabilistic
         coherence of the topic, 'top_terms_phi' are the top 5 terms for each

@@ -4,8 +4,14 @@
 \alias{TmParallelApply}
 \title{An OS-independent parallel version of \code{\link[base]{lapply}}}
 \usage{
-TmParallelApply(X, FUN, cpus = parallel::detectCores(), export = NULL,
-  libraries = NULL, envir = parent.frame())
+TmParallelApply(
+  X,
+  FUN,
+  cpus = parallel::detectCores(),
+  export = NULL,
+  libraries = NULL,
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{X}{A vector or list over which to apply \code{FUN}}

@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.rtextmineR.com/404.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/a_start_here.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/b_document_clustering.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/c_topic_modeling.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/d_text_embeddings.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/e_doc_summarization.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/f_tidytext_example.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/authors.html</loc>
+  </url>
+  <url>
     <loc>https://www.rtextmineR.com/index.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/news/index.html</loc>
   </url>
   <url>
     <loc>https://www.rtextmineR.com/reference/CalcGamma.html</loc>
@@ -70,7 +103,16 @@
     <loc>https://www.rtextmineR.com/reference/TmParallelApply.html</loc>
   </url>
   <url>
+    <loc>https://www.rtextmineR.com/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://www.rtextmineR.com/reference/nih.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/reference/posterior.html</loc>
+  </url>
+  <url>
+    <loc>https://www.rtextmineR.com/reference/posterior.lda_topic_model.html</loc>
   </url>
   <url>
     <loc>https://www.rtextmineR.com/reference/predict.ctm_topic_model.html</loc>
@@ -88,24 +130,9 @@
     <loc>https://www.rtextmineR.com/reference/textmineR.html</loc>
   </url>
   <url>
+    <loc>https://www.rtextmineR.com/reference/update.html</loc>
+  </url>
+  <url>
     <loc>https://www.rtextmineR.com/reference/update.lda_topic_model.html</loc>
-  </url>
-  <url>
-    <loc>https://www.rtextmineR.com/articles/a_start_here.html</loc>
-  </url>
-  <url>
-    <loc>https://www.rtextmineR.com/articles/b_document_clustering.html</loc>
-  </url>
-  <url>
-    <loc>https://www.rtextmineR.com/articles/c_topic_modeling.html</loc>
-  </url>
-  <url>
-    <loc>https://www.rtextmineR.com/articles/d_text_embeddings.html</loc>
-  </url>
-  <url>
-    <loc>https://www.rtextmineR.com/articles/e_doc_summarization.html</loc>
-  </url>
-  <url>
-    <loc>https://www.rtextmineR.com/articles/f_tidytext_example.html</loc>
   </url>
 </urlset>

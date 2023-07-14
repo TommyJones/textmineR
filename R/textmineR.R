@@ -12,6 +12,7 @@
 #' @docType package
 NULL
 
+#' @importFrom magrittr %>%
 #' @import Matrix
 #' @import Rcpp
 #' @importFrom Rcpp sourceCpp

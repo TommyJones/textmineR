@@ -4,10 +4,20 @@
 \alias{update.lda_topic_model}
 \title{Update a Latent Dirichlet Allocation topic model with new data}
 \usage{
-update.lda_topic_model(object, dtm, additional_k = 0,
-  iterations = NULL, burnin = -1, new_alpha = NULL,
-  new_beta = NULL, optimize_alpha = FALSE, calc_likelihood = FALSE,
-  calc_coherence = TRUE, calc_r2 = FALSE, ...)
+\method{update}{lda_topic_model}(
+  object,
+  dtm,
+  additional_k = 0,
+  iterations = NULL,
+  burnin = -1,
+  new_alpha = NULL,
+  new_beta = NULL,
+  optimize_alpha = FALSE,
+  calc_likelihood = FALSE,
+  calc_coherence = TRUE,
+  calc_r2 = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{a fitted object of class \code{lda_topic_model}}
@@ -44,13 +54,10 @@ Defaults to \code{FALSE}.}
 \item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
-Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
+Returns an S3 object of class c("LDA", "TopicModel").
 }
 \description{
 Update an LDA model with new data using collapsed Gibbs sampling.
-}
-\details{
-EXPLAIN IMPLEMENTATION DETAILS
 }
 \examples{
 \dontrun{

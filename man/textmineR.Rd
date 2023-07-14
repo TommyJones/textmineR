@@ -3,7 +3,6 @@
 \docType{package}
 \name{textmineR}
 \alias{textmineR}
-\alias{textmineR-package}
 \title{textmineR}
 \description{
 Functions for Text Mining and Topic Modeling

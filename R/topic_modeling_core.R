@@ -1,3 +1,117 @@
+#' Update methods for topic models
+#' @description \code{update} will update a previously-trained topic model based
+#' on new data. Useful for updates or transfer learning.
+#' @param object An existing trained topic model
+#' @param ... Additional arguments to the call
+#' @export
+update <- function(object, ...) UseMethod("update")
+
+#' Posterior methods for topic models
+#' @description \code{posterior} will draw from the posterior distribution of a
+#' topic model
+#' @param object An existing trained topic model
+#' @param ... Additional arguments to the call
+#' @export
+posterior <- function(object, ...) UseMethod("posterior")
+
+
+#' Draw from the posterior of an LDA topic model
+#' @description This function takes an object of class \code{lda_topic_model} and
+#' draws samples from the posterior of either \code{phi} or \code{theta}. This is 
+#' useful for quantifying uncertainty around parametersof the final model.
+#' @param object An object of class \code{lda_topic_model}
+#' @param which A character of either 'theta' or 'phi', indicating from which
+#' matrix to draw posterior samples
+#' @param num_samples Integer number of samples to draw
+#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}.
+#' @references 
+#' Heinrich, G. (2005) Parameter estimation for text analysis. Technical report. 
+#' \href{http://www.arbylon.net/publications/text-est.pdf}{http://www.arbylon.net/publications/text-est.pdf}
+#' @return Returns a data frame where each row is a single sample from the posterior. 
+#' Each column is the distribution over a single parameter. The variable \code{var}
+#' is a facet for subsetting by document (for theta) or topic (for phi).
+#' @export
+#' @examples
+#' \dontrun{
+#' a <- posterior(object = nih_sample_topic_model, which = "theta", num_samples = 20)
+#' 
+#' plot(density(a$t1[a$var == "8693991"]))
+#' 
+#' b <- posterior(object = nih_sample_topic_model, which = "phi", num_samples = 20)
+#' 
+#' plot(denisty(b$research[b$var == "t_5"]))
+#' }
+posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100, ...) {
+  
+  ### check inputs ----
+  if (! class(object) == "lda_topic_model") 
+    stop("object must be of class lda_topic_model")
+  
+  if (num_samples <= 0) {
+    stop("num_samples must be an integer greater than 0")
+  }
+  
+  num_samples <- round(num_samples) # in case someone is cheeky
+  
+  
+  ### set up objects to extract ----
+  if (which == "theta") {
+    # extract dirichlet parameter for theta
+    par <- object$theta * (sum(object$alpha) + rowSums(object$data))
+    
+  } else if (which == "phi") {
+    
+    # need to recover approximate theta count mat to get number of times
+    # each topic was sampled
+    theta_count <- object$theta * (sum(object$alpha) + rowSums(object$data)) 
+    theta_count <- t(theta_count) - object$alpha 
+    theta_count <- t(theta_count) %>% round %>% colSums()
+    
+    # now get the right parameter matrix
+    par <- object$phi * (sum(object$beta) + theta_count)
+    
+  } else {
+    stop("which must be one of 'theta' or 'phi'")
+  }
+  
+  # get appropriate dim names to use later
+  cols <- colnames(par)
+  
+  rows <- rownames(par)
+  
+  
+  ### take samples ----
+  
+  # sample from each row (document or topic)
+  samples <- lapply(seq_len(nrow(par)), function(j) par[j,]) %>%
+    textmineR::TmParallelApply(function(x){
+      p <- gtools::rdirichlet(n = num_samples, alpha = x)
+      
+      colnames(p) <- cols
+      
+      as.data.frame(p)
+    }, export = c("num_samples", "cols"), libraries = "gtools", ...)
+  
+  
+  samples <- mapply(function(x,y){
+    x$var <- y
+    x
+  },x = samples, y = rows,
+  SIMPLIFY = FALSE)
+  
+  # names(samples) <- rows
+  # 
+  # class(samples) <- "lda_posterior"
+  
+  samples <- do.call(rbind, samples)
+  
+  # samples <- cbind(var = samples$var, samples[ -ncol(samples), ])
+  
+  samples
+  
+}
+
+
 #' Calculate a matrix whose rows represent P(topic_i|tokens)
 #' 
 #' @description This function takes a phi matrix (P(token|topic)) and a theta 
@@ -171,10 +285,15 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #'        after the model is trained? Defaults to \code{TRUE}. 
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
-#' @param ... Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}. 
+#' @param ... Other arguments to pass to \link[topicmodels]{CTM} or \link[textmineR]{TmParallelApply}.
+#'   See note below.
 #' @return Returns a list with a minimum of two objects, \code{phi} and 
 #' \code{theta}. The rows of \code{phi} index topics and the columns index tokens.
 #' The rows of \code{theta} index documents and the columns index topics.
+#' @note 
+#' When passing additional arguments to \link[topicmodels]{CTM}, you must unlist the 
+#' elements in the \code{control} argument and pass them one by one. See examples for
+#' how to dot this correctly.
 #' @examples
 #' # Load a pre-formatted dtm 
 #' data(nih_sample_dtm) 
@@ -182,6 +301,29 @@ Cluster2TopicModel <- function(dtm, clustering, ...){
 #' # Fit a CTM model on a sample of documents
 #' model <- FitCtmModel(dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ], 
 #'                      k = 3, return_all = FALSE)
+#'                      
+#' # the correct way to pass control arguments to CTM
+#' \dontrun{
+#' topics_CTM <- FitCtmModel(
+#'     dtm = nih_sample_dtm[ sample(1:nrow(nih_sample_dtm) , 10) , ],
+#'     k = 10,
+#'     calc_coherence = TRUE,
+#'     calc_r2 = TRUE,
+#'     return_all = TRUE,
+#'     estimate.beta = TRUE,
+#'     verbose = 0,
+#'     prefix = tempfile(),
+#'     save = 0,
+#'     keep = 0,
+#'     seed = as.integer(Sys.time()),
+#'     nstart = 1L,
+#'     best = TRUE,
+#'     var = list(iter.max = 500, tol = 10^-6),
+#'     em = list(iter.max = 1000, tol = 10^-4),
+#'     initialize = "random",
+#'     cg = list(iter.max = 500, tol = 10^-5)
+#' )
+#' }
 #' @export
 FitCtmModel <- function(dtm, k, calc_coherence = TRUE, 
                         calc_r2 = FALSE, return_all = TRUE, ...){
@@ -687,12 +829,16 @@ FitLdaModel <- function(dtm, k, iterations = NULL, burnin = -1, alpha = 0.1, bet
   gamma <- CalcGamma(phi = phi, theta = theta, 
                                    p_docs = Matrix::rowSums(dtm))
   
-  names(result$alpha) <- rownames(result$phi)
+  names(result$alpha) <- rownames(phi)
   
-  names(result$beta) <- colnames(result$phi)
+  colnames(result$beta) <- colnames(phi) # because this is still a matrix
   
-  result <- list(phi = phi, theta = theta, gamma = gamma,
-                 data = dtm, alpha = result$alpha, beta = result$beta,
+  result <- list(phi = phi, 
+                 theta = theta, 
+                 gamma = gamma,
+                 data = dtm, 
+                 alpha = result$alpha, 
+                 beta = result$beta[1, ], # make beta a vector again
                  log_likelihood = data.frame(result$log_likelihood)[,1:2] # drop 3rd col for now
                  ) # add other things here
   
@@ -904,8 +1050,8 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
 #' @param calc_r2 Do you want to calculate R-squared after the model is trained?
 #'        Defaults to \code{FALSE}.
 #' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}
-#' @return Returns an S3 object of class c("LDA", "TopicModel"). DESCRIBE MORE
-#' @details EXPLAIN IMPLEMENTATION DETAILS
+#' @return Returns an S3 object of class c("LDA", "TopicModel"). 
+#' @export
 #' @examples 
 #' \dontrun{
 #' # load a document term matrix

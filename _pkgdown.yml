@@ -3,7 +3,7 @@ url: https://www.rtextmineR.com
 template: 
   params:
     bootswatch: flatly
-
-navbar:
-  type: inverse
+    docsearch:
+      api_key:  3c26218210734fb0fe605f17d745faba
+      index_name: rtextminer
   

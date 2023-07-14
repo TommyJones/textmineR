@@ -425,11 +425,12 @@ Dtm2Tcm <- function(dtm){
 #' returns a data frame with columns for term frequency, document frequency, 
 #' and inverse-document frequency
 #' @param dtm A document term matrix of class \code{dgCMatrix}.
-#' @return Returns a \code{data.frame} with 4 columns. The first column, 
-#' \code{term} is a vector of token labels. The second column, \code{term_freq}
-#' is the count of times \code{term} appears in the entire corpus. The third
-#' column \code{doc_freq} is the count of the number of documents in which 
-#' \code{term} appears. The fourth column, \code{idf} is the log-weighted
+#' @return Returns a \code{data.frame} or \code{tibble} with 4 columns.
+#' The first column, \code{term} is a vector of token labels.
+#' The second column, \code{term_freq} is the count of times \code{term}
+#' appears in the entire corpus. The third column \code{doc_freq} is the
+#' count of the number of documents in which \code{term} appears.
+#' The fourth column, \code{idf} is the log-weighted
 #' inverse document frequency of \code{term}.
 #' @export
 #' @examples
@@ -448,5 +449,9 @@ TermDocFreq <- function(dtm){
                          stringsAsFactors=FALSE)
   
   freq.mat$idf <- log(nrow(dtm) / freq.mat$doc_freq)
+
+  if ("tibble" %in% row.names(utils::installed.packages())) {
+      freq.mat <- tibble::as_tibble(freq.mat)
+  }
   return(freq.mat)
 }
