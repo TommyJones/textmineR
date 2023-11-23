@@ -5,10 +5,6 @@ CalcLikelihoodC <- function(dtm, phi, theta) {
     .Call(`_textmineR_CalcLikelihoodC`, dtm, phi, theta)
 }
 
-CalcSumSquares <- function(dtm, phi, theta, ybar) {
-    .Call(`_textmineR_CalcSumSquares`, dtm, phi, theta, ybar)
-}
-
 Dtm2DocsC <- function(dtm, vocab) {
     .Call(`_textmineR_Dtm2DocsC`, dtm, vocab)
 }

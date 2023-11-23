@@ -1284,3 +1284,20 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   result
   
 }
+
+#' Get the fitted values for a Latent Dirichlet Allocation topic model
+#' @description Obtains the fitted values for the specified LDA model.
+#' @param object a fitted object of class \code{lda_topic_model}
+#' @param ... other arguments.
+#' @return a matrix of class \code{dgCMatrix}
+#' @export
+#' @examples
+#' # load a premade topic model
+#' data(nih_sample_topic_model)
+#' # fit values using fitted()
+#' fitted_values <- fitted(nih_sample_topic_model)
+#' fitted_values
+
+fitted.lda_topic_model <- function(object, ...) {
+    (Matrix::rowSums(object$data) * object$theta) %*% object$phi
+}
