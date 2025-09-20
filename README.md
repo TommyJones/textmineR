@@ -5,6 +5,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/textmineR)](https://CRAN.R-project.org/package=textmineR)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/textmineR?color=orange)](https://CRAN.R-project.org/package=textmineR)
 [![R-CMD-check](https://github.com/TommyJones/textmineR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/TommyJones/textmineR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/TommyJones/textmineR/graph/badge.svg)](https://app.codecov.io/gh/TommyJones/textmineR)
 <!-- badges: end -->
 
 
