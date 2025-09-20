@@ -12,7 +12,7 @@ Description: An aid for text mining in R, with a syntax that
     topic models that take similarly-formatted input and give similarly-formatted
     output. Has additional functionality for analyzing and diagnostics for
     topic models.
-SystemRequirements: GNU make, C++11
+SystemRequirements: GNU make
 Depends:
     R (>= 3.0.2),
     Matrix
