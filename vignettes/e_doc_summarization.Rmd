@@ -14,6 +14,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# handle package dependencies in Suggests gracefully
+need <- function(pkgs) all(vapply(pkgs, requireNamespace, TRUE, quietly = TRUE))
+
 ```
 
 In this example we'll use text embeddings and a bit of network analysis to build a basic document summarizer. 
@@ -131,11 +135,11 @@ If you consider a similarity matrix to be an adjacency matrix, then you have a f
 
 Using the `igraph` package (with its own objects) to calculate eigenvector centrality. From there, we'll take the top three sentences.
 
-```{r eval = FALSE}
-  g <- graph.adjacency(g, mode = "undirected", weighted = TRUE)
+```{r eval = need("igraph")}
+  g <- igraph::graph.adjacency(g, mode = "undirected", weighted = TRUE)
   
   # calculate eigenvector centrality
-  ev <- evcent(g)
+  ev <- igraph::evcent(g)
   
   # format the result
   result <- sent[ names(ev$vector)[ order(ev$vector, decreasing = TRUE)[ 1:3 ] ] ]
@@ -149,9 +153,7 @@ Using the `igraph` package (with its own objects) to calculate eigenvector centr
 
 The code below puts it all together in a single function. The first few lines vectorize the code, so that we can summarize multiple documents from a single function call. 
 
-```{r summaries}
-
-library(igraph) 
+```{r eval = need("igraph"), summaries}
 
 # let's do this in a function
 
@@ -199,10 +201,10 @@ summarizer <- function(doc, gamma) {
   # by taking pointwise max, we'll make the matrix symmetric again
   g <- pmax(g, t(g))
   
-  g <- graph.adjacency(g, mode = "undirected", weighted = TRUE)
+  g <- igraph::graph.adjacency(g, mode = "undirected", weighted = TRUE)
   
   # calculate eigenvector centrality
-  ev <- evcent(g)
+  ev <- igraph::evcent(g)
   
   # format the result
   result <- sent[ names(ev$vector)[ order(ev$vector, decreasing = TRUE)[ 1:3 ] ] ]
@@ -215,7 +217,7 @@ summarizer <- function(doc, gamma) {
 
 How well did we do? Let's look at summaries from the first three reviews.
 
-```{r}
+```{r eval = need("igraph")}
 # Let's see the summary of the first couple of reviews
 docs <- movie_review$review[ 1:3 ]
 names(docs) <- movie_review$id[ 1:3 ]
