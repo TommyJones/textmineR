@@ -20,7 +20,6 @@ NULL
 #' @importFrom methods as
 #' @importFrom stopwords stopwords
 #' @export CalcLikelihoodC
-#' @export CalcSumSquares
 #' @export Dtm2DocsC
 #' @export Hellinger_cpp
 #' @export HellingerMat
