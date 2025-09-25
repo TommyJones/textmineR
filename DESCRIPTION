@@ -39,12 +39,13 @@ Suggests:
     rmarkdown,
     SnowballC,
     stringi,
-    testthat,
+    testthat (>= 3.0.0),
     tibble,
     tidyr,
     tidytext,
     topicmodels,
-    wordcloud
+    wordcloud,
+    markdown
 License: MIT + file LICENSE
 URL: https://www.rtextminer.com/
 BugReports: https://github.com/TommyJones/textmineR/issues
@@ -55,3 +56,4 @@ LinkingTo: Rcpp,
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US
+Config/testthat/edition: 3

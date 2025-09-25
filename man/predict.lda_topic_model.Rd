@@ -18,45 +18,53 @@
 
 \item{newdata}{a DTM or TCM of class \code{dgCMatrix} or a numeric vector}
 
-\item{method}{one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is used
-and \code{iterations} must be specified.}
+\item{method}{one of either "gibbs" or "dot". If "gibbs" Gibbs sampling is
+used and \code{iterations} must be specified.}
 
-\item{iterations}{If \code{method = "gibbs"}, an integer number of iterations 
-for the Gibbs sampler to run. A future version may include automatic stopping criteria.}
+\item{iterations}{If \code{method = "gibbs"}, an integer number of
+iterations for the Gibbs sampler to run. A future version may include
+automatic stopping criteria.}
 
-\item{burnin}{If \code{method = "gibbs"}, an integer number of burnin iterations. 
-If \code{burnin} is greater than -1, the entries of the resulting "theta" matrix 
-are an average over all iterations greater than \code{burnin}.}
+\item{burnin}{If \code{method = "gibbs"}, an integer number of burnin
+iterations. If \code{burnin} is greater than -1, the entries of the
+resulting "theta" matrix are an average over all iterations greater than
+\code{burnin}.}
 
-\item{...}{Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}}
+\item{...}{Other arguments to be passed to
+\code{\link[textmineR]{TmParallelApply}}}
 }
 \value{
 a "theta" matrix with one row per document and one column per topic
 }
 \description{
-Obtains predictions of topics for new documents from a fitted LDA model
+Obtains predictions of topics for new documents from a fitted
+LDA model
 }
 \examples{
 \dontrun{
 # load some data
 data(nih_sample_dtm)
 
-# fit a model 
+# fit a model
 set.seed(12345)
 
-m <- FitLdaModel(dtm = nih_sample_dtm[1:20,], k = 5,
-                 iterations = 200, burnin = 175)
+m <- FitLdaModel(
+  dtm = nih_sample_dtm[1:20, ], k = 5,
+  iterations = 200, burnin = 175
+)
 
 str(m)
 
 # predict on held-out documents using gibbs sampling "fold in"
-p1 <- predict(m, nih_sample_dtm[21:100,], method = "gibbs",
-              iterations = 200, burnin = 175)
+p1 <- predict(m, nih_sample_dtm[21:100, ],
+  method = "gibbs",
+  iterations = 200, burnin = 175
+)
 
 # predict on held-out documents using the dot product method
-p2 <- predict(m, nih_sample_dtm[21:100,], method = "dot")
+p2 <- predict(m, nih_sample_dtm[21:100, ], method = "dot")
 
 # compare the methods
-barplot(rbind(p1[1,],p2[1,]), beside = TRUE, col = c("red", "blue")) 
+barplot(rbind(p1[1, ], p2[1, ]), beside = TRUE, col = c("red", "blue"))
 }
 }

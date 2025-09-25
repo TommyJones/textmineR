@@ -5,7 +5,7 @@
 #'   functionality are also mentioned.
 #' @name textmineR-deprecated
 #' @keywords internal
-#' @details 
+#' @details
 #' Below is a list of deprecated functions:
 #' RecursiveRbind
 #' Vec2Dtm
