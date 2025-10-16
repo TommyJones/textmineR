@@ -135,7 +135,7 @@ If you consider a similarity matrix to be an adjacency matrix, then you have a f
 
 Using the `igraph` package (with its own objects) to calculate eigenvector centrality. From there, we'll take the top three sentences.
 
-```{r eval = need("igraph")}
+```{r eval = FALSE}
   g <- igraph::graph.adjacency(g, mode = "undirected", weighted = TRUE)
   
   # calculate eigenvector centrality
