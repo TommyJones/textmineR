@@ -1,7 +1,11 @@
 # textmineR 3.0.6
-This version is a patch. In this version I have
+This version is a patch where:
 
-* Updated the URL to a working paper cited in the topic modeling vignette.
+* The C++11 requirement has been removed.
+* Package dependencies in vignettes have been handled more gracefully, to guard
+  against failure to build vignettes during CMD check.
+* Handled class checking with inherits() not if(class(object) == "class").
+* Fixed broken URLs in documentation.
 
 # textmineR 3.0.5
 This version is a patch. In this version I have
