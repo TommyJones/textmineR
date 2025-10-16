@@ -44,7 +44,7 @@ posterior <- function(object, ...) UseMethod("posterior")
 posterior.lda_topic_model <- function(object, which = "theta", num_samples = 100, ...) {
   
   ### check inputs ----
-  if (! class(object) == "lda_topic_model") 
+  if (! inherits(object, "lda_topic_model")) 
     stop("object must be of class lda_topic_model")
   
   if (num_samples <= 0) {
@@ -400,7 +400,7 @@ FitCtmModel <- function(dtm, k, calc_coherence = TRUE,
 predict.ctm_topic_model <- function(object, newdata, ...) {
   ### Check inputs ----
 
-  if (class(object) != "ctm_topic_model") {
+  if (! inherits(object, "ctm_topic_model")) {
     stop("object must be a topic model object of class ctm_topic_model")
   }
   
@@ -408,7 +408,7 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
     stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
   
-  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+  if (inherits(newdata, "numeric")) { # if newdata is a numeric vector, assumed to be 1 document
     if (is.null(names(newdata))) {
       stop("it looks like newdata is a numeric vector without names. 
            Did you mean to pass a single document?
@@ -437,7 +437,7 @@ predict.ctm_topic_model <- function(object, newdata, ...) {
   
 
   ### get predictions ----
-  if (class(newdata) == "numeric") {
+  if (inherits(newdata, "numeric")) {
     newdata <- newdata / sum(newdata)
   } else {
     newdata <- newdata / Matrix::rowSums(newdata,na.rm = TRUE)
@@ -566,7 +566,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
   
   ## Add check for single row of dtm that gets coerced to a numeric by R
   
-  if (class(object) != "lsa_topic_model") {
+  if (! inherits(object, "lsa_topic_model")) {
     stop("object must be a topic model object of class lsa_topic_model")
   }
   
@@ -574,7 +574,7 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
     stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
   
-  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+  if (inherits(newdata, "numeric")) { # if newdata is a numeric vector, assumed to be 1 document
     if (is.null(names(newdata))) {
       stop("it looks like newdata is a numeric vector without names. 
            Did you mean to pass a single document?
@@ -629,11 +629,11 @@ predict.lsa_topic_model <- function(object, newdata, ...) {
 Dtm2Lexicon <- function(dtm, ...) {
   
   # check inputs
-  if (class(dtm) != "dgCMatrix" & class(dtm) != "numeric") {
+  if (! inherits(dtm, "dgCMatrix") & ! inherits(dtm, "numeric")) {
     stop("dtm must be of class dgCMatrix or, if a single document, a numeric vector")
   }
   
-  if (class(dtm) == "numeric") {
+  if (inherits(dtm, "numeric")) {
     
     if (is.null(names(dtm))) {
       stop("it looks like you passed a numeric vector without names. 
@@ -918,7 +918,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
   }
   
   
-  if (class(object) != "lda_topic_model") {
+  if (! inherits(object, "lda_topic_model")) {
     stop("object must be a topic model object of class lda_topic_model")
   }
   
@@ -926,7 +926,7 @@ predict.lda_topic_model <- function(object, newdata, method = c("gibbs", "dot"),
     stop("newdata must be a matrix of class dgCMatrix or a numeric vector")
   }
   
-  if (class(newdata) == "numeric") { # if newdata is a numeric vector, assumed to be 1 document
+  if (inherits(newdata, "numeric")) { # if newdata is a numeric vector, assumed to be 1 document
     if (is.null(names(newdata))) {
       stop("it looks like newdata is a numeric vector without names. 
            Did you mean to pass a single document?
@@ -1103,7 +1103,7 @@ update.lda_topic_model <- function(object, dtm, additional_k = 0,
   ### Check inputs are of correct dimensionality ----
   
   # object of correct class?
-  if (class(object) != "lda_topic_model")
+  if (! inherits(object, "lda_topic_model"))
     stop("object must be of class lda_topic_model")
   
   # iterations and burnin acceptable?
