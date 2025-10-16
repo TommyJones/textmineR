@@ -9,8 +9,7 @@
 #' topic models.
 #'
 #' @name textmineR
-#' @docType _PACKAGE
-NULL
+"_PACKAGE"
 
 #' @importFrom magrittr %>%
 #' @import Matrix
