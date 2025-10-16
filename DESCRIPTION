@@ -52,6 +52,6 @@ LazyData: true
 LinkingTo: Rcpp,
     RcppArmadillo,
     RcppProgress
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Language: en-US
