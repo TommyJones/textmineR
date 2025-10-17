@@ -14,6 +14,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# Ensure vignette building is successful on Windows
+is_win   <- .Platform$OS.type == "windows"
+is_check <- nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_")) || identical(Sys.getenv("CI"), "true")
+cpus <- if (is_win && is_check) 1 else 2
 ```
 
 
@@ -43,7 +48,7 @@ dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of docum
                  remove_punctuation = TRUE, # punctuation - this is the default
                  remove_numbers = TRUE, # numbers - this is the default
                  verbose = FALSE, # Turn off status bar for this demo
-                 cpus = 2) # default is all available cpus on the system
+                 cpus = cpus) # default is all available cpus on the system
 
 dtm <- dtm[,colSums(dtm) > 2]
 
@@ -72,7 +77,7 @@ model <- FitLdaModel(dtm = dtm,
                      calc_likelihood = TRUE,
                      calc_coherence = TRUE,
                      calc_r2 = TRUE,
-                     cpus = 2) 
+                     cpus = cpus) 
 
 ```
 
@@ -222,7 +227,7 @@ assignments <- predict(model, dtm,
                        method = "gibbs", 
                        iterations = 200,
                        burnin = 180,
-                       cpus = 2)
+                       cpus = cpus)
 
 # predictions with dot
 assignments_dot <- predict(model, dtm,
@@ -446,7 +451,7 @@ model_list <- TmParallelApply(X = k_list, FUN = function(k){
   
   m
 }, export= ls(), # c("nih_sample_dtm"), # export only needed for Windows machines
-cpus = 2) 
+cpus = cpus) 
 
 # Get average coherence for each model
 coherence_mat <- data.frame(k = sapply(model_list, function(x) nrow(x$phi)), 

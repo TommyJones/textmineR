@@ -17,6 +17,12 @@ knitr::opts_chunk$set(
 
 # handle package dependencies in Suggests gracefully
 need <- function(pkgs) all(vapply(pkgs, requireNamespace, TRUE, quietly = TRUE))
+
+
+# Ensure vignette building is successful on Windows
+is_win   <- .Platform$OS.type == "windows"
+is_check <- nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_")) || identical(Sys.getenv("CI"), "true")
+cpus <- if (is_win && is_check) 1 else 2
 ```
 
 # Document clustering
@@ -41,7 +47,7 @@ dtm <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT, # character vector of docum
                  remove_punctuation = TRUE, # punctuation - this is the default
                  remove_numbers = TRUE, # numbers - this is the default
                  verbose = FALSE, # Turn off status bar for this demo
-                 cpus = 2) # default is all available cpus on the system
+                 cpus = cpus) # default is all available cpus on the system
 
 # construct the matrix of term counts to get the IDF vector
 tf_mat <- TermDocFreq(dtm)
