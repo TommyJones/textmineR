@@ -15,10 +15,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-# Ensure vignette building is successful on Windows
-is_win   <- .Platform$OS.type == "windows"
-is_check <- nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_")) || identical(Sys.getenv("CI"), "true")
-cpus <- if (is_win && is_check) 1 else 2
 
 ```
 
@@ -49,7 +45,7 @@ data(nih_sample)
 tcm <- CreateTcm(doc_vec = nih_sample$ABSTRACT_TEXT,
                  skipgram_window = 10,
                  verbose = FALSE,
-                 cpus = cpus)
+                 cpus = 1)
 
 # a TCM is generally larger than a DTM
 dim(tcm)
@@ -73,7 +69,7 @@ embeddings <- FitLdaModel(dtm = tcm,
                           calc_likelihood = FALSE,
                           calc_coherence = TRUE,
                           calc_r2 = TRUE,
-                          cpus = cpus)
+                          cpus = 1)
 ```
 
 ## Interpretation of $\Phi$ and $\Theta$
@@ -143,7 +139,7 @@ dtm_embed <- CreateDtm(doc_vec = nih_sample$ABSTRACT_TEXT,
                        doc_names = nih_sample$APPLICATION_ID,
                        ngram_window = c(1,1),
                        verbose = FALSE,
-                       cpus = cpus)
+                       cpus = 1)
 
 dtm_embed <- dtm_embed[,colSums(dtm_embed) > 2]
 
@@ -159,7 +155,7 @@ Once you've embedded your documents, you effectively have a new $\Theta$. We can
 embeddings$r2_dtm <- CalcTopicModelR2(dtm = dtm_embed, 
                                       phi = embeddings$phi[,colnames(dtm_embed)], # line up vocabulary
                                       theta = embedding_assignments,
-                                      cpus = cpus)
+                                      cpus = 1)
 
 embeddings$r2_dtm
 

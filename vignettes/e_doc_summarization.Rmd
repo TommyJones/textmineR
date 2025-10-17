@@ -19,10 +19,6 @@ knitr::opts_chunk$set(
 need <- function(pkgs) all(vapply(pkgs, requireNamespace, TRUE, quietly = TRUE))
 
 
-# Ensure vignette building is successful on Windows
-is_win   <- .Platform$OS.type == "windows"
-is_check <- nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_")) || identical(Sys.getenv("CI"), "true")
-cpus <- if (is_win && is_check) 1 else 2
 ```
 
 In this example we'll use text embeddings and a bit of network analysis to build a basic document summarizer. 
@@ -58,7 +54,7 @@ movie_review$review <- stringr::str_replace_all(movie_review$review, "<br */>", 
 tcm <- CreateTcm(doc_vec = movie_review$review,
                  skipgram_window = 10,
                  verbose = FALSE,
-                 cpus = cpus)
+                 cpus = 1)
 
 # use LDA to get embeddings into probability space
 # This will take considerably longer as the TCM matrix has many more rows 
@@ -73,7 +69,7 @@ embeddings <- FitLdaModel(dtm = tcm,
                           calc_likelihood = FALSE,
                           calc_coherence = FALSE,
                           calc_r2 = FALSE,
-                          cpus = cpus)
+                          cpus = 1)
 
 ```
 
@@ -93,7 +89,7 @@ In the code chunk below, we split the document into sentences using the `stringi
   names(sent) <- seq_along(sent) # so we know index and order
   
   # embed the sentences in the model
-  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE, cpus = cpus)
+  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE, cpus = 1)
   
   # remove any documents with 2 or fewer words
   e <- e[ rowSums(e) > 2 , ]
@@ -175,7 +171,7 @@ summarizer <- function(doc, gamma) {
   names(sent) <- seq_along(sent) # so we know index and order
   
   # embed the sentences in the model
-  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE, cpus = cpus)
+  e <- CreateDtm(sent, ngram_window = c(1,1), verbose = FALSE, cpus = 1)
   
   # remove any documents with 2 or fewer words
   e <- e[ rowSums(e) > 2 , ]

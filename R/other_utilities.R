@@ -28,6 +28,11 @@ TmParallelApply <- function(X, FUN, cpus=parallel::detectCores(),
   os <- .Platform$OS.type
   if (length(cpus) == 0 || is.na(cpus)) cpus <- 1L
   
+  # Always run sequential if only 1 CPU
+  if (cpus == 1L) {
+    return(lapply(X, FUN))
+  }
+  
   if(os == "unix" ){ # on unix systems use mclapply()
     
     out <- parallel::mclapply(X = X, FUN = FUN, mc.cores = cpus)
