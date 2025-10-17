@@ -24,7 +24,11 @@ to be archived and direct users to `tidylda`.
 * win-builder: release, devel, and oldrel
 
 ## R CMD check results
-There are no NOTEs, WARNINGs, or ERRORs.
+There are no WARNINGs, or ERRORs.
+
+On the Winbuilder service, I receive NOTEs on possible invalid URLs. I have
+verified that they work. I think it's Wikipedia rejecting the automated query as
+the error message is "Status: 429 Message: Too Many Requests""
 
 ## revdepcheck results
 
