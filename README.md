@@ -8,8 +8,14 @@
 [![Codecov test coverage](https://codecov.io/gh/TommyJones/textmineR/graph/badge.svg)](https://app.codecov.io/gh/TommyJones/textmineR)
 <!-- badges: end -->
 
+## Maintenance status
 
+⚠️ **Note:** `textmineR` is now in **maintenance-only mode**.  
+The package remains functional and is kept on CRAN for reproducibility, but it is **no longer under active development**.
 
+For new work, please see [`tidylda`](https://cran.r-project.org/package=tidylda), which is the actively maintained successor to `textmineR`. `tidylda` provides a more modern interface and improved topic modeling functionality while following the tidyverse design philosophy.
+
+## textmineR
 Functions for Text Mining and Topic Modeling 
 
 Copyright 2021 by Thomas W. Jones

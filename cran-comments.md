@@ -1,11 +1,21 @@
 ## Patch release version 3.0.6
-This version is a patch where:
+This is a re-submission correcting WARNINGs found after submission to CRAN.
 
-* The C++11 requirement has been removed.
-* Package dependencies in vignettes have been handled more gracefully, to guard
-  against failure to build vignettes during CMD check.
-* Handled class checking with inherits() not if(class(object) == "class").
-* Fixed broken URLs in documentation.
+"Warning: textmineR.Rd:3: docType '_PACKAGE' is unrecognized"
+
+* Documentation now follows proper syntax.
+* Vignettes no longer rely on parallel processing.
+
+Note also, textmineR is in maintenance-only mode: it remains functional and useful for
+existing users, but is no longer under active feature development. Where possible
+I have made minimal adjustments (e.g., vignette gating, DESCRIPTION metadata 
+updates) to keep the package compliant.
+
+For new projects, I recommend users adopt `tidylda`, which is the actively 
+maintained successor to `textmineR` and implements more modern topic modeling workflows.
+
+If the maintenance burden grows significantly, I am prepared to allow the package
+to be archived and direct users to `tidylda`.
 
 ## Test environments
 * local macOS install: release
