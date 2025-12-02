@@ -216,21 +216,21 @@ CalcProbCoherence<- function(phi, dtm, M = 5){
 
 #' Calculate the R-squared of a topic model.
 #' @description Function to calculate R-squared for a topic model. 
-#' This uses a geometric interpretation of R-squared as the proportion of total distance 
-#' each document is from the center of all the documents that is explained by the model. 
+#' This is a wrapper for \code{mvrsquared::calc_rsquared} with additional
+#' checks in place to check for the inputs.
 #' @param dtm A documents by terms dimensional document term matrix of class
 #' \code{dgCMatrix} or of class \code{matrix}. 
-#' @param phi A topics by terms dimensional matrix where each entry is p(term_i |topic_j)
-#' @param theta A documents by topics dimensional matrix where each entry is p(topic_j|document_d)
-#' @param ... Other arguments to be passed to \code{\link[textmineR]{TmParallelApply}}. See note, below.
+#' @param phi A topics by terms dimensional matrix where each entry is
+#' p(term_i |topic_j)
+#' @param theta A documents by topics dimensional matrix where each entry
+#' is p(topic_j|document_d)
+#' @param cpus An integer of how many threads to use. Defaults to 1 and is
+#' equivalent of setting \code{threads} in \link{mvrsquared}[calc_rsquared].
+#' @param ... Other arguments to be passed to
+#' \code{\link[mvrsquared]{calc_rsquared}}. See note, below.
 #' @return
-#' Returns an object of class \code{numeric} representing the proportion of variability
-#' in the data that is explained by the topic model.
-#' @note
-#' This function performs parallel computation if \code{dtm} has more than 3,000
-#' rows. The default is to use all available cores according to \code{\link[parallel]{detectCores}}.
-#' However, this can be modified by passing the \code{cpus} argument when calling
-#' this function.
+#' Returns an object of class \code{numeric} representing the proportion
+#' of variability in the data that is explained by the topic model.
 #' @export
 #' @examples
 #' # Load a pre-formatted dtm and topic model
@@ -244,7 +244,7 @@ CalcProbCoherence<- function(phi, dtm, M = 5){
 #' 
 #' 
 #' r2
-CalcTopicModelR2 <- function(dtm, phi, theta, ...){
+CalcTopicModelR2 <- function(dtm, phi, theta, cpus = 1, ...){
   
   # check that inputs have necessary formats
   if(nrow(dtm) != nrow(theta) ){ 
@@ -305,40 +305,14 @@ CalcTopicModelR2 <- function(dtm, phi, theta, ...){
   
   
   # get ybar, the "center" of the documents
-  ybar <- Matrix::colMeans(dtm)
-  
-  # do in parallel in batches of about 3000 if we have more than 3000 docs
-  if(nrow(dtm) > 3000){
-    
-    batches <- seq(1, nrow(dtm), by = 3000)
-    
-    data_divided <- lapply(batches, function(j){
-      
-      dtm_divided <- dtm[ j:min(j + 2999, nrow(dtm)) , ]
-      
-      theta_divided <- theta[ j:min(j + 2999, nrow(dtm)) , ]
-      
-      list(dtm_divided=dtm_divided, theta_divided=theta_divided)
-    })
-    
-    result <-TmParallelApply(X = data_divided, FUN = function(x){
-      CalcSumSquares(dtm = x$dtm_divided, 
-                     phi = phi, 
-                     theta = x$theta_divided, 
-                     ybar=ybar)
-    }, export=c("phi", "ybar"), ...)
-    
-    result <- do.call(rbind, result)
-    
-    result <- 1 - sum(result[ , 1 ]) / sum(result[ , 2 ])
-    
-    # do sequentially otherwise
-  }else{
-    sum_squares <- CalcSumSquares(dtm = dtm,  phi = phi, theta = theta, ybar=ybar)
-    
-    result <- 1 - sum_squares[ 1 ] / sum_squares[ 2 ]
-    
-  }
-  
-  result
+    ybar <- Matrix::colMeans(dtm)
+
+  # use mvrsquared to calculate rsquared
+    result <- mvrsquared::calc_rsquared(
+                              y = dtm,
+                              yhat = list(x = Matrix::rowSums(dtm) * theta,
+                                          w = phi),
+                              ybar = ybar, threads = cpus, ...
+                          )
+  return(result)
 }

@@ -24,20 +24,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// CalcSumSquares
-NumericVector CalcSumSquares(arma::sp_mat dtm, NumericMatrix phi, NumericMatrix theta, NumericVector ybar);
-RcppExport SEXP _textmineR_CalcSumSquares(SEXP dtmSEXP, SEXP phiSEXP, SEXP thetaSEXP, SEXP ybarSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat >::type dtm(dtmSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type ybar(ybarSEXP);
-    rcpp_result_gen = Rcpp::wrap(CalcSumSquares(dtm, phi, theta, ybar));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Dtm2DocsC
 List Dtm2DocsC(arma::sp_mat dtm, std::vector< std::string> vocab);
 RcppExport SEXP _textmineR_Dtm2DocsC(SEXP dtmSEXP, SEXP vocabSEXP) {
@@ -147,7 +133,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_textmineR_CalcLikelihoodC", (DL_FUNC) &_textmineR_CalcLikelihoodC, 3},
-    {"_textmineR_CalcSumSquares", (DL_FUNC) &_textmineR_CalcSumSquares, 4},
     {"_textmineR_Dtm2DocsC", (DL_FUNC) &_textmineR_Dtm2DocsC, 2},
     {"_textmineR_HellingerMat", (DL_FUNC) &_textmineR_HellingerMat, 1},
     {"_textmineR_Hellinger_cpp", (DL_FUNC) &_textmineR_Hellinger_cpp, 2},

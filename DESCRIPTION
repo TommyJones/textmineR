@@ -28,7 +28,8 @@ Imports:
     Rcpp,
     RcppProgress,
     RSpectra,
-    utils
+    utils,
+    mvrsquared
 Suggests:
     spelling,
     digest,
@@ -37,6 +38,7 @@ Suggests:
     knitr,
     lda,
     MASS,
+    markdown,
     rmarkdown,
     SnowballC,
     stringi,
